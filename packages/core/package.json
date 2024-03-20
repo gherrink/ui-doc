@@ -1,0 +1,41 @@
+{
+  "name": "@styleguide/core",
+  "description": "Core to generate a styleguide out of css comments.",
+  "version": "0.0.0-alpha.0",
+  "homepage": "https://github.com/gherrink/styleguide/",
+  "keywords": [
+    "styleguide",
+    "ui-kit"
+  ],
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/packages/core/src/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "umd": "dist/index.umd.js",
+  "types": "dist/packages/core/src/index.d.ts",
+  "type": "module",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "dependencies": {},
+  "devDependencies": {},
+  "peerDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gherrink/styleguide",
+    "directory": "packages/core"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "$npm_execpath clean && rollup -c",
+    "test": "$npm_execpath build && jest"
+  }
+}
