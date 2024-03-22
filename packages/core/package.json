@@ -24,9 +24,9 @@
     "src",
     "dist"
   ],
-  "dependencies": {},
-  "devDependencies": {},
-  "peerDependencies": {},
+  "dependencies": {
+    "comment-parser": "^1.4.1"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/gherrink/styleguide",
@@ -36,6 +36,6 @@
   "scripts": {
     "clean": "rm -rf dist",
     "build": "$npm_execpath clean && rollup -c",
-    "test": "$npm_execpath build && jest"
+    "test": "jest"
   }
 }

@@ -1,3 +1,3 @@
-// eslint-disable-next-line import/extensions
+export * from './errors'
 export * from './Styleguide'
 export * from './types'

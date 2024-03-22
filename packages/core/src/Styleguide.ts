@@ -1,9 +1,10 @@
-import { StyleguideOptions } from './types'
+import { Options } from './types'
 
 export class Styleguide {
-  public options: StyleguideOptions
+  public options: Options
 
-  constructor(options: StyleguideOptions) {
+  constructor(options: Options) {
     this.options = options
   }
+
 }
