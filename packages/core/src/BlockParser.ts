@@ -1,6 +1,6 @@
 import { Block as CommentBlock, parse as parseComments } from 'comment-parser'
 
-import { TagTransformerError } from './errors'
+import { BlockParseError, TagTransformerError } from './errors'
 import tagTransformers from './tag-transformers'
 import { Block, TagTransformer, TagTransformFunction } from './types'
 
@@ -30,11 +30,13 @@ export class BlockParser {
       order: 0,
     }
 
+    if (comment.tags.length <= 0) {
+      throw this.createError('Empty block.', comment)
+    }
+
     comment.tags.forEach(tag => {
       if (!this.tagTransformers[tag.tag]) {
-        // TODO somehow improve error handling
-        console.error(`Undefined tag type '${tag.tag}'.`)
-        return
+        throw this.createError(`Undefined tag type '${tag.tag}'.`, comment)
       }
 
       tag.description = tag.description.trim()
@@ -53,9 +55,7 @@ export class BlockParser {
 
     })
 
-    if (!this.isValidBlock(block)) {
-      return undefined
-    }
+    this.validateBlock(block, comment)
 
     block.key = this.blockKey(block as Block)
     if (!block.key) {
@@ -65,8 +65,10 @@ export class BlockParser {
     return block as Block
   }
 
-  protected isValidBlock(block: Partial<Block>): boolean {
-    return (!!block.page && !!block.section) || !!block.location
+  protected validateBlock(block: Partial<Block>, comment: CommentBlock) {
+    if (!(!!block.page || (!!block.page && !!block.section) || !!block.location)) {
+      throw this.createError('Missing block location. Don\'t know where to place this block, please use @location, @page or @section + @page.', comment)
+    }
   }
 
   protected blockKey(block: Block): string {
@@ -75,5 +77,11 @@ export class BlockParser {
     }
 
     return (block.page?.key || '') + (block.section?.key ? `.${block.section.key}` : '')
+  }
+
+  protected createError(reason: string, comment: CommentBlock): BlockParseError {
+    const code = comment.source.map(line => line.source).join('\n')
+
+    return new BlockParseError(reason, code, comment.source[0].number)
   }
 }

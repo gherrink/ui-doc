@@ -24,7 +24,7 @@ export type Block = {
   [key: string]: any,
   key: string,
   order: number,
-  location: string,
+  location?: string,
   page?: BlockIdentifier,
   section?: BlockIdentifier,
   description?: string,
