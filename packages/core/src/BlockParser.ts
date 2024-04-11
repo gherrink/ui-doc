@@ -2,9 +2,11 @@ import { Block as CommentBlock, parse as parseComments } from 'comment-parser'
 
 import { BlockParseError, TagTransformerError } from './errors'
 import tagTransformers from './tag-transformers'
-import { Block, TagTransformer, TagTransformFunction } from './types'
+import {
+  Block, BlockParserInterface, TagTransformer, TagTransformFunction,
+} from './types'
 
-export class BlockParser {
+export class BlockParser implements BlockParserInterface {
 
   protected tagTransformers: {[key: string]: TagTransformFunction} = {}
 

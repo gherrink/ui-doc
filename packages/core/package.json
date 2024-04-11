@@ -24,13 +24,17 @@
     "src",
     "dist"
   ],
-  "dependencies": {
-    "comment-parser": "^1.4.1"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/gherrink/styleguide",
     "directory": "packages/core"
+  },
+  "dependencies": {
+    "comment-parser": "^1.4.1",
+    "picomatch": "^4.0.2"
+  },
+  "devDependencies": {
+    "@types/picomatch": "^2.3.3"
   },
   "sideEffects": false,
   "scripts": {
@@ -38,4 +42,5 @@
     "build": "$npm_execpath clean && rollup -c",
     "test": "jest"
   }
+
 }

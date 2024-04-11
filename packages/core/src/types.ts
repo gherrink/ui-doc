@@ -1,7 +1,21 @@
 import { Spec as CommentSpec } from 'comment-parser'
 
 export type Options = {
+  finder: FileFinder
+}
 
+export interface FileFinder {
+  registerOnNewFile(callback: (file: string) => void): void
+  registerOnChangeFile(callback: (file: string) => void): void
+  scan(): void
+}
+
+export interface FileReader {
+  content(file: string): string
+}
+
+export type FileFinderOptions = {
+  globs: string[]
 }
 
 export type BlockIdentifier = {
@@ -30,6 +44,11 @@ export type Block = {
   description?: string,
   code?: BlockCode,
   example?: BlockExample,
+}
+
+export interface BlockParserInterface {
+  registerTagTransformer(transformer: TagTransformer): BlockParserInterface
+  parse(content: string): Block[]
 }
 
 export type TagTransformFunction = (block: Partial<Block>, spec: CommentSpec) => Partial<Block>
