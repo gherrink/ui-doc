@@ -18,6 +18,22 @@ export type FileFinderOptions = {
   globs: string[]
 }
 
+export type FilePath = string
+export type Source = {blocks: Block[]}
+
+export type ContextEntry = {
+  [key: string]: any
+  id: string
+  title: string
+  order: number
+  sections: ContextEntry[]
+}
+
+export type Context = {
+  pages: ContextEntry[]
+  entries: {[key: string]: ContextEntry}
+}
+
 export type BlockCode = {
   content: string,
   title: string,
