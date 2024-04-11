@@ -2,7 +2,8 @@
   "name": "styleguide",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "demos/*"
   ],
   "browserslist": [
     "defaults",
