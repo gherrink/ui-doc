@@ -78,7 +78,7 @@ export class BlockParser implements BlockParserInterface {
       return block.location
     }
 
-    return (block.page?.key || '') + (block.section?.key ? `.${block.section.key}` : '')
+    return (block.page || '') + (block.section ? `.${block.section}` : '')
   }
 
   protected createError(reason: string, comment: CommentBlock): BlockParseError {

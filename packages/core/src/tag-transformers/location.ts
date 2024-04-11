@@ -1,14 +1,13 @@
-import { TagTransformerError } from '../errors'
 import { TagTransformer } from '../types'
+import { identifier } from './utils'
 
 export const tag: TagTransformer = {
   name: 'location',
-  transform: (block, data) => {
-    if (!data.name) {
-      throw new TagTransformerError('No key is given')
-    }
+  transform: (block, spec) => {
+    const { key, name } = identifier(spec)
 
-    block.location = data.name.toLowerCase()
+    block.title = name
+    block.location = key
 
     return block
   },

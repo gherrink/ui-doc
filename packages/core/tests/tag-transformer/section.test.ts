@@ -19,9 +19,9 @@ describe('Section tag transformer', () => {
     block = section.transform(block, comment)
 
     expect(block).toHaveProperty('section')
-    expect(block.section).toMatchObject({
-      key: 'test',
-      name: 'test',
+    expect(block).toMatchObject({
+      section: 'test',
+      title: 'test',
     })
   })
 
@@ -40,9 +40,9 @@ describe('Section tag transformer', () => {
     block = section.transform(block, comment)
 
     expect(block).toHaveProperty('section')
-    expect(block.section).toMatchObject({
-      key: 'test',
-      name: 'Test',
+    expect(block).toMatchObject({
+      section: 'test',
+      title: 'Test',
     })
   })
 
@@ -61,9 +61,9 @@ describe('Section tag transformer', () => {
     block = section.transform(block, comment)
 
     expect(block).toHaveProperty('section')
-    expect(block.section).toMatchObject({
-      key: 'test',
-      name: 'Test Section',
+    expect(block).toMatchObject({
+      section: 'test',
+      title: 'Test Section',
     })
   })
 
@@ -82,9 +82,33 @@ describe('Section tag transformer', () => {
     block = section.transform(block, comment)
 
     expect(block).toHaveProperty('section')
-    expect(block.section).toMatchObject({
-      key: 'test.test',
-      name: 'Test Section',
+    expect(block).toMatchObject({
+      section: 'test.test',
+      title: 'Test Section',
+    })
+  })
+
+  test('should not override location title', () => {
+    const comment = {
+      tag: 'section',
+      name: 'test.test',
+      type: '',
+      description: 'Test Section',
+      optional: false,
+      problems: [],
+      source: [],
+    }
+    let block: Partial<Block> = {
+      location: 'test.test',
+      title: 'Test Location',
+    }
+
+    block = section.transform(block, comment)
+
+    expect(block).toMatchObject({
+      section: 'test.test',
+      location: 'test.test',
+      title: 'Test Location',
     })
   })
 

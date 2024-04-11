@@ -18,11 +18,6 @@ export type FileFinderOptions = {
   globs: string[]
 }
 
-export type BlockIdentifier = {
-  key: string,
-  name?: string,
-}
-
 export type BlockCode = {
   content: string,
   title: string,
@@ -39,8 +34,9 @@ export type Block = {
   key: string,
   order: number,
   location?: string,
-  page?: BlockIdentifier,
-  section?: BlockIdentifier,
+  page?: string,
+  section?: string,
+  title?: string,
   description?: string,
   code?: BlockCode,
   example?: BlockExample,

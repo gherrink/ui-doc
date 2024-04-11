@@ -4,7 +4,12 @@ import { identifier } from './utils'
 export const tag: TagTransformer = {
   name: 'section',
   transform: (block, spec) => {
-    block.section = identifier(spec)
+    const { key, name } = identifier(spec)
+
+    block.section = key
+    if (!(block.location && block.title)) {
+      block.title = name
+    }
 
     return block
   },

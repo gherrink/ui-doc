@@ -1,9 +1,9 @@
 import { Spec } from 'comment-parser'
 
 import { TagTransformerError } from '../../errors'
-import { BlockCode, BlockIdentifier } from '../../types'
+import { BlockCode } from '../../types'
 
-export function identifier(data: Spec): BlockIdentifier {
+export function identifier(data: Spec): {key: string, name: string} {
   if (!data.name) {
     throw new TagTransformerError('No key is given')
   }

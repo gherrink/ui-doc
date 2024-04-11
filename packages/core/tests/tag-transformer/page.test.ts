@@ -19,9 +19,9 @@ describe('Page tag transformer', () => {
     block = page.transform(block, comment)
 
     expect(block).toHaveProperty('page')
-    expect(block.page).toMatchObject({
-      key: 'test',
-      name: 'test',
+    expect(block).toMatchObject({
+      page: 'test',
+      title: 'test',
     })
   })
 
@@ -40,9 +40,9 @@ describe('Page tag transformer', () => {
     block = page.transform(block, comment)
 
     expect(block).toHaveProperty('page')
-    expect(block.page).toMatchObject({
-      key: 'test',
-      name: 'Test',
+    expect(block).toMatchObject({
+      page: 'test',
+      title: 'Test',
     })
   })
 
@@ -61,9 +61,9 @@ describe('Page tag transformer', () => {
     block = page.transform(block, comment)
 
     expect(block).toHaveProperty('page')
-    expect(block.page).toMatchObject({
-      key: 'test',
-      name: 'Test Page',
+    expect(block).toMatchObject({
+      page: 'test',
+      title: 'Test Page',
     })
   })
 
