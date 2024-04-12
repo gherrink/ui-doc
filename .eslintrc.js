@@ -16,7 +16,6 @@ module.exports = {
         './**/*.jsx',
       ],
       plugins: [
-        'html',
         '@typescript-eslint',
         'simple-import-sort',
       ],
@@ -99,6 +98,15 @@ module.exports = {
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         'simple-import-sort/imports': 'error',
         'simple-import-sort/exports': 'error',
+      },
+    },
+    {
+      files: ['./**/*.html'],
+      plugins: ['@html-eslint'],
+      parser: '@html-eslint/parser',
+      extends: ['plugin:@html-eslint/recommended'],
+      rules: {
+        '@html-eslint/indent': ['error', 2],
       },
     },
   ],
