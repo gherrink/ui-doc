@@ -1,0 +1,46 @@
+{
+  "name": "@styleguide/html-renderer",
+  "description": "Simple HTML renderer for Styleguide",
+  "version": "0.0.0-alpha.0",
+  "homepage": "https://github.com/gherrink/styleguide/",
+  "keywords": [
+    "styleguide",
+    "ui-kit",
+    "renderer",
+    "html"
+  ],
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/packages/html-renderer/src/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "umd": "dist/index.umd.js",
+  "types": "dist/packages/html-renderer/src/index.d.ts",
+  "type": "module",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gherrink/styleguide",
+    "directory": "packages/html-renderer"
+  },
+  "devDependencies": {
+    "rollup-plugin-copy": "^3.5.0"
+  },
+  "peerDependencies": {
+    "@styleguide/core": "^0.0.0-alpha.0"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "$npm_execpath clean && rollup -c",
+    "test": "jest"
+  }
+}
