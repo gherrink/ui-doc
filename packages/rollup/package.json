@@ -1,0 +1,49 @@
+{
+  "name": "@styleguide/rollup",
+  "description": "Rollup plugin for styleguide",
+  "version": "0.0.0-alpha.0",
+  "homepage": "https://github.com/gherrink/styleguide/",
+  "keywords": [
+    "styleguide",
+    "ui-kit",
+    "rollup",
+    "rollup-plugin"
+  ],
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/packages/rollup/src/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "umd": "dist/index.umd.js",
+  "types": "dist/packages/rollup/src/index.d.ts",
+  "type": "module",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gherrink/styleguide",
+    "directory": "packages/rollup"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@styleguide/core": "workspace:^0.0.0-alpha.0",
+    "@styleguide/node": "workspace:^0.0.0-alpha.0"
+  },
+  "peerDependencies": {
+    "@styleguide/core": "workspace:^0.0.0-alpha.0",
+    "@styleguide/node": "workspace:^0.0.0-alpha.0"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "$npm_execpath clean && rollup -c",
+    "test": "jest"
+  }
+}

@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "base": "tsx --tsconfig tsconfig.base.json ./base.ts",
-    "ts": "tsc --project tsconfig.base.json"
+    "ts": "tsc --project tsconfig.base.json",
+    "rollup": "rollup -c"
   },
   "dependencies": {
   },
