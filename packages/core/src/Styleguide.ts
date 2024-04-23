@@ -1,8 +1,9 @@
 import { BlockParser } from './BlockParser'
-import { NodeFileReader } from './NodeFileReader'
 import {
-  Block, BlockParserInterface, Context, ContextEntry, FileFinder, FilePath, FileReader, Options,
+  Block, BlockParserInterface, Context, ContextEntry, FilePath, FileReader, FileWriter, Options,
+  Renderer,
   Source,
+  SourceListener,
 } from './types'
 
 export class Styleguide {
@@ -10,13 +11,27 @@ export class Styleguide {
 
   protected context: Context
 
-  public finder: FileFinder
+  public listener: SourceListener
 
   public parser: BlockParserInterface
 
   public reader: FileReader
 
+  public writer: FileWriter
+
+  public renderer: Renderer
+
   protected loaded = false
+
+  protected texts = {
+    title: 'Styleguide',
+  }
+
+  protected generate = {
+    pageTitle: (page: ContextEntry) => (page.id !== 'index'
+      ? `${page.title} | ${this.texts.title}`
+      : this.texts.title),
+  }
 
   constructor(options: Options) {
     this.sources = {}
@@ -24,9 +39,12 @@ export class Styleguide {
       pages: [],
       entries: {},
     }
-    this.finder = this.createFileFinder(options.finder)
+
     this.parser = this.createParser()
-    this.reader = this.createReader()
+    this.listener = this.createSourceListener(options.listener)
+    this.reader = options.reader
+    this.writer = options.writer
+    this.renderer = options.renderer
   }
 
   public load() {
@@ -34,25 +52,22 @@ export class Styleguide {
       return
     }
 
-    this.finder.scan()
+    this.listener.scan()
     this.sourcesToContext()
+    // TODO sort
 
     this.loaded = true
   }
 
-  protected createFileFinder(finder: FileFinder): FileFinder {
-    finder.registerOnNewFile(this.onNewFile.bind(this))
-    finder.registerOnChangeFile(this.onChangeFile.bind(this))
+  protected createSourceListener(listener: SourceListener): SourceListener {
+    listener.registerOnNewFile(this.onNewFile.bind(this))
+    listener.registerOnChangeFile(this.onChangeFile.bind(this))
 
-    return finder
+    return listener
   }
 
   protected createParser(): BlockParserInterface {
     return new BlockParser()
-  }
-
-  protected createReader(): FileReader {
-    return new NodeFileReader()
   }
 
   protected onNewFile(file: string) {
@@ -130,5 +145,19 @@ export class Styleguide {
 
       parent.sections.push(entry)
     }
+  }
+
+  public output() {
+    this.load()
+    this.context.pages.forEach(page => {
+      this.writer.write(`${page.id}.html`, this.pageContent(page))
+    })
+  }
+
+  public pageContent(page: ContextEntry): string {
+    return this.renderer.generate({
+      title: this.generate.pageTitle(page),
+      page,
+    })
   }
 }

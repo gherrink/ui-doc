@@ -1,6 +1,6 @@
 import fs from 'fs'
 
-import { FileReader } from './types'
+import { FileReader } from '../../core/src/types'
 
 export class NodeFileReader implements FileReader {
   content(file: string): string {

@@ -1,10 +1,13 @@
 import { Spec as CommentSpec } from 'comment-parser'
 
 export type Options = {
-  finder: FileFinder
+  listener: SourceListener
+  reader: FileReader
+  writer: FileWriter
+  renderer: Renderer
 }
 
-export interface FileFinder {
+export interface SourceListener {
   registerOnNewFile(callback: (file: string) => void): void
   registerOnChangeFile(callback: (file: string) => void): void
   scan(): void
@@ -14,7 +17,15 @@ export interface FileReader {
   content(file: string): string
 }
 
-export type FileFinderOptions = {
+export interface FileWriter {
+  write(file: string, content: string): boolean
+}
+
+export interface FileFinder {
+  scan(globs: string[], fileFound: (file: string) => void): void
+}
+
+export type SourceListenerOptions = {
   globs: string[]
 }
 
@@ -68,4 +79,13 @@ export type TagTransformFunction = (block: Partial<Block>, spec: CommentSpec) =>
 export type TagTransformer = {
   name: string,
   transform: TagTransformFunction
+}
+
+export type OutputContext = {
+  title: string,
+  page: ContextEntry,
+}
+
+export interface Renderer {
+  generate(context: OutputContext, layout?: string): string
 }
