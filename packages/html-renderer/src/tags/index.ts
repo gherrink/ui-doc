@@ -8,12 +8,12 @@ import variable from './var'
 import varEscaped from './var-escaped'
 
 export default {
-  debug,
-  for: forLoop,
   if: condition,
-  page,
-  partial,
-  'partial-context': partialContext,
+  for: forLoop,
   var: variable,
   'var-escaped': varEscaped,
+  partial,
+  'partial-context': partialContext,
+  page,
+  debug,
 }
