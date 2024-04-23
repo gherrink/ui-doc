@@ -20,6 +20,10 @@ export const tag: TagTransformer = {
       data.type = 'html'
     }
 
+    if (!data.title && block.title) {
+      data.title = block.title
+    }
+
     if (!Object.hasOwnProperty.call(block, 'code') && block.hideCode !== true) {
       block.code = {
         content: data.content,
