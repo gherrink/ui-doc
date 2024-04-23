@@ -14,66 +14,90 @@ function execTag(content: string, context: { [key: string]: any }): string {
 }
 
 describe('if tag', () => {
-  test('should match', () => {
-    const contents = [
-      '{{if:foo}}',
-      '{{if:bar}}',
-      '{{if:foo.bar}}',
-      'foooo {{if:foo}} bar',
-    ]
-
-    contents.forEach(content => {
-      expect(content).toMatch(tag.regex)
-    })
+  test.each([
+    '{{if:foo}}',
+    '{{if:bar}}',
+    '{{if:foo.bar}}',
+    'foooo {{if:foo}} bar',
+    '{{if:type=="html"}}',
+  ])('should match: %s', content => {
+    expect(content).toMatch(tag.regex)
   })
 
-  test('should render content', () => {
+  test.each([
+    { content: '{{if:foo}}content{{endif:foo}}', expected: 'content' },
+    { content: '{{if:bar}}content{{endif:bar}}', expected: '' },
+    { content: '{{if:baz}}content{{endif:baz}}', expected: '' },
+  ])('should render content: $content', ({ content, expected }) => {
     const context = {
       foo: true,
       bar: false,
     }
-    const cases = [
-      { content: '{{if:foo}}content{{endif:foo}}', expected: 'content' },
-      { content: '{{if:bar}}content{{endif:bar}}', expected: '' },
-      { content: '{{if:baz}}content{{endif:baz}}', expected: '' },
-    ]
 
-    cases.forEach(({ content, expected }) => {
-      expect(execTag(content, context)).toBe(expected)
-    })
+    expect(execTag(content, context)).toBe(expected)
   })
 
-  test('sould render nested content', () => {
+  test.each([
+    { content: '{{if:foo.bar}}content{{endif:foo.bar}}', expected: 'content' },
+    { content: '{{if:foo.baz}}content{{endif:foo.baz}}', expected: '' },
+    { content: '{{if:foo.qux}}content{{endif:foo.qux}}', expected: '' },
+  ])('should render nested content: $content', ({ content, expected }) => {
     const context = {
       foo: {
         bar: true,
         baz: false,
       },
     }
-    const cases = [
-      { content: '{{if:foo.bar}}content{{endif:foo.bar}}', expected: 'content' },
-      { content: '{{if:foo.baz}}content{{endif:foo.baz}}', expected: '' },
-      { content: '{{if:foo.qux}}content{{endif:foo.qux}}', expected: '' },
-    ]
 
-    cases.forEach(({ content, expected }) => {
-      expect(execTag(content, context)).toBe(expected)
-    })
+    expect(execTag(content, context)).toBe(expected)
   })
 
-  test('should render multiple content', () => {
+  test.each([
+    { content: '{{if:foo}}foo{{endif:foo}} {{if:bar}}bar{{endif:bar}}', expected: 'foo ' },
+    { content: '{{if:foo}}foo{{endif:foo}} {{if:baz}}baz{{endif:baz}}', expected: 'foo baz' },
+  ])('should render multiple content: $content', ({ content, expected }) => {
     const context = {
       foo: true,
       bar: false,
       baz: true,
     }
-    const cases = [
-      { content: '{{if:foo}}foo{{endif:foo}} {{if:bar}}bar{{endif:bar}}', expected: 'foo ' },
-      { content: '{{if:foo}}foo{{endif:foo}} {{if:baz}}baz{{endif:baz}}', expected: 'foo baz' },
-    ]
 
-    cases.forEach(({ content, expected }) => {
-      expect(execTag(content, context)).toBe(expected)
-    })
+    expect(execTag(content, context)).toBe(expected)
+  })
+
+  test.each([
+    { content: '{{if:foo==1}}content{{endif:foo}}', expected: 'content' },
+    { content: '{{if:foo==2}}content{{endif:foo}}', expected: '' },
+    { content: '{{if:foo!=1}}content{{endif:foo}}', expected: '' },
+    { content: '{{if:foo!=2}}content{{endif:foo}}', expected: 'content' },
+    { content: '{{if:bar==1}}content{{endif:bar}}', expected: '' },
+    { content: '{{if:bar==2}}content{{endif:bar}}', expected: 'content' },
+    { content: '{{if:bar!=1}}content{{endif:bar}}', expected: 'content' },
+    { content: '{{if:bar!=2}}content{{endif:bar}}', expected: '' },
+  ])('should render content with number comparison: $content', ({ content, expected }) => {
+    const context = {
+      foo: 1,
+      bar: 2,
+    }
+
+    expect(execTag(content, context)).toBe(expected)
+  })
+
+  test.each([
+    { content: '{{if:foo=="foo"}}content{{endif:foo}}', expected: 'content' },
+    { content: '{{if:foo=="bar"}}content{{endif:foo}}', expected: '' },
+    { content: '{{if:foo!="foo"}}content{{endif:foo}}', expected: '' },
+    { content: '{{if:foo!="bar"}}content{{endif:foo}}', expected: 'content' },
+    { content: '{{if:bar=="foo"}}content{{endif:bar}}', expected: '' },
+    { content: '{{if:bar=="bar"}}content{{endif:bar}}', expected: 'content' },
+    { content: '{{if:bar!="foo"}}content{{endif:bar}}', expected: 'content' },
+    { content: '{{if:bar!="bar"}}content{{endif:bar}}', expected: '' },
+  ])('should render content with string comparison: $content', ({ content, expected }) => {
+    const context = {
+      foo: 'foo',
+      bar: 'bar',
+    }
+
+    expect(execTag(content, context)).toBe(expected)
   })
 })
