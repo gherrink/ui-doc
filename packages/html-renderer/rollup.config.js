@@ -3,7 +3,6 @@ import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import autoExternal from 'rollup-plugin-auto-external'
-import copy from 'rollup-plugin-copy'
 import sourcemaps from 'rollup-plugin-sourcemaps'
 import typescript from 'rollup-plugin-typescript2'
 
@@ -56,12 +55,6 @@ export default {
         },
         include: null,
       },
-    }),
-    copy({
-      flatten: false,
-      targets: [
-        { src: 'templates/**/*.html', dest: 'dist/templates' },
-      ],
     }),
   ],
 }

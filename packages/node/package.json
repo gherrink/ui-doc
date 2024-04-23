@@ -34,11 +34,12 @@
     "picomatch": "^4.0.2"
   },
   "devDependencies": {
+    "@styleguide/core": "workspace:^0.0.0-alpha.0",
     "@types/node": "^20.12.7",
     "@types/picomatch": "^2.3.3"
   },
   "peerDependencies": {
-    "@styleguide/core": "^0.0.0-alpha.0"
+    "@styleguide/core": "workspace:^0.0.0-alpha.0"
   },
   "sideEffects": false,
   "scripts": {

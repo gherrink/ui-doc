@@ -32,15 +32,15 @@
     "directory": "packages/html-renderer"
   },
   "devDependencies": {
-    "rollup-plugin-copy": "^3.5.0"
+    "@styleguide/core": "workspace:^0.0.0-alpha.0"
   },
   "peerDependencies": {
-    "@styleguide/core": "^0.0.0-alpha.0"
+    "@styleguide/core": "^workspace:0.0.0-alpha.0"
   },
   "sideEffects": false,
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "$npm_execpath clean && rollup -c",
+    "build": "$npm_execpath clean && rollup -c && rollup -c rollup.assets.js",
     "test": "jest"
   }
 }

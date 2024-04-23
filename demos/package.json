@@ -7,10 +7,12 @@
     "ts": "tsc --project tsconfig.base.json"
   },
   "dependencies": {
-    "@styleguide/core": "0.0.0-alpha.0",
-    "@styleguide/html-renderer": "0.0.0-alpha.0"
   },
   "devDependencies": {
+    "@styleguide/core": "workspace:0.0.0-alpha.0",
+    "@styleguide/html-renderer": "workspace:0.0.0-alpha.0",
+    "@styleguide/node": "workspace:0.0.0-alpha.0",
+    "@styleguide/rollup": "workspace:0.0.0-alpha.0",
     "@types/node": "^20.12.7",
     "tsx": "^4.7.2",
     "typescript": "^4.9.5"
