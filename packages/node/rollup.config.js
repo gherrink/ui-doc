@@ -52,6 +52,9 @@ export default {
           paths: {
             '@styleguide/*': ['packages/*/src'],
           },
+          types: [
+            'node',
+          ],
         },
         include: null,
       },

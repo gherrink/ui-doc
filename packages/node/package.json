@@ -34,6 +34,7 @@
     "picomatch": "^4.0.2"
   },
   "devDependencies": {
+    "@types/node": "^20.12.7",
     "@types/picomatch": "^2.3.3"
   },
   "peerDependencies": {
@@ -45,5 +46,4 @@
     "build": "$npm_execpath clean && rollup -c",
     "test": "jest"
   }
-
 }

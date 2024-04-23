@@ -1,8 +1,7 @@
-import fs from 'fs'
-import path from 'path'
+import { FileFinder } from '@styleguide/core'
+import fs from 'node:fs'
+import path from 'node:path'
 import picomatch from 'picomatch'
-
-import { FileFinder } from '../../core/src/types'
 
 export class NodeFileFinder implements FileFinder {
   public scan(globs: string[], fileFound: (file: string) => void) {

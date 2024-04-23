@@ -1,7 +1,6 @@
-import fs from 'fs'
-import path from 'path'
-
-import { FileWriter } from '../../core/src/types'
+import { FileWriter } from '@styleguide/core'
+import fs from 'node:fs'
+import path from 'node:path'
 
 export class NodeFileWriter implements FileWriter {
 
