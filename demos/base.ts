@@ -10,7 +10,7 @@ const finder = new NodeFileFinder()
 const writer = new NodeFileWriter('./dist/base')
 const reader = new NodeFileReader()
 const listener = new BaseSourceListener({
-  globs: ['less/**/*.less'],
+  globs: ['css/**/*.css'],
 }, finder)
 const renderer = new HtmlRenderer()
 

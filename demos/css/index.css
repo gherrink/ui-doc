@@ -1,0 +1,15 @@
+/**
+ * Some resets
+ *
+ * @page resets Resets
+ */
+@import "01_resets/root.css";
+@import "01_resets/initial.css";
+@import "01_resets/typography.css";
+
+/**
+ * Some objects
+ *
+ * @page objects Objects
+ */
+@import "02_objects/button.css";
