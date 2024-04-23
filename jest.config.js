@@ -5,7 +5,7 @@ const { compilerOptions } = require('./tsconfig.json')
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testRegex: '(/tests/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',
+  testRegex: '(/tests/.*)\\.(test|spec)\\.(jsx?|tsx?)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   roots: ['<rootDir>'],
   modulePaths: [compilerOptions.baseUrl],
