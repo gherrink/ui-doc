@@ -1,6 +1,7 @@
 import debug from './debug'
 import forLoop from './for'
 import condition from './if'
+import layoutUrlEncoded from './layout-url-encoded'
 import page from './page'
 import partial from './partial'
 import partialContext from './partial-context'
@@ -15,5 +16,6 @@ export default {
   partial,
   'partial-context': partialContext,
   page,
+  'layout-url-encoded': layoutUrlEncoded,
   debug,
 }
