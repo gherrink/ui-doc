@@ -1,16 +1,7 @@
 import { Spec as CommentSpec } from 'comment-parser'
 
 export type Options = {
-  listener: SourceListener
-  reader: FileReader
-  writer: FileWriter
   renderer: Renderer
-}
-
-export interface SourceListener {
-  registerOnNewFile(callback: (file: string) => void): void
-  registerOnChangeFile(callback: (file: string) => void): void
-  scan(): void
 }
 
 export interface FileReader {
@@ -21,12 +12,17 @@ export interface FileWriter {
   write(file: string, content: string): boolean
 }
 
+export type fileFinderOnFound = (file: string) => void
+
 export interface FileFinder {
-  scan(globs: string[], fileFound: (file: string) => void): void
+  search(onFound: fileFinderOnFound): void
+  matches(file: string): boolean
 }
 
-export type SourceListenerOptions = {
-  globs: string[]
+export type sourceScannerOnFound = (file: string, content: string) => void
+
+export interface SourceScanner {
+  scan(onFound: sourceScannerOnFound): void
 }
 
 export type FilePath = string
@@ -45,7 +41,11 @@ export type Context = {
   entries: {[key: string]: ContextEntry}
 }
 
-export type BlockCode = {
+export type BlockEntry = {
+  [key: string]: any
+}
+
+export type BlockCode = BlockEntry & {
   content: string,
   title: string,
   type: string,
