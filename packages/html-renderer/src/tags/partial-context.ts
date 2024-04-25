@@ -8,10 +8,13 @@ export const tag: HtmlRendererTag = {
   }) => {
     const name = match[1].replaceAll('.', '-')
     const contextKey = match[3] || match[1]
+    const newContext = readNestedValue(contextKey, context)
+
+    Object.assign(typeof newContext === 'object' ? newContext : {}, { _parent: context })
 
     return content.replace(
       match[0],
-      renderer.partial(name, readNestedValue(contextKey, context)),
+      renderer.partial(name, newContext),
     )
   },
 }
