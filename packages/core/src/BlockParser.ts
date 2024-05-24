@@ -3,6 +3,7 @@ import { Block as CommentBlock, parse as parseComments } from 'comment-parser'
 import { BlockParseError, TagTransformerError } from './errors'
 import tagTransformers from './tag-transformers'
 import {
+  type DescriptionParserInterface,
   Block, BlockParserInterface, TagTransformer, TagTransformFunction,
 } from './types'
 
@@ -20,8 +21,11 @@ export class BlockParser implements BlockParserInterface {
     'block-parsed': [],
   }
 
-  constructor() {
+  protected descriptionParser: DescriptionParserInterface
+
+  constructor(descriptionParser: DescriptionParserInterface) {
     tagTransformers.forEach(tag => this.registerTagTransformer(tag))
+    this.descriptionParser = descriptionParser
   }
 
   public registerTagTransformer({ name, transform: parse }: TagTransformer): BlockParser {
@@ -86,6 +90,10 @@ export class BlockParser implements BlockParserInterface {
       }
 
     })
+
+    if (comment.description) {
+      block.description = this.descriptionParser.parse(comment.description.trim())
+    }
 
     this.validateBlock(block, comment)
 

@@ -74,6 +74,10 @@ export interface BlockParserInterface {
   parse(content: string): Block[]
 }
 
+export interface DescriptionParserInterface {
+  parse(description: string): string
+}
+
 export type TagTransformFunction = (block: Partial<Block>, spec: CommentSpec) => Partial<Block>
 
 export type TagTransformer = {

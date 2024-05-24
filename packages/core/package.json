@@ -30,14 +30,14 @@
     "directory": "packages/core"
   },
   "dependencies": {
-    "comment-parser": "^1.4.1"
+    "comment-parser": "^1.4.1",
+    "marked": "^12.0.2"
   },
-  "devDependencies": {},
   "sideEffects": false,
   "scripts": {
     "clean": "rm -rf dist",
     "build": "$npm_execpath clean && rollup -c",
+    "watch": "$npm_execpath clean && rollup -c -w",
     "test": "jest"
   }
-
 }

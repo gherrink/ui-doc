@@ -1,4 +1,5 @@
 import { BlockParser } from './BlockParser'
+import { DescriptionParser } from './DescriptionParser'
 import {
   Block,
   BlockParserInterface,
@@ -56,7 +57,7 @@ export class Styleguide {
   }
 
   protected createParser(): BlockParserInterface {
-    return new BlockParser()
+    return new BlockParser(new DescriptionParser())
   }
 
   public on<K extends keyof StyleguideEventMap>(type: K, listener: (event: StyleguideEventMap[K]) => void): Styleguide {
