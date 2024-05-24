@@ -4,8 +4,14 @@ import path from 'node:path'
 import picomatch from 'picomatch'
 
 export class NodeFileFinder implements FileFinder {
-  public scan(globs: string[], fileFound: (file: string) => void) {
-    globs.forEach(glob => {
+  public globs: string[] = []
+
+  constructor(globs: string[] = []) {
+    this.globs = globs
+  }
+
+  public search(fileFound: (file: string) => void) {
+    this.globs.forEach(glob => {
       const scan = picomatch.scan(glob, { tokens: true, parts: true })
       const pathBase = path.join(scan.prefix, scan.base)
       const recursive = scan.maxDepth === Infinity
@@ -33,5 +39,9 @@ export class NodeFileFinder implements FileFinder {
         }
       }
     })
+  }
+
+  public matches(file: string): boolean {
+    return this.globs.some(glob => picomatch.isMatch(file, glob))
   }
 }

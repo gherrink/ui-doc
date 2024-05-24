@@ -3,20 +3,26 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 export class NodeFileWriter implements FileWriter {
-
   protected outputDir = '.'
 
   constructor(outputDir: string) {
     this.outputDir = outputDir
-    fs.mkdirSync(path.resolve(outputDir), { recursive: true })
+    this.ensureDirectoryExists(outputDir)
   }
 
-  write(file: string, content: string): boolean {
+  public write(file: string, content: string): boolean {
+    const outputFile = path.resolve(path.join(this.outputDir, file))
+
     try {
-      fs.writeFileSync(path.resolve(path.join(this.outputDir, file)), content)
+      this.ensureDirectoryExists(outputFile)
+      fs.writeFileSync(outputFile, content)
       return true
     } catch (e) {
       return false
     }
+  }
+
+  protected ensureDirectoryExists(dir: string): void {
+    fs.mkdirSync(path.resolve(path.dirname(dir)), { recursive: true })
   }
 }
