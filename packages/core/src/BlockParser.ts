@@ -6,9 +6,19 @@ import {
   Block, BlockParserInterface, TagTransformer, TagTransformFunction,
 } from './types'
 
+export interface BlockParserEvent {}
+export interface BlockParsedEvent extends BlockParserEvent { block: Block }
+export interface BlockParserEventMap {
+  'block-parsed': BlockParsedEvent
+}
+
 export class BlockParser implements BlockParserInterface {
 
   protected tagTransformers: {[key: string]: TagTransformFunction} = {}
+
+  protected listeners: Record<keyof BlockParserEventMap, ((event: BlockParserEventMap[keyof BlockParserEventMap]) => void)[]> = {
+    'block-parsed': [],
+  }
 
   constructor() {
     tagTransformers.forEach(tag => this.registerTagTransformer(tag))
@@ -18,6 +28,26 @@ export class BlockParser implements BlockParserInterface {
     this.tagTransformers[name] = parse
 
     return this
+  }
+
+  public on<K extends keyof BlockParserEventMap>(type: K, listener: (event: BlockParserEventMap[K]) => void): BlockParser {
+    this.listeners[type].push(listener)
+
+    return this
+  }
+
+  public off<K extends keyof BlockParserEventMap>(type: K, listener: (event: BlockParserEventMap[K]) => void): BlockParser {
+    this.listeners[type] = this.listeners[type].filter(l => l !== listener)
+
+    return this
+  }
+
+  protected emit<K extends keyof BlockParserEventMap>(type: K, event: BlockParserEventMap[K]): void {
+    if (!this.listeners[type]) {
+      return
+    }
+
+    this.listeners[type].forEach(listener => listener(event))
   }
 
   public parse(content: string): Block[] {
@@ -63,6 +93,8 @@ export class BlockParser implements BlockParserInterface {
     if (!block.key) {
       return undefined
     }
+
+    this.emit('block-parsed', { block: block as Block })
 
     return block as Block
   }
