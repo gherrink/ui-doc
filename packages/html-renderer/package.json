@@ -24,7 +24,9 @@
   "type": "module",
   "files": [
     "src",
-    "dist"
+    "dist",
+    "templates",
+    "styles"
   ],
   "repository": {
     "type": "git",
@@ -40,7 +42,7 @@
   "sideEffects": false,
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "$npm_execpath clean && rollup -c && rollup -c rollup.assets.js",
+    "build": "$npm_execpath clean && rollup -c",
     "watch": "$npm_execpath clean && rollup -c -w",
     "test": "jest"
   }

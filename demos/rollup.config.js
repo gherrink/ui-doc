@@ -1,26 +1,53 @@
-import sizes from '@atomico/rollup-plugin-sizes'
 import styleguide from '@styleguide/rollup'
 import autoprefixer from 'autoprefixer'
 import postcssImport from 'postcss-import'
 import postcssNested from 'postcss-nested'
+import postcssSimpleVars from 'postcss-simple-vars'
 import postcss from 'rollup-plugin-postcss'
 
-export default {
-  external: [],
-  input: 'css/index.css',
-  output: {
-    file: 'dist/rollup/index.css',
+export default [
+  {
+    input: 'css/index.css',
+    output: {
+      name: 'app',
+      dir: 'dist/rollup',
+      format: 'es',
+      sourcemap: true,
+    },
+    plugins: [
+      postcss({
+        extract: 'app.css',
+        minimize: true,
+        sourceMap: true,
+        plugins: [
+          postcssImport(),
+          postcssNested(),
+          autoprefixer(),
+        ],
+      }),
+      styleguide(),
+    ],
   },
-  plugins: [
-    sizes(),
-    postcss({
-      extract: true,
-      plugins: [
-        postcssImport(),
-        autoprefixer(),
-        postcssNested(),
-      ],
-    }),
-    styleguide(),
-  ],
-}
+  {
+    input: '../packages/html-renderer/styles/index.css',
+    output: {
+      name: 'styleguide',
+      dir: 'dist/rollup',
+      format: 'es',
+      sourcemap: true,
+    },
+    plugins: [
+      postcss({
+        extract: 'styleguide.css',
+        minimize: true,
+        sourceMap: true,
+        plugins: [
+          postcssImport(),
+          postcssNested(),
+          postcssSimpleVars(),
+          autoprefixer(),
+        ],
+      }),
+    ],
+  },
+]

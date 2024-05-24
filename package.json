@@ -46,6 +46,7 @@
     "postcss": "^8.4.38",
     "postcss-import": "^16.1.0",
     "postcss-nested": "^6.0.1",
+    "postcss-simple-vars": "^7.0.1",
     "rollup": "^2.67.0",
     "rollup-plugin-auto-external": "^2.0.0",
     "rollup-plugin-copy": "^3.5.0",
