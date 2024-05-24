@@ -135,6 +135,7 @@ export class Styleguide {
         id: this.contextEntryKeyToId(key),
         title: '',
         order: 0,
+        titleLevel: 2,
         sections: [],
       }
 
@@ -160,6 +161,7 @@ export class Styleguide {
     } else {
       const parent = this.contextEntry(parts.slice(0, -1).join('.'))
 
+      entry.titleLevel = parent.titleLevel + 1
       parent.sections.push(entry)
     }
   }
