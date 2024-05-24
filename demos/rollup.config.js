@@ -7,7 +7,7 @@ import postcss from 'rollup-plugin-postcss'
 
 export default [
   {
-    input: 'css/index.css',
+    input: 'css/app.css',
     output: {
       name: 'app',
       dir: 'dist/rollup',
@@ -25,7 +25,9 @@ export default [
           autoprefixer(),
         ],
       }),
-      styleguide(),
+      styleguide({
+        source: ['css/**/*.css'],
+      }),
     ],
   },
   {
