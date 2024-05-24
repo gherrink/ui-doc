@@ -6,24 +6,24 @@ export type Options = {
 }
 
 export interface FileReader {
-  content(file: string): string
+  content(file: string): Promise<string>
 }
 
 export interface FileWriter {
-  write(file: string, content: string): boolean
+  write(file: string, content: string): Promise<boolean>
 }
 
-export type fileFinderOnFound = (file: string) => void
+export type fileFinderOnFound = (file: string) => Promise<void>
 
 export interface FileFinder {
-  search(onFound: fileFinderOnFound): void
+  search(onFound: fileFinderOnFound): Promise<void>
   matches(file: string): boolean
 }
 
-export type sourceScannerOnFound = (file: string, content: string) => void
+export type sourceScannerOnFound = (file: string, content: string) => Promise<void>
 
 export interface SourceScanner {
-  scan(onFound: sourceScannerOnFound): void
+  scan(onFound: sourceScannerOnFound): Promise<void>
 }
 
 export type FilePath = string

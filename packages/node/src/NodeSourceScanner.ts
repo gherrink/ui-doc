@@ -14,11 +14,11 @@ export class NodeSourceScanner implements SourceScanner {
     this.reader = reader
   }
 
-  scan(onFound: sourceScannerOnFound) {
-    this.finder.search(file => {
-      const content = this.reader.content(file)
+  public async scan(onFound: sourceScannerOnFound): Promise<void> {
+    await this.finder.search(async file => {
+      const content = await this.reader.content(file)
 
-      onFound(file, content)
+      return onFound(file, content)
     })
   }
 }

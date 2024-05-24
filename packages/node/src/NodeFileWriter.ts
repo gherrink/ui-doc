@@ -1,5 +1,5 @@
 import { FileWriter } from '@styleguide/core'
-import fs from 'node:fs'
+import fs from 'node:fs/promises'
 import path from 'node:path'
 
 export class NodeFileWriter implements FileWriter {
@@ -10,19 +10,20 @@ export class NodeFileWriter implements FileWriter {
     this.ensureDirectoryExists(outputDir)
   }
 
-  public write(file: string, content: string): boolean {
+  public async write(file: string, content: string): Promise<boolean> {
     const outputFile = path.resolve(path.join(this.outputDir, file))
 
     try {
-      this.ensureDirectoryExists(outputFile)
-      fs.writeFileSync(outputFile, content)
+      await this.ensureDirectoryExists(outputFile)
+      await fs.writeFile(outputFile, content, 'utf8')
+
       return true
     } catch (e) {
       return false
     }
   }
 
-  protected ensureDirectoryExists(dir: string): void {
-    fs.mkdirSync(path.resolve(path.dirname(dir)), { recursive: true })
+  protected async ensureDirectoryExists(dir: string): Promise<void> {
+    await fs.mkdir(path.resolve(path.dirname(dir)), { recursive: true })
   }
 }

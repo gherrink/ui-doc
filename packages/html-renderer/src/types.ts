@@ -1,6 +1,6 @@
-import { Renderer } from '@styleguide/core'
+import { RendererInterface } from '@styleguide/core'
 
-export interface HtmlRendererInterface extends Renderer {
+export interface HtmlRendererInterface extends RendererInterface {
   addTag(name: string, tag: HtmlRendererTag): HtmlRendererInterface
 
   addLayout(name: string, layout: string): HtmlRendererInterface

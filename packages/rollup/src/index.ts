@@ -11,7 +11,11 @@ interface RollupStyleguidePluginOptions extends StyleguideOptions {
 const createDefaultRenderer = (templatePath?: string): RendererInterface => {
   const renderer = new HtmlRenderer()
 
-  NodeHtmlRendererTemplateLoader.load(renderer, templatePath)
+  const awaitLoaded = async () => {
+    await NodeHtmlRendererTemplateLoader.load(renderer, templatePath)
+  }
+
+  awaitLoaded()
 
   return renderer
 }
@@ -31,26 +35,26 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
   return {
     name: 'rollup-plugin-styleguide',
 
-    buildStart() {
+    async buildStart() {
       const watchedFiles = this.getWatchFiles()
 
       // TODO make it asynchron
 
-      finder.search(file => {
+      await finder.search(async file => {
         if (!watchedFiles.includes(file)) {
           this.addWatchFile(file)
         }
         if (!styleguide.sourceExists(file)) {
-          styleguide.sourceCreate(file, reader.content(file))
+          styleguide.sourceCreate(file, await reader.content(file))
         }
       })
     },
 
-    watchChange(id, change) {
+    async watchChange(id, change) {
       // TODO make it asynchron
       if (styleguide.sourceExists(id)) {
         if (change.event === 'update') {
-          styleguide.sourceUpdate(id, reader.content(id))
+          styleguide.sourceUpdate(id, await reader.content(id))
         } else if (change.event === 'delete') {
           styleguide.sourceDelete(id)
         }
@@ -59,7 +63,7 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
       }
 
       if (change.event === 'create' && finder.matches(id)) {
-        styleguide.sourceCreate(id, reader.content(id))
+        styleguide.sourceCreate(id, await reader.content(id))
       }
     },
 

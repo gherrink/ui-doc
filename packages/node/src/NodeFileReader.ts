@@ -1,8 +1,7 @@
-import { FileReader } from '@styleguide/core'
-import fs from 'node:fs'
+import fs from 'node:fs/promises'
 
-export class NodeFileReader implements FileReader {
-  content(file: string): string {
-    return fs.readFileSync(file, 'utf8')
+export class NodeFileReader {
+  public async content(file: string): Promise<string> {
+    return fs.readFile(file, 'utf8')
   }
 }

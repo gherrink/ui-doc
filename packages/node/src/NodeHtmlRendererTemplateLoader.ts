@@ -23,25 +23,31 @@ export class NodeHtmlRendererTemplateLoader {
     this.partialFinder = this.createFileFinder([`${templatesPath}/partials/*.html`])
   }
 
-  public static load(renderer: HtmlRenderer, templatePath = '@styleguide/html-renderer/templates'): void {
-    new NodeHtmlRendererTemplateLoader(templatePath).append(renderer)
+  public static async load(renderer: HtmlRenderer, templatePath = '@styleguide/html-renderer/templates'): Promise<NodeHtmlRendererTemplateLoader> {
+    const loader = new NodeHtmlRendererTemplateLoader(templatePath)
+
+    await loader.append(renderer)
+
+    return loader
   }
 
-  public append(renderer: HtmlRenderer) {
+  public async append(renderer: HtmlRenderer): Promise<void> {
     const name = (file: string): string => path.basename(file, path.extname(file))
-    const content = (file: string): string => this.reader.content(file).trim()
+    const content = async (file: string): Promise<string> => (await this.reader.content(file)).trim()
 
-    this.layoutFinder.search(file => {
-      renderer.addLayout(name(file), content(file))
-    })
+    await Promise.all([
+      this.layoutFinder.search(async file => {
+        renderer.addLayout(name(file), await content(file))
+      }),
 
-    this.pageFinder.search(file => {
-      renderer.addPage(name(file), content(file))
-    })
+      this.pageFinder.search(async file => {
+        renderer.addPage(name(file), await content(file))
+      }),
 
-    this.partialFinder.search(file => {
-      renderer.addPartial(name(file), content(file))
-    })
+      this.partialFinder.search(async file => {
+        renderer.addPartial(name(file), await content(file))
+      }),
+    ])
   }
 
   protected createFileFinder(globs: string[]): NodeFileFinder {
