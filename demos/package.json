@@ -5,7 +5,9 @@
   "scripts": {
     "base": "tsx --tsconfig tsconfig.base.json ./base.ts",
     "ts": "tsc --project tsconfig.base.json",
-    "rollup": "rollup -c"
+    "rollup": "rollup -c",
+    "rollup:watch": "rollup -c -w",
+    "serve": "tsx --tsconfig tsconfig.base.json ./serve.ts"
   },
   "dependencies": {
   },
