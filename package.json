@@ -14,6 +14,7 @@
     "lint:fix": "eslint --fix --cache --quiet --no-error-on-unmatched-pattern ./",
     "lint:staged": "lint-staged",
     "build": "lerna run build",
+    "watch": "lerna watch -- $npm_execpath run build",
     "test": "lerna run test",
     "pack": "$npm_execpath run clean:packs && lerna exec -- $npm_execpath pack",
     "clean:packages": "rm -rf ./packages/*/dist",
