@@ -2,9 +2,16 @@ import { describe, expect, test } from '@jest/globals'
 
 import { BlockParser } from '../src/BlockParser'
 import { BlockParseError } from '../src/errors'
+import type { DescriptionParserInterface } from '../src/types'
 
-const parser = new BlockParser()
-const perpareForBlockParserExeption = (content: string): string => {
+class DescriptionParser implements DescriptionParserInterface {
+  public parse(content: string): string {
+    return content
+  }
+}
+
+const parser = new BlockParser(new DescriptionParser())
+const prepareForBlockParserException = (content: string): string => {
   return content.replace(/^\n+|[\n\s]+$/g, '')
 }
 
@@ -60,7 +67,7 @@ describe('BlockParser', () => {
     expect(() => parser.parse(content))
       .toThrowError(new BlockParseError(
         'Undefined tag type \'fooo\'.',
-        perpareForBlockParserExeption(content),
+        prepareForBlockParserException(content),
         1,
       ))
   })
@@ -95,7 +102,7 @@ describe('BlockParser', () => {
      */
     `
 
-    expect(() => parser.parse(content)).toThrowError(new BlockParseError('Empty block.', perpareForBlockParserExeption(content), 1))
+    expect(() => parser.parse(content)).toThrowError(new BlockParseError('Empty block.', prepareForBlockParserException(content), 1))
   })
 
   test('should report invalid location', () => {
@@ -108,7 +115,7 @@ describe('BlockParser', () => {
     expect(() => parser.parse(content))
       .toThrowError(new BlockParseError(
         'Missing block location. Don\'t know where to place this block, please use @location, @page or @section + @page.',
-        perpareForBlockParserExeption(content),
+        prepareForBlockParserException(content),
         1,
       ))
   })

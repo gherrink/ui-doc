@@ -7,7 +7,7 @@ import {
   ContextEntry,
   FilePath,
   Options,
-  Renderer,
+  RendererInterface,
   Source,
 } from './types'
 
@@ -22,9 +22,9 @@ export class Styleguide {
 
   protected context: Context
 
-  public parser: BlockParserInterface
+  public blockParser: BlockParserInterface
 
-  public renderer: Renderer
+  public renderer: RendererInterface
 
   protected listeners: Record<keyof StyleguideEventMap, ((event: StyleguideEventMap[keyof StyleguideEventMap]) => void)[]> = {
     'context-entry': [],
@@ -50,7 +50,7 @@ export class Styleguide {
       entries: {},
     }
 
-    this.parser = this.createParser()
+    this.blockParser = options.blockParser || this.createParser()
     this.renderer = options.renderer
 
     this.registerListeners()
@@ -82,29 +82,61 @@ export class Styleguide {
 
   protected registerListeners() {
     this.on('context-entry', ({ entry, key }) => {
-      if (!entry.example || entry.example.type !== 'html' || entry.example.src) {
-        return
+      if (entry.example && entry.example.type === 'html' && !entry.example.src) {
+        entry.example.fileName = `${key.replaceAll('.', '-')}.html`
+        entry.example.src = `/examples/${entry.example.fileName}`
       }
-
-      entry.example.fileName = `${key.replaceAll('.', '-')}.html`
-      entry.example.src = `/examples/${entry.example.fileName}`
     })
   }
 
-  public sourceRegister(file: string, content: string) {
-    // TODO handle errors
-    const source: Source = {
-      blocks: this.parser.parse(content),
-    }
-
-    if (source) {
-      this.sources[file] = source
-      this.sourceToContext(source)
-    }
+  public sourceExists(file: string): boolean {
+    return !!this.sources[file]
   }
 
-  public sourceChange(file: string, content: string) {
-    console.log(`changed file: ${file}`, content)
+  public sourceCreate(file: string, content: string) {
+    // TODO handle errors
+    const source: Source = {
+      blocks: this.blockParser.parse(content),
+    }
+
+    this.sources[file] = source
+    this.sourceToContext(source)
+  }
+
+  public sourceUpdate(file: string, content: string) {
+    if (!this.sourceExists(file)) {
+      this.sourceCreate(file, content)
+
+      return
+    }
+
+    const blocksNew = this.blockParser.parse(content)
+    const sourceBlockKeysOld = this.sources[file].blocks.map(block => block.key)
+    const sourceBlockKeysNew = blocksNew.map(block => block.key)
+
+    // write new blocks to source
+    this.sources[file].blocks = blocksNew
+
+    // update and add new blocks to context
+    blocksNew.forEach(block => this.blockToContext(block))
+
+    // remove old blocks
+    sourceBlockKeysOld
+      .filter(key => !sourceBlockKeysNew.includes(key))
+      .sort((a, b) => b.length - a.length)
+      .forEach(key => this.contextEntryDelete(key))
+  }
+
+  public sourceDelete(file: string) {
+    if (!this.sourceExists(file)) {
+      return
+    }
+
+    this.sources[file].blocks
+      .map(block => block.key)
+      .sort((a, b) => b.length - a.length)
+      .forEach(key => this.contextEntryDelete(key))
+    delete this.sources[file]
   }
 
   protected sourceToContext(source: Source) {
@@ -115,14 +147,23 @@ export class Styleguide {
 
   protected blockToContext(block: Block) {
     const entry = this.contextEntry(block.key)
+    const blockIgnoredKeys = ['key', 'title', 'page', 'section', 'location']
+    const entryIgnoredKeys = ['id', 'title', 'titleLevel', 'order', 'sections']
+    const blockKeys = Object.keys(block)
 
-    entry.title = block.title || ''
+    entry.title = (!entry.title || block.title)
+      ? block.title || ''
+      : entry.title
 
-    const ignored = ['key', 'title', 'page', 'section', 'location']
-
-    Object.keys(block).forEach(blockType => {
-      if (!ignored.includes(blockType)) {
+    blockKeys.forEach(blockType => {
+      if (!blockIgnoredKeys.includes(blockType)) {
         entry[blockType] = block[blockType]
+      }
+    })
+
+    Object.keys(entry).forEach(key => {
+      if (!entryIgnoredKeys.includes(key) && !blockKeys.includes(key)) {
+        delete entry[key]
       }
     })
 
@@ -145,6 +186,41 @@ export class Styleguide {
     return this.context.entries[key]
   }
 
+  protected contextEntryDelete(key: string) {
+    const parts = key.split('.')
+    const entry = this.context.entries[key]
+
+    if (!entry) {
+      return
+    }
+
+    // if entry has sections it can not be deleted. Reset it instead.
+    if (entry.sections.length > 0) {
+      const ignore = ['id', 'title', 'order', 'titleLevel', 'sections']
+
+      Object.keys(entry).forEach(entryKey => {
+        if (!ignore.includes(entryKey)) {
+          delete entry[entryKey]
+        }
+      })
+
+      return
+    }
+
+    if (parts.length === 1) {
+      const index = this.context.pages.findIndex(page => page.id === entry.id)
+
+      this.context.pages.splice(index, 1)
+    } else {
+      const parent = this.context.entries[parts.slice(0, -1).join('.')]
+      const index = parent.sections.findIndex(section => section.id === entry.id)
+
+      parent.sections.splice(index, 1)
+    }
+
+    delete this.context.entries[key]
+  }
+
   protected contextEntryKeyToId(key: string) {
     if (!key.includes('.')) {
       return key
@@ -164,6 +240,14 @@ export class Styleguide {
       entry.titleLevel = parent.titleLevel + 1
       parent.sections.push(entry)
     }
+  }
+
+  public pages(): ContextEntry[] {
+    return this.context.pages
+  }
+
+  public entries(): Record<string, ContextEntry> {
+    return this.context.entries
   }
 
   public output(write: (file: string, content: string) => void) {

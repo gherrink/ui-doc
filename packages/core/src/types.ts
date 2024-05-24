@@ -1,7 +1,8 @@
 import { Spec as CommentSpec } from 'comment-parser'
 
 export type Options = {
-  renderer: Renderer
+  renderer: RendererInterface
+  blockParser?: BlockParserInterface
 }
 
 export interface FileReader {
@@ -90,6 +91,6 @@ export type OutputContext = {
   page: ContextEntry,
 }
 
-export interface Renderer {
+export interface RendererInterface {
   generate(context: OutputContext, layout?: string): string
 }
