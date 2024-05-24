@@ -7,7 +7,7 @@ export class NodeFileFinder implements FileFinder {
   public globs: string[] = []
 
   constructor(globs: string[] = []) {
-    this.globs = globs
+    this.globs = globs.map(glob => path.resolve(glob))
   }
 
   public search(fileFound: (file: string) => void) {
@@ -35,7 +35,7 @@ export class NodeFileFinder implements FileFinder {
         const file = path.join(directory, dirent.name)
 
         if (file.match(regex)) {
-          fileFound(file)
+          fileFound(path.resolve(file))
         }
       }
     })
