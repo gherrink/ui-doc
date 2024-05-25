@@ -47,6 +47,20 @@ describe('for tag', () => {
     })
   })
 
+  test('should replace for loop but leave the other content', () => {
+    const renderMock = jest.fn<HtmlRendererInterface['render']>((content: string) => content)
+    const context = {}
+    const cases = [
+      { content: 'before {{for:foo}}content{{endfor:foo}} after', expected: 'before  after' },
+      { content: 'before\n{{for:bar}}content{{endfor:bar}}\nafter', expected: 'before\n\nafter' },
+      { content: '{{for:baz}}content{{endfor:baz}}', expected: '' },
+    ]
+
+    cases.forEach(({ content, expected }) => {
+      expect(execTag(content, context, { render: renderMock as HtmlRendererInterface['render'] } as HtmlRendererInterface)).toBe(expected)
+    })
+  })
+
   test('should give correct array context', () => {
     const renderMock = jest.fn<HtmlRendererInterface['render']>((content: string) => content)
     const context = [1, 2, 3]
@@ -54,9 +68,9 @@ describe('for tag', () => {
 
     expect(execTag(content, context, { render: renderMock as HtmlRendererInterface['render'] } as HtmlRendererInterface)).toBe('contentcontentcontent')
     expect(renderMock).toHaveBeenCalledTimes(3)
-    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _varKey: 'this', _loop: { index: 0, value: 1 } })
-    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _varKey: 'this', _loop: { index: 1, value: 2 } })
-    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _varKey: 'this', _loop: { index: 2, value: 3 } })
+    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _contextKey: 'this', _loop: { index: 0, value: 1 } })
+    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _contextKey: 'this', _loop: { index: 1, value: 2 } })
+    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _contextKey: 'this', _loop: { index: 2, value: 3 } })
   })
 
   test('should give correct object context', () => {
@@ -66,9 +80,9 @@ describe('for tag', () => {
 
     expect(execTag(content, context, { render: renderMock as HtmlRendererInterface['render'] } as HtmlRendererInterface)).toBe('contentcontentcontent')
     expect(renderMock).toHaveBeenCalledTimes(3)
-    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _varKey: 'this', _loop: { index: 0, key: 'foo', value: 1 } })
-    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _varKey: 'this', _loop: { index: 1, key: 'bar', value: 2 } })
-    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _varKey: 'this', _loop: { index: 2, key: 'baz', value: 3 } })
+    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _contextKey: 'this', _loop: { index: 0, key: 'foo', value: 1 } })
+    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _contextKey: 'this', _loop: { index: 1, key: 'bar', value: 2 } })
+    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _contextKey: 'this', _loop: { index: 2, key: 'baz', value: 3 } })
   })
 
   test('should handle simple key', () => {
@@ -80,9 +94,9 @@ describe('for tag', () => {
 
     expect(execTag(content, context, { render: renderMock as HtmlRendererInterface['render'] } as HtmlRendererInterface)).toBe('contentcontentcontent')
     expect(renderMock).toHaveBeenCalledTimes(3)
-    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _varKey: 'foo', _loop: { index: 0, value: 1 } })
-    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _varKey: 'foo', _loop: { index: 1, value: 2 } })
-    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _varKey: 'foo', _loop: { index: 2, value: 3 } })
+    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _contextKey: 'foo', _loop: { index: 0, value: 1 } })
+    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _contextKey: 'foo', _loop: { index: 1, value: 2 } })
+    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _contextKey: 'foo', _loop: { index: 2, value: 3 } })
   })
 
   test('should handle nested keys', () => {
@@ -96,9 +110,9 @@ describe('for tag', () => {
 
     expect(execTag(content, context, { render: renderMock as HtmlRendererInterface['render'] } as HtmlRendererInterface)).toBe('contentcontentcontent')
     expect(renderMock).toHaveBeenCalledTimes(3)
-    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _varKey: 'foo.bar', _loop: { index: 0, value: 1 } })
-    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _varKey: 'foo.bar', _loop: { index: 1, value: 2 } })
-    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _varKey: 'foo.bar', _loop: { index: 2, value: 3 } })
+    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _contextKey: 'foo.bar', _loop: { index: 0, value: 1 } })
+    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _contextKey: 'foo.bar', _loop: { index: 1, value: 2 } })
+    expect(renderMock).toHaveBeenCalledWith('content', { _parent: context, _contextKey: 'foo.bar', _loop: { index: 2, value: 3 } })
   })
 
   test('should handle object array', () => {
@@ -109,18 +123,18 @@ describe('for tag', () => {
     expect(execTag(content, context, { render: renderMock as HtmlRendererInterface['render'] } as HtmlRendererInterface)).toBe('contentcontentcontent')
     expect(renderMock).toHaveBeenCalledTimes(3)
     expect(renderMock).toHaveBeenCalledWith('content', {
-      test: 1, _parent: context, _varKey: 'this', _loop: { index: 0, value: { test: 1 } },
+      test: 1, _parent: context, _contextKey: 'this', _loop: { index: 0, value: { test: 1 } },
     })
     expect(renderMock).toHaveBeenCalledWith('content', {
       test: 2,
       _parent: context,
-      _varKey: 'this',
+      _contextKey: 'this',
       _loop: { index: 1, value: { test: 2 } },
     })
     expect(renderMock).toHaveBeenCalledWith('content', {
       test: 3,
       _parent: context,
-      _varKey: 'this',
+      _contextKey: 'this',
       _loop: { index: 2, value: { test: 3 } },
     })
   })
@@ -135,19 +149,19 @@ describe('for tag', () => {
     expect(renderMock).toHaveBeenCalledWith('content', {
       test: 1,
       _parent: context,
-      _varKey: 'this',
+      _contextKey: 'this',
       _loop: { index: 0, key: 'foo', value: { test: 1 } },
     })
     expect(renderMock).toHaveBeenCalledWith('content', {
       test: 2,
       _parent: context,
-      _varKey: 'this',
+      _contextKey: 'this',
       _loop: { index: 1, key: 'bar', value: { test: 2 } },
     })
     expect(renderMock).toHaveBeenCalledWith('content', {
       test: 3,
       _parent: context,
-      _varKey: 'this',
+      _contextKey: 'this',
       _loop: { index: 2, key: 'baz', value: { test: 3 } },
     })
   })

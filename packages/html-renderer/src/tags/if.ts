@@ -6,18 +6,17 @@ export const tag: HtmlRendererTag = {
   render: ({
     content, match, context,
   }) => {
-    const varKey = match[1]
-
+    const contextKey = match[1]
     const ifMatch = new RegExp(
-      `{{if:${varKey}${match[2] || ''}}}[\\n]*(.+?)(\\n[ ]*)?{{endif:${varKey}}}`,
+      `{{if:${contextKey}${match[2] || ''}}}[\\n]*(.+?)(\\n[ ]*)?{{endif:${contextKey}}}`,
       'gs',
     ).exec(content)
 
     if (ifMatch === null) {
-      return content
+      throw new Error(`Invalid if statement in ${content}`)
     }
 
-    let value = readNestedValue(varKey, context)
+    let value = readNestedValue(contextKey, context)
     let compareValue
 
     if (match[4]) {

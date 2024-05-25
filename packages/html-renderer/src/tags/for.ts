@@ -1,3 +1,4 @@
+import { HTMLRendererError } from '../errors'
 import { HtmlRendererTag } from '../types'
 import { readNestedValue } from './utils'
 
@@ -6,13 +7,8 @@ export const tag: HtmlRendererTag = {
   render: ({
     content, match, context, renderer,
   }) => {
-    const varKey = match[2] || 'this'
-    const varContext = varKey === 'this' ? context : readNestedValue(varKey, context)
-
-    if (!varKey || !(Array.isArray(varContext) || typeof varContext === 'object')) {
-      return ''
-    }
-
+    const contextKey = match[2] || 'this'
+    const contextNew = contextKey === 'this' ? context : readNestedValue(contextKey, context)
     const forMatchDefinition = match[2] ? `:${match[2]}` : ''
     const forMatch = new RegExp(
       `{{for${forMatchDefinition}}}\\n*(.+?)(\n[ ]*)?{{endfor${forMatchDefinition}}}`,
@@ -20,40 +16,48 @@ export const tag: HtmlRendererTag = {
     ).exec(content)
 
     if (forMatch === null) {
+      throw new HTMLRendererError(`Invalid for loop in ${content}`)
+    }
+
+    const replacement = () => {
+      if (Array.isArray(contextNew)) {
+        return contextNew
+          .map((item, index) => {
+            const currentValue = typeof item === 'object'
+              ? { ...item }
+              : {}
+
+            return renderer.render(forMatch[1], {
+              ...currentValue,
+              _parent: context,
+              _contextKey: contextKey,
+              _loop: { index, value: item },
+            })
+          })
+          .join('')
+      }
+
+      if (typeof contextNew === 'object') {
+        return Object.keys(contextNew)
+          .map((key, index) => {
+            const currentValue = typeof contextNew[key] === 'object'
+              ? { ...contextNew[key] }
+              : {}
+
+            return renderer.render(forMatch[1], {
+              ...currentValue,
+              _parent: context,
+              _contextKey: contextKey,
+              _loop: { key, index, value: contextNew[key] },
+            })
+          })
+          .join('')
+      }
+
       return ''
     }
 
-    const replaceFunction = Array.isArray(varContext)
-      ? () => varContext
-        .map((item, index) => {
-          const currentValue = typeof item === 'object'
-            ? { ...item }
-            : {}
-
-          return renderer.render(forMatch[1], {
-            ...currentValue,
-            _parent: context,
-            _varKey: varKey,
-            _loop: { index, value: item },
-          })
-        })
-        .join('')
-      : () => Object.keys(varContext)
-        .map((key, index) => {
-          const currentValue = typeof varContext[key] === 'object'
-            ? { ...varContext[key] }
-            : {}
-
-          return renderer.render(forMatch[1], {
-            ...currentValue,
-            _parent: context,
-            _varKey: varKey,
-            _loop: { key, index, value: varContext[key] },
-          })
-        })
-        .join('')
-
-    return content.replace(forMatch[0], replaceFunction())
+    return content.replace(forMatch[0], replacement())
   },
 }
 
