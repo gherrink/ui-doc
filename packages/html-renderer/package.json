@@ -15,7 +15,8 @@
       "types": "./dist/packages/html-renderer/src/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./styleguide.css": "./dist/styleguide.css"
   },
   "main": "dist/index.cjs",
   "module": "dist/index.js",

@@ -1,5 +1,6 @@
 export * from './NodeFileFinder'
 export * from './NodeFileReader'
 export * from './NodeFileWriter'
+export * from './NodeHtmlRendererAssets'
 export * from './NodeHtmlRendererTemplateLoader'
 export * from './NodeSourceScanner'

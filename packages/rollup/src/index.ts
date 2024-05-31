@@ -1,6 +1,11 @@
 import { type RendererInterface, Options as StyleguideOptions, Styleguide } from '@styleguide/core'
 import { HtmlRenderer, Parser } from '@styleguide/html-renderer'
-import { NodeFileFinder, NodeFileReader, NodeHtmlRendererTemplateLoader } from '@styleguide/node'
+import {
+  NodeFileFinder,
+  NodeFileReader,
+  NodeHtmlRendererAssets,
+  NodeHtmlRendererTemplateLoader,
+} from '@styleguide/node'
 import type { Plugin } from 'rollup'
 
 interface RollupStyleguidePluginOptions extends StyleguideOptions {
@@ -64,14 +69,20 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
       }
     },
 
-    generateBundle() {
+    async generateBundle() {
       // TODO output user info what was generated
-
       styleguide.output((file, content) => this.emitFile({
         type: 'asset',
         fileName: file,
         source: content,
       }))
+
+      // TODO only emit when defined in config
+      this.emitFile({
+        type: 'asset',
+        fileName: 'styleguide.css',
+        source: await NodeHtmlRendererAssets.content(NodeHtmlRendererAssets.assets.style),
+      })
     },
   }
 }

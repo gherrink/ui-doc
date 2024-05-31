@@ -68,12 +68,10 @@ export default [
   // style generation
   {
     external: [],
-    input: 'styles/index.css',
+    input: { styleguide: 'styles/index.css' },
     output: [
       {
-        name: 'styleguide',
-        file: 'dist/styles/styleguide.css',
-        format: 'es',
+        dir: 'dist',
         sourcemap: true,
       },
     ],
@@ -88,6 +86,12 @@ export default [
           autoprefixer(),
         ],
       }),
+      {
+        generateBundle: (option, bundle) => {
+          // remove empty styleguide.js file
+          delete bundle['styleguide.js']
+        },
+      },
     ],
   },
 ]
