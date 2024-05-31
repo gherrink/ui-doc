@@ -41,6 +41,7 @@ export class Styleguide {
     titleExample: (example: ContextEntry) => (example.title
       ? `${example.title} Example | ${this.texts.title}`
       : `Example | ${this.texts.title}`),
+    linkPage: (page: ContextEntry) => `/${page.id}.html`,
   }
 
   constructor(options: Options) {
@@ -48,6 +49,7 @@ export class Styleguide {
     this.context = {
       pages: [],
       entries: {},
+      menu: [],
     }
 
     this.blockParser = options.blockParser || this.createParser()
@@ -101,6 +103,7 @@ export class Styleguide {
 
     this.sources[file] = source
     this.sourceToContext(source)
+    this.clearMenu()
   }
 
   public sourceUpdate(file: string, content: string) {
@@ -125,6 +128,8 @@ export class Styleguide {
       .filter(key => !sourceBlockKeysNew.includes(key))
       .sort((a, b) => b.length - a.length)
       .forEach(key => this.contextEntryDelete(key))
+
+    this.clearMenu()
   }
 
   public sourceDelete(file: string) {
@@ -137,6 +142,8 @@ export class Styleguide {
       .sort((a, b) => b.length - a.length)
       .forEach(key => this.contextEntryDelete(key))
     delete this.sources[file]
+
+    this.clearMenu()
   }
 
   protected sourceToContext(source: Source) {
@@ -250,24 +257,28 @@ export class Styleguide {
     return this.context.entries
   }
 
-  public output(write: (file: string, content: string) => void) {
-    this.context.pages.forEach(page => {
-      write(`${page.id}.html`, this.pageContent(page))
-    })
+  public async output(write: (file: string, content: string) => Promise<void>): Promise<void> {
+    await Promise.all([
+      ...this.context.pages.map(page => write(`${page.id}.html`, this.pageContent(page))),
+      ...Object.keys(this.context.entries).map(key => {
+        const entry = this.context.entries[key]
 
-    Object.keys(this.context.entries).forEach(key => {
-      const entry = this.context.entries[key]
-
-      if (entry.example && entry.example.type === 'html' && entry.example.src) {
-        write(`examples/${entry.example.fileName}`, this.exampleContent(entry.example, 'example'))
-      }
-    })
+        return entry.example && entry.example.type === 'html' && entry.example.src
+          ? write(`examples/${entry.example.fileName}`, this.exampleContent(entry.example, 'example'))
+          : Promise.resolve()
+      }),
+    ])
   }
 
   public pageContent(page: ContextEntry, layout?: string): string {
     return this.renderer.generate({
       title: this.generate.titlePage(page),
       page: JSON.parse(JSON.stringify(page)),
+      menu: this.createMenu().map(item => {
+        item.active = item.href === this.generate.linkPage(page)
+
+        return item
+      }),
     }, layout)
   }
 
@@ -277,5 +288,23 @@ export class Styleguide {
     context.title = this.generate.titleExample(example)
 
     return this.renderer.generate(context, layout)
+  }
+
+  protected createMenu(): Context['menu'] {
+    if (this.context.menu.length === 0) {
+      this.context.pages.forEach(page => {
+        this.context.menu.push({
+          text: page.title,
+          href: this.generate.linkPage(page),
+          active: false,
+        })
+      })
+    }
+
+    return this.context.menu
+  }
+
+  protected clearMenu() {
+    this.context.menu = []
   }
 }

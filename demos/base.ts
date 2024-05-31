@@ -1,34 +1,38 @@
 import { Styleguide } from '@styleguide/core'
-import { HtmlRenderer, Parser } from '@styleguide/html-renderer'
-import {
-  NodeFileReader,
-  NodeFileWriter,
-  NodeHtmlRendererTemplateLoader,
-  NodeSourceScanner,
-} from '@styleguide/node'
-import { NodeHtmlRendererAssets } from 'packages/node/src/NodeHtmlRendererAssets'
+import { HtmlRenderer, Parser, TemplateLoader } from '@styleguide/html-renderer'
+import { NodeFileSystem } from '@styleguide/node'
 
 // TODO clean up output directory
 // TODO make it run parallel
 async function main() {
   const outputDir = './dist/base'
+  const fileSystem = new NodeFileSystem()
+  const assetLoader = fileSystem.assetLoader()
   const renderer = new HtmlRenderer(Parser.init())
-  const reader = new NodeFileReader()
-  const writer = new NodeFileWriter(outputDir)
-  const scanner = new NodeSourceScanner(['css/**/*.css'], reader)
+  const finder = fileSystem.createFileFinder(['css/**/*.css'])
 
-  await NodeHtmlRendererTemplateLoader.load(renderer)
-  await NodeHtmlRendererAssets.copyStyle(`${outputDir}/styleguide.css`)
+  await TemplateLoader.load({
+    renderer,
+    fileSystem,
+  })
 
   const styleguide = new Styleguide({
     renderer,
   })
 
-  await scanner.scan(async (file, content) => {
-    await styleguide.sourceCreate(file, content)
+  await finder.search(async file => {
+    styleguide.sourceCreate(
+      file,
+      await fileSystem.fileRead(file),
+    )
   })
 
-  await styleguide.output((file, content) => writer.write(file, content))
+  await fileSystem.ensureDirectoryExists(outputDir)
+  await fileSystem.ensureDirectoryExists(`${outputDir}/examples`)
+  await styleguide.output(async (file, content) => {
+    await fileSystem.fileWrite(`${outputDir}/${file}`, content)
+  })
+  await assetLoader.copy('@styleguide/html-renderer/styleguide.css', `${outputDir}/styleguide.css`)
 }
 
 main()

@@ -5,14 +5,6 @@ export type Options = {
   blockParser?: BlockParserInterface
 }
 
-export interface FileReader {
-  content(file: string): Promise<string>
-}
-
-export interface FileWriter {
-  write(file: string, content: string): Promise<boolean>
-}
-
 export type fileFinderOnFound = (file: string) => Promise<void>
 
 export interface FileFinder {
@@ -20,10 +12,19 @@ export interface FileFinder {
   matches(file: string): boolean
 }
 
-export type sourceScannerOnFound = (file: string, content: string) => Promise<void>
+export interface AssetLoader {
+  packageExists(packageName: string): Promise<boolean>
+  packagePath(packageName: string): Promise<string | undefined>
+}
 
-export interface SourceScanner {
-  scan(onFound: sourceScannerOnFound): Promise<void>
+export interface FileSystem {
+  createFileFinder(globs: string[]): FileFinder
+  assetLoader(): AssetLoader
+  fileRead(file: string): Promise<string>
+  fileWrite(file: string, content: string): Promise<boolean>
+  fileCopy(from: string, to: string): Promise<boolean>
+  fileExists(file: string): Promise<boolean>
+  fileBasename(file: string): string
 }
 
 export type FilePath = string
@@ -37,9 +38,16 @@ export type ContextEntry = {
   sections: ContextEntry[]
 }
 
+export type MenuItem = {
+  text: string
+  href: string
+  active: boolean
+}
+
 export type Context = {
   pages: ContextEntry[]
   entries: {[key: string]: ContextEntry}
+  menu: MenuItem[]
 }
 
 export type BlockEntry = {
@@ -89,6 +97,7 @@ export type TagTransformer = {
 export type OutputContext = {
   title: string,
   page: ContextEntry,
+  menu: MenuItem[],
 }
 
 export interface RendererInterface {
