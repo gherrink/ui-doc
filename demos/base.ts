@@ -1,5 +1,5 @@
 import { Styleguide } from '@styleguide/core'
-import { HtmlRenderer } from '@styleguide/html-renderer'
+import { HtmlRenderer, Parser } from '@styleguide/html-renderer'
 import {
   NodeFileReader,
   NodeFileWriter,
@@ -8,20 +8,23 @@ import {
 } from '@styleguide/node'
 
 // TODO clean up output directory
+async function main() {
+  const renderer = new HtmlRenderer(Parser.init())
+  const reader = new NodeFileReader()
+  const writer = new NodeFileWriter('./dist/base')
+  const scanner = new NodeSourceScanner(['css/**/*.css'], reader)
 
-const renderer = new HtmlRenderer()
-const reader = new NodeFileReader()
-const writer = new NodeFileWriter('./dist/base')
-const scanner = new NodeSourceScanner(['css/**/*.css'], reader)
+  await NodeHtmlRendererTemplateLoader.load(renderer)
 
-NodeHtmlRendererTemplateLoader.load(renderer)
+  const styleguide = new Styleguide({
+    renderer,
+  })
 
-const styleguide = new Styleguide({
-  renderer,
-})
+  await scanner.scan(async (file, content) => {
+    await styleguide.sourceCreate(file, content)
+  })
 
-scanner.scan((file, content) => {
-  styleguide.sourceRegister(file, content)
-})
+  await styleguide.output((file, content) => writer.write(file, content))
+}
 
-styleguide.output((file, content) => writer.write(file, content))
+main()

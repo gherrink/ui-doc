@@ -37,15 +37,15 @@ export class NodeHtmlRendererTemplateLoader {
 
     await Promise.all([
       this.layoutFinder.search(async file => {
-        renderer.addLayout(name(file), await content(file))
+        renderer.addLayout(name(file), { content: await content(file), source: file })
       }),
 
       this.pageFinder.search(async file => {
-        renderer.addPage(name(file), await content(file))
+        renderer.addPage(name(file), { content: await content(file), source: file })
       }),
 
       this.partialFinder.search(async file => {
-        renderer.addPartial(name(file), await content(file))
+        renderer.addPartial(name(file), { content: await content(file), source: file })
       }),
     ])
   }

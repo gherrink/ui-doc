@@ -1,5 +1,5 @@
 import { type RendererInterface, Options as StyleguideOptions, Styleguide } from '@styleguide/core'
-import { HtmlRenderer } from '@styleguide/html-renderer'
+import { HtmlRenderer, Parser } from '@styleguide/html-renderer'
 import { NodeFileFinder, NodeFileReader, NodeHtmlRendererTemplateLoader } from '@styleguide/node'
 import type { Plugin } from 'rollup'
 
@@ -9,7 +9,7 @@ interface RollupStyleguidePluginOptions extends StyleguideOptions {
 }
 
 const createDefaultRenderer = (templatePath?: string): RendererInterface => {
-  const renderer = new HtmlRenderer()
+  const renderer = new HtmlRenderer(Parser.init())
 
   const awaitLoaded = async () => {
     await NodeHtmlRendererTemplateLoader.load(renderer, templatePath)
@@ -30,15 +30,13 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
     renderer: options.renderer || createDefaultRenderer(options.templatePath),
   })
 
-  // TODO clean up output directory
+  // TODO may clean up output directory
 
   return {
     name: 'rollup-plugin-styleguide',
 
     async buildStart() {
       const watchedFiles = this.getWatchFiles()
-
-      // TODO make it asynchron
 
       await finder.search(async file => {
         if (!watchedFiles.includes(file)) {
@@ -51,7 +49,6 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
     },
 
     async watchChange(id, change) {
-      // TODO make it asynchron
       if (styleguide.sourceExists(id)) {
         if (change.event === 'update') {
           styleguide.sourceUpdate(id, await reader.content(id))
@@ -68,6 +65,8 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
     },
 
     generateBundle() {
+      // TODO output user info what was generated
+
       styleguide.output((file, content) => this.emitFile({
         type: 'asset',
         fileName: file,

@@ -1,0 +1,6 @@
+export class TagNodeSyntaxError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'TagNodeSyntaxError'
+  }
+}

@@ -1,12 +1,11 @@
 # Styleguide HTML Renderer
 
-Simple and light HTML Rendering Engine. Its perpise is to create HTML from a Context Object by using a simple templating syntax and
-have no dependencies. This project sould not be used for complexer projects, because of it's simplicity.
+Simple and light HTML Rendering Engine. Its purpose is to create HTML from a Context Object by using a simple template syntax and
+have no dependencies. This project should not be used for complexer projects, because of it's simplicity.
 
 ## Tags
 
-Tags are used to get a bit of functionality into the html generation process. Please not since we use only regex and not real paring enging
-to generate the output it can happen that a regex matches to mucht.
+Tags are used to get a bit of functionality into the html generation process.
 
 ### var
 
@@ -16,23 +15,39 @@ Output value of a variable.
 <h1>{{var:title}}</h1>
 ```
 
-### var-escaped
-
-Ouput escaped value of a variable.
-
-```
-<div>{{var-escaped:content}}</div>
-```
+To escape the variable use `{{var:title escape}}`.
 
 ### if
 
-Use a if condition to desiced when our when not to render something. Please not that currentryl there is no `else` or `ifelse`
+Use a if condition to decide when our when not to render something. Please not that currently there is no `else` or `ifelse`
 
 ```
 {{if:show}}
 <p>Show this if show inside the context is a true statement</p>
-{{endif:show}}
+{{/if}}
 ```
+
+#### Conditions
+
+You can use conditions
+
+```
+{{if:title === "foo"}}
+{{if:show === true}}
+{{if:page.number === 3}}
+```
+
+**Operators:**
+
+- `===`
+- `==`
+- `!==`
+- `!=`
+- `<`
+- `<=`
+- `>`
+- `>=`
+
 
 ### for
 
@@ -46,7 +61,7 @@ and give you loop specific context like index and object keys.
 <ul>
   {{for:list}}
   <li>{{var:_loop.value}}, index: {{var:_loop.index}}</li>
-  {{endfor:list}}
+  {{/for}}
 </ul>
 
 <!-- Output: -->
@@ -64,7 +79,7 @@ and give you loop specific context like index and object keys.
 <ul>
   {{for:list}}
   <li>{{var:_loop.value}}, key: {{var:_loop.key}}, index: {{var:_loop.index}}</li>
-  {{endfor:list}}
+  {{/for}}
 </ul>
 
 <!-- Output: -->
@@ -77,7 +92,7 @@ and give you loop specific context like index and object keys.
 
 #### loop items as objects
 
-You can loop over an array or object of objects. The object items will directily be acccasible inside the for context.
+You can loop over an array or object of objects. The object items will directly be accessible inside the for context.
 
 ```
 <!-- context: {"sections": [{"title": "Section 1", content: "<p>Section 1 content</p>"}, {"title": "Section 2", content: "<p>Section 2 content</p>"}]} -->
@@ -87,7 +102,7 @@ You can loop over an array or object of objects. The object items will directily
   <h2>{{var::title}}</h2>
   {{var:content}}
 </section>
-{{endfor:sections}}
+{{/for}}
 
 <!-- Output: -->
 <section>
@@ -102,10 +117,10 @@ You can loop over an array or object of objects. The object items will directily
 
 ### page
 
-Use page to output registerd page templates (see Templating > Page). `{{page:foo}}` this will try to
-render the `foo` page. If no page with this name is registerd the system will fallback to the `default` page.
-If you want to use the default page you can also just use `{{page}}`. Please note that the page tag will
-search for a `page` inside the current context and change the context than to the value of `page`.
+Use page to output registered page templates (see Templates > Page). `{{page:foo}}` this will try to
+render the `foo` page. If no page with this name is registered the system will fallback to the `default` page.
+If you want to use the default page you can also just use `{{page}}`. As second parameter you can give a context
+if you like to change the context `{{page:layout newContext}}`.
 
 ```
 <!-- context: {"title": "Document Title", "page": {"title": "Page title", "content": "Page content"}} -->
@@ -115,7 +130,8 @@ search for a `page` inside the current context and change the context than to th
   <title>{{var:title}}</title>
 </head>
 <body>
-  {{page}}
+  <!-- using default layout with new context `page` -->
+  {{page:default page}}
 </body>
 </html>
 
@@ -143,25 +159,21 @@ search for a `page` inside the current context and change the context than to th
 
 ### partial
 
-Use partial to render registered partial templates (see Templating > Partial). If the given partial name was not found nothing will be generated
+Use partial to render registered partial templates (see Templates > Partial). If the given partial name was not found nothing will be generated
 
 ```
 {{partial:foo}} > output foo partial
 ```
 
-### partial-context
-
-Simular to partial but will chagne the context to a given variable name.
+As second parameter you can give a context definition to change the context
 
 ```
-{{partial-context:foo}} > output foo partial and chagne context to foo
-{{partial-context:foo:bar}} > output foo partial and chagne context to bar
-{{partial-context:foo.bar}} > output foo-bar partial and chagne context to foo.bar
+{{partial:foo bar}} > output foo partial using bar of the current context as new context
 ```
 
 ### debug
 
-Use debug to output the current context or parts of the context. The context will be outputed as JSON.
+Use debug to output the current context or parts of the context. The context will be outputted as JSON.
 
 ```
 <!-- context: {"title": "Document Title", "page": {"title": "Page title", "content": "Page content"}} -->
@@ -176,7 +188,7 @@ Use debug to output the current context or parts of the context. The context wil
 
 ```
 
-## Templating
+## Templates
 
 You can register different template parts to the renderer these templates can then be reused wile generation.
 
@@ -187,7 +199,7 @@ Define the HTML basic structure.
 ### Page
 
 Define a page specific template. You can use the `{{page:your-page-template-name}}` tag to render a specific page template.
-Page templates are not nececarray but they help to keep layouts smaller and easier to read.
+Page templates are not necessary but they help to keep layouts smaller and easier to read.
 
 ### Partial
 
@@ -215,11 +227,11 @@ const page = `
 
 {{if:excerpt}}
 <div>{{var:excerpt}}</div>
-{{endif:excerpt}}
+{{/if}}
 
 {{for:sections}}
 {{partial:section}}
-{{endfor:sections}}`
+{{/for}}`
 
 const section = `
 <h2>{{var:title}}</h2>

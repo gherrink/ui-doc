@@ -1,45 +1,73 @@
 import { HTMLRendererError } from './errors'
-import defaultTags from './tags'
-import { HtmlRendererInterface, HtmlRendererTag } from './types'
+import { SyntaxError } from './errors/SyntaxError'
+import { Reader } from './Reader'
+import {
+  type HtmlRendererSourceInput,
+  type ReaderInterface,
+  type RenderContext,
+  HtmlRendererInterface,
+  NodeInterface,
+} from './types'
+import type { ParserInterface } from './types/parser'
+
+function instanceofReaderInterface(object: any): object is ReaderInterface {
+  return typeof object.peak === 'function'
+    && typeof object.consume === 'function'
+    && typeof object.isEof === 'function'
+    && typeof object.debug === 'function'
+}
 
 export class HtmlRenderer implements HtmlRendererInterface {
-  protected layouts: {[key: string]: string} = {}
+  protected parser: ParserInterface
 
-  protected partials: {[key: string]: string} = {}
+  protected layouts: {[key: string]: NodeInterface} = {}
 
-  protected pages: {[key: string]: string} = {}
+  protected partials: {[key: string]: NodeInterface} = {}
 
-  protected tags: {[key: string]: HtmlRendererTag} = {}
+  protected pages: {[key: string]: NodeInterface} = {}
 
-  public constructor() {
-    this.tags = defaultTags
+  public constructor(parser: ParserInterface) {
+    this.parser = parser
   }
 
-  public addTag(name: string, tag: HtmlRendererTag): HtmlRenderer {
-    this.tags[name] = tag
+  public addLayout(name: string, layout: HtmlRendererSourceInput): HtmlRenderer {
+    this.layouts[name] = this.parse(layout)
 
     return this
   }
 
-  public addLayout(name: string, layout: string): HtmlRenderer {
-    this.layouts[name] = layout
+  public addPartial(name: string, partial: HtmlRendererSourceInput): HtmlRenderer {
+    this.partials[name] = this.parse(partial)
 
     return this
   }
 
-  public addPartial(name: string, partial: string): HtmlRenderer {
-    this.partials[name] = partial
+  public addPage(name: string, page: HtmlRendererSourceInput): HtmlRenderer {
+    this.pages[name] = this.parse(page)
 
     return this
   }
 
-  public addPage(name: string, page: string): HtmlRenderer {
-    this.pages[name] = page
+  protected parse(input: HtmlRendererSourceInput): NodeInterface {
+    const reader = !instanceofReaderInterface(input)
+      ? new Reader(input.content, input.source)
+      : input
 
-    return this
+    try {
+      return this.parser.parse(reader)
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        const debug = reader.debug()
+
+        // TODO improve error message
+        throw new HTMLRendererError(`Syntax error in ${debug.source} at line ${debug.line}:${debug.pos}: ${error.message}`)
+      }
+
+      throw error
+    }
   }
 
-  public generate(context: {[key: string]: any}, layout?: string): string {
+  public generate(context: RenderContext, layout?: string): string {
     layout = layout || 'default'
     const content = this.layouts[layout] || undefined
 
@@ -50,21 +78,7 @@ export class HtmlRenderer implements HtmlRendererInterface {
     return this.render(content, context)
   }
 
-  public render(content: string, context: {[key: string]: any}): string {
-    Object.keys(this.tags).forEach(tagKey => {
-      const tag = this.tags[tagKey];
-
-      [...content.matchAll(tag.regex)].forEach(match => {
-        content = tag.render({
-          content, match, context, renderer: this,
-        })
-      })
-    })
-
-    return content
-  }
-
-  public page(name: string, context: {[key: string]: any}): string {
+  public page(name: string, context: RenderContext): string {
     const content = this.pages[name]
       || this.pages.default
       || undefined
@@ -76,7 +90,7 @@ export class HtmlRenderer implements HtmlRendererInterface {
     return this.render(content, context)
   }
 
-  public partial(name: string, context?: {[key: string]: any}): string {
+  public partial(name: string, context?: RenderContext): string {
     const content = this.partials[name] || this.partials.default || undefined
 
     if (!content) {
@@ -86,4 +100,7 @@ export class HtmlRenderer implements HtmlRendererInterface {
     return this.render(content, context || {})
   }
 
+  protected render(rootNode: NodeInterface, context: RenderContext): string {
+    return rootNode.render(context, this)
+  }
 }

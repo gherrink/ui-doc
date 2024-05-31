@@ -4,8 +4,13 @@ import fs from 'node:fs'
 import http from 'node:http'
 import path from 'node:path'
 
-const port = process.argv[2] ? parseInt(process.argv[2], 10) : 8080
-const basePath = 'dist/rollup'
+const basePath = process.argv[2] || undefined
+const port = process.argv[3] ? parseInt(process.argv[3], 10) : 8080
+
+if (!basePath) {
+  console.error('Usage: node serve.js <base_path> [port]')
+  process.exit(1)
+}
 
 // maps file extension to MIME types
 const mimeType = {
