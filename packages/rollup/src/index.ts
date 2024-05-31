@@ -11,6 +11,7 @@ import type { Plugin } from 'rollup'
 interface RollupStyleguidePluginOptions extends StyleguideOptions {
   source: string[]
   templatePath?: string
+  styleAsset?: false | string
 }
 
 const createDefaultRenderer = (templatePath?: string): RendererInterface => {
@@ -77,12 +78,13 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
         source: content,
       }))
 
-      // TODO only emit when defined in config
-      this.emitFile({
-        type: 'asset',
-        fileName: 'styleguide.css',
-        source: await NodeHtmlRendererAssets.content(NodeHtmlRendererAssets.assets.style),
-      })
+      if (options.styleAsset !== false) {
+        this.emitFile({
+          type: 'asset',
+          fileName: options.styleAsset || 'styleguide.css',
+          source: await NodeHtmlRendererAssets.content(NodeHtmlRendererAssets.assets.style),
+        })
+      }
     },
   }
 }
