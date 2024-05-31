@@ -10,4 +10,7 @@
   "cSpell.words": [
     "styleguide"
   ],
+  "search.exclude": {
+    "**/dist/": true,
+  }
 }
