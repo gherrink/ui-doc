@@ -12,6 +12,7 @@ interface RollupStyleguidePluginOptions extends StyleguideOptions {
   source: string[]
   templatePath?: string
   styleAsset?: false | string
+  highlightStyle?: string
 }
 
 const createDefaultRenderer = (templatePath: string | undefined, fileSystem: FileSystem): RendererInterface => {
@@ -93,6 +94,18 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
           source: await assetLoader.read('@styleguide/html-renderer/styleguide.css'),
         })
       }
+
+      this.emitFile({
+        type: 'asset',
+        fileName: 'highlight.css',
+        source: await assetLoader.read(`@highlightjs/cdn-assets/styles/${options.highlightStyle || 'default'}.min.css`),
+      })
+
+      this.emitFile({
+        type: 'asset',
+        fileName: 'highlight.js',
+        source: await assetLoader.read('@highlightjs/cdn-assets/highlight.min.js'),
+      })
     },
   }
 }

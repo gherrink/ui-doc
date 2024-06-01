@@ -1,0 +1,39 @@
+.nav-main {
+  @extend .bg;
+}
+
+.nav-main > .bar {
+  height: var(--nav-main-height);
+
+  > .control.title {
+    --px: var(--nav-main-menu-item-px);
+    --py: var(--nav-main-menu-item-py);
+    --font-weight: var(--font-weight-bold)
+  }
+}
+
+.nav-main > .menu {
+  position: absolute;
+  top: 0;
+  right: calc(var(--width-calc) - var(--nav-main-menu-item-px));
+
+  display: flex;
+  flex-direction: row;
+
+  height: var(--nav-main-height);
+
+  > .control {
+    --px: var(--nav-main-menu-item-px);
+    --py: var(--nav-main-menu-item-py);
+    --font-size: var(--nav-main-menu-item-font-size);
+    --font-weight: var(--font-weight-bold);
+
+    &[aria-current] {
+      --font-color: var(--accent-color);
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

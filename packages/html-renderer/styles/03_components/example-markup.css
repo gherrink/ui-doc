@@ -1,0 +1,29 @@
+.example,
+.markup {
+  border: 1px solid rgb(var(--code-border-color, var(--border-color)));
+}
+
+.example,
+.markup > .code > .hljs {
+  padding: 1em;
+}
+
+.example {
+  > iframe {
+    width: 100%;
+    border: none;
+  }
+}
+
+.markup {
+  font-size: var(--font-size-xs);
+
+  > .code {
+    margin: 0;
+  }
+}
+
+.example + .markup {
+  margin-top: 0;
+  border-top: none;
+}

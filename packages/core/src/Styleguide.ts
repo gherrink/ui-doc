@@ -42,6 +42,9 @@ export class Styleguide {
       ? `${example.title} Example | ${this.texts.title}`
       : `Example | ${this.texts.title}`),
     linkPage: (page: ContextEntry) => `/${page.id}.html`,
+    homeLink: () => '/index.html',
+    logo: () => 'LOGO',
+    name: () => this.texts.title,
   }
 
   constructor(options: Options) {
@@ -273,6 +276,9 @@ export class Styleguide {
   public pageContent(page: ContextEntry, layout?: string): string {
     return this.renderer.generate({
       title: this.generate.titlePage(page),
+      logo: this.generate.logo(),
+      name: this.generate.name(),
+      homeLink: this.generate.homeLink(),
       page: JSON.parse(JSON.stringify(page)),
       menu: this.createMenu().map(item => {
         item.active = item.href === this.generate.linkPage(page)

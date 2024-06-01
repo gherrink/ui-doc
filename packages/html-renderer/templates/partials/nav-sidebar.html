@@ -1,0 +1,18 @@
+<nav class="nav-list" data-sidebar="" aria-label="Page navigation">
+  <ul>
+    {{for:page.sections}}
+    <li>
+      <a class="control" tabindex="0" href="#{{var:id}}">{{var:title}}</a>
+      {{if:sections}}
+      <ul>
+        {{for:sections}}
+        <li>
+          <a class="control" tabindex="0" href="#{{var:id}}">{{var:title}}</a>
+        </li>
+        {{/for}}
+      </ul>
+      {{/if}}
+    </li>
+    {{/for}}
+  </ul>
+</nav>

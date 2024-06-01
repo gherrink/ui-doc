@@ -16,7 +16,8 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./styleguide.css": "./dist/styleguide.css"
+    "./styleguide.css": "./dist/styleguide.css",
+    "./styleguide.js": "./dist/styleguide.js"
   },
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -27,7 +28,8 @@
     "src",
     "dist",
     "templates",
-    "styles"
+    "styles",
+    "scripts"
   ],
   "repository": {
     "type": "git",
@@ -46,5 +48,8 @@
     "build": "$npm_execpath clean && rollup -c",
     "watch": "$npm_execpath clean && rollup -c -w",
     "test": "jest"
+  },
+  "optionalDependencies": {
+    "@highlightjs/cdn-assets": "^11.9.0"
   }
 }

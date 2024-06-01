@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{var:title}}</title>
+    <link rel="shortcut icon" href="./favicon.ico">
+
+    <link rel="stylesheet" href="/styleguide.css">
+    <link rel="stylesheet" href="/highlight.css">
+  </head>
+  <body class="{{var:page.id}}">
+    <header>
+      {{partial:nav-main}}
+    </header>
+    <main class="width-content">
+      <div class="content">
+        {{page:page.id page}}
+      </div>
+      <aside class="sidebar">
+        <div class="scroll">
+          {{partial:nav-sidebar}}
+        </div>
+      </aside>
+    </main>
+  </body>
+
+  <script src="/highlight.js"></script>
+  <script type="application/javascript">hljs.highlightAll();</script>
+  <script src="/styleguide.js"></script>
+</html>

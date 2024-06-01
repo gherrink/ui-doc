@@ -10,9 +10,8 @@
     "serve:base": "tsx --tsconfig tsconfig.base.json ./serve.ts dist/base",
     "serve:rollup": "tsx --tsconfig tsconfig.base.json ./serve.ts dist/rollup"
   },
-  "dependencies": {
-  },
   "devDependencies": {
+    "@highlightjs/cdn-assets": "^11.9.0",
     "@styleguide/core": "workspace:0.0.0-alpha.0",
     "@styleguide/html-renderer": "workspace:0.0.0-alpha.0",
     "@styleguide/node": "workspace:0.0.0-alpha.0",

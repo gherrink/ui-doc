@@ -1,0 +1,13 @@
+[class*="width-"] {
+  --width-calc: max(var(--width-min-space-x, 32px), calc((100% - var(--width-content, 1280px)) / 2));
+
+  padding-inline: var(--width-calc);
+}
+
+.width-content {
+  --width-content: 1280px;
+}
+
+.width-full {
+  --width: 100%;
+}

@@ -33,6 +33,8 @@ async function main() {
     await fileSystem.fileWrite(`${outputDir}/${file}`, content)
   })
   await assetLoader.copy('@styleguide/html-renderer/styleguide.css', `${outputDir}/styleguide.css`)
+  await assetLoader.copy('@highlightjs/cdn-assets/styles/default.min.css', `${outputDir}/highlight.css`)
+  await assetLoader.copy('@highlightjs/cdn-assets/highlight.min.js', `${outputDir}/highlight.js`)
 }
 
 main()

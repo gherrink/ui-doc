@@ -1,0 +1,42 @@
+.nav-list {
+  --nav-list-item-px: var(--size-sm);
+  --nav-list-item-py: var(--size-xs);
+  --nav-list-item-border-color: var(--border-color);
+
+  text-align: left;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  > ul > li + li {
+    margin-top: var(--nav-list-root-item-space, var(--size-sm));
+  }
+
+  .control {
+    &.active {
+      --font-color: var(--accent-color);
+    }
+  }
+}
+
+.nav-list > ul > li > .control {
+  --py: var(--nav-list-item-py);
+  --pr: var(--nav-list-item-px);
+  --font-weight: var(--font-weight-bold);
+  --font-size: var(--font-size-md);
+}
+
+.nav-list > ul > li > ul > li > .control {
+  --py: var(--nav-list-item-py);
+  --px: var(--nav-list-item-px);
+
+  text-align: left;
+  border-left: 1px solid rgba(var(--nav-list-item-border-color) / var(--border-opacity, .1));
+
+  &:hover {
+    --border-opacity: 1;
+  }
+}

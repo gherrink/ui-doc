@@ -96,6 +96,9 @@ export type TagTransformer = {
 
 export type OutputContext = {
   title: string,
+  logo: string,
+  name: string,
+  homeLink: string,
   page: ContextEntry,
   menu: MenuItem[],
 }

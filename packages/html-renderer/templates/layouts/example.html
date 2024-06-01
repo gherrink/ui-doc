@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{{var:title}}</title>
+
+    <link rel="stylesheet" href="/app.css">
+    <style>
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+      body > *:last-child {
+        margin-bottom: 0 !important;
+      }
+      body > *:first-child {
+        margin-top: 0 !important;
+      }
+    </style>
+  </head>
+  <body {{if:modifier}}class="{{var:modifier}}"{{/if}}>
+    {{var:content}}
+  </body>
+</html>

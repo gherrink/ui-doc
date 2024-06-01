@@ -3,9 +3,9 @@ import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import autoprefixer from 'autoprefixer'
+import postcssExtend from 'postcss-extend'
 import postcssImport from 'postcss-import'
 import postcssNested from 'postcss-nested'
-import postcssSimpleVars from 'postcss-simple-vars'
 import autoExternal from 'rollup-plugin-auto-external'
 import postcss from 'rollup-plugin-postcss'
 import sourcemaps from 'rollup-plugin-sourcemaps'
@@ -82,7 +82,7 @@ export default [
         plugins: [
           postcssImport(),
           postcssNested(),
-          postcssSimpleVars(),
+          postcssExtend(),
           autoprefixer(),
         ],
       }),
@@ -92,6 +92,35 @@ export default [
           delete bundle['styleguide.js']
         },
       },
+    ],
+  },
+  // script generation
+  {
+    external: [],
+    input: { styleguide: 'scripts/styleguide.ts' },
+    output: [
+      {
+        dir: 'dist',
+        format: 'umd',
+        sourcemap: false,
+      },
+    ],
+    plugins: [
+      resolve(),
+      commonjs(),
+      babel({
+        babelHelpers: 'bundled',
+        exclude: '../../node_modules/**',
+      }),
+      sizes(),
+      typescript({
+        tsconfig: '../../tsconfig.web.json',
+        tsconfigOverride: {
+          compilerOptions: {
+            declaration: true,
+          },
+        },
+      }),
     ],
   },
 ]

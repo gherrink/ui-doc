@@ -1,0 +1,7 @@
+.bg {
+  --selection-bg-color: var(--font-color);
+  --selection-color: var(--bg-color);
+
+  color: rgb(var(--font-color));
+  background: rgb(var(--bg-color));
+}

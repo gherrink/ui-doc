@@ -6,6 +6,7 @@ module.exports = {
   env: {
     es6: true,
     node: true,
+    browser: true,
   },
   overrides: [
     {
@@ -107,6 +108,7 @@ module.exports = {
       extends: ['plugin:@html-eslint/recommended'],
       rules: {
         '@html-eslint/indent': ['error', 2],
+        '@html-eslint/element-newline': ['error', { skip: ['pre', 'code'] }],
       },
     },
   ],

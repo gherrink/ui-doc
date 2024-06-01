@@ -1,0 +1,43 @@
+.margin,
+.mxy {
+  margin: var(--mt, var(--size-normal)) var(--mr, var(--size-normal)) var(--mb, var(--size-normal)) var(--ml, var(--size-normal));
+}
+
+.mt {
+  margin-top: var(--mt, var(--size-normal));
+}
+
+.mr {
+  margin-right: var(--mr, var(--size-normal));
+}
+
+.mb {
+  margin-bottom: var(--mb, var(--size-normal));
+}
+
+.ml {
+  margin-left: var(--ml, var(--size-normal));
+}
+
+.mxy {
+  --mt: var(--my, var(--size-normal));
+  --mb: var(--my, var(--size-normal));
+  --ml: var(--mx, var(--size-normal));
+  --mr: var(--mx, var(--size-normal));
+}
+
+.my {
+  --mt: var(--my, var(--size-normal));
+  --mb: var(--my,var(--size-normal));
+
+  @extend .mt;
+  @extend .mb;
+}
+
+.mx {
+  --ml: var(--mx, var(--size-normal));
+  --mr: var(--mx, var(--size-normal));
+
+  @extend .ml;
+  @extend .mr;
+}

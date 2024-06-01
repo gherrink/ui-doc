@@ -1,0 +1,18 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+*::after,
+*::before {
+  box-sizing: inherit;
+}
+
+::selection {
+  color: rgb(var(--selection-color));
+  background-color: rgb(var(--selection-bg-color));
+}
+
+body {
+  background-color: rgb(var(--bg-color));;
+}

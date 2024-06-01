@@ -1,9 +1,13 @@
+import babel from '@rollup/plugin-babel'
+import commonjs from '@rollup/plugin-commonjs'
+import resolve from '@rollup/plugin-node-resolve'
 import styleguide from '@styleguide/rollup'
 import autoprefixer from 'autoprefixer'
+import postcssExtend from 'postcss-extend'
 import postcssImport from 'postcss-import'
 import postcssNested from 'postcss-nested'
-import postcssSimpleVars from 'postcss-simple-vars'
 import postcss from 'rollup-plugin-postcss'
+import typescript from 'rollup-plugin-typescript2'
 
 export default [
   {
@@ -48,9 +52,36 @@ export default [
         plugins: [
           postcssImport(),
           postcssNested(),
-          postcssSimpleVars(),
+          postcssExtend(),
           autoprefixer(),
         ],
+      }),
+    ],
+  },
+  {
+    external: [],
+    input: { styleguide: '../packages/html-renderer/scripts/styleguide.ts' },
+    output: [
+      {
+        dir: 'dist/rollup',
+        format: 'umd',
+        sourcemap: false,
+      },
+    ],
+    plugins: [
+      resolve(),
+      commonjs(),
+      babel({
+        babelHelpers: 'bundled',
+        exclude: '../node_modules/**',
+      }),
+      typescript({
+        tsconfig: '../tsconfig.web.json',
+        tsconfigOverride: {
+          compilerOptions: {
+            declaration: true,
+          },
+        },
       }),
     ],
   },

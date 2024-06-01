@@ -1,0 +1,57 @@
+html {
+  font-size: var(--font-size-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: 100%;
+  word-break: break-word;
+}
+
+body,
+.font {
+  font-family: var(--font-family);
+  font-size: var(--font-size);
+  font-weight: var(--font-weight);
+  line-height: var(--font-line-height);
+  color: rgb(var(--font-color));
+}
+
+button, input, optgroup, select, textarea {
+  font-family: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--headline-family, inherit);
+  font-size: calc(var(--font-size-normal) * var(--headline-scale, 1));
+  font-weight: var(--headline-weight, inherit);
+  line-height: var(--headline-line-height, inherit);
+  color: rgb(var(--headline-color, inherit));
+}
+
+h1 {
+  --headline-scale: 2.5;
+}
+
+h2 {
+  --headline-scale: 2;
+}
+
+h3 {
+  --headline-scale: 1.75;
+}
+
+h4 {
+  --headline-scale: 1.5;
+}
+
+a {
+  color: rgb(var(--link-color, inherit));
+  text-decoration: var(--link-decoration, none);
+}
+
+b, strong {
+  --font-weight: var(--font-weight-bold);
+}
+
+small {
+  --font-size: var(--font-size-sm);
+}
