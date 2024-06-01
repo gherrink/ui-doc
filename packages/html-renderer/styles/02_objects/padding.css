@@ -1,6 +1,7 @@
 .padding,
 .pxy {
-  padding: var(--pt, var(--size-normal)) var(--pr, var(--size-normal)) var(--pb, var(--size-normal)) var(--pl, var(--size-normal));
+  padding: var(--pt, var(--size-normal)) var(--pr, var(--size-normal)) var(--pb, var(--size-normal))
+    var(--pl, var(--size-normal));
 }
 
 .pt {
@@ -16,7 +17,7 @@
 }
 
 .pl {
-  padding-left: var(--pl,var(--size-normal));
+  padding-left: var(--pl, var(--size-normal));
 }
 
 .pxy {

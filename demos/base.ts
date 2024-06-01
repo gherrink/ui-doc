@@ -12,8 +12,8 @@ async function main() {
   const finder = fileSystem.createFileFinder(['css/**/*.css'])
 
   await TemplateLoader.load({
-    renderer,
     fileSystem,
+    renderer,
   })
 
   const styleguide = new Styleguide({
@@ -21,10 +21,7 @@ async function main() {
   })
 
   await finder.search(async file => {
-    styleguide.sourceCreate(
-      file,
-      await fileSystem.fileRead(file),
-    )
+    styleguide.sourceCreate(file, await fileSystem.fileRead(file))
   })
 
   await fileSystem.ensureDirectoryExists(outputDir)
@@ -33,7 +30,10 @@ async function main() {
     await fileSystem.fileWrite(`${outputDir}/${file}`, content)
   })
   await assetLoader.copy('@styleguide/html-renderer/styleguide.css', `${outputDir}/styleguide.css`)
-  await assetLoader.copy('@highlightjs/cdn-assets/styles/default.min.css', `${outputDir}/highlight.css`)
+  await assetLoader.copy(
+    '@highlightjs/cdn-assets/styles/default.min.css',
+    `${outputDir}/highlight.css`,
+  )
   await assetLoader.copy('@highlightjs/cdn-assets/highlight.min.js', `${outputDir}/highlight.js`)
 }
 

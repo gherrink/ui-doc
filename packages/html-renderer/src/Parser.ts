@@ -45,15 +45,20 @@ export class Parser implements ParserInterface {
 
     while (token) {
       switch (token.type) {
-        case 'template': parent.append(new TemplateNode(token.content)); break
-        case 'comment': parent.append(new CommentNode(token.content)); break
+        case 'template':
+          parent.append(new TemplateNode(token.content))
+          break
+        case 'comment':
+          parent.append(new CommentNode(token.content))
+          break
         case 'tag-open':
           if (lexer.peek()?.type === 'tag-end') {
             return parent
           }
           parent.append(this.parseTag(lexer))
           break
-        default: throw new SyntaxError(`Unexpected token type: ${token.type}`)
+        default:
+          throw new SyntaxError(`Unexpected token type: ${token.type}`)
       }
       token = lexer.consume()
     }
@@ -99,7 +104,13 @@ export class Parser implements ParserInterface {
     this.parseChildren(lexer, node)
     const closeTokens = lexer.consume(3)
 
-    if (!closeTokens || closeTokens[0]?.type !== 'tag-end' || closeTokens[1]?.type !== 'tag-identifier' || closeTokens[1].name !== tagIdentifier.name || closeTokens[2]?.type !== 'tag-close') {
+    if (
+      !closeTokens ||
+      closeTokens[0]?.type !== 'tag-end' ||
+      closeTokens[1]?.type !== 'tag-identifier' ||
+      closeTokens[1].name !== tagIdentifier.name ||
+      closeTokens[2]?.type !== 'tag-close'
+    ) {
       throw new SyntaxError('Expected closing tag')
     }
 

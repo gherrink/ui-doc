@@ -1,27 +1,15 @@
 /* eslint-disable no-empty-function */
-import type { AssetLoader } from '@styleguide/core'
+import type { AssetLoader, FileSystem } from '@styleguide/core'
 import fs from 'fs/promises'
 import path from 'path'
 
-import { NodeFileSystem } from './NodeFileSystem'
-
 export class NodeAssetLoader implements AssetLoader {
-  protected static instance: NodeAssetLoader
-
   protected resolvedPackages: Record<string, string | null> = {}
 
-  protected fileSystem: NodeFileSystem
+  protected fileSystem: FileSystem
 
-  protected constructor(fileSystem: NodeFileSystem = NodeFileSystem.init()) {
+  public constructor(fileSystem: FileSystem) {
     this.fileSystem = fileSystem
-  }
-
-  public static init(): NodeAssetLoader {
-    if (!this.instance) {
-      this.instance = new NodeAssetLoader()
-    }
-
-    return this.instance
   }
 
   public async packageExists(packageName: string): Promise<boolean> {
@@ -30,7 +18,9 @@ export class NodeAssetLoader implements AssetLoader {
 
   public async packagePath(packageName: string): Promise<string | undefined> {
     if (this.resolvedPackages[packageName] !== undefined) {
-      return this.resolvedPackages[packageName] === null ? undefined : (this.resolvedPackages[packageName] as string)
+      return this.resolvedPackages[packageName] === null
+        ? undefined
+        : this.resolvedPackages[packageName]!
     }
 
     const paths = require.resolve.paths(packageName)
@@ -40,28 +30,29 @@ export class NodeAssetLoader implements AssetLoader {
     }
 
     this.resolvedPackages[packageName] = await paths.reduce(async (acc, nodePath) => {
-      if (await acc !== null) {
+      if ((await acc) !== null) {
         return acc
       }
 
       const dir = path.join(nodePath, packageName)
 
-      return await fs.access(dir, fs.constants.R_OK).then(() => true).catch(() => false)
+      return (await fs
+        .access(dir, fs.constants.R_OK)
+        .then(() => true)
+        .catch(() => false))
         ? dir
         : acc
     }, Promise.resolve<string | null>(null))
 
     return this.resolvedPackages[packageName] !== null
-      ? (this.resolvedPackages[packageName] as string)
+      ? this.resolvedPackages[packageName]!
       : undefined
   }
 
   public async resolve(file: string): Promise<string | undefined> {
     const resolvedFile = require.resolve(file)
 
-    return await this.fileSystem.fileExists(resolvedFile)
-      ? resolvedFile
-      : undefined
+    return (await this.fileSystem.fileExists(resolvedFile)) ? resolvedFile : undefined
   }
 
   public async copy(from: string, to: string): Promise<void> {

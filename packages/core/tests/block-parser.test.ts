@@ -64,12 +64,9 @@ describe('BlockParser', () => {
      */
     `
 
-    expect(() => parser.parse(content))
-      .toThrowError(new BlockParseError(
-        'Undefined tag type \'fooo\'.',
-        prepareForBlockParserException(content),
-        1,
-      ))
+    expect(() => parser.parse(content)).toThrowError(
+      new BlockParseError("Undefined tag type 'fooo'.", prepareForBlockParserException(content), 1),
+    )
   })
 
   test('should run custom tag transformer', () => {
@@ -102,7 +99,9 @@ describe('BlockParser', () => {
      */
     `
 
-    expect(() => parser.parse(content)).toThrowError(new BlockParseError('Empty block.', prepareForBlockParserException(content), 1))
+    expect(() => parser.parse(content)).toThrowError(
+      new BlockParseError('Empty block.', prepareForBlockParserException(content), 1),
+    )
   })
 
   test('should report invalid location', () => {
@@ -112,11 +111,12 @@ describe('BlockParser', () => {
      */
     `
 
-    expect(() => parser.parse(content))
-      .toThrowError(new BlockParseError(
-        'Missing block location. Don\'t know where to place this block, please use @location, @page or @section + @page.',
+    expect(() => parser.parse(content)).toThrowError(
+      new BlockParseError(
+        "Missing block location. Don't know where to place this block, please use @location, @page or @section + @page.",
         prepareForBlockParserException(content),
         1,
-      ))
+      ),
+    )
   })
 })

@@ -1,2 +1,1 @@
-export class TagTransformerError extends Error {
-}
+export class TagTransformerError extends Error {}

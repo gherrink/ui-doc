@@ -6,13 +6,13 @@ import location from '../../src/tag-transformers/location'
 describe('Location tag transformer', () => {
   test('should transform name', () => {
     const comment = {
-      tag: 'location',
-      name: 'test',
-      type: '',
       description: '',
+      name: 'test',
       optional: false,
       problems: [],
       source: [],
+      tag: 'location',
+      type: '',
     }
     let block: Partial<Block> = {}
 
@@ -24,13 +24,13 @@ describe('Location tag transformer', () => {
 
   test('should transform name upper', () => {
     const comment = {
-      tag: 'location',
-      name: 'Test',
-      type: '',
       description: '',
+      name: 'Test',
       optional: false,
       problems: [],
       source: [],
+      tag: 'location',
+      type: '',
     }
     let block: Partial<Block> = {}
 
@@ -42,13 +42,13 @@ describe('Location tag transformer', () => {
 
   test('should transform name and description level 2', () => {
     const comment = {
-      tag: 'location',
-      name: 'test.test',
-      type: '',
       description: '',
+      name: 'test.test',
       optional: false,
       problems: [],
       source: [],
+      tag: 'location',
+      type: '',
     }
     let block: Partial<Block> = {}
 
@@ -60,13 +60,13 @@ describe('Location tag transformer', () => {
 
   test('should throw error', () => {
     const comment = {
-      tag: 'location',
-      name: '',
-      type: '',
       description: '',
+      name: '',
       optional: false,
       problems: [],
       source: [],
+      tag: 'location',
+      type: '',
     }
     let block: Partial<Block> = {}
 

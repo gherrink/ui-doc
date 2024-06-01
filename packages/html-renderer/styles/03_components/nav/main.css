@@ -8,7 +8,7 @@
   > .control.title {
     --px: var(--nav-main-menu-item-px);
     --py: var(--nav-main-menu-item-py);
-    --font-weight: var(--font-weight-bold)
+    --font-weight: var(--font-weight-bold);
   }
 }
 

@@ -170,16 +170,7 @@ describe('Parser tag if', () => {
     expect(tag.options.secondValue).toBeUndefined()
   })
 
-  test.each([
-    '==',
-    '===',
-    '!=',
-    '!==',
-    '>',
-    '>=',
-    '<',
-    '<=',
-  ])('operator %s', operator => {
+  test.each(['==', '===', '!=', '!==', '>', '>=', '<', '<='])('operator %s', operator => {
     const reader = new Reader(`{{ if:bar ${operator} baz }}foo{{ /if }}`)
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode

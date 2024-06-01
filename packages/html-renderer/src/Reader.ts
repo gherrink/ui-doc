@@ -47,10 +47,10 @@ export class Reader implements ReaderInterface {
     const lines = this.input.split('\n', 1)
 
     return {
-      source: this.source,
+      content: this.currentContent + lines[0],
       line: this.currentLine,
       pos: this.currentPos,
-      content: this.currentContent + lines[0],
+      source: this.source,
     }
   }
 }

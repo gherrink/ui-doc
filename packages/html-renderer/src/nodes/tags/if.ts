@@ -40,9 +40,13 @@ export class TagIfNode extends TagNode {
     return value ? this.renderChildNodes(context, renderer) : ''
   }
 
-  protected getValue(context: RenderContext, valueKey: 'firstValue' | 'secondValue', contextKey: 'firstContextKey' | 'secondContextKey'): any {
+  protected getValue(
+    context: RenderContext,
+    valueKey: 'firstValue' | 'secondValue',
+    contextKey: 'firstContextKey' | 'secondContextKey',
+  ): any {
     return this.options[contextKey] !== undefined
-      ? readNestedValue(this.options[contextKey] as string, context)
+      ? readNestedValue(this.options[contextKey]!, context)
       : this.options[valueKey]
   }
 
@@ -73,12 +77,17 @@ export class TagIfNode extends TagNode {
 }
 
 export const parseTagIfNode: TagNodeParse = {
-  identifier: 'if',
-  example: '{{ if:(contextKey|contextKey === (true|"a string"|12.34)|contextKey === otherContextKey) }}###{{ /if }}',
+  example:
+    '{{ if:(contextKey|contextKey === (true|"a string"|12.34)|contextKey === otherContextKey) }}###{{ /if }}',
   hasContent: true,
+  identifier: 'if',
   parse() {
-    const options: Partial<TagIfNodeOptions> = { }
-    const addOptionKeyOrValue = (token: TokenValue, keyName: 'firstContextKey' | 'secondContextKey', valueName: 'firstValue' | 'secondValue') => {
+    const options: Partial<TagIfNodeOptions> = {}
+    const addOptionKeyOrValue = (
+      token: TokenValue,
+      keyName: 'firstContextKey' | 'secondContextKey',
+      valueName: 'firstValue' | 'secondValue',
+    ) => {
       if (token.type === 'identifier') {
         options[keyName] = token.name
         return
@@ -138,8 +147,14 @@ export const parseTagIfNode: TagNodeParse = {
           throw new TagNodeSyntaxError('Expected context key when no operator is given')
         }
 
-        if (options.operator !== undefined && options.secondContextKey === undefined && options.secondValue === undefined) {
-          throw new TagNodeSyntaxError('Expected second context key or value when operator is given')
+        if (
+          options.operator !== undefined &&
+          options.secondContextKey === undefined &&
+          options.secondValue === undefined
+        ) {
+          throw new TagNodeSyntaxError(
+            'Expected second context key or value when operator is given',
+          )
         }
 
         return new TagIfNode(options as TagIfNodeOptions)

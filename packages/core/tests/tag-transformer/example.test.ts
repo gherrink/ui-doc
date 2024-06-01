@@ -3,7 +3,7 @@ import { Block } from '@styleguide/core'
 
 import example from '../../src/tag-transformers/example'
 
-function exampleToCode(data: { content: string, title: string, type: string }) {
+function exampleToCode(data: { content: string; title: string; type: string }) {
   return {
     content: data.content,
     title: data.title,
@@ -14,20 +14,20 @@ function exampleToCode(data: { content: string, title: string, type: string }) {
 describe('Example tag transformer', () => {
   test('should transform simple', () => {
     const comment = {
-      tag: 'example',
-      name: '',
-      type: '',
       description: '<div>test</div>',
+      name: '',
       optional: false,
       problems: [],
       source: [],
+      tag: 'example',
+      type: '',
     }
     let block: Partial<Block> = {}
     const expected = {
       content: '<div>test</div>',
+      modifier: undefined,
       title: '',
       type: 'html',
-      modifier: undefined,
     }
 
     block = example.transform(block, comment)
@@ -40,20 +40,20 @@ describe('Example tag transformer', () => {
 
   test('should transform type with modifier', () => {
     const comment = {
-      tag: 'example',
-      name: '',
-      type: 'simple-modifier',
       description: '<div>test</div>',
+      name: '',
       optional: false,
       problems: [],
       source: [],
+      tag: 'example',
+      type: 'simple-modifier',
     }
     let block: Partial<Block> = {}
     const expected = {
       content: '<div>test</div>',
+      modifier: 'simple-modifier',
       title: '',
       type: 'html',
-      modifier: 'simple-modifier',
     }
 
     block = example.transform(block, comment)
@@ -66,20 +66,20 @@ describe('Example tag transformer', () => {
 
   test('should transform type with modifier and type', () => {
     const comment = {
-      tag: 'example',
-      name: '',
-      type: 'simple-modifier|xhtml',
       description: '<div>test</div>',
+      name: '',
       optional: false,
       problems: [],
       source: [],
+      tag: 'example',
+      type: 'simple-modifier|xhtml',
     }
     let block: Partial<Block> = {}
     const expected = {
       content: '<div>test</div>',
+      modifier: 'simple-modifier',
       title: '',
       type: 'xhtml',
-      modifier: 'simple-modifier',
     }
 
     block = example.transform(block, comment)
@@ -92,13 +92,13 @@ describe('Example tag transformer', () => {
 
   test('should not transform code when hideCode', () => {
     const comment = {
-      tag: 'example',
-      name: '',
-      type: '',
       description: '<div>test</div>',
+      name: '',
       optional: false,
       problems: [],
       source: [],
+      tag: 'example',
+      type: '',
     }
     let block: Partial<Block> = {
       hideCode: true,
@@ -118,13 +118,13 @@ describe('Example tag transformer', () => {
 
   test('should not be undefined on empty content', () => {
     const comment = {
-      tag: 'example',
-      name: '',
-      type: '',
       description: '',
+      name: '',
       optional: false,
       problems: [],
       source: [],
+      tag: 'example',
+      type: '',
     }
     let block: Partial<Block> = {}
 
@@ -136,13 +136,13 @@ describe('Example tag transformer', () => {
 
   test('should not override existing code', () => {
     const comment = {
-      tag: 'example',
-      name: '',
-      type: '',
       description: '<div>example test</div>',
+      name: '',
       optional: false,
       problems: [],
       source: [],
+      tag: 'example',
+      type: '',
     }
     let block: Partial<Block> = {
       code: {

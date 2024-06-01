@@ -1,10 +1,5 @@
 import { TagNodeSyntaxError } from '../../errors/TagNodeSyntaxError'
-import type {
-  HtmlRendererInterface,
-  RenderContext,
-  TagNodeParse,
-  TokenValue,
-} from '../../types'
+import type { HtmlRendererInterface, RenderContext, TagNodeParse, TokenValue } from '../../types'
 import { readNestedValue } from '../../utils'
 import { TagNode } from '../TagNode'
 
@@ -17,11 +12,12 @@ export class TagForNode extends TagNode {
 
   public constructor({ contextKey }: TagForNodeOptions) {
     super('tag-for')
-    this.contextKey = contextKey || 'this'
+    this.contextKey = contextKey ?? 'this'
   }
 
   public render(context: RenderContext, renderer: HtmlRendererInterface): string {
-    const contextNew = this.contextKey === 'this' ? context : readNestedValue(this.contextKey, context)
+    const contextNew =
+      this.contextKey === 'this' ? context : readNestedValue(this.contextKey, context)
 
     if (Array.isArray(contextNew)) {
       return this.renderArray(contextNew, context, renderer)
@@ -34,37 +30,51 @@ export class TagForNode extends TagNode {
     return ''
   }
 
-  protected renderArray(context: any[], parentContext: RenderContext, renderer: HtmlRendererInterface): string {
+  protected renderArray(
+    context: any[],
+    parentContext: RenderContext,
+    renderer: HtmlRendererInterface,
+  ): string {
     return context
       .map((item, index) => {
-        return this.renderChildNodes({
-          ...(typeof item === 'object' ? item : {}),
-          _parent: parentContext,
-          _contextKey: this.contextKey,
-          _loop: { index, value: item },
-        }, renderer)
+        return this.renderChildNodes(
+          {
+            ...(typeof item === 'object' ? item : {}),
+            _contextKey: this.contextKey,
+            _loop: { index, value: item },
+            _parent: parentContext,
+          },
+          renderer,
+        )
       })
       .join('')
   }
 
-  protected renderObject(context: Record<string, any>, parentContext: RenderContext, renderer: HtmlRendererInterface): string {
+  protected renderObject(
+    context: Record<string, any>,
+    parentContext: RenderContext,
+    renderer: HtmlRendererInterface,
+  ): string {
     return Object.keys(context)
       .map((key, index) => {
-        return this.renderChildNodes({
-          ...(typeof context[key] === 'object') ? context[key] : {},
-          _parent: parentContext,
-          _contextKey: this.contextKey,
-          _loop: { key, index, value: context[key] },
-        }, renderer)
+        return this.renderChildNodes(
+          {
+            ...(typeof context[key] === 'object' ? context[key] : {}),
+            _contextKey: this.contextKey,
+            _loop: { index, key, value: context[key] },
+            _parent: parentContext,
+          },
+          renderer,
+        )
       })
       .join('')
   }
 }
 
 export const parseTagForNode: TagNodeParse = {
-  identifier: 'for',
   example: '{{ for[:contextKey] }}###{{ /for }}',
   hasContent: true,
+  identifier: 'for',
   parse() {
     const options: Partial<TagForNodeOptions> = {}
     let gotSeparator = false

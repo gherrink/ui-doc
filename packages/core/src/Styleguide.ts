@@ -12,13 +12,16 @@ import {
 } from './types'
 
 export interface StyleguideEvent {}
-export interface ContextEntryEvent extends StyleguideEvent { entry: ContextEntry, key: string }
+export interface ContextEntryEvent extends StyleguideEvent {
+  entry: ContextEntry
+  key: string
+}
 export interface StyleguideEventMap {
   'context-entry': ContextEntryEvent
 }
 
 export class Styleguide {
-  protected sources: {[key: FilePath]: Source}
+  protected sources: Record<FilePath, Source>
 
   protected context: Context
 
@@ -26,7 +29,10 @@ export class Styleguide {
 
   public renderer: RendererInterface
 
-  protected listeners: Record<keyof StyleguideEventMap, ((event: StyleguideEventMap[keyof StyleguideEventMap]) => void)[]> = {
+  protected listeners: Record<
+    keyof StyleguideEventMap,
+    ((event: StyleguideEventMap[keyof StyleguideEventMap]) => void)[]
+  > = {
     'context-entry': [],
   }
 
@@ -35,27 +41,27 @@ export class Styleguide {
   }
 
   protected generate = {
-    titlePage: (page: ContextEntry) => (page.id !== 'index'
-      ? `${page.title} | ${this.texts.title}`
-      : this.texts.title),
-    titleExample: (example: ContextEntry) => (example.title
-      ? `${example.title} Example | ${this.texts.title}`
-      : `Example | ${this.texts.title}`),
-    linkPage: (page: ContextEntry) => `/${page.id}.html`,
     homeLink: () => '/index.html',
+    linkPage: (page: ContextEntry) => `/${page.id}.html`,
     logo: () => 'LOGO',
     name: () => this.texts.title,
+    titleExample: (example: ContextEntry) =>
+      example.title
+        ? `${example.title} Example | ${this.texts.title}`
+        : `Example | ${this.texts.title}`,
+    titlePage: (page: ContextEntry) =>
+      page.id !== 'index' ? `${page.title} | ${this.texts.title}` : this.texts.title,
   }
 
   constructor(options: Options) {
     this.sources = {}
     this.context = {
-      pages: [],
       entries: {},
       menu: [],
+      pages: [],
     }
 
-    this.blockParser = options.blockParser || this.createParser()
+    this.blockParser = options.blockParser ?? this.createParser()
     this.renderer = options.renderer
 
     this.registerListeners()
@@ -65,13 +71,19 @@ export class Styleguide {
     return new BlockParser(new DescriptionParser())
   }
 
-  public on<K extends keyof StyleguideEventMap>(type: K, listener: (event: StyleguideEventMap[K]) => void): Styleguide {
+  public on<K extends keyof StyleguideEventMap>(
+    type: K,
+    listener: (event: StyleguideEventMap[K]) => void,
+  ): Styleguide {
     this.listeners[type].push(listener)
 
     return this
   }
 
-  public off<K extends keyof StyleguideEventMap>(type: K, listener: (event: StyleguideEventMap[K]) => void): Styleguide {
+  public off<K extends keyof StyleguideEventMap>(
+    type: K,
+    listener: (event: StyleguideEventMap[K]) => void,
+  ): Styleguide {
     this.listeners[type] = this.listeners[type].filter(l => l !== listener)
 
     return this
@@ -161,9 +173,7 @@ export class Styleguide {
     const entryIgnoredKeys = ['id', 'title', 'titleLevel', 'order', 'sections']
     const blockKeys = Object.keys(block)
 
-    entry.title = (!entry.title || block.title)
-      ? block.title || ''
-      : entry.title
+    entry.title = !entry.title || block.title ? block.title ?? '' : entry.title
 
     blockKeys.forEach(blockType => {
       if (!blockIgnoredKeys.includes(blockType)) {
@@ -184,10 +194,10 @@ export class Styleguide {
     if (!this.context.entries[key]) {
       this.context.entries[key] = {
         id: this.contextEntryKeyToId(key),
-        title: '',
         order: 0,
-        titleLevel: 2,
         sections: [],
+        title: '',
+        titleLevel: 2,
       }
 
       this.contextEntryAppend(key, this.context.entries[key])
@@ -267,25 +277,31 @@ export class Styleguide {
         const entry = this.context.entries[key]
 
         return entry.example && entry.example.type === 'html' && entry.example.src
-          ? write(`examples/${entry.example.fileName}`, this.exampleContent(entry.example, 'example'))
+          ? write(
+              `examples/${entry.example.fileName}`,
+              this.exampleContent(entry.example, 'example'),
+            )
           : Promise.resolve()
       }),
     ])
   }
 
   public pageContent(page: ContextEntry, layout?: string): string {
-    return this.renderer.generate({
-      title: this.generate.titlePage(page),
-      logo: this.generate.logo(),
-      name: this.generate.name(),
-      homeLink: this.generate.homeLink(),
-      page: JSON.parse(JSON.stringify(page)),
-      menu: this.createMenu().map(item => {
-        item.active = item.href === this.generate.linkPage(page)
+    return this.renderer.generate(
+      {
+        homeLink: this.generate.homeLink(),
+        logo: this.generate.logo(),
+        menu: this.createMenu().map(item => {
+          item.active = item.href === this.generate.linkPage(page)
 
-        return item
-      }),
-    }, layout)
+          return item
+        }),
+        name: this.generate.name(),
+        page: JSON.parse(JSON.stringify(page)),
+        title: this.generate.titlePage(page),
+      },
+      layout,
+    )
   }
 
   public exampleContent(example: ContextEntry, layout: 'example'): string {
@@ -300,9 +316,9 @@ export class Styleguide {
     if (this.context.menu.length === 0) {
       this.context.pages.forEach(page => {
         this.context.menu.push({
-          text: page.title,
-          href: this.generate.linkPage(page),
           active: false,
+          href: this.generate.linkPage(page),
+          text: page.title,
         })
       })
     }

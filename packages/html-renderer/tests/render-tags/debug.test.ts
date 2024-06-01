@@ -3,7 +3,7 @@ import { describe, expect, test } from '@jest/globals'
 import { TagDebugNode } from '../../src/nodes/tags/debug'
 
 describe('render tag debug', () => {
-  const context = { title: 'Hello', page: { title: 'World' } }
+  const context = { page: { title: 'World' }, title: 'Hello' }
 
   const debugOutput = (debug: any) => `<pre>${JSON.stringify(debug, null, 2)}</pre>`
 

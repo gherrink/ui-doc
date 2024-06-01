@@ -1,12 +1,15 @@
-import type { FileSystem } from '@styleguide/core'
 import fs from 'node:fs/promises'
 import path from 'node:path'
+
+import type { FileSystem } from '@styleguide/core'
 
 import { NodeAssetLoader } from './NodeAssetLoader'
 import { NodeFileFinder } from './NodeFileFinder'
 
 export class NodeFileSystem implements FileSystem {
   private static instance: NodeFileSystem
+
+  private assetLoaderInstance?: NodeAssetLoader
 
   public static init(): NodeFileSystem {
     if (!this.instance) {
@@ -21,7 +24,11 @@ export class NodeFileSystem implements FileSystem {
   }
 
   public assetLoader(): NodeAssetLoader {
-    return NodeAssetLoader.init()
+    if (!this.assetLoaderInstance) {
+      this.assetLoaderInstance = new NodeAssetLoader(this)
+    }
+
+    return this.assetLoaderInstance
   }
 
   public async fileRead(file: string): Promise<string> {
@@ -52,7 +59,10 @@ export class NodeFileSystem implements FileSystem {
   }
 
   public async fileExists(file: string): Promise<boolean> {
-    return fs.access(path.resolve(file), fs.constants.F_OK).then(() => true).catch(() => false)
+    return fs
+      .access(path.resolve(file), fs.constants.F_OK)
+      .then(() => true)
+      .catch(() => false)
   }
 
   public fileBasename(file: string): string {
@@ -62,4 +72,8 @@ export class NodeFileSystem implements FileSystem {
   public async ensureDirectoryExists(dir: string): Promise<void> {
     await fs.mkdir(path.resolve(dir), { recursive: true })
   }
+}
+
+export function cerateNodeFileSystem(): NodeFileSystem {
+  return NodeFileSystem.init()
 }

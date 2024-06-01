@@ -15,8 +15,8 @@ import type {
 } from './types'
 
 const IDENTIFIER_CHARS: Record<TokenTypeIdentifier, string> = {
-  'tag-identifier': 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
   identifier: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.',
+  'tag-identifier': 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
 }
 
 export class Lexer implements LexerInterface {
@@ -40,16 +40,16 @@ export class Lexer implements LexerInterface {
     this.consumeNextTokens(k)
 
     return k === 1
-      ? this.currentTokens.slice(0, k)[0] as TokenReturn<T>
-      : this.currentTokens.slice(0, k) as TokenReturn<T>
+      ? (this.currentTokens.slice(0, k)[0] as TokenReturn<T>)
+      : (this.currentTokens.slice(0, k) as TokenReturn<T>)
   }
 
   public consume<T extends PositiveInteger = 1>(k: T = 1 as T): TokenReturn<T> {
     this.consumeNextTokens(k)
 
     return k === 1
-      ? this.currentTokens.splice(0, k)[0] as TokenReturn<T>
-      : this.currentTokens.splice(0, k) as TokenReturn<T>
+      ? (this.currentTokens.splice(0, k)[0] as TokenReturn<T>)
+      : (this.currentTokens.splice(0, k) as TokenReturn<T>)
   }
 
   protected consumeNextTokens(k: PositiveInteger = 1) {
@@ -124,8 +124,8 @@ export class Lexer implements LexerInterface {
     }
 
     return {
-      type: 'comment',
       content: content.trim(),
+      type: 'comment',
     }
   }
 
@@ -147,8 +147,8 @@ export class Lexer implements LexerInterface {
     }
 
     return {
-      type: 'template',
       content,
+      type: 'template',
     }
   }
 
@@ -183,7 +183,18 @@ export class Lexer implements LexerInterface {
       return this.consumeString()
     }
 
-    if (char === '1' || char === '2' || char === '3' || char === '4' || char === '5' || char === '6' || char === '7' || char === '8' || char === '9' || char === '0') {
+    if (
+      char === '1' ||
+      char === '2' ||
+      char === '3' ||
+      char === '4' ||
+      char === '5' ||
+      char === '6' ||
+      char === '7' ||
+      char === '8' ||
+      char === '9' ||
+      char === '0'
+    ) {
       return this.consumeNumber()
     }
 
@@ -237,7 +248,19 @@ export class Lexer implements LexerInterface {
     while (!this.reader.isEof()) {
       const char = this.reader.peak()
 
-      if (char === '1' || char === '2' || char === '3' || char === '4' || char === '5' || char === '6' || char === '7' || char === '8' || char === '9' || char === '0' || char === '.') {
+      if (
+        char === '1' ||
+        char === '2' ||
+        char === '3' ||
+        char === '4' ||
+        char === '5' ||
+        char === '6' ||
+        char === '7' ||
+        char === '8' ||
+        char === '9' ||
+        char === '0' ||
+        char === '.'
+      ) {
         value += this.reader.consume()
       } else {
         break
@@ -273,8 +296,8 @@ export class Lexer implements LexerInterface {
     }
 
     return {
-      type: 'operator',
       operator,
+      type: 'operator',
     }
   }
 
@@ -293,8 +316,8 @@ export class Lexer implements LexerInterface {
     }
 
     return {
-      type,
       name,
+      type,
     }
   }
 }

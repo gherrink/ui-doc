@@ -4,7 +4,15 @@ export type TokenTypeIdentifier = 'tag-identifier' | 'identifier'
 
 export type TokenTagType = 'tag-open' | 'tag-close' | 'tag-end' | 'tag-separator'
 
-export type TokenType = 'comment' | 'template' | 'operator' | 'number' | 'string' | 'boolean' | TokenTypeIdentifier | TokenTagType
+export type TokenType =
+  | 'comment'
+  | 'template'
+  | 'operator'
+  | 'number'
+  | 'string'
+  | 'boolean'
+  | TokenTypeIdentifier
+  | TokenTagType
 
 export interface Token {
   type: TokenType
@@ -49,17 +57,24 @@ export interface TokenTag extends Token {
   type: TokenTagType
 }
 
-export type TokenValue<T extends TokenType = TokenType> =
-  T extends 'comment' ? TokenComment :
-  T extends 'template' ? TokenTemplate :
-  T extends 'string' ? TokenString :
-  T extends 'number' ? TokenNumber :
-  T extends 'boolean' ? TokenBoolean :
-  T extends TokenTypeIdentifier ? TokenIdentifier :
-  T extends 'operator' ? TokenOperator :
-  T extends TokenTagType ? TokenTag :
-  never
+export type TokenValue<T extends TokenType = TokenType> = T extends 'comment'
+  ? TokenComment
+  : T extends 'template'
+    ? TokenTemplate
+    : T extends 'string'
+      ? TokenString
+      : T extends 'number'
+        ? TokenNumber
+        : T extends 'boolean'
+          ? TokenBoolean
+          : T extends TokenTypeIdentifier
+            ? TokenIdentifier
+            : T extends 'operator'
+              ? TokenOperator
+              : T extends TokenTagType
+                ? TokenTag
+                : never
 
-export type TokenReturn<T = PositiveInteger> =
-  T extends 1 ? (TokenValue | undefined) :
-  (TokenValue | undefined)[]
+export type TokenReturn<T = PositiveInteger> = T extends 1
+  ? TokenValue | undefined
+  : (TokenValue | undefined)[]

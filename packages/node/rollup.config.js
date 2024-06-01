@@ -13,22 +13,22 @@ export default {
   input: 'src/index.ts',
   output: [
     {
-      name: pkg.name,
       file: pkg.umd,
       format: 'umd',
+      name: pkg.name,
       sourcemap: true,
     },
     {
-      name: pkg.name,
+      exports: 'auto',
       file: pkg.main,
       format: 'cjs',
+      name: pkg.name,
       sourcemap: true,
-      exports: 'auto',
     },
     {
-      name: pkg.name,
       file: pkg.module,
       format: 'es',
+      name: pkg.name,
       sourcemap: true,
     },
   ],
@@ -52,9 +52,7 @@ export default {
           paths: {
             '@styleguide/*': ['packages/*/src'],
           },
-          types: [
-            'node',
-          ],
+          types: ['node'],
         },
         include: null,
       },

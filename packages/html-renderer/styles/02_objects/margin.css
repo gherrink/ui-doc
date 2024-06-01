@@ -1,6 +1,7 @@
 .margin,
 .mxy {
-  margin: var(--mt, var(--size-normal)) var(--mr, var(--size-normal)) var(--mb, var(--size-normal)) var(--ml, var(--size-normal));
+  margin: var(--mt, var(--size-normal)) var(--mr, var(--size-normal)) var(--mb, var(--size-normal))
+    var(--ml, var(--size-normal));
 }
 
 .mt {
@@ -28,7 +29,7 @@
 
 .my {
   --mt: var(--my, var(--size-normal));
-  --mb: var(--my,var(--size-normal));
+  --mb: var(--my, var(--size-normal));
 
   @extend .mt;
   @extend .mb;

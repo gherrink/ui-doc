@@ -23,12 +23,8 @@ export default [
       postcss({
         extract: 'app.css',
         minimize: true,
+        plugins: [postcssImport(), postcssNested(), autoprefixer()],
         sourceMap: true,
-        plugins: [
-          postcssImport(),
-          postcssNested(),
-          autoprefixer(),
-        ],
       }),
       styleguide({
         source: ['css/**/*.css'],
@@ -39,22 +35,17 @@ export default [
   {
     input: '../packages/html-renderer/styles/index.css',
     output: {
-      name: 'styleguide',
       dir: 'dist/rollup',
       format: 'es',
+      name: 'styleguide',
       sourcemap: true,
     },
     plugins: [
       postcss({
         extract: 'styleguide.css',
         minimize: true,
+        plugins: [postcssImport(), postcssNested(), postcssExtend(), autoprefixer()],
         sourceMap: true,
-        plugins: [
-          postcssImport(),
-          postcssNested(),
-          postcssExtend(),
-          autoprefixer(),
-        ],
       }),
     ],
   },

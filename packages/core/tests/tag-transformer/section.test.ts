@@ -6,13 +6,13 @@ import section from '../../src/tag-transformers/section'
 describe('Section tag transformer', () => {
   test('should transform name', () => {
     const comment = {
-      tag: 'section',
-      name: 'test',
-      type: '',
       description: '',
+      name: 'test',
       optional: false,
       problems: [],
       source: [],
+      tag: 'section',
+      type: '',
     }
     let block: Partial<Block> = {}
 
@@ -27,13 +27,13 @@ describe('Section tag transformer', () => {
 
   test('should transform name upper', () => {
     const comment = {
-      tag: 'section',
-      name: 'Test',
-      type: '',
       description: '',
+      name: 'Test',
       optional: false,
       problems: [],
       source: [],
+      tag: 'section',
+      type: '',
     }
     let block: Partial<Block> = {}
 
@@ -48,13 +48,13 @@ describe('Section tag transformer', () => {
 
   test('should transform name and description', () => {
     const comment = {
-      tag: 'section',
-      name: 'test',
-      type: '',
       description: 'Test Section',
+      name: 'test',
       optional: false,
       problems: [],
       source: [],
+      tag: 'section',
+      type: '',
     }
     let block: Partial<Block> = {}
 
@@ -69,13 +69,13 @@ describe('Section tag transformer', () => {
 
   test('should transform name and description level 2', () => {
     const comment = {
-      tag: 'section',
-      name: 'test.test',
-      type: '',
       description: 'Test Section',
+      name: 'test.test',
       optional: false,
       problems: [],
       source: [],
+      tag: 'section',
+      type: '',
     }
     let block: Partial<Block> = {}
 
@@ -90,13 +90,13 @@ describe('Section tag transformer', () => {
 
   test('should not override location title', () => {
     const comment = {
-      tag: 'section',
-      name: 'test.test',
-      type: '',
       description: 'Test Section',
+      name: 'test.test',
       optional: false,
       problems: [],
       source: [],
+      tag: 'section',
+      type: '',
     }
     let block: Partial<Block> = {
       location: 'test.test',
@@ -106,21 +106,21 @@ describe('Section tag transformer', () => {
     block = section.transform(block, comment)
 
     expect(block).toMatchObject({
-      section: 'test.test',
       location: 'test.test',
+      section: 'test.test',
       title: 'Test Location',
     })
   })
 
   test('should throw error', () => {
     const comment = {
-      tag: 'section',
-      name: '',
-      type: '',
       description: '',
+      name: '',
       optional: false,
       problems: [],
       source: [],
+      tag: 'section',
+      type: '',
     }
     let block: Partial<Block> = {}
 

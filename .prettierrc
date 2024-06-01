@@ -1,0 +1,28 @@
+{
+	"arrowParens": "avoid",
+	"printWidth": 100,
+	"singleQuote": true,
+  "quoteProps": "as-needed",
+	"trailingComma": "all",
+	"useTabs": false,
+  "semi": false,
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "tabWidth": 2,
+	"overrides": [
+		{
+			"files": "**/*.md",
+			"options": {
+				"printWidth": 76,
+				"tabWidth": 2,
+				"proseWrap": "never"
+			}
+		},
+    {
+      "files": "**/*.css",
+      "options": {
+        "singleQuote": false
+      }
+    }
+	]
+}

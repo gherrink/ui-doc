@@ -1,6 +1,4 @@
-import {
-  describe, expect, jest, test,
-} from '@jest/globals'
+import { describe, expect, jest, test } from '@jest/globals'
 
 import { Styleguide } from '../src/Styleguide'
 import type { BlockParserInterface, RendererInterface } from '../src/types'
@@ -21,8 +19,8 @@ describe('Styleguide', () => {
     }
 
     const styleguide = new Styleguide({
-      renderer,
       blockParser,
+      renderer,
     })
 
     return {
@@ -36,13 +34,20 @@ describe('Styleguide', () => {
     const { styleguide } = styleguideMock({
       blockParserParse: jest.fn<BlockParserInterface['parse']>().mockReturnValue([
         {
-          key: 'foo', order: 0, title: 'Foo',
+          key: 'foo',
+          order: 0,
+          title: 'Foo',
         },
         {
-          key: 'bar', order: 0, title: 'Bar', description: 'Bar description',
+          description: 'Bar description',
+          key: 'bar',
+          order: 0,
+          title: 'Bar',
         },
         {
-          key: 'foo.bar', order: 0, title: 'Foo Bar',
+          key: 'foo.bar',
+          order: 0,
+          title: 'Foo Bar',
         },
       ]),
     })
@@ -54,31 +59,33 @@ describe('Styleguide', () => {
     expect(Object.keys(entries)).toEqual(['foo', 'bar', 'foo.bar'])
     expect(entries.foo).toEqual({
       id: 'foo',
-      title: 'Foo',
       order: 0,
+      sections: [
+        {
+          id: 'bar',
+          order: 0,
+          sections: [],
+          title: 'Foo Bar',
+          titleLevel: 3,
+        },
+      ],
+      title: 'Foo',
       titleLevel: 2,
-      sections: [{
-        id: 'bar',
-        title: 'Foo Bar',
-        order: 0,
-        titleLevel: 3,
-        sections: [],
-      }],
     })
     expect(entries.bar).toEqual({
-      id: 'bar',
-      title: 'Bar',
-      order: 0,
-      titleLevel: 2,
       description: 'Bar description',
+      id: 'bar',
+      order: 0,
       sections: [],
+      title: 'Bar',
+      titleLevel: 2,
     })
     expect(entries['foo.bar']).toEqual({
       id: 'bar',
-      title: 'Foo Bar',
       order: 0,
-      titleLevel: 3,
       sections: [],
+      title: 'Foo Bar',
+      titleLevel: 3,
     })
 
     expect(pages.length).toBe(2)
@@ -86,21 +93,31 @@ describe('Styleguide', () => {
 
   test('changes should be applied', () => {
     const { styleguide } = styleguideMock({
-      blockParserParse: jest.fn<BlockParserInterface['parse']>()
+      blockParserParse: jest
+        .fn<BlockParserInterface['parse']>()
         .mockReturnValueOnce([
           {
-            key: 'foo', order: 0, title: 'Foo',
+            key: 'foo',
+            order: 0,
+            title: 'Foo',
           },
           {
-            key: 'foo.bar', order: 0, title: 'Foo Bar', description: 'Foo Bar description',
+            description: 'Foo Bar description',
+            key: 'foo.bar',
+            order: 0,
+            title: 'Foo Bar',
           },
         ])
         .mockReturnValueOnce([
           {
-            key: 'foo', order: 0, title: 'Foo',
+            key: 'foo',
+            order: 0,
+            title: 'Foo',
           },
           {
-            key: 'foo.bar', order: 0, title: 'Foo Bar 2',
+            key: 'foo.bar',
+            order: 0,
+            title: 'Foo Bar 2',
           },
         ]),
     })
@@ -112,25 +129,27 @@ describe('Styleguide', () => {
     expect(Object.keys(entriesFirst)).toEqual(['foo', 'foo.bar'])
     expect(entriesFirst.foo).toEqual({
       id: 'foo',
-      title: 'Foo',
       order: 0,
+      sections: [
+        {
+          description: 'Foo Bar description',
+          id: 'bar',
+          order: 0,
+          sections: [],
+          title: 'Foo Bar',
+          titleLevel: 3,
+        },
+      ],
+      title: 'Foo',
       titleLevel: 2,
-      sections: [{
-        id: 'bar',
-        title: 'Foo Bar',
-        description: 'Foo Bar description',
-        order: 0,
-        titleLevel: 3,
-        sections: [],
-      }],
     })
     expect(entriesFirst['foo.bar']).toEqual({
-      id: 'bar',
-      title: 'Foo Bar',
       description: 'Foo Bar description',
+      id: 'bar',
       order: 0,
-      titleLevel: 3,
       sections: [],
+      title: 'Foo Bar',
+      titleLevel: 3,
     })
 
     styleguide.sourceUpdate('file.css', '')
@@ -140,40 +159,50 @@ describe('Styleguide', () => {
     expect(Object.keys(entriesSecond)).toEqual(['foo', 'foo.bar'])
     expect(entriesSecond.foo).toEqual({
       id: 'foo',
-      title: 'Foo',
       order: 0,
+      sections: [
+        {
+          id: 'bar',
+          order: 0,
+          sections: [],
+          title: 'Foo Bar 2',
+          titleLevel: 3,
+        },
+      ],
+      title: 'Foo',
       titleLevel: 2,
-      sections: [{
-        id: 'bar',
-        title: 'Foo Bar 2',
-        order: 0,
-        titleLevel: 3,
-        sections: [],
-      }],
     })
     expect(entriesSecond['foo.bar']).toEqual({
       id: 'bar',
-      title: 'Foo Bar 2',
       order: 0,
-      titleLevel: 3,
       sections: [],
+      title: 'Foo Bar 2',
+      titleLevel: 3,
     })
   })
 
   test('when blocks get removed they should be removed from context', () => {
     const { styleguide } = styleguideMock({
-      blockParserParse: jest.fn<BlockParserInterface['parse']>()
+      blockParserParse: jest
+        .fn<BlockParserInterface['parse']>()
         .mockReturnValueOnce([
           {
-            key: 'foo', order: 0, title: 'Foo',
+            key: 'foo',
+            order: 0,
+            title: 'Foo',
           },
           {
-            key: 'foo.bar', order: 0, title: 'Foo Bar', description: 'Foo Bar description',
+            description: 'Foo Bar description',
+            key: 'foo.bar',
+            order: 0,
+            title: 'Foo Bar',
           },
         ])
         .mockReturnValueOnce([
           {
-            key: 'foo', order: 0, title: 'Foo',
+            key: 'foo',
+            order: 0,
+            title: 'Foo',
           },
         ]),
     })
@@ -185,25 +214,27 @@ describe('Styleguide', () => {
     expect(Object.keys(entriesFirst)).toEqual(['foo', 'foo.bar'])
     expect(entriesFirst.foo).toEqual({
       id: 'foo',
-      title: 'Foo',
       order: 0,
+      sections: [
+        {
+          description: 'Foo Bar description',
+          id: 'bar',
+          order: 0,
+          sections: [],
+          title: 'Foo Bar',
+          titleLevel: 3,
+        },
+      ],
+      title: 'Foo',
       titleLevel: 2,
-      sections: [{
-        id: 'bar',
-        title: 'Foo Bar',
-        description: 'Foo Bar description',
-        order: 0,
-        titleLevel: 3,
-        sections: [],
-      }],
     })
     expect(entriesFirst['foo.bar']).toEqual({
-      id: 'bar',
-      title: 'Foo Bar',
       description: 'Foo Bar description',
+      id: 'bar',
       order: 0,
-      titleLevel: 3,
       sections: [],
+      title: 'Foo Bar',
+      titleLevel: 3,
     })
 
     styleguide.sourceUpdate('file.css', '')
@@ -213,27 +244,35 @@ describe('Styleguide', () => {
     expect(Object.keys(entriesSecond)).toEqual(['foo'])
     expect(entriesSecond.foo).toEqual({
       id: 'foo',
-      title: 'Foo',
       order: 0,
-      titleLevel: 2,
       sections: [],
+      title: 'Foo',
+      titleLevel: 2,
     })
   })
 
   test('when blocks get witch has children they should only reset', () => {
     const { styleguide } = styleguideMock({
-      blockParserParse: jest.fn<BlockParserInterface['parse']>()
+      blockParserParse: jest
+        .fn<BlockParserInterface['parse']>()
         .mockReturnValueOnce([
           {
-            key: 'foo', order: 0, title: 'Foo', description: 'Foo description',
+            description: 'Foo description',
+            key: 'foo',
+            order: 0,
+            title: 'Foo',
           },
           {
-            key: 'foo.bar', order: 0, title: 'Foo Bar',
+            key: 'foo.bar',
+            order: 0,
+            title: 'Foo Bar',
           },
         ])
         .mockReturnValueOnce([
           {
-            key: 'foo.bar', order: 0, title: 'Foo Bar',
+            key: 'foo.bar',
+            order: 0,
+            title: 'Foo Bar',
           },
         ]),
     })
@@ -244,25 +283,27 @@ describe('Styleguide', () => {
 
     expect(Object.keys(entriesFirst)).toEqual(['foo', 'foo.bar'])
     expect(entriesFirst.foo).toEqual({
-      id: 'foo',
-      title: 'Foo',
-      order: 0,
-      titleLevel: 2,
       description: 'Foo description',
-      sections: [{
-        id: 'bar',
-        title: 'Foo Bar',
-        order: 0,
-        titleLevel: 3,
-        sections: [],
-      }],
+      id: 'foo',
+      order: 0,
+      sections: [
+        {
+          id: 'bar',
+          order: 0,
+          sections: [],
+          title: 'Foo Bar',
+          titleLevel: 3,
+        },
+      ],
+      title: 'Foo',
+      titleLevel: 2,
     })
     expect(entriesFirst['foo.bar']).toEqual({
       id: 'bar',
-      title: 'Foo Bar',
       order: 0,
-      titleLevel: 3,
       sections: [],
+      title: 'Foo Bar',
+      titleLevel: 3,
     })
 
     styleguide.sourceUpdate('file.css', '')
@@ -270,37 +311,43 @@ describe('Styleguide', () => {
     expect(Object.keys(entriesFirst)).toEqual(['foo', 'foo.bar'])
     expect(entriesFirst.foo).toEqual({
       id: 'foo',
-      title: 'Foo',
       order: 0,
+      sections: [
+        {
+          id: 'bar',
+          order: 0,
+          sections: [],
+          title: 'Foo Bar',
+          titleLevel: 3,
+        },
+      ],
+      title: 'Foo',
       titleLevel: 2,
-      sections: [{
-        id: 'bar',
-        title: 'Foo Bar',
-        order: 0,
-        titleLevel: 3,
-        sections: [],
-      }],
     })
     expect(entriesFirst['foo.bar']).toEqual({
       id: 'bar',
-      title: 'Foo Bar',
       order: 0,
-      titleLevel: 3,
       sections: [],
+      title: 'Foo Bar',
+      titleLevel: 3,
     })
   })
 
   test('when blocks get removed they should be removed from context', () => {
     const { styleguide } = styleguideMock({
-      blockParserParse: jest.fn<BlockParserInterface['parse']>()
-        .mockReturnValue([
-          {
-            key: 'foo', order: 0, title: 'Foo',
-          },
-          {
-            key: 'foo.bar', order: 0, title: 'Foo Bar', description: 'Foo Bar description',
-          },
-        ]),
+      blockParserParse: jest.fn<BlockParserInterface['parse']>().mockReturnValue([
+        {
+          key: 'foo',
+          order: 0,
+          title: 'Foo',
+        },
+        {
+          description: 'Foo Bar description',
+          key: 'foo.bar',
+          order: 0,
+          title: 'Foo Bar',
+        },
+      ]),
     })
 
     styleguide.sourceCreate('file.css', '')
@@ -310,25 +357,27 @@ describe('Styleguide', () => {
     expect(Object.keys(entries)).toEqual(['foo', 'foo.bar'])
     expect(entries.foo).toEqual({
       id: 'foo',
-      title: 'Foo',
       order: 0,
+      sections: [
+        {
+          description: 'Foo Bar description',
+          id: 'bar',
+          order: 0,
+          sections: [],
+          title: 'Foo Bar',
+          titleLevel: 3,
+        },
+      ],
+      title: 'Foo',
       titleLevel: 2,
-      sections: [{
-        id: 'bar',
-        title: 'Foo Bar',
-        description: 'Foo Bar description',
-        order: 0,
-        titleLevel: 3,
-        sections: [],
-      }],
     })
     expect(entries['foo.bar']).toEqual({
-      id: 'bar',
-      title: 'Foo Bar',
       description: 'Foo Bar description',
+      id: 'bar',
       order: 0,
-      titleLevel: 3,
       sections: [],
+      title: 'Foo Bar',
+      titleLevel: 3,
     })
 
     styleguide.sourceDelete('file.css')

@@ -3,21 +3,28 @@ import { Block as CommentBlock, parse as parseComments } from 'comment-parser'
 import { BlockParseError, TagTransformerError } from './errors'
 import tagTransformers from './tag-transformers'
 import {
+  Block,
+  BlockParserInterface,
   type DescriptionParserInterface,
-  Block, BlockParserInterface, TagTransformer, TagTransformFunction,
+  TagTransformer,
+  TagTransformFunction,
 } from './types'
 
 export interface BlockParserEvent {}
-export interface BlockParsedEvent extends BlockParserEvent { block: Block }
+export interface BlockParsedEvent extends BlockParserEvent {
+  block: Block
+}
 export interface BlockParserEventMap {
   'block-parsed': BlockParsedEvent
 }
 
 export class BlockParser implements BlockParserInterface {
+  protected tagTransformers: Record<string, TagTransformFunction> = {}
 
-  protected tagTransformers: {[key: string]: TagTransformFunction} = {}
-
-  protected listeners: Record<keyof BlockParserEventMap, ((event: BlockParserEventMap[keyof BlockParserEventMap]) => void)[]> = {
+  protected listeners: Record<
+    keyof BlockParserEventMap,
+    ((event: BlockParserEventMap[keyof BlockParserEventMap]) => void)[]
+  > = {
     'block-parsed': [],
   }
 
@@ -34,19 +41,28 @@ export class BlockParser implements BlockParserInterface {
     return this
   }
 
-  public on<K extends keyof BlockParserEventMap>(type: K, listener: (event: BlockParserEventMap[K]) => void): BlockParser {
+  public on<K extends keyof BlockParserEventMap>(
+    type: K,
+    listener: (event: BlockParserEventMap[K]) => void,
+  ): BlockParser {
     this.listeners[type].push(listener)
 
     return this
   }
 
-  public off<K extends keyof BlockParserEventMap>(type: K, listener: (event: BlockParserEventMap[K]) => void): BlockParser {
+  public off<K extends keyof BlockParserEventMap>(
+    type: K,
+    listener: (event: BlockParserEventMap[K]) => void,
+  ): BlockParser {
     this.listeners[type] = this.listeners[type].filter(l => l !== listener)
 
     return this
   }
 
-  protected emit<K extends keyof BlockParserEventMap>(type: K, event: BlockParserEventMap[K]): void {
+  protected emit<K extends keyof BlockParserEventMap>(
+    type: K,
+    event: BlockParserEventMap[K],
+  ): void {
     if (!this.listeners[type]) {
       return
     }
@@ -88,7 +104,6 @@ export class BlockParser implements BlockParserInterface {
           throw e
         }
       }
-
     })
 
     if (comment.description) {
@@ -109,7 +124,10 @@ export class BlockParser implements BlockParserInterface {
 
   protected validateBlock(block: Partial<Block>, comment: CommentBlock) {
     if (!(!!block.page || (!!block.page && !!block.section) || !!block.location)) {
-      throw this.createError('Missing block location. Don\'t know where to place this block, please use @location, @page or @section + @page.', comment)
+      throw this.createError(
+        "Missing block location. Don't know where to place this block, please use @location, @page or @section + @page.",
+        comment,
+      )
     }
   }
 
@@ -118,7 +136,7 @@ export class BlockParser implements BlockParserInterface {
       return block.location
     }
 
-    return (block.page || '') + (block.section ? `.${block.section}` : '')
+    return (block.page ?? '') + (block.section ? `.${block.section}` : '')
   }
 
   protected createError(reason: string, comment: CommentBlock): BlockParseError {

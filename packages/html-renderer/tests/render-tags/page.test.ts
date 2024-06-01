@@ -1,7 +1,4 @@
-import {
-  beforeEach, describe, expect, jest,
-  test,
-} from '@jest/globals'
+import { beforeEach, describe, expect, jest, test } from '@jest/globals'
 
 import { TagPageNode } from '../../src/nodes/tags/page'
 import type { HtmlRendererInterface } from '../../src/types'
@@ -9,7 +6,7 @@ import type { HtmlRendererInterface } from '../../src/types'
 describe('render tag page', () => {
   const pageMock = jest.fn<HtmlRendererInterface['page']>(() => '').mockReturnValue('')
   const renderer = { page: pageMock as HtmlRendererInterface['page'] } as HtmlRendererInterface
-  const context = { title: 'Hello', page: { title: 'World', foo: { bar: 'foo-bar' } } }
+  const context = { page: { foo: { bar: 'foo-bar' }, title: 'World' }, title: 'Hello' }
 
   beforeEach(() => {
     pageMock.mockClear()
@@ -43,7 +40,7 @@ describe('render tag page', () => {
   })
 
   test('expect call page function with changed context', () => {
-    const node = new TagPageNode({ name: 'foo-bar', contextKey: 'page' })
+    const node = new TagPageNode({ contextKey: 'page', name: 'foo-bar' })
 
     node.render(context, renderer)
 
@@ -52,7 +49,7 @@ describe('render tag page', () => {
   })
 
   test('expect call page function with changed context deep', () => {
-    const node = new TagPageNode({ name: 'foo-bar', contextKey: 'page.foo' })
+    const node = new TagPageNode({ contextKey: 'page.foo', name: 'foo-bar' })
 
     node.render(context, renderer)
 

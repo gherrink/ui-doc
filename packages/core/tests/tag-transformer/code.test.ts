@@ -6,13 +6,13 @@ import code from '../../src/tag-transformers/code'
 describe('Code tag transformer', () => {
   test('should transform simple', () => {
     const comment = {
-      tag: 'code',
-      name: '',
-      type: '',
       description: '<div>test</div>',
+      name: '',
       optional: false,
       problems: [],
       source: [],
+      tag: 'code',
+      type: '',
     }
     let block: Partial<Block> = {}
 
@@ -24,13 +24,13 @@ describe('Code tag transformer', () => {
 
   test('should transform type', () => {
     const comment = {
-      tag: 'code',
-      name: '',
-      type: 'xhtml',
       description: '<div>test</div>',
+      name: '',
       optional: false,
       problems: [],
       source: [],
+      tag: 'code',
+      type: 'xhtml',
     }
     let block: Partial<Block> = {}
 
@@ -42,31 +42,35 @@ describe('Code tag transformer', () => {
 
   test('should transform name', () => {
     const comment = {
-      tag: 'code',
-      name: 'Test name',
-      type: '',
       description: '<div>test</div>',
+      name: 'Test name',
       optional: false,
       problems: [],
       source: [],
+      tag: 'code',
+      type: '',
     }
     let block: Partial<Block> = {}
 
     block = code.transform(block, comment)
 
     expect(block).toHaveProperty('code')
-    expect(block.code).toMatchObject({ content: '<div>test</div>', title: 'Test name', type: 'html' })
+    expect(block.code).toMatchObject({
+      content: '<div>test</div>',
+      title: 'Test name',
+      type: 'html',
+    })
   })
 
   test('should ignore empty', () => {
     const comment = {
-      tag: 'code',
-      name: 'Test name',
-      type: '',
       description: '',
+      name: 'Test name',
       optional: false,
       problems: [],
       source: [],
+      tag: 'code',
+      type: '',
     }
     let block: Partial<Block> = {}
 
@@ -77,13 +81,13 @@ describe('Code tag transformer', () => {
 
   test('should override existing code', () => {
     const comment = {
-      tag: 'code',
-      name: 'Test name',
-      type: '',
       description: '<div>new code</div>',
+      name: 'Test name',
       optional: false,
       problems: [],
       source: [],
+      tag: 'code',
+      type: '',
     }
     let block: Partial<Block> = {
       code: {
@@ -104,13 +108,13 @@ describe('Code tag transformer', () => {
 
   test('should not transform when hideCode', () => {
     const comment = {
-      tag: 'example',
-      name: '',
-      type: '',
       description: '<div>test</div>',
+      name: '',
       optional: false,
       problems: [],
       source: [],
+      tag: 'example',
+      type: '',
     }
     let block: Partial<Block> = {
       hideCode: true,

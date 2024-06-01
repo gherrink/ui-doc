@@ -6,13 +6,13 @@ import hideCode from '../../src/tag-transformers/hide-code'
 describe('hide code tag transformer', () => {
   test('should transform', () => {
     const comment = {
-      tag: 'hideCode',
-      name: '',
-      type: '',
       description: '',
+      name: '',
       optional: false,
       problems: [],
       source: [],
+      tag: 'hideCode',
+      type: '',
     }
     let block: Partial<Block> = {}
 
@@ -25,13 +25,13 @@ describe('hide code tag transformer', () => {
 
   test('should remove code', () => {
     const comment = {
-      tag: 'hideCode',
-      name: '',
-      type: '',
       description: '',
+      name: '',
       optional: false,
       problems: [],
       source: [],
+      tag: 'hideCode',
+      type: '',
     }
     let block: Partial<Block> = {
       code: {

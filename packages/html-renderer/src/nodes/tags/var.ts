@@ -31,9 +31,9 @@ export class TagVarNode extends TagNode {
 }
 
 export const parseTagVarNode: TagNodeParse = {
-  identifier: 'var',
   example: '{{ var:contextKey [escape] }}',
   hasContent: false,
+  identifier: 'var',
   parse() {
     const options: Partial<TagVarNodeOptions> = {}
     let gotSeparator = false

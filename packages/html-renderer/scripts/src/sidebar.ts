@@ -1,27 +1,32 @@
 function createSidebar(sidebar: HTMLElement) {
   const links: Record<string, HTMLLinkElement> = {}
-  const observer = new IntersectionObserver(entries => {
-    const activeEntries = entries.filter(entry => entry.isIntersecting)
+  const observer = new IntersectionObserver(
+    entries => {
+      const activeEntries = entries.filter(entry => entry.isIntersecting)
 
-    if (activeEntries.length <= 0) {
-      return
-    }
+      if (activeEntries.length <= 0) {
+        return
+      }
 
-    Object.keys(links).forEach(id => {
-      links[id].classList.remove('active')
-    })
+      Object.keys(links).forEach(id => {
+        links[id].classList.remove('active')
+      })
 
-    const activeLink = links[activeEntries[0].target.id]
+      const activeLink = links[activeEntries[0].target.id]
 
-    activeLink.classList.add('active')
-    if (activeLink?.parentElement?.parentElement?.parentElement instanceof HTMLLIElement) {
-      activeLink.parentElement.parentElement.parentElement.querySelector('a')?.classList.add('active')
-    }
-  }, {
-    root: null,
-    rootMargin: '0px 0px -90% 0px',
-    threshold: 0.5,
-  })
+      activeLink.classList.add('active')
+      if (activeLink?.parentElement?.parentElement?.parentElement instanceof HTMLLIElement) {
+        activeLink.parentElement.parentElement.parentElement
+          .querySelector('a')
+          ?.classList.add('active')
+      }
+    },
+    {
+      root: null,
+      rootMargin: '0px 0px -90% 0px',
+      threshold: 0.5,
+    },
+  )
 
   sidebar.querySelectorAll<HTMLLinkElement>('a[href^="#"]').forEach(link => {
     const id = link.href.split('#')[1]

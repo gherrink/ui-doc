@@ -3,7 +3,7 @@ import { Spec } from 'comment-parser'
 import { TagTransformerError } from '../../errors'
 import { BlockCode } from '../../types'
 
-export function identifier(data: Spec): {key: string, name: string} {
+export function identifier(data: Spec): { key: string; name: string } {
   if (!data.name) {
     throw new TagTransformerError('No key is given')
   }
@@ -25,6 +25,6 @@ export function code(data: Spec): BlockCode | undefined {
   return {
     content: data.description,
     title: data.name,
-    type: (typeof data.type === 'string' && data.type) ? data.type : 'html',
+    type: typeof data.type === 'string' && data.type ? data.type : 'html',
   }
 }

@@ -1,10 +1,5 @@
 import { TagNodeSyntaxError } from '../../errors/TagNodeSyntaxError'
-import type {
-  HtmlRendererInterface,
-  RenderContext,
-  TagNodeParse,
-  TokenValue,
-} from '../../types'
+import type { HtmlRendererInterface, RenderContext, TagNodeParse, TokenValue } from '../../types'
 import { readNestedValue } from '../../utils'
 import { TagNode } from '../TagNode'
 
@@ -20,23 +15,22 @@ export class TagPageNode extends TagNode {
 
   public constructor({ name, contextKey }: TagPageNodeOptions) {
     super('tag-page')
-    this.name = name || 'default'
-    this.contextKey = contextKey || 'this'
+    this.name = name ?? 'default'
+    this.contextKey = contextKey ?? 'this'
   }
 
   public render(context: RenderContext, renderer: HtmlRendererInterface): string {
-    const newContext = this.contextKey === 'this'
-      ? context
-      : readNestedValue(this.contextKey, context)
+    const newContext =
+      this.contextKey === 'this' ? context : readNestedValue(this.contextKey, context)
 
     return renderer.page(this.name, newContext)
   }
 }
 
 export const parseTagPageNode: TagNodeParse = {
-  identifier: 'page',
   example: '{{ page[:page-name [contextKey]] }}',
   hasContent: false,
+  identifier: 'page',
   parse() {
     const options: Partial<TagPageNodeOptions> = {}
     let gotSeparator = false

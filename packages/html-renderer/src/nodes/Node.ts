@@ -1,6 +1,4 @@
-import type {
-  HtmlRendererInterface, NodeInterface, NodeType, RenderContext,
-} from '../types'
+import type { HtmlRendererInterface, NodeInterface, NodeType, RenderContext } from '../types'
 
 export const nodeOperators = ['==', '!=', '===', '!==', '<', '<=', '>', '>='] as const
 

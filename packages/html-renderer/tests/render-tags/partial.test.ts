@@ -1,15 +1,14 @@
-import {
-  beforeEach,
-  describe, expect, jest, test,
-} from '@jest/globals'
+import { beforeEach, describe, expect, jest, test } from '@jest/globals'
 
 import { TagPartialNode } from '../../src/nodes/tags/partial'
 import type { HtmlRendererInterface } from '../../src/types'
 
 describe('render tag partial', () => {
   const partialMock = jest.fn<HtmlRendererInterface['partial']>(() => '').mockReturnValue('')
-  const renderer = { partial: partialMock as HtmlRendererInterface['partial'] } as HtmlRendererInterface
-  const context = { title: 'Hello', page: { title: 'World' } }
+  const renderer = {
+    partial: partialMock as HtmlRendererInterface['partial'],
+  } as HtmlRendererInterface
+  const context = { page: { title: 'World' }, title: 'Hello' }
 
   beforeEach(() => {
     partialMock.mockClear()
@@ -34,7 +33,7 @@ describe('render tag partial', () => {
   })
 
   test('expect call partial function with changed context', () => {
-    const node = new TagPartialNode({ name: 'foo-bar', contextKey: 'page' })
+    const node = new TagPartialNode({ contextKey: 'page', name: 'foo-bar' })
 
     node.render(context, renderer)
 

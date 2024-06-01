@@ -46,7 +46,6 @@ body > main > .sidebar {
   }
 }
 
-
 body > main > .content {
   margin-left: calc(var(--main-sidebar-width) + var(--main-content-sidebar-space));
 

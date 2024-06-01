@@ -34,7 +34,7 @@
   --px: var(--nav-list-item-px);
 
   text-align: left;
-  border-left: 1px solid rgba(var(--nav-list-item-border-color) / var(--border-opacity, .1));
+  border-left: 1px solid rgba(var(--nav-list-item-border-color) / var(--border-opacity, 0.1));
 
   &:hover {
     --border-opacity: 1;

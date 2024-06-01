@@ -2,29 +2,31 @@ import { HTMLRendererError } from './errors'
 import { SyntaxError } from './errors/SyntaxError'
 import { Reader } from './Reader'
 import {
+  HtmlRendererInterface,
   type HtmlRendererSourceInput,
+  NodeInterface,
   type ReaderInterface,
   type RenderContext,
-  HtmlRendererInterface,
-  NodeInterface,
 } from './types'
 import type { ParserInterface } from './types/parser'
 
 function instanceofReaderInterface(object: any): object is ReaderInterface {
-  return typeof object.peak === 'function'
-    && typeof object.consume === 'function'
-    && typeof object.isEof === 'function'
-    && typeof object.debug === 'function'
+  return (
+    typeof object.peak === 'function' &&
+    typeof object.consume === 'function' &&
+    typeof object.isEof === 'function' &&
+    typeof object.debug === 'function'
+  )
 }
 
 export class HtmlRenderer implements HtmlRendererInterface {
   protected parser: ParserInterface
 
-  protected layouts: {[key: string]: NodeInterface} = {}
+  protected layouts: Record<string, NodeInterface> = {}
 
-  protected partials: {[key: string]: NodeInterface} = {}
+  protected partials: Record<string, NodeInterface> = {}
 
-  protected pages: {[key: string]: NodeInterface} = {}
+  protected pages: Record<string, NodeInterface> = {}
 
   public constructor(parser: ParserInterface) {
     this.parser = parser
@@ -60,7 +62,9 @@ export class HtmlRenderer implements HtmlRendererInterface {
         const debug = reader.debug()
 
         // TODO improve error message
-        throw new HTMLRendererError(`Syntax error in ${debug.source} at line ${debug.line}:${debug.pos}: ${error.message}`)
+        throw new HTMLRendererError(
+          `Syntax error in ${debug.source} at line ${debug.line}:${debug.pos}: ${error.message}`,
+        )
       }
 
       throw error
@@ -68,23 +72,25 @@ export class HtmlRenderer implements HtmlRendererInterface {
   }
 
   public generate(context: RenderContext, layout?: string): string {
-    layout = layout || 'default'
+    layout = layout ?? 'default'
     const content = this.layouts[layout] || undefined
 
     if (!content) {
-      throw new HTMLRendererError(`Layout "${layout}" not found. Please register it using "addLayout" method.`)
+      throw new HTMLRendererError(
+        `Layout "${layout}" not found. Please register it using "addLayout" method.`,
+      )
     }
 
     return this.render(content, context)
   }
 
   public page(name: string, context: RenderContext): string {
-    const content = this.pages[name]
-      || this.pages.default
-      || undefined
+    const content = this.pages[name] || this.pages.default || undefined
 
     if (!content) {
-      throw new HTMLRendererError(`Page "${name}" not found. Please register it using "addPage" method.`)
+      throw new HTMLRendererError(
+        `Page "${name}" not found. Please register it using "addPage" method.`,
+      )
     }
 
     return this.render(content, context)
@@ -94,10 +100,12 @@ export class HtmlRenderer implements HtmlRendererInterface {
     const content = this.partials[name] || this.partials.default || undefined
 
     if (!content) {
-      throw new HTMLRendererError(`Partial "${name}" not found. Please register it using "addPartial" method.`)
+      throw new HTMLRendererError(
+        `Partial "${name}" not found. Please register it using "addPartial" method.`,
+      )
     }
 
-    return this.render(content, context || {})
+    return this.render(content, context ?? {})
   }
 
   protected render(rootNode: NodeInterface, context: RenderContext): string {

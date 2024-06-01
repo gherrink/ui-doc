@@ -4,7 +4,7 @@ import type { ReaderInterface } from './reader'
 
 export type RenderContext = Record<string, any>
 
-export type HtmlRendererSourceInput = {source: string, content: string} | ReaderInterface
+export type HtmlRendererSourceInput = { source: string; content: string } | ReaderInterface
 
 export interface HtmlRendererInterface extends RendererInterface {
   addLayout(name: string, layout: HtmlRendererSourceInput): HtmlRendererInterface

@@ -6,13 +6,13 @@ import page from '../../src/tag-transformers/page'
 describe('Page tag transformer', () => {
   test('should transform name', () => {
     const comment = {
-      tag: 'page',
-      name: 'test',
-      type: '',
       description: '',
+      name: 'test',
       optional: false,
       problems: [],
       source: [],
+      tag: 'page',
+      type: '',
     }
     let block: Partial<Block> = {}
 
@@ -27,13 +27,13 @@ describe('Page tag transformer', () => {
 
   test('should transform name upper', () => {
     const comment = {
-      tag: 'page',
-      name: 'Test',
-      type: '',
       description: '',
+      name: 'Test',
       optional: false,
       problems: [],
       source: [],
+      tag: 'page',
+      type: '',
     }
     let block: Partial<Block> = {}
 
@@ -48,13 +48,13 @@ describe('Page tag transformer', () => {
 
   test('should transform name and description', () => {
     const comment = {
-      tag: 'page',
-      name: 'test',
-      type: '',
       description: 'Test Page',
+      name: 'test',
       optional: false,
       problems: [],
       source: [],
+      tag: 'page',
+      type: '',
     }
     let block: Partial<Block> = {}
 
@@ -69,13 +69,13 @@ describe('Page tag transformer', () => {
 
   test('should throw error', () => {
     const comment = {
-      tag: 'page',
-      name: '',
-      type: '',
       description: '',
+      name: '',
       optional: false,
       problems: [],
       source: [],
+      tag: 'page',
+      type: '',
     }
     let block: Partial<Block> = {}
 

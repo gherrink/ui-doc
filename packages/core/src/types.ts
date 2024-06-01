@@ -1,14 +1,14 @@
 import { Spec as CommentSpec } from 'comment-parser'
 
-export type Options = {
+export interface Options {
   renderer: RendererInterface
   blockParser?: BlockParserInterface
 }
 
-export type fileFinderOnFound = (file: string) => Promise<void>
+export type FileFinderOnFoundCallback = (file: string) => Promise<void>
 
 export interface FileFinder {
-  search(onFound: fileFinderOnFound): Promise<void>
+  search(onFound: FileFinderOnFoundCallback): Promise<void>
   matches(file: string): boolean
 }
 
@@ -28,9 +28,11 @@ export interface FileSystem {
 }
 
 export type FilePath = string
-export type Source = {blocks: Block[]}
+export interface Source {
+  blocks: Block[]
+}
 
-export type ContextEntry = {
+export interface ContextEntry {
   [key: string]: any
   id: string
   title: string
@@ -38,44 +40,42 @@ export type ContextEntry = {
   sections: ContextEntry[]
 }
 
-export type MenuItem = {
+export interface MenuItem {
   text: string
   href: string
   active: boolean
 }
 
-export type Context = {
+export interface Context {
   pages: ContextEntry[]
-  entries: {[key: string]: ContextEntry}
+  entries: Record<string, ContextEntry>
   menu: MenuItem[]
 }
 
-export type BlockEntry = {
-  [key: string]: any
-}
+export type BlockEntry = Record<string, any>
 
 export type BlockCode = BlockEntry & {
-  content: string,
-  title: string,
-  type: string,
+  content: string
+  title: string
+  type: string
 }
 
 export type BlockExample = BlockCode & {
-  modifier?: string,
-  code?: string,
+  modifier?: string
+  code?: string
 }
 
-export type Block = {
-  [key: string]: any,
-  key: string,
-  order: number,
-  location?: string,
-  page?: string,
-  section?: string,
-  title?: string,
-  description?: string,
-  code?: BlockCode,
-  example?: BlockExample,
+export interface Block {
+  [key: string]: any
+  key: string
+  order: number
+  location?: string
+  page?: string
+  section?: string
+  title?: string
+  description?: string
+  code?: BlockCode
+  example?: BlockExample
 }
 
 export interface BlockParserInterface {
@@ -89,18 +89,18 @@ export interface DescriptionParserInterface {
 
 export type TagTransformFunction = (block: Partial<Block>, spec: CommentSpec) => Partial<Block>
 
-export type TagTransformer = {
-  name: string,
+export interface TagTransformer {
+  name: string
   transform: TagTransformFunction
 }
 
-export type OutputContext = {
-  title: string,
-  logo: string,
-  name: string,
-  homeLink: string,
-  page: ContextEntry,
-  menu: MenuItem[],
+export interface OutputContext {
+  title: string
+  logo: string
+  name: string
+  homeLink: string
+  page: ContextEntry
+  menu: MenuItem[]
 }
 
 export interface RendererInterface {

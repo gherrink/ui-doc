@@ -12,13 +12,12 @@ export class TagDebugNode extends TagNode {
 
   public constructor({ contextKey }: TagDebugNodeOptions) {
     super('tag-debug')
-    this.contextKey = contextKey || 'this'
+    this.contextKey = contextKey ?? 'this'
   }
 
   public render(context: RenderContext): string {
-    const debugContext = this.contextKey !== 'this'
-      ? readNestedValue(this.contextKey, context)
-      : context
+    const debugContext =
+      this.contextKey !== 'this' ? readNestedValue(this.contextKey, context) : context
     const debugContent = debugContext
       ? JSON.stringify(debugContext, null, 2)
       : `Current context for "${this.contextKey}" is empty`
@@ -28,9 +27,9 @@ export class TagDebugNode extends TagNode {
 }
 
 export const parseTagDebugNode: TagNodeParse = {
-  identifier: 'debug',
   example: '{{ debug[:contextKey] }}',
   hasContent: false,
+  identifier: 'debug',
   parse() {
     const options: Partial<TagDebugNodeOptions> = {}
     let gotSeparator = false

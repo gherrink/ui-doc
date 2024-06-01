@@ -1,25 +1,25 @@
 .control {
-    --px: 0;
-    --py: 0;
+  --px: 0;
+  --py: 0;
 
-    @extend .pxy;
-    @extend .font;
+  @extend .pxy;
+  @extend .font;
 
-    cursor: pointer;
+  cursor: pointer;
 
-    display: inline-block;
+  display: inline-block;
 
-    text-align: center;
-    text-decoration: none;
+  text-align: center;
+  text-decoration: none;
 
-    appearance: none;
-    background: rgb(var(--control-bg-color, transparent));
-    border: none;
-    border-radius: unset;
-    outline: none;
+  appearance: none;
+  background: rgb(var(--control-bg-color, transparent));
+  border: none;
+  border-radius: unset;
+  outline: none;
 
-    &[aria-disabled="true"],
-    &:disabled {
-      cursor: not-allowed;
-    }
+  &[aria-disabled="true"],
+  &:disabled {
+    cursor: not-allowed;
+  }
 }

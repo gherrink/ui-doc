@@ -1,7 +1,7 @@
 import {
   type FileSystem,
-  type RendererInterface,
   Options as StyleguideOptions,
+  type RendererInterface,
   Styleguide,
 } from '@styleguide/core'
 import { HtmlRenderer, Parser, TemplateLoader } from '@styleguide/html-renderer'
@@ -15,13 +15,18 @@ interface RollupStyleguidePluginOptions extends StyleguideOptions {
   highlightStyle?: string
 }
 
-const createDefaultRenderer = (templatePath: string | undefined, fileSystem: FileSystem): RendererInterface => {
+const PLUGIN_NAME = 'rollup-plugin-styleguide'
+
+const createDefaultRenderer = (
+  templatePath: string | undefined,
+  fileSystem: FileSystem,
+): RendererInterface => {
   const renderer = new HtmlRenderer(Parser.init())
 
   const awaitLoaded = async () => {
     await TemplateLoader.load({
-      renderer,
       fileSystem,
+      renderer,
       templateBasePath: templatePath,
     })
   }
@@ -44,8 +49,9 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
   // TODO may clean up output directory
 
   return {
-    name: 'rollup-plugin-styleguide',
+    name: PLUGIN_NAME,
 
+    // eslint-disable-next-line sort-keys
     async buildStart() {
       const watchedFiles = this.getWatchFiles()
 
@@ -56,6 +62,41 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
         if (!styleguide.sourceExists(file)) {
           styleguide.sourceCreate(file, await fileSystem.fileRead(file))
         }
+      })
+    },
+
+    async generateBundle() {
+      const assetLoader = fileSystem.assetLoader()
+
+      // TODO output user info what was generated
+      await styleguide.output(async (file, content) => {
+        this.emitFile({
+          fileName: file,
+          source: content,
+          type: 'asset',
+        })
+      })
+
+      if (options.styleAsset !== false) {
+        this.emitFile({
+          fileName: options.styleAsset ?? 'styleguide.css',
+          source: await assetLoader.read('@styleguide/html-renderer/styleguide.css'),
+          type: 'asset',
+        })
+      }
+
+      this.emitFile({
+        fileName: 'highlight.css',
+        source: await assetLoader.read(
+          `@highlightjs/cdn-assets/styles/${options.highlightStyle ?? 'default'}.min.css`,
+        ),
+        type: 'asset',
+      })
+
+      this.emitFile({
+        fileName: 'highlight.js',
+        source: await assetLoader.read('@highlightjs/cdn-assets/highlight.min.js'),
+        type: 'asset',
       })
     },
 
@@ -73,39 +114,6 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
       if (change.event === 'create' && finder.matches(id)) {
         styleguide.sourceCreate(id, await fileSystem.fileRead(id))
       }
-    },
-
-    async generateBundle() {
-      const assetLoader = fileSystem.assetLoader()
-
-      // TODO output user info what was generated
-      await styleguide.output(async (file, content) => {
-        this.emitFile({
-          type: 'asset',
-          fileName: file,
-          source: content,
-        })
-      })
-
-      if (options.styleAsset !== false) {
-        this.emitFile({
-          type: 'asset',
-          fileName: options.styleAsset || 'styleguide.css',
-          source: await assetLoader.read('@styleguide/html-renderer/styleguide.css'),
-        })
-      }
-
-      this.emitFile({
-        type: 'asset',
-        fileName: 'highlight.css',
-        source: await assetLoader.read(`@highlightjs/cdn-assets/styles/${options.highlightStyle || 'default'}.min.css`),
-      })
-
-      this.emitFile({
-        type: 'asset',
-        fileName: 'highlight.js',
-        source: await assetLoader.read('@highlightjs/cdn-assets/highlight.min.js'),
-      })
     },
   }
 }

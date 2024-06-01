@@ -1,7 +1,14 @@
 import type { nodeOperators } from '../nodes'
 import type { HtmlRendererInterface, RenderContext } from './renderer'
 
-export type TagNodeType = 'tag' | 'tag-debug' | 'tag-var' | 'tag-for' | 'tag-if' | 'tag-page' | 'tag-partial'
+export type TagNodeType =
+  | 'tag'
+  | 'tag-debug'
+  | 'tag-var'
+  | 'tag-for'
+  | 'tag-if'
+  | 'tag-page'
+  | 'tag-partial'
 
 export type NodeType = 'root' | 'template' | 'comment' | TagNodeType
 
@@ -18,4 +25,4 @@ export interface TagNodeInterface extends NodeInterface {
   readonly type: TagNodeType
 }
 
-export type NodeOperator = typeof nodeOperators[number]
+export type NodeOperator = (typeof nodeOperators)[number]

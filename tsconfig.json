@@ -14,12 +14,13 @@
     "rootDir": ".",
     "allowJs": true,
     "checkJs": false,
+    "outDir": "dist",
     "paths": {
       "@styleguide/*": ["packages/*/dist", "packages/*/src"]
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
-  "files": ["./env.d.ts"],
-  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx"],
+  "files": ["./env.d.ts", "./.eslintrc.js"],
+  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
   "exclude": ["**/node_modules", "**/dist"]
 }

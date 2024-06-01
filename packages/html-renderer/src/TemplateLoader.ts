@@ -8,9 +8,9 @@ export class TemplateLoader {
     fileSystem,
     templateBasePath = '@styleguide/html-renderer/templates',
   }: {
-    renderer: HtmlRendererInterface,
-    fileSystem: FileSystem,
-    templateBasePath?: string,
+    renderer: HtmlRendererInterface
+    fileSystem: FileSystem
+    templateBasePath?: string
   }): Promise<void> {
     const templatePath = await fileSystem.assetLoader().packagePath(templateBasePath)
     const layoutFinder = fileSystem.createFileFinder([`${templatePath}/layouts/*.html`])
@@ -18,7 +18,8 @@ export class TemplateLoader {
     const partialFinder = fileSystem.createFileFinder([`${templatePath}/partials/*.html`])
 
     const name = (file: string): string => fileSystem.fileBasename(file)
-    const content = async (file: string): Promise<string> => (await fileSystem.fileRead(file)).trim()
+    const content = async (file: string): Promise<string> =>
+      (await fileSystem.fileRead(file)).trim()
 
     await Promise.all([
       layoutFinder.search(async file => {

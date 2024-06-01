@@ -1,12 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 
 import { SyntaxError } from '../src/errors/SyntaxError'
-import {
-  CommentNode,
-  TagDebugNode,
-  TagForNode,
-  TemplateNode,
-} from '../src/nodes'
+import { CommentNode, TagDebugNode, TagForNode, TemplateNode } from '../src/nodes'
 import { Parser } from '../src/Parser'
 import { Reader } from '../src/Reader'
 

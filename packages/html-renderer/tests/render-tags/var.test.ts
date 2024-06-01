@@ -3,7 +3,7 @@ import { describe, expect, test } from '@jest/globals'
 import { TagVarNode } from '../../src/nodes/tags/var'
 
 describe('render tag var', () => {
-  const context = { title: 'Hello', page: { title: 'World' } }
+  const context = { page: { title: 'World' }, title: 'Hello' }
 
   test('output', () => {
     const node = new TagVarNode({ contextKey: 'title' })
