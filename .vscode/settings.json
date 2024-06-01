@@ -12,5 +12,12 @@
   ],
   "search.exclude": {
     "**/dist/": true,
-  }
+  },
+  "css.validate": false,
+  "[css]": {
+    "editor.defaultFormatter": "stylelint.vscode-stylelint"
+  },
+  "[postcss]": {
+    "editor.defaultFormatter": "stylelint.vscode-stylelint"
+  },
 }
