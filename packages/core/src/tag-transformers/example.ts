@@ -1,7 +1,7 @@
-import { BlockExample, TagTransformer } from '../types'
+import type { BlockExample, TagTransformerInterface } from '../types'
 import { code } from './utils'
 
-export const tag: TagTransformer = {
+export const tag: TagTransformerInterface = {
   name: 'example',
   transform: (block, spec) => {
     const data: BlockExample | undefined = code(spec)

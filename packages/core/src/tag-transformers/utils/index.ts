@@ -1,7 +1,7 @@
 import { Spec } from 'comment-parser'
 
 import { TagTransformerError } from '../../errors'
-import { BlockCode } from '../../types'
+import type { BlockCode } from '../../types'
 
 export function identifier(data: Spec): { key: string; name: string } {
   if (!data.name) {

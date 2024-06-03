@@ -1,6 +1,6 @@
-import { TagTransformer } from '../types'
+import type { TagTransformerInterface } from '../types'
 
-export const tag: TagTransformer = {
+export const tag: TagTransformerInterface = {
   name: 'order',
   transform: (block, spec) => {
     block.order = parseInt(spec.name, 10)

@@ -6,9 +6,9 @@ import {
   Context,
   ContextEntry,
   FilePath,
-  Options,
   RendererInterface,
-  Source,
+  StyleguideOptions,
+  StyleguideSource,
 } from './types'
 
 export interface StyleguideEvent {}
@@ -21,7 +21,7 @@ export interface StyleguideEventMap {
 }
 
 export class Styleguide {
-  protected sources: Record<FilePath, Source>
+  protected sources: Record<FilePath, StyleguideSource>
 
   protected context: Context
 
@@ -53,7 +53,7 @@ export class Styleguide {
       page.id !== 'index' ? `${page.title} | ${this.texts.title}` : this.texts.title,
   }
 
-  constructor(options: Options) {
+  constructor(options: StyleguideOptions) {
     this.sources = {}
     this.context = {
       entries: {},
@@ -112,7 +112,7 @@ export class Styleguide {
 
   public sourceCreate(file: string, content: string) {
     // TODO handle errors
-    const source: Source = {
+    const source: StyleguideSource = {
       blocks: this.blockParser.parse(content),
     }
 
@@ -161,7 +161,7 @@ export class Styleguide {
     this.clearMenu()
   }
 
-  protected sourceToContext(source: Source) {
+  protected sourceToContext(source: StyleguideSource) {
     source.blocks.forEach(block => {
       this.blockToContext(block)
     })

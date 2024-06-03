@@ -6,7 +6,7 @@ import {
   Block,
   BlockParserInterface,
   type DescriptionParserInterface,
-  TagTransformer,
+  TagTransformerInterface,
   TagTransformFunction,
 } from './types'
 
@@ -35,7 +35,7 @@ export class BlockParser implements BlockParserInterface {
     this.descriptionParser = descriptionParser
   }
 
-  public registerTagTransformer({ name, transform: parse }: TagTransformer): BlockParser {
+  public registerTagTransformer({ name, transform: parse }: TagTransformerInterface): BlockParser {
     this.tagTransformers[name] = parse
 
     return this

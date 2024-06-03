@@ -1,7 +1,7 @@
-import { TagTransformer } from '../types'
+import type { TagTransformerInterface } from '../types'
 import { identifier } from './utils'
 
-export const tag: TagTransformer = {
+export const tag: TagTransformerInterface = {
   name: 'location',
   transform: (block, spec) => {
     const { key, name } = identifier(spec)

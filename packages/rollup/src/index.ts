@@ -1,8 +1,8 @@
 import {
   type FileSystem,
-  Options as StyleguideOptions,
   type RendererInterface,
   Styleguide,
+  StyleguideOptions,
 } from '@styleguide/core'
 import { HtmlRenderer, Parser, TemplateLoader } from '@styleguide/html-renderer'
 import { NodeFileSystem } from '@styleguide/node'

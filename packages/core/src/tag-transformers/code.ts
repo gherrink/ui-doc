@@ -1,7 +1,8 @@
-import { TagTransformer } from '../types'
+
+import type { TagTransformerInterface } from '../types'
 import { code } from './utils'
 
-export const tag: TagTransformer = {
+export const tag: TagTransformerInterface = {
   name: 'code',
   transform: (block, spec) => {
     if (block.hideCode) {
