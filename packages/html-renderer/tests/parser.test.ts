@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals'
 
-import { SyntaxError } from '../src/errors/SyntaxError'
+import { ParserError } from '../src/errors'
 import { CommentNode, TagDebugNode, TagForNode, TemplateNode } from '../src/nodes'
 import { Parser } from '../src/Parser'
 import { Reader } from '../src/Reader'
@@ -72,7 +72,7 @@ describe('Parser', () => {
 
     expect(() => {
       parser.parse(reader)
-    }).toThrow(SyntaxError)
+    }).toThrow(ParserError)
   })
 
   test('to throw when tag not ended', () => {
@@ -81,7 +81,7 @@ describe('Parser', () => {
 
     expect(() => {
       parser.parse(reader)
-    }).toThrow(SyntaxError)
+    }).toThrow(ParserError)
   })
 
   test('template with tag', () => {

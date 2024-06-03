@@ -1,4 +1,4 @@
-import { TagNodeSyntaxError } from '../../errors/TagNodeSyntaxError'
+import { TagNodeError } from '../../errors'
 import type { RenderContext, TagNodeParse, TokenValue } from '../../types'
 import { escapeHtml, readNestedValue } from '../../utils'
 import { TagNode } from '../TagNode'
@@ -42,7 +42,7 @@ export const parseTagVarNode: TagNodeParse = {
       addToken(token: TokenValue) {
         if (!gotSeparator) {
           if (token.type !== 'tag-separator') {
-            throw new TagNodeSyntaxError('Expected separator')
+            throw new TagNodeError('Expected separator')
           }
 
           gotSeparator = true
@@ -50,11 +50,11 @@ export const parseTagVarNode: TagNodeParse = {
         }
 
         if (token.type !== 'identifier') {
-          throw new TagNodeSyntaxError('Expected tag identifier')
+          throw new TagNodeError('Expected tag identifier')
         }
 
         if (options.contextKey !== undefined && options.escape !== undefined) {
-          throw new TagNodeSyntaxError('Expected only context key followed by optional escape')
+          throw new TagNodeError('Expected only context key followed by optional escape')
         }
 
         if (options.contextKey === undefined) {
@@ -63,14 +63,14 @@ export const parseTagVarNode: TagNodeParse = {
         }
 
         if (token.name !== 'escape') {
-          throw new TagNodeSyntaxError('Expected escape')
+          throw new TagNodeError('Expected escape')
         }
 
         options.escape = true
       },
       create() {
         if (!options.contextKey) {
-          throw new TagNodeSyntaxError('Expected context key')
+          throw new TagNodeError('Expected context key')
         }
 
         return new TagVarNode(options as TagVarNodeOptions)

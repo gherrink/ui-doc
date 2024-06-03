@@ -1,4 +1,4 @@
-import { TagNodeSyntaxError } from '../../errors/TagNodeSyntaxError'
+import { TagNodeError } from '../../errors'
 import type {
   HtmlRendererInterface,
   NodeOperator,
@@ -98,7 +98,7 @@ export const parseTagIfNode: TagNodeParse = {
         return
       }
 
-      throw new TagNodeSyntaxError('Expected identifier or value')
+      throw new TagNodeError('Expected identifier or value')
     }
     let gotSeparator = false
 
@@ -106,7 +106,7 @@ export const parseTagIfNode: TagNodeParse = {
       addToken(token: TokenValue) {
         if (!gotSeparator) {
           if (token.type !== 'tag-separator') {
-            throw new TagNodeSyntaxError('Expected separator')
+            throw new TagNodeError('Expected separator')
           }
 
           gotSeparator = true
@@ -120,11 +120,11 @@ export const parseTagIfNode: TagNodeParse = {
 
         if (options.operator === undefined) {
           if (token.type !== 'operator') {
-            throw new TagNodeSyntaxError('Expected operator')
+            throw new TagNodeError('Expected operator')
           }
 
           if (!nodeOperators.includes(token.operator as NodeOperator)) {
-            throw new TagNodeSyntaxError(`Invalid operator ${token.operator}`)
+            throw new TagNodeError(`Invalid operator ${token.operator}`)
           }
 
           options.operator = token.operator as NodeOperator
@@ -136,15 +136,15 @@ export const parseTagIfNode: TagNodeParse = {
           return
         }
 
-        throw new TagNodeSyntaxError('Unexpected token')
+        throw new TagNodeError('Unexpected token')
       },
       create() {
         if (options.firstContextKey === undefined && options.firstValue === undefined) {
-          throw new TagNodeSyntaxError('Expected first context key or value')
+          throw new TagNodeError('Expected first context key or value')
         }
 
         if (options.operator === undefined && options.firstContextKey === undefined) {
-          throw new TagNodeSyntaxError('Expected context key when no operator is given')
+          throw new TagNodeError('Expected context key when no operator is given')
         }
 
         if (
@@ -152,9 +152,7 @@ export const parseTagIfNode: TagNodeParse = {
           options.secondContextKey === undefined &&
           options.secondValue === undefined
         ) {
-          throw new TagNodeSyntaxError(
-            'Expected second context key or value when operator is given',
-          )
+          throw new TagNodeError('Expected second context key or value when operator is given')
         }
 
         return new TagIfNode(options as TagIfNodeOptions)

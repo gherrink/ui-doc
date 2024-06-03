@@ -1,5 +1,4 @@
-import { HTMLRendererError } from './errors'
-import { SyntaxError } from './errors/SyntaxError'
+import { HTMLRendererError, HTMLRendererSyntaxError, ParserError } from './errors'
 import { Reader } from './Reader'
 import {
   HtmlRendererInterface,
@@ -58,13 +57,16 @@ export class HtmlRenderer implements HtmlRendererInterface {
     try {
       return this.parser.parse(reader)
     } catch (error) {
-      if (error instanceof SyntaxError) {
+      if (error instanceof ParserError) {
         const debug = reader.debug()
 
-        // TODO improve error message
-        throw new HTMLRendererError(
-          `Syntax error in ${debug.source} at line ${debug.line}:${debug.pos}: ${error.message}`,
-        )
+        throw new HTMLRendererSyntaxError({
+          code: debug.content,
+          column: debug.pos,
+          line: debug.line,
+          reason: error.message,
+          source: debug.source,
+        })
       }
 
       throw error

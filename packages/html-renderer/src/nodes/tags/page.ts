@@ -1,4 +1,4 @@
-import { TagNodeSyntaxError } from '../../errors/TagNodeSyntaxError'
+import { TagNodeError } from '../../errors'
 import type { HtmlRendererInterface, RenderContext, TagNodeParse, TokenValue } from '../../types'
 import { readNestedValue } from '../../utils'
 import { TagNode } from '../TagNode'
@@ -39,7 +39,7 @@ export const parseTagPageNode: TagNodeParse = {
       addToken(token: TokenValue) {
         if (!gotSeparator) {
           if (token.type !== 'tag-separator') {
-            throw new TagNodeSyntaxError('Expected separator')
+            throw new TagNodeError('Expected separator')
           }
 
           gotSeparator = true
@@ -47,11 +47,11 @@ export const parseTagPageNode: TagNodeParse = {
         }
 
         if (token.type !== 'identifier') {
-          throw new TagNodeSyntaxError('Expected tag identifier')
+          throw new TagNodeError('Expected tag identifier')
         }
 
         if (options.name && options.contextKey) {
-          throw new TagNodeSyntaxError('Expected only one name and context key')
+          throw new TagNodeError('Expected only one name and context key')
         }
 
         if (options.name) {

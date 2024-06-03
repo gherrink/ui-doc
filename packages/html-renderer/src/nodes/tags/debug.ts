@@ -1,4 +1,4 @@
-import { TagNodeSyntaxError } from '../../errors/TagNodeSyntaxError'
+import { TagNodeError } from '../../errors'
 import type { RenderContext, TagNodeParse, TokenValue } from '../../types'
 import { readNestedValue } from '../../utils'
 import { TagNode } from '../TagNode'
@@ -38,7 +38,7 @@ export const parseTagDebugNode: TagNodeParse = {
       addToken(token: TokenValue) {
         if (!gotSeparator) {
           if (token.type !== 'tag-separator') {
-            throw new TagNodeSyntaxError('Expected separator')
+            throw new TagNodeError('Expected separator')
           }
 
           gotSeparator = true
@@ -50,7 +50,7 @@ export const parseTagDebugNode: TagNodeParse = {
           return
         }
 
-        throw new TagNodeSyntaxError('Expected tag identifier')
+        throw new TagNodeError('Expected tag identifier')
       },
       create() {
         return new TagDebugNode(options as TagDebugNodeOptions)

@@ -1,5 +1,4 @@
-import { SyntaxError } from './errors/SyntaxError'
-import { TagNodeSyntaxError } from './errors/TagNodeSyntaxError'
+import { ParserError, TagNodeError } from './errors'
 import { Lexer } from './Lexer'
 import { CommentNode } from './nodes/CommentNode'
 import { Node } from './nodes/Node'
@@ -58,7 +57,7 @@ export class Parser implements ParserInterface {
           parent.append(this.parseTag(lexer))
           break
         default:
-          throw new SyntaxError(`Unexpected token type: ${token.type}`)
+          throw new ParserError(`Unexpected token type "${token.type}"`)
       }
       token = lexer.consume()
     }
@@ -70,13 +69,13 @@ export class Parser implements ParserInterface {
     const tagIdentifier = lexer.consume()
 
     if (!tagIdentifier || tagIdentifier.type !== 'tag-identifier') {
-      throw new SyntaxError('Expected tag identifier')
+      throw new ParserError('Expected tag identifier')
     }
 
     const tagDefinition = this.tags[tagIdentifier.name]
 
     if (!tagDefinition) {
-      throw new SyntaxError(`Unknown tag: ${tagIdentifier.name}`)
+      throw new ParserError(`Unknown tag "${tagIdentifier.name}"`)
     }
 
     const { addToken, create } = tagDefinition.parse()
@@ -90,8 +89,10 @@ export class Parser implements ParserInterface {
       }
       node = create()
     } catch (error) {
-      if (error instanceof TagNodeSyntaxError) {
-        throw new SyntaxError(`Error parsing tag ${tagIdentifier.name}: ${error.message}`)
+      if (error instanceof TagNodeError) {
+        throw new ParserError(
+          `Error parsing tag ${tagIdentifier.name} - ${error.message}\nShould be something like: ${tagDefinition.example}`,
+        )
       }
 
       throw error
@@ -111,7 +112,7 @@ export class Parser implements ParserInterface {
       closeTokens[1].name !== tagIdentifier.name ||
       closeTokens[2]?.type !== 'tag-close'
     ) {
-      throw new SyntaxError('Expected closing tag')
+      throw new ParserError('Expected closing tag')
     }
 
     return node

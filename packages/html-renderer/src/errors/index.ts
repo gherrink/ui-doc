@@ -1,3 +1,4 @@
 export * from './HtmlRendererError'
-export * from './SyntaxError'
-export * from './TagNodeSyntaxError'
+export * from './HtmlRendererSyntaxError'
+export * from './ParserError'
+export * from './TagNodeError'

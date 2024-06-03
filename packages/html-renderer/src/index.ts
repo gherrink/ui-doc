@@ -1,3 +1,4 @@
+export * from './errors'
 export * from './HtmlRenderer'
 export * from './Lexer'
 export * from './nodes'

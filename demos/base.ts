@@ -1,6 +1,7 @@
 import { BlockParseError, Styleguide } from '@styleguide/core'
 import { HtmlRenderer, Parser, TemplateLoader } from '@styleguide/html-renderer'
 import { NodeFileSystem } from '@styleguide/node'
+import { HTMLRendererSyntaxError } from 'packages/html-renderer/src/errors'
 
 // TODO clean up output directory
 // TODO make it run parallel
@@ -11,10 +12,20 @@ async function main() {
   const renderer = new HtmlRenderer(Parser.init())
   const finder = fileSystem.createFileFinder(['css/**/*.css'])
 
-  await TemplateLoader.load({
-    fileSystem,
-    renderer,
-  })
+  try {
+    await TemplateLoader.load({
+      fileSystem,
+      renderer,
+    })
+  } catch (e) {
+    if (e instanceof HTMLRendererSyntaxError) {
+      console.error(`HTMLRendererSyntaxError: ${e.message}`)
+      console.error(e.stack)
+    } else {
+      throw e
+    }
+    return
+  }
 
   const styleguide = new Styleguide({
     renderer,

@@ -17,21 +17,17 @@ interface RollupStyleguidePluginOptions extends StyleguideOptions {
 
 const PLUGIN_NAME = 'rollup-plugin-styleguide'
 
-const createDefaultRenderer = (
+const createDefaultRenderer = async (
   templatePath: string | undefined,
   fileSystem: FileSystem,
-): RendererInterface => {
+): Promise<RendererInterface> => {
   const renderer = new HtmlRenderer(Parser.init())
 
-  const awaitLoaded = async () => {
-    await TemplateLoader.load({
-      fileSystem,
-      renderer,
-      templateBasePath: templatePath,
-    })
-  }
-
-  awaitLoaded()
+  await TemplateLoader.load({
+    fileSystem,
+    renderer,
+    templateBasePath: templatePath,
+  })
 
   return renderer
 }
@@ -39,14 +35,7 @@ const createDefaultRenderer = (
 export default function createStyleguidePlugin(options: RollupStyleguidePluginOptions): Plugin {
   const fileSystem = NodeFileSystem.init()
   const finder = fileSystem.createFileFinder(options.source)
-
-  // TODO detect template updates when templates in workspace
-
-  const styleguide = new Styleguide({
-    renderer: options.renderer || createDefaultRenderer(options.templatePath, fileSystem),
-  })
-
-  // TODO may clean up output directory
+  let styleguide: Styleguide
 
   return {
     name: PLUGIN_NAME,
@@ -54,6 +43,13 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
     // eslint-disable-next-line sort-keys
     async buildStart() {
       const watchedFiles = this.getWatchFiles()
+
+      styleguide = new Styleguide({
+        renderer:
+          options.renderer || (await createDefaultRenderer(options.templatePath, fileSystem)),
+      })
+
+      // TODO detect template updates when templates in workspace
 
       await finder.search(async file => {
         if (!watchedFiles.includes(file)) {
