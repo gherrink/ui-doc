@@ -113,7 +113,7 @@ export class Styleguide {
   public sourceCreate(file: string, content: string) {
     // TODO handle errors
     const source: StyleguideSource = {
-      blocks: this.blockParser.parse(content),
+      blocks: this.blockParser.parse({ content, identifier: file }),
     }
 
     this.sources[file] = source
@@ -128,7 +128,7 @@ export class Styleguide {
       return
     }
 
-    const blocksNew = this.blockParser.parse(content)
+    const blocksNew = this.blockParser.parse({ content, identifier: file })
     const sourceBlockKeysOld = this.sources[file].blocks.map(block => block.key)
     const sourceBlockKeysNew = blocksNew.map(block => block.key)
 

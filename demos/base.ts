@@ -1,4 +1,4 @@
-import { Styleguide } from '@styleguide/core'
+import { BlockParseError, Styleguide } from '@styleguide/core'
 import { HtmlRenderer, Parser, TemplateLoader } from '@styleguide/html-renderer'
 import { NodeFileSystem } from '@styleguide/node'
 
@@ -20,9 +20,18 @@ async function main() {
     renderer,
   })
 
-  await finder.search(async file => {
-    styleguide.sourceCreate(file, await fileSystem.fileRead(file))
-  })
+  try {
+    await finder.search(async file => {
+      styleguide.sourceCreate(file, await fileSystem.fileRead(file))
+    })
+  } catch (e) {
+    if (e instanceof BlockParseError) {
+      console.error(`BlockParserError: ${e.message}`)
+      console.error(e.stack)
+    } else {
+      throw e
+    }
+  }
 
   await fileSystem.ensureDirectoryExists(outputDir)
   await fileSystem.ensureDirectoryExists(`${outputDir}/examples`)

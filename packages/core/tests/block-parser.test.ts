@@ -25,7 +25,7 @@ describe('BlockParser', () => {
      * <h1>Headline</h1>
      */
     `
-    const blocks = parser.parse(content)
+    const blocks = parser.parse({ content, identifier: 'inline:test' })
 
     expect(blocks).toHaveLength(1)
     expect(blocks[0].key).toBe('foo.headline')
@@ -47,7 +47,7 @@ describe('BlockParser', () => {
      * <h1>Headline</h1>
      */
     `
-    const blocks = parser.parse(content)
+    const blocks = parser.parse({ content, identifier: 'inline:test' })
 
     expect(blocks).toHaveLength(2)
 
@@ -64,8 +64,13 @@ describe('BlockParser', () => {
      */
     `
 
-    expect(() => parser.parse(content)).toThrowError(
-      new BlockParseError("Undefined tag type 'fooo'.", prepareForBlockParserException(content), 1),
+    expect(() => parser.parse({ content, identifier: 'inline:test' })).toThrowError(
+      new BlockParseError({
+        code: prepareForBlockParserException(content),
+        line: 1,
+        reason: "Undefined tag type 'fooo'.",
+        source: 'inline:test',
+      }),
     )
   })
 
@@ -87,7 +92,7 @@ describe('BlockParser', () => {
       },
     })
 
-    const blocks = parser.parse(content)
+    const blocks = parser.parse({ content, identifier: 'inline:test' })
 
     expect(blocks).toHaveLength(1)
     expect(blocks[0]).toMatchObject({ fooo: 'customname' })
@@ -99,8 +104,13 @@ describe('BlockParser', () => {
      */
     `
 
-    expect(() => parser.parse(content)).toThrowError(
-      new BlockParseError('Empty block.', prepareForBlockParserException(content), 1),
+    expect(() => parser.parse({ content, identifier: 'inline:test' })).toThrowError(
+      new BlockParseError({
+        code: prepareForBlockParserException(content),
+        line: 1,
+        reason: 'Empty block.',
+        source: 'inline:test',
+      }),
     )
   })
 
@@ -111,12 +121,14 @@ describe('BlockParser', () => {
      */
     `
 
-    expect(() => parser.parse(content)).toThrowError(
-      new BlockParseError(
-        "Missing block location. Don't know where to place this block, please use @location, @page or @section + @page.",
-        prepareForBlockParserException(content),
-        1,
-      ),
+    expect(() => parser.parse({ content, identifier: 'inline:test' })).toThrowError(
+      new BlockParseError({
+        code: prepareForBlockParserException(content),
+        line: 1,
+        reason:
+          "Missing block location. Don't know where to place this block, please use @location, @page or @section + @page.",
+        source: 'inline:test',
+      }),
     )
   })
 })

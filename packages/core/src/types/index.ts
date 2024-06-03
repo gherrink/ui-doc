@@ -1,6 +1,6 @@
 export * from './AssetLoader'
 export * from './Block'
-export * from './BlockParserInterface'
+export * from './BlockParser'
 export * from './Context'
 export * from './DescriptionParserInterface'
 export * from './FileFinder'

@@ -5,7 +5,10 @@ import type { BlockCode } from '../../types'
 
 export function identifier(data: Spec): { key: string; name: string } {
   if (!data.name) {
-    throw new TagTransformerError('No key is given')
+    throw new TagTransformerError(
+      `Missing key. You should use "@${data.tag} your-${data.tag}-key"`,
+      data.tag,
+    )
   }
 
   const name = data.description || data.name

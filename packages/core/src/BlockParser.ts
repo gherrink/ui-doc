@@ -2,21 +2,17 @@ import { Block as CommentBlock, parse as parseComments } from 'comment-parser'
 
 import { BlockParseError, TagTransformerError } from './errors'
 import tagTransformers from './tag-transformers'
-import {
+import type {
   Block,
+  BlockParserContext,
+  BlockParserEventMap,
   BlockParserInterface,
-  type DescriptionParserInterface,
+  DescriptionParserInterface,
   TagTransformerInterface,
   TagTransformFunction,
 } from './types'
 
-export interface BlockParserEvent {}
-export interface BlockParsedEvent extends BlockParserEvent {
-  block: Block
-}
-export interface BlockParserEventMap {
-  'block-parsed': BlockParsedEvent
-}
+type BlockParserErrorCreate = (reason: string, comment: CommentBlock) => BlockParseError
 
 export class BlockParser implements BlockParserInterface {
   protected tagTransformers: Record<string, TagTransformFunction> = {}
@@ -70,25 +66,36 @@ export class BlockParser implements BlockParserInterface {
     this.listeners[type].forEach(listener => listener(event))
   }
 
-  public parse(content: string): Block[] {
-    return parseComments(content, { spacing: 'preserve' })
-      .map((comment: CommentBlock) => this.toBlock(comment))
+  public parse(context: BlockParserContext): Block[] {
+    const createError: BlockParserErrorCreate = (reason, comment) => {
+      const code = comment.source.map(line => line.source).join('\n')
+
+      return new BlockParseError({
+        code,
+        line: comment.source[0].number,
+        reason,
+        source: context.identifier,
+      })
+    }
+
+    return parseComments(context.content, { spacing: 'preserve' })
+      .map((comment: CommentBlock) => this.toBlock(comment, createError))
       .filter((entry): entry is Block => !!entry)
   }
 
-  protected toBlock(comment: CommentBlock): Block | undefined {
+  protected toBlock(comment: CommentBlock, createError: BlockParserErrorCreate): Block | undefined {
     let block: Partial<Block> = {
       key: '',
       order: 0,
     }
 
     if (comment.tags.length <= 0) {
-      throw this.createError('Empty block.', comment)
+      throw createError('Empty block.', comment)
     }
 
     comment.tags.forEach(tag => {
       if (!this.tagTransformers[tag.tag]) {
-        throw this.createError(`Undefined tag type '${tag.tag}'.`, comment)
+        throw createError(`Undefined tag type '${tag.tag}'.`, comment)
       }
 
       tag.description = tag.description.trim()
@@ -98,8 +105,7 @@ export class BlockParser implements BlockParserInterface {
         block = this.tagTransformers[tag.tag](block, tag)
       } catch (e) {
         if (e instanceof TagTransformerError) {
-          // TODO improve this, add source location
-          console.error(e.message)
+          throw createError(e.message, comment)
         } else {
           throw e
         }
@@ -110,7 +116,11 @@ export class BlockParser implements BlockParserInterface {
       block.description = this.descriptionParser.parse(comment.description.trim())
     }
 
-    this.validateBlock(block, comment)
+    const validationError = this.validateBlock(block)
+
+    if (validationError) {
+      throw createError(validationError, comment)
+    }
 
     block.key = this.blockKey(block as Block)
     if (!block.key) {
@@ -122,13 +132,12 @@ export class BlockParser implements BlockParserInterface {
     return block as Block
   }
 
-  protected validateBlock(block: Partial<Block>, comment: CommentBlock) {
+  protected validateBlock(block: Partial<Block>): string | undefined {
     if (!(!!block.page || (!!block.page && !!block.section) || !!block.location)) {
-      throw this.createError(
-        "Missing block location. Don't know where to place this block, please use @location, @page or @section + @page.",
-        comment,
-      )
+      return "Missing block location. Don't know where to place this block, please use @location, @page or @section + @page."
     }
+
+    return undefined
   }
 
   protected blockKey(block: Block): string {
@@ -137,11 +146,5 @@ export class BlockParser implements BlockParserInterface {
     }
 
     return (block.page ?? '') + (block.section ? `.${block.section}` : '')
-  }
-
-  protected createError(reason: string, comment: CommentBlock): BlockParseError {
-    const code = comment.source.map(line => line.source).join('\n')
-
-    return new BlockParseError(reason, code, comment.source[0].number)
   }
 }
