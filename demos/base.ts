@@ -1,7 +1,11 @@
 import { BlockParseError, Styleguide } from '@styleguide/core'
-import { HtmlRenderer, Parser, TemplateLoader } from '@styleguide/html-renderer'
+import {
+  HtmlRenderer,
+  HTMLRendererSyntaxError,
+  Parser,
+  TemplateLoader,
+} from '@styleguide/html-renderer'
 import { NodeFileSystem } from '@styleguide/node'
-import { HTMLRendererSyntaxError } from 'packages/html-renderer/src/errors'
 
 // TODO clean up output directory
 // TODO make it run parallel
@@ -49,7 +53,14 @@ async function main() {
   await styleguide.output(async (file, content) => {
     await fileSystem.fileWrite(`${outputDir}/${file}`, content)
   })
-  await assetLoader.copy('@styleguide/html-renderer/styleguide.css', `${outputDir}/styleguide.css`)
+  await assetLoader.copy(
+    '@styleguide/html-renderer/styleguide.min.css',
+    `${outputDir}/styleguide.css`,
+  )
+  await assetLoader.copy(
+    '@styleguide/html-renderer/styleguide.min.js',
+    `${outputDir}/styleguide.js`,
+  )
   await assetLoader.copy(
     '@highlightjs/cdn-assets/styles/default.min.css',
     `${outputDir}/highlight.css`,

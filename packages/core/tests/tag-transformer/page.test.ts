@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
-import { Block } from '@styleguide/core'
 
 import page from '../../src/tag-transformers/page'
+import { Block } from '../../src/types'
 
 describe('Page tag transformer', () => {
   test('should transform name', () => {
@@ -81,7 +81,7 @@ describe('Page tag transformer', () => {
 
     expect(() => {
       block = page.transform(block, comment)
-    }).toThrowError('No key is given')
+    }).toThrowError('Missing key')
 
     expect(block.page).toBeUndefined()
   })

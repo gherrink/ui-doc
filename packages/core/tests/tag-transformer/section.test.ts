@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
-import { Block } from '@styleguide/core'
 
 import section from '../../src/tag-transformers/section'
+import { Block } from '../../src/types'
 
 describe('Section tag transformer', () => {
   test('should transform name', () => {
@@ -126,7 +126,7 @@ describe('Section tag transformer', () => {
 
     expect(() => {
       block = section.transform(block, comment)
-    }).toThrowError('No key is given')
+    }).toThrowError('Missing key')
 
     expect(block.section).toBeUndefined()
   })

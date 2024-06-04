@@ -112,7 +112,7 @@ describe('Lexer', () => {
     const lexer = new Lexer(reader)
 
     expect(lexer.consume()).toStrictEqual({ type: 'tag-open' })
-    expect(lexer.consume()).toStrictEqual({ name: 'foo', ype: 'tag-identifier' })
+    expect(lexer.consume()).toStrictEqual({ name: 'foo', type: 'tag-identifier' })
     expect(lexer.consume()).toStrictEqual({ type: 'tag-separator' })
     expect(lexer.consume()).toStrictEqual({ name: 'bar', type: 'identifier' })
     expect(lexer.consume()).toStrictEqual({ type: 'tag-close' })

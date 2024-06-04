@@ -1,4 +1,4 @@
-import { Spec as CommentSpec } from 'comment-parser'
+import type { Spec as CommentSpec } from 'comment-parser'
 
 import type { Block } from './Block'
 

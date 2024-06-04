@@ -3,12 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "base": "tsx --tsconfig tsconfig.base.json ./base.ts",
-    "ts": "tsc --project tsconfig.base.json",
+    "base": "ts-node base.ts",
     "rollup": "rollup -c",
     "rollup:watch": "rollup -c -w",
-    "serve:base": "tsx --tsconfig tsconfig.base.json ./serve.ts dist/base",
-    "serve:rollup": "tsx --tsconfig tsconfig.base.json ./serve.ts dist/rollup"
+    "serve:base": "ts-node ./serve.ts dist/base",
+    "serve:rollup": "ts-node ./serve.ts dist/rollup",
+    "ts": "tsc --project tsconfig.base.json"
   },
   "devDependencies": {
     "@highlightjs/cdn-assets": "^11.9.0",
@@ -17,7 +17,7 @@
     "@styleguide/node": "workspace:0.0.0-alpha.0",
     "@styleguide/rollup": "workspace:0.0.0-alpha.0",
     "@types/node": "^20.12.7",
-    "tsx": "^4.7.2",
+    "ts-node": "^10.9.2",
     "typescript": "^4.9.5"
   }
 }

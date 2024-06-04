@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
-import { Block } from '@styleguide/core'
 
 import location from '../../src/tag-transformers/location'
+import { Block } from '../../src/types'
 
 describe('Location tag transformer', () => {
   test('should transform name', () => {
@@ -72,7 +72,7 @@ describe('Location tag transformer', () => {
 
     expect(() => {
       block = location.transform(block, comment)
-    }).toThrowError('No key is given')
+    }).toThrowError('Missing key')
 
     expect(block.location).toBeUndefined()
   })

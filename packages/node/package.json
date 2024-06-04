@@ -1,34 +1,52 @@
 {
   "name": "@styleguide/node",
-  "description": "Node implementations for styleguide",
+  "description": "Node implementations for styleguide.",
   "version": "0.0.0-alpha.0",
-  "homepage": "https://github.com/gherrink/styleguide/",
+  "license": "MIT",
   "keywords": [
     "styleguide",
     "ui-kit",
+    "documentation",
+    "generation",
     "node"
-  ],
-  "license": "MIT",
-  "exports": {
-    ".": {
-      "types": "./dist/packages/node/src/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "umd": "dist/index.umd.js",
-  "types": "dist/packages/node/src/index.d.ts",
-  "type": "module",
-  "files": [
-    "src",
-    "dist"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/gherrink/styleguide",
     "directory": "packages/node"
+  },
+  "author": "Maurice Busch",
+  "homepage": "https://github.com/gherrink/styleguide/tree/master/packages/node#readme",
+  "bugs": "https://github.com/gherrink/styleguide/issues",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.cjs"
+    }
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "prebuild": "rm -rf dist dist",
+    "prepare": "if [ ! -d 'dist' ]; then pnpm build; fi",
+    "prerelease": "pnpm build",
+    "test": "jest"
+  },
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "peerDependencies": {
+    "@styleguide/core": "workspace:^0.0.0-alpha.0",
+    "node": "^16.0.0||^18.0.0||^20.0.0||^22.0.0"
   },
   "dependencies": {
     "picomatch": "^4.0.2"
@@ -37,15 +55,5 @@
     "@styleguide/core": "workspace:^0.0.0-alpha.0",
     "@types/node": "^20.12.7",
     "@types/picomatch": "^2.3.3"
-  },
-  "peerDependencies": {
-    "@styleguide/core": "workspace:^0.0.0-alpha.0"
-  },
-  "sideEffects": false,
-  "scripts": {
-    "clean": "rm -rf dist",
-    "build": "$npm_execpath clean && rollup -c",
-    "watch": "$npm_execpath clean && rollup -c -w",
-    "test": "jest"
   }
 }

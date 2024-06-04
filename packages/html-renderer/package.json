@@ -1,54 +1,66 @@
 {
   "name": "@styleguide/html-renderer",
-  "description": "Simple HTML renderer for Styleguide",
+  "description": "HTML renderer for Styleguide.",
   "version": "0.0.0-alpha.0",
-  "homepage": "https://github.com/gherrink/styleguide/",
+  "license": "MIT",
   "keywords": [
     "styleguide",
     "ui-kit",
+    "documentation",
+    "generation",
     "renderer",
     "html"
-  ],
-  "license": "MIT",
-  "exports": {
-    ".": {
-      "types": "./dist/packages/html-renderer/src/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
-    "./styleguide.css": "./dist/styleguide.css",
-    "./styleguide.js": "./dist/styleguide.js"
-  },
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "umd": "dist/index.umd.js",
-  "types": "dist/packages/html-renderer/src/index.d.ts",
-  "type": "module",
-  "files": [
-    "src",
-    "dist",
-    "templates",
-    "styles",
-    "scripts"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/gherrink/styleguide",
     "directory": "packages/html-renderer"
   },
-  "devDependencies": {
-    "@styleguide/core": "workspace:^0.0.0-alpha.0"
+  "author": "Maurice Busch",
+  "homepage": "https://github.com/gherrink/styleguide/tree/master/packages/html-renderer#readme",
+  "bugs": "https://github.com/gherrink/styleguide/issues",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.cjs"
+    },
+    "./styleguide.css": "./dist/assets/styleguide.css",
+    "./styleguide.min.css": "./dist/assets/styleguide.min.css",
+    "./styleguide.js": {
+      "types": "./dist/assets/styleguide.d.ts",
+      "import": "./dist/assets/styleguide.mjs",
+      "script": "./dist/assets/styleguide.min.js",
+      "default": "./dist/assets/styleguide.cjs"
+    },
+    "./styleguide.min.js": "./dist/assets/styleguide.min.js"
   },
-  "peerDependencies": {
-    "@styleguide/core": "^workspace:0.0.0-alpha.0"
+  "engines": {
+    "node": ">=16.0.0"
   },
-  "sideEffects": false,
   "scripts": {
-    "clean": "rm -rf dist",
-    "build": "$npm_execpath clean && rollup -c",
-    "watch": "$npm_execpath clean && rollup -c -w",
+    "build": "rollup -c",
+    "prebuild": "rm -rf dist dist",
+    "prepare": "if [ ! -d 'dist' ]; then pnpm build; fi",
+    "prerelease": "pnpm build",
     "test": "jest"
   },
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "scripts",
+    "styles",
+    "templates",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "peerDependencies": {
+    "@styleguide/core": "workspace:^0.0.0-alpha.0"
+  },
+  "dependencies": {},
   "optionalDependencies": {
     "@highlightjs/cdn-assets": "^11.9.0"
   }

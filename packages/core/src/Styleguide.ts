@@ -1,24 +1,16 @@
 import { BlockParser } from './BlockParser'
 import { DescriptionParser } from './DescriptionParser'
-import {
+import type {
   Block,
   BlockParserInterface,
   Context,
   ContextEntry,
   FilePath,
   RendererInterface,
+  StyleguideEventMap,
   StyleguideOptions,
   StyleguideSource,
 } from './types'
-
-export interface StyleguideEvent {}
-export interface ContextEntryEvent extends StyleguideEvent {
-  entry: ContextEntry
-  key: string
-}
-export interface StyleguideEventMap {
-  'context-entry': ContextEntryEvent
-}
 
 export class Styleguide {
   protected sources: Record<FilePath, StyleguideSource>

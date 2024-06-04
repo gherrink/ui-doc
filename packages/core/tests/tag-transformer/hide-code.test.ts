@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
-import { Block } from '@styleguide/core'
 
 import hideCode from '../../src/tag-transformers/hide-code'
+import { Block } from '../../src/types'
 
 describe('hide code tag transformer', () => {
   test('should transform', () => {

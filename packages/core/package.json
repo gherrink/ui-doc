@@ -2,42 +2,51 @@
   "name": "@styleguide/core",
   "description": "Core to generate a styleguide out of css comments.",
   "version": "0.0.0-alpha.0",
-  "homepage": "https://github.com/gherrink/styleguide/",
+  "license": "MIT",
   "keywords": [
     "styleguide",
-    "ui-kit"
-  ],
-  "license": "MIT",
-  "exports": {
-    ".": {
-      "types": "./dist/packages/core/src/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "umd": "dist/index.umd.js",
-  "types": "dist/packages/core/src/index.d.ts",
-  "type": "module",
-  "files": [
-    "src",
-    "dist"
+    "ui-kit",
+    "documentation",
+    "generation"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/gherrink/styleguide",
     "directory": "packages/core"
   },
+  "author": "Maurice Busch",
+  "homepage": "https://github.com/gherrink/styleguide/tree/master/packages/core#readme",
+  "bugs": "https://github.com/gherrink/styleguide/issues",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.cjs"
+    }
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "prebuild": "rm -rf dist dist",
+    "prepare": "if [ ! -d 'dist' ]; then pnpm build; fi",
+    "prerelease": "pnpm build",
+    "test": "jest"
+  },
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "peerDependencies": {},
   "dependencies": {
     "comment-parser": "^1.4.1",
     "marked": "^12.0.2"
   },
-  "sideEffects": false,
-  "scripts": {
-    "clean": "rm -rf dist",
-    "build": "$npm_execpath clean && rollup -c",
-    "watch": "$npm_execpath clean && rollup -c -w",
-    "test": "jest"
-  }
+  "devDependencies": {}
 }

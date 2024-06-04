@@ -1,9 +1,5 @@
-import {
-  type FileSystem,
-  type RendererInterface,
-  Styleguide,
-  StyleguideOptions,
-} from '@styleguide/core'
+import type { FileSystem, RendererInterface, StyleguideOptions } from '@styleguide/core'
+import { Styleguide } from '@styleguide/core'
 import { HtmlRenderer, Parser, TemplateLoader } from '@styleguide/html-renderer'
 import { NodeFileSystem } from '@styleguide/node'
 import type { Plugin } from 'rollup'
@@ -21,6 +17,7 @@ const createDefaultRenderer = async (
   templatePath: string | undefined,
   fileSystem: FileSystem,
 ): Promise<RendererInterface> => {
+  // TODO make import async so if html render is not installed it will not fail
   const renderer = new HtmlRenderer(Parser.init())
 
   await TemplateLoader.load({

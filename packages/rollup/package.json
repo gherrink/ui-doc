@@ -1,50 +1,63 @@
 {
   "name": "@styleguide/rollup",
-  "description": "Rollup plugin for styleguide",
+  "description": "Rollup plugin for styleguide.",
   "version": "0.0.0-alpha.0",
-  "homepage": "https://github.com/gherrink/styleguide/",
+  "license": "MIT",
   "keywords": [
     "styleguide",
     "ui-kit",
+    "documentation",
+    "generation",
     "rollup",
     "rollup-plugin"
-  ],
-  "license": "MIT",
-  "exports": {
-    ".": {
-      "types": "./dist/packages/rollup/src/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "main": "dist/index.cjs",
-  "module": "dist/index.js",
-  "umd": "dist/index.umd.js",
-  "types": "dist/packages/rollup/src/index.d.ts",
-  "type": "module",
-  "files": [
-    "src",
-    "dist"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/gherrink/styleguide",
     "directory": "packages/rollup"
   },
-  "dependencies": {},
-  "devDependencies": {
-    "@styleguide/core": "workspace:^0.0.0-alpha.0",
-    "@styleguide/node": "workspace:^0.0.0-alpha.0"
+  "author": "Maurice Busch",
+  "homepage": "https://github.com/gherrink/styleguide/tree/master/packages/rollup#readme",
+  "bugs": "https://github.com/gherrink/styleguide/issues",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.cjs"
+    }
   },
-  "peerDependencies": {
-    "@styleguide/core": "workspace:^0.0.0-alpha.0",
-    "@styleguide/node": "workspace:^0.0.0-alpha.0"
+  "engines": {
+    "node": ">=16.0.0"
   },
-  "sideEffects": false,
   "scripts": {
-    "clean": "rm -rf dist",
-    "build": "$npm_execpath clean && rollup -c",
-    "watch": "$npm_execpath clean && rollup -c -w",
+    "build": "rollup -c",
+    "prebuild": "rm -rf dist dist",
+    "prepare": "if [ ! -d 'dist' ]; then pnpm build; fi",
+    "prerelease": "pnpm build",
     "test": "jest"
+  },
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "peerDependencies": {
+    "@styleguide/html-renderer": "workspace:^0.0.0-alpha.0",
+    "rollup": "^4.0.0"
+  },
+  "dependencies": {
+    "@styleguide/core": "workspace:^0.0.0-alpha.0",
+    "@styleguide/node": "workspace:^0.0.0-alpha.0",
+    "comment-parser": "^1.4.1",
+    "marked": "^12.0.2"
+  },
+  "devDependencies": {
+    "@styleguide/core": "workspace:*",
+    "@styleguide/html-renderer": "workspace:*",
+    "@styleguide/node": "workspace:*"
   }
 }

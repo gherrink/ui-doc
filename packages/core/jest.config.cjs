@@ -1,1 +1,1 @@
-module.exports = require('../../jest.config.js')
+../../shared/jest.config.cjs
