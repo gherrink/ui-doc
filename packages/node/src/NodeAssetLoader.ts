@@ -1,5 +1,6 @@
 /* eslint-disable no-empty-function */
 import fs from 'node:fs/promises'
+import { createRequire } from 'node:module'
 import path from 'node:path'
 
 import type { AssetLoader, FileSystem } from '@styleguide/core'
@@ -9,8 +10,11 @@ export class NodeAssetLoader implements AssetLoader {
 
   protected fileSystem: FileSystem
 
+  protected require: NodeRequire
+
   public constructor(fileSystem: FileSystem) {
     this.fileSystem = fileSystem
+    this.require = createRequire(import.meta.url)
   }
 
   public async packageExists(packageName: string): Promise<boolean> {
@@ -24,7 +28,7 @@ export class NodeAssetLoader implements AssetLoader {
         : this.resolvedPackages[packageName]!
     }
 
-    const paths = require.resolve.paths(packageName)
+    const paths = this.require.resolve.paths(packageName)
 
     if (!paths) {
       throw new Error('Could not resolve require paths')
@@ -51,7 +55,7 @@ export class NodeAssetLoader implements AssetLoader {
   }
 
   public async resolve(file: string): Promise<string | undefined> {
-    const resolvedFile = require.resolve(file)
+    const resolvedFile = this.require.resolve(file)
 
     return (await this.fileSystem.fileExists(resolvedFile)) ? resolvedFile : undefined
   }

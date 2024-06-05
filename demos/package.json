@@ -7,10 +7,9 @@
     "rollup": "rollup -c",
     "rollup:watch": "rollup -c -w",
     "serve:base": "ts-node ./serve.ts dist/base",
-    "serve:rollup": "ts-node ./serve.ts dist/rollup",
-    "ts": "tsc --project tsconfig.base.json"
+    "serve:rollup": "ts-node ./serve.ts dist/rollup"
   },
-  "devDependencies": {
+  "dependencies": {
     "@highlightjs/cdn-assets": "^11.9.0",
     "@styleguide/core": "workspace:0.0.0-alpha.0",
     "@styleguide/html-renderer": "workspace:0.0.0-alpha.0",

@@ -3,5 +3,6 @@
   "compilerOptions": {
     "skipLibCheck": true,
     "outDir": "dist",
+    "module": "CommonJS"
   },
 }
