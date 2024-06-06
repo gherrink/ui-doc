@@ -1,12 +1,13 @@
-import type { FileSystem, RendererInterface, StyleguideOptions } from '@styleguide/core'
+import type { BlockParserInterface, FileSystem, RendererInterface } from '@styleguide/core'
 import { Styleguide } from '@styleguide/core'
-import { HtmlRenderer, Parser, TemplateLoader } from '@styleguide/html-renderer'
 import { NodeFileSystem } from '@styleguide/node'
 import type { Plugin } from 'rollup'
 
 import { version as pluginVersion } from '../package.json'
 
-interface RollupStyleguidePluginOptions extends StyleguideOptions {
+interface RollupStyleguidePluginOptions {
+  renderer?: RendererInterface
+  blockParser?: BlockParserInterface
   source: string[]
   templatePath?: string
   styleAsset?: false | string
@@ -21,10 +22,10 @@ const createDefaultRenderer = async (
   templatePath: string | undefined,
   fileSystem: FileSystem,
 ): Promise<RendererInterface> => {
-  // TODO make import async so if html render is not installed it will not fail
-  const renderer = new HtmlRenderer(Parser.init())
+  const rendererImport = await import('@styleguide/html-renderer')
+  const renderer = new rendererImport.HtmlRenderer(rendererImport.Parser.init())
 
-  await TemplateLoader.load({
+  await rendererImport.TemplateLoader.load({
     fileSystem,
     renderer,
     templateBasePath: templatePath,
@@ -47,8 +48,9 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
       const watchedFiles = this.getWatchFiles()
 
       styleguide = new Styleguide({
+        blockParser: options.blockParser,
         renderer:
-          options.renderer || (await createDefaultRenderer(options.templatePath, fileSystem)),
+          options.renderer ?? (await createDefaultRenderer(options.templatePath, fileSystem)),
       })
 
       // TODO detect template updates when templates in workspace
