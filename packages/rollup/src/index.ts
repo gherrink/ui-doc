@@ -4,6 +4,8 @@ import { HtmlRenderer, Parser, TemplateLoader } from '@styleguide/html-renderer'
 import { NodeFileSystem } from '@styleguide/node'
 import type { Plugin } from 'rollup'
 
+import { version as pluginVersion } from '../package.json'
+
 interface RollupStyleguidePluginOptions extends StyleguideOptions {
   source: string[]
   templatePath?: string
@@ -38,7 +40,7 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
 
   return {
     name: PLUGIN_NAME,
-    version: '0.0.1', // TODO get version from package.json
+    version: pluginVersion,
 
     // eslint-disable-next-line sort-keys
     async buildStart() {

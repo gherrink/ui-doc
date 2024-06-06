@@ -2,6 +2,7 @@
 
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
+import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'
 import typescript from '@rollup/plugin-typescript'
@@ -45,6 +46,7 @@ export function configTs({ pkg, external = [] }) {
       },
     ],
     plugins: [
+      json(),
       resolve(),
       commonjs(),
       typescript({ sourceMap: true, declarationDir: '.', declaration: true }),
