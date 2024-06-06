@@ -8,10 +8,12 @@ interface RollupStyleguidePluginOptions extends StyleguideOptions {
   source: string[]
   templatePath?: string
   styleAsset?: false | string
-  highlightStyle?: string
+  highlightStyle?: false | string
+  highlightTheme?: false | string
+  highlightScript?: false | string
 }
 
-const PLUGIN_NAME = 'rollup-plugin-styleguide'
+const PLUGIN_NAME = 'styleguide'
 
 const createDefaultRenderer = async (
   templatePath: string | undefined,
@@ -36,6 +38,7 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
 
   return {
     name: PLUGIN_NAME,
+    version: '0.0.1', // TODO get version from package.json
 
     // eslint-disable-next-line sort-keys
     async buildStart() {
@@ -61,36 +64,48 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
     async generateBundle() {
       const assetLoader = fileSystem.assetLoader()
 
-      // TODO output user info what was generated
       await styleguide.output((file, content) => {
         this.emitFile({
           fileName: file,
           source: content,
           type: 'asset',
         })
+        this.info({ code: 'OUTPUT', message: `${file}` })
       })
 
-      if (options.styleAsset !== false) {
+      const outputFromOption = async (
+        fileNameCallback: () => string | false,
+        sourceCallback: () => string | false,
+      ) => {
+        const fileName = fileNameCallback()
+        const source = sourceCallback()
+
+        if (source === false || fileName === false) {
+          return
+        }
+
         this.emitFile({
-          fileName: options.styleAsset ?? 'styleguide.css',
-          source: await assetLoader.read('@styleguide/html-renderer/styleguide.css'),
+          fileName,
+          source: await assetLoader.read(source),
           type: 'asset',
         })
+        this.info({ code: 'OUTPUT', message: `${fileName} from ${source}` })
       }
 
-      this.emitFile({
-        fileName: 'highlight.css',
-        source: await assetLoader.read(
-          `@highlightjs/cdn-assets/styles/${options.highlightStyle ?? 'default'}.min.css`,
-        ),
-        type: 'asset',
-      })
+      await outputFromOption(
+        () => options.styleAsset ?? 'styleguide.css',
+        () => '@styleguide/html-renderer/styleguide.css',
+      )
 
-      this.emitFile({
-        fileName: 'highlight.js',
-        source: await assetLoader.read('@highlightjs/cdn-assets/highlight.min.js'),
-        type: 'asset',
-      })
+      await outputFromOption(
+        () => options.highlightScript ?? 'highlight.css',
+        () => `@highlightjs/cdn-assets/styles/${options.highlightTheme ?? 'default'}.min.css`,
+      )
+
+      await outputFromOption(
+        () => options.highlightScript ?? 'highlight.js',
+        () => '@highlightjs/cdn-assets/highlight.min.js',
+      )
     },
 
     async watchChange(id, change) {
