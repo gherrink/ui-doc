@@ -12,10 +12,13 @@ export class NodeFileFinder implements FileFinder {
   }
 
   public async search(fileFound: FileFinderOnFoundCallback): Promise<void> {
-    await Promise.all(this.globs.map(glob => this.searchGlob(glob, fileFound)))
+    await Promise.all(await Promise.all(this.globs.map(glob => this.searchGlob(glob, fileFound))))
   }
 
-  protected async searchGlob(glob: string, fileFound: FileFinderOnFoundCallback): Promise<void> {
+  protected searchGlob(
+    glob: string,
+    fileFound: FileFinderOnFoundCallback,
+  ): Promise<Promise<void>[]> {
     const scan = picomatch.scan(glob, { parts: true, tokens: true })
     const pathBase = path.join(scan.prefix, scan.base)
     const recursive = scan.maxDepth === Infinity
@@ -29,28 +32,35 @@ export class NodeFileFinder implements FileFinder {
     regex: RegExp,
     fileFound: FileFinderOnFoundCallback,
     recursive: boolean,
-  ): Promise<void> {
+  ): Promise<Promise<void>[]> {
     const dirs = await fs.readdir(path.resolve(directory), { withFileTypes: true })
 
-    await Promise.all(
-      dirs.map(async dirent => {
-        if (dirent.isDirectory()) {
-          if (recursive) {
-            await this.scanDirectory(path.join(directory, dirent.name), regex, fileFound, recursive)
-          }
+    return dirs.reduce(async (acc, dirent): Promise<Promise<void>[]> => {
+      const list = await acc
 
-          return
+      if (dirent.isDirectory()) {
+        if (recursive) {
+          list.push(
+            ...(await this.scanDirectory(
+              path.join(directory, dirent.name),
+              regex,
+              fileFound,
+              recursive,
+            )),
+          )
         }
+      } else if (dirent.isFile()) {
+        const file = path.join(directory, dirent.name)
 
-        if (dirent.isFile()) {
-          const file = path.join(directory, dirent.name)
+        if (file.match(regex)) {
+          const onFound = fileFound(path.resolve(file))
 
-          if (file.match(regex)) {
-            await fileFound(path.resolve(file))
-          }
+          list.push(onFound instanceof Promise ? onFound : Promise.resolve(onFound))
         }
-      }),
-    )
+      }
+
+      return Promise.resolve(list)
+    }, Promise.resolve<Promise<void>[]>([]))
   }
 
   public matches(file: string): boolean {

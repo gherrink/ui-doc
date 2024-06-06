@@ -9,6 +9,7 @@ import type {
   RendererInterface,
   StyleguideEventMap,
   StyleguideOptions,
+  StyleguideOutputCallback,
   StyleguideSource,
 } from './types'
 
@@ -262,7 +263,13 @@ export class Styleguide {
     return this.context.entries
   }
 
-  public async output(write: (file: string, content: string) => Promise<void>): Promise<void> {
+  public async output(output: StyleguideOutputCallback): Promise<void> {
+    const write = async (file: string, content: string) => {
+      const result = output(file, content)
+
+      return result instanceof Promise ? result : Promise.resolve(result)
+    }
+
     await Promise.all([
       ...this.context.pages.map(page => write(`${page.id}.html`, this.pageContent(page))),
       ...Object.keys(this.context.entries).map(key => {

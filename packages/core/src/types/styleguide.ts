@@ -20,3 +20,5 @@ export interface StyleguideEventMap {
 export interface StyleguideSource {
   blocks: Block[]
 }
+
+export type StyleguideOutputCallback = (file: string, content: string) => Promise<void> | void

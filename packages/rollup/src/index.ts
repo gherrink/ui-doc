@@ -62,7 +62,7 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
       const assetLoader = fileSystem.assetLoader()
 
       // TODO output user info what was generated
-      await styleguide.output(async (file, content) => {
+      await styleguide.output((file, content) => {
         this.emitFile({
           fileName: file,
           source: content,
