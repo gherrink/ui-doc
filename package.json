@@ -21,7 +21,7 @@
     "package:build": "pnpm -r --filter='./packages/*' run build",
     "package:release": "versioner --stripShortName='^@.+/(plugin-)?' --target",
     "preinstall": "npx only-allow pnpm",
-    "prepare": "husky install",
+    "prepare": "husky",
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check .",
     "security": "pnpm audit --audit-level=high"
