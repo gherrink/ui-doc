@@ -14,21 +14,21 @@ if (!basePath) {
 
 // maps file extension to MIME types
 const mimeType = {
-  '.ico': 'image/x-icon',
-  '.html': 'text/html',
-  '.js': 'text/javascript',
-  '.json': 'application/json',
   '.css': 'text/css',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.wav': 'audio/wav',
-  '.mp3': 'audio/mpeg',
-  '.svg': 'image/svg+xml',
-  '.pdf': 'application/pdf',
-  '.zip': 'application/zip',
   '.doc': 'application/msword',
   '.eot': 'application/vnd.ms-fontobject',
+  '.html': 'text/html',
+  '.ico': 'image/x-icon',
+  '.jpg': 'image/jpeg',
+  '.js': 'text/javascript',
+  '.json': 'application/json',
+  '.mp3': 'audio/mpeg',
+  '.pdf': 'application/pdf',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
   '.ttf': 'application/x-font-ttf',
+  '.wav': 'audio/wav',
+  '.zip': 'application/zip',
 }
 
 http
