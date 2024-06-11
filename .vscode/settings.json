@@ -14,6 +14,7 @@
   "search.exclude": {
     "**/dist/": true,
   },
+  "conventionalCommits.scopes": ["core", "html-renderer", "node", "rollup", "demos"],
   "css.validate": false,
   "[css]": {
     "editor.defaultFormatter": "stylelint.vscode-stylelint"
