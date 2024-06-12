@@ -1,7 +1,6 @@
 # Styleguide HTML Renderer
 
-Simple and light HTML Rendering Engine. Its purpose is to create HTML from a Context Object by using a simple template syntax and
-have no dependencies. This project should not be used for complexer projects, because of it's simplicity.
+Simple and light HTML Rendering Engine. Its purpose is to create HTML from a Context Object by using a simple template syntax and have no dependencies. This project should not be used for complexer projects, because of it's simplicity.
 
 ## Tags
 
@@ -48,11 +47,9 @@ You can use conditions
 - `>`
 - `>=`
 
-
 ### for
 
-Use for to loop over objects and arrays. Please not that a loop will change the context to help you access inside your loop target
-and give you loop specific context like index and object keys.
+Use for to loop over objects and arrays. Please not that a loop will change the context to help you access inside your loop target and give you loop specific context like index and object keys.
 
 #### array loop
 
@@ -117,10 +114,7 @@ You can loop over an array or object of objects. The object items will directly 
 
 ### page
 
-Use page to output registered page templates (see Templates > Page). `{{page:foo}}` this will try to
-render the `foo` page. If no page with this name is registered the system will fallback to the `default` page.
-If you want to use the default page you can also just use `{{page}}`. As second parameter you can give a context
-if you like to change the context `{{page:layout newContext}}`.
+Use page to output registered page templates (see Templates > Page). `{{page:foo}}` this will try to render the `foo` page. If no page with this name is registered the system will fallback to the `default` page. If you want to use the default page you can also just use `{{page}}`. As second parameter you can give a context if you like to change the context `{{page:layout newContext}}`.
 
 ```
 <!-- context: {"title": "Document Title", "page": {"title": "Page title", "content": "Page content"}} -->
@@ -198,13 +192,11 @@ Define the HTML basic structure.
 
 ### Page
 
-Define a page specific template. You can use the `{{page:your-page-template-name}}` tag to render a specific page template.
-Page templates are not necessary but they help to keep layouts smaller and easier to read.
+Define a page specific template. You can use the `{{page:your-page-template-name}}` tag to render a specific page template. Page templates are not necessary but they help to keep layouts smaller and easier to read.
 
 ### Partial
 
-Define a partial that can be reused, to get the same output inside layouts, pages and even in other partials. You can use the
-`{{partial:your-partial-name}}` tag to render the partial.
+Define a partial that can be reused, to get the same output inside layouts, pages and even in other partials. You can use the `{{partial:your-partial-name}}` tag to render the partial.
 
 ## Usage
 
@@ -250,8 +242,8 @@ renderer.generate({
   page: {
     title: 'Example Page Title',
     sections: [
-      { title: "Section 1" content: "<p>Section 1 content</p>" },
-      { title: "Section 2" content: "<p>Section 2 content</p>" },
+      {; content: "<p>Section 1 content</p>" },
+      {; title: "Section 2"; content: "<p>Section 2 content</p>" },
     ],
   },
 })

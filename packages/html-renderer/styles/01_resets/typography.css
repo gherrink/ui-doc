@@ -15,11 +15,20 @@ body,
   color: rgb(var(--font-color));
 }
 
-button, input, optgroup, select, textarea {
+button,
+input,
+optgroup,
+select,
+textarea {
   font-family: inherit;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--headline-family, inherit);
   font-size: calc(var(--font-size-normal) * var(--headline-scale, 1));
   font-weight: var(--headline-weight, inherit);
@@ -48,7 +57,8 @@ a {
   text-decoration: var(--link-decoration, none);
 }
 
-b, strong {
+b,
+strong {
   --font-weight: var(--font-weight-bold);
 }
 
