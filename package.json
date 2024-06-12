@@ -10,19 +10,23 @@
     "not IE 11"
   ],
   "scripts": {
-    "fix:css": "stylelint --cache packages demos --fix",
+    "fix:css": "stylelint 'packages/**/*.css' 'demos/**/*.css' --cache --fix",
     "fix:js": "eslint --cache packages demos shared --ext .js,.ts,.mjs --fix",
     "lint": "pnpm lint:docs && pnpm --no-bail lint:json && pnpm lint:package && pnpm lint:js && pnpm lint:css",
-    "lint:css": "stylelint --cache packages demos",
+    "lint:css": "stylelint 'packages/**/*.css' 'demos/**/*.css' --cache",
     "lint:docs": "prettier --write **/README.md **/CHANGELOG.md",
     "lint:js": "eslint --cache packages demos shared --ext .js,.ts,.mjs",
     "lint:json": "prettier --write **/tsconfig.json tsconfig.*.json pnpm-workspace.yaml",
     "lint:package": "prettier --write **/package.json",
     "package:build": "pnpm -r --filter='./packages/*' run build",
+    "package:release": "versioner --stripShortName='^@.+/' --target",
+    "package:release-dry": "versioner --dry --stripShortName='^@.+/' --target",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky",
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check .",
+    "release": "pnpm lint && pnpm --filter [HEAD^] test && pnpm --filter [HEAD^] --workspace-concurrency=1 release",
+    "release:dry": "pnpm lint && pnpm --filter \"@styleguide/*\" test && pnpm --filter \"@styleguide/*\" --workspace-concurrency=1 release:dry",
     "security": "pnpm audit --audit-level=high"
   },
   "devDependencies": {
@@ -30,6 +34,7 @@
     "@babel/preset-env": "^7.24.6",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
+    "@dot/versioner": "^0.3.4",
     "@jest/globals": "^29.7.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.8",
