@@ -102,6 +102,11 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
       )
 
       await outputFromOption(
+        () => 'styleguide.js',
+        () => '@styleguide/html-renderer/styleguide.js',
+      )
+
+      await outputFromOption(
         () => options.highlightScript ?? 'highlight.css',
         () => `@highlightjs/cdn-assets/styles/${options.highlightTheme ?? 'default'}.min.css`,
       )
