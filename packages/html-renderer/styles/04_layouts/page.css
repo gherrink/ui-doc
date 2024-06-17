@@ -58,3 +58,11 @@ body > main > .content {
     margin-top: var(--main-content-section-space, var(--size-lg));
   }
 }
+
+footer {
+  --mt: var(--size-xl);
+
+  > .text {
+    text-align: right;
+  }
+}

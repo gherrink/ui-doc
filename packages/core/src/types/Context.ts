@@ -20,6 +20,7 @@ export interface Context {
 
 export interface OutputContext {
   title: string
+  footerText: string
   logo: string
   name: string
   homeLink: string

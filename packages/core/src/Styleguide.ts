@@ -30,10 +30,12 @@ export class Styleguide {
   }
 
   protected texts = {
+    copyright: 'Styleguide',
     title: 'Styleguide',
   }
 
   protected generate = {
+    footerText: () => `© ${new Date().getFullYear()} ${this.texts.copyright}`,
     homeLink: () => '/index.html',
     linkPage: (page: ContextEntry) => `/${page.id}.html`,
     logo: () => 'LOGO',
@@ -288,6 +290,7 @@ export class Styleguide {
   public pageContent(page: ContextEntry, layout?: string): string {
     return this.renderer.generate(
       {
+        footerText: this.generate.footerText(),
         homeLink: this.generate.homeLink(),
         logo: this.generate.logo(),
         menu: this.createMenu().map(item => {
