@@ -168,7 +168,12 @@ export class Styleguide {
     const entryIgnoredKeys = ['id', 'title', 'titleLevel', 'order', 'sections']
     const blockKeys = Object.keys(block)
 
-    entry.title = !entry.title || block.title ? block.title ?? '' : entry.title
+    if (
+      (typeof block.title === 'string' && block.title) ||
+      (entry.title === entry.id && block.title)
+    ) {
+      entry.title = block.title
+    }
 
     blockKeys.forEach(blockType => {
       if (!blockIgnoredKeys.includes(blockType)) {
@@ -187,11 +192,13 @@ export class Styleguide {
 
   protected contextEntry(key: string): ContextEntry {
     if (!this.context.entries[key]) {
+      const id = this.contextEntryKeyToId(key)
+
       this.context.entries[key] = {
-        id: this.contextEntryKeyToId(key),
+        id,
         order: 0,
         sections: [],
-        title: '',
+        title: id,
         titleLevel: 2,
       }
 
