@@ -73,7 +73,7 @@ export class BlockParser implements BlockParserInterface {
       return new BlockParseError({
         code,
         line: comment.source[0].number,
-        reason,
+        message: reason,
         source: context.identifier,
       })
     }

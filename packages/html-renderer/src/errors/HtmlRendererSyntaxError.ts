@@ -1,6 +1,4 @@
 export class HTMLRendererSyntaxError extends SyntaxError {
-  public reason: string
-
   public code: string
 
   public line: number
@@ -10,25 +8,24 @@ export class HTMLRendererSyntaxError extends SyntaxError {
   public source: string
 
   constructor({
-    reason,
+    message,
     code,
     column,
     line,
     source,
   }: {
-    reason: string
+    message: string
     code: string
     column: number
     line: number
     source: string
   }) {
-    super(reason)
+    super(message)
     this.name = 'HTMLRendererSyntaxError'
-    this.reason = reason
     this.code = code
     this.line = line
     this.column = column
     this.source = source
-    this.stack = `${this.source}:${this.line}:${this.column}\n\n${code}`
+    this.stack = `HTMLRendererSyntaxError: ${message}\n    in ${this.source}:${this.line}:${this.column}\n\n    ${code.replaceAll('\n', '\n    ')}`
   }
 }

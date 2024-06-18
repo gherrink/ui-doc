@@ -64,7 +64,7 @@ export class HtmlRenderer implements HtmlRendererInterface {
           code: debug.content,
           column: debug.pos,
           line: debug.line,
-          reason: error.message,
+          message: error.message,
           source: debug.source,
         })
       }
