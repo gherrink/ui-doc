@@ -279,8 +279,20 @@ export class Styleguide {
       return result instanceof Promise ? result : Promise.resolve(result)
     }
 
+    const pages: ContextEntry[] = [...this.context.pages]
+
+    // if no index page exists, create one
+    if (!pages.find(page => page.id === 'index')) {
+      pages.unshift({
+        id: 'index',
+        order: 0,
+        sections: [],
+        title: this.generate.name(),
+      })
+    }
+
     await Promise.all([
-      ...this.context.pages.map(page => write(`${page.id}.html`, this.pageContent(page))),
+      ...pages.map(page => write(`${page.id}.html`, this.pageContent(page, page.layout))),
       ...Object.keys(this.context.entries).map(key => {
         const entry = this.context.entries[key]
 
@@ -324,6 +336,10 @@ export class Styleguide {
   protected createMenu(): Context['menu'] {
     if (this.context.menu.length === 0) {
       this.context.pages.forEach(page => {
+        if (page.id === 'index') {
+          return
+        }
+
         this.context.menu.push({
           active: false,
           href: this.generate.linkPage(page),
