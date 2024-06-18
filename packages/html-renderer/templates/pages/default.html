@@ -1,7 +1,14 @@
-<h1 class="headline">{{var:title}}</h1>
+<div class="content">
+  <h1 class="headline">{{var:title}}</h1>
 
-{{if:description}}<div class="description">{{var:description}}</div>{{/if}}
+  {{if:description}}<div class="description">{{var:description}}</div>{{/if}}
 
-{{for:sections}}
-{{partial:section}}
-{{/for}}
+  {{for:sections}}
+  {{partial:section}}
+  {{/for}}
+</div>
+<aside class="sidebar">
+  <div class="scroll">{{partial:nav-sidebar}}</div>
+</aside>
+
+
