@@ -20,10 +20,19 @@ export class TagPageNode extends TagNode {
   }
 
   public render(context: RenderContext, renderer: HtmlRendererInterface): string {
+    let pageName: string = this.name
     const newContext =
       this.contextKey === 'this' ? context : readNestedValue(this.contextKey, context)
 
-    return renderer.page(this.name, newContext)
+    if (pageName.includes('.')) {
+      const foundName = readNestedValue(pageName, context)
+
+      if (typeof foundName === 'string' && foundName) {
+        pageName = foundName
+      }
+    }
+
+    return renderer.page(pageName, newContext)
   }
 }
 
