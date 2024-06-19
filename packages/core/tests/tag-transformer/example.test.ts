@@ -167,4 +167,21 @@ describe('Example tag transformer', () => {
       type: 'html',
     })
   })
+
+  test('should throw error when invalid html is given', () => {
+    const comment = {
+      description: '<div>example test',
+      name: '',
+      optional: false,
+      problems: [],
+      source: [],
+      tag: 'example',
+      type: '',
+    }
+    const block: Partial<Block> = {}
+
+    expect(() => {
+      example.transform(block, comment)
+    }).toThrowError('Invalid HTML content.')
+  })
 })

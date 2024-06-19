@@ -1,5 +1,6 @@
+import { TagTransformerError } from '../errors'
 import type { BlockExample, TagTransformerInterface } from '../types'
-import { code } from './utils'
+import { code, isValidHTML } from './utils'
 
 export const tag: TagTransformerInterface = {
   name: 'example',
@@ -22,6 +23,10 @@ export const tag: TagTransformerInterface = {
 
     if (!data.title && block.title) {
       data.title = block.title
+    }
+
+    if (data.type === 'html' && !isValidHTML(data.content)) {
+      throw new TagTransformerError('Invalid HTML content.', spec.tag)
     }
 
     if (!Object.hasOwnProperty.call(block, 'code') && block.hideCode !== true) {
