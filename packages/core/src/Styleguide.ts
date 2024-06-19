@@ -8,6 +8,7 @@ import type {
   FilePath,
   RendererInterface,
   StyleguideEventMap,
+  StyleguideGenerateMap,
   StyleguideOptions,
   StyleguideOutputCallback,
   StyleguideSource,
@@ -34,17 +35,17 @@ export class Styleguide {
     title: 'Styleguide',
   }
 
-  protected generate = {
-    footerText: () => `© ${new Date().getFullYear()} ${this.texts.copyright}`,
-    homeLink: () => '/index.html',
-    linkPage: (page: ContextEntry) => `/${page.id}.html`,
-    logo: () => 'LOGO',
-    name: () => this.texts.title,
-    titleExample: (example: ContextEntry) =>
+  protected generate: StyleguideGenerateMap = {
+    exampleTitle: (example: ContextEntry) =>
       example.title
         ? `${example.title} Example | ${this.texts.title}`
         : `Example | ${this.texts.title}`,
-    titlePage: (page: ContextEntry) =>
+    footerText: () => `© ${new Date().getFullYear()} ${this.texts.copyright}`,
+    homeLink: () => '/index.html',
+    logo: () => 'LOGO',
+    name: () => this.texts.title,
+    pageLink: (page: ContextEntry) => `/${page.id}.html`,
+    pageTitle: (page: ContextEntry) =>
       page.id !== 'index' ? `${page.title} | ${this.texts.title}` : this.texts.title,
   }
 
@@ -58,6 +59,8 @@ export class Styleguide {
 
     this.blockParser = options.blockParser ?? this.createParser()
     this.renderer = options.renderer
+    this.generate = Object.assign(this.generate, options.generate ?? {})
+    this.texts = Object.assign(this.texts, options.texts ?? {})
 
     this.registerListeners()
   }
@@ -106,7 +109,6 @@ export class Styleguide {
   }
 
   public sourceCreate(file: string, content: string) {
-    // TODO handle errors
     const source: StyleguideSource = {
       blocks: this.blockParser.parse({ content, identifier: file }),
     }
@@ -313,13 +315,13 @@ export class Styleguide {
         homeLink: this.generate.homeLink(),
         logo: this.generate.logo(),
         menu: this.createMenu().map(item => {
-          item.active = item.href === this.generate.linkPage(page)
+          item.active = item.href === this.generate.pageLink(page)
 
           return item
         }),
         name: this.generate.name(),
         page: JSON.parse(JSON.stringify(page)),
-        title: this.generate.titlePage(page),
+        title: this.generate.pageTitle(page),
       },
       layout,
     )
@@ -328,7 +330,7 @@ export class Styleguide {
   public exampleContent(example: ContextEntry, layout: 'example'): string {
     const context = JSON.parse(JSON.stringify(example))
 
-    context.title = this.generate.titleExample(example)
+    context.title = this.generate.exampleTitle(example)
 
     return this.renderer.generate(context, layout)
   }
@@ -342,7 +344,7 @@ export class Styleguide {
 
         this.context.menu.push({
           active: false,
-          href: this.generate.linkPage(page),
+          href: this.generate.pageLink(page),
           text: page.title,
         })
       })
