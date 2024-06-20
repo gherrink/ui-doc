@@ -9,6 +9,8 @@
 }
 
 .example {
+  display: flex;
+
   > iframe {
     width: 100%;
     border: none;

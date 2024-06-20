@@ -19,7 +19,9 @@
       }
     </style>
   </head>
-  <body {{if:modifier}}class="{{var:modifier}}"{{/if}}>
+  <body>
+    {{if:modifier}}<div class="{{var:modifier}}">{{/if}}
     {{var:content}}
+    {{if:modifier}}</div>{{/if}}
   </body>
 </html>
