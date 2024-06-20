@@ -9,6 +9,7 @@ import type {
   RendererInterface,
   StyleguideEventMap,
   StyleguideGenerateMap,
+  StyleguideListeners,
   StyleguideOptions,
   StyleguideOutputCallback,
   StyleguideSource,
@@ -23,11 +24,11 @@ export class Styleguide {
 
   public renderer: RendererInterface
 
-  protected listeners: Record<
-    keyof StyleguideEventMap,
-    ((event: StyleguideEventMap[keyof StyleguideEventMap]) => void)[]
-  > = {
+  protected listeners: StyleguideListeners<keyof StyleguideEventMap> = {
     'context-entry': [],
+    example: [],
+    page: [],
+    'source-edit': [],
   }
 
   protected texts = {
@@ -36,16 +37,31 @@ export class Styleguide {
   }
 
   protected generate: StyleguideGenerateMap = {
-    exampleTitle: (example: ContextEntry) =>
+    exampleTitle: example =>
       example.title
         ? `${example.title} Example | ${this.texts.title}`
         : `Example | ${this.texts.title}`,
     footerText: () => `© ${new Date().getFullYear()} ${this.texts.copyright}`,
     homeLink: () => '/index.html',
     logo: () => 'LOGO',
+    menu: (menu, pages) => {
+      pages.forEach(page => {
+        if (page.id === 'index') {
+          return
+        }
+
+        menu.push({
+          active: false,
+          href: this.generate.pageLink(page),
+          text: page.title,
+        })
+      })
+
+      return menu
+    },
     name: () => this.texts.title,
-    pageLink: (page: ContextEntry) => `/${page.id}.html`,
-    pageTitle: (page: ContextEntry) =>
+    pageLink: page => `/${page.id}.html`,
+    pageTitle: page =>
       page.id !== 'index' ? `${page.title} | ${this.texts.title}` : this.texts.title,
   }
 
@@ -82,7 +98,10 @@ export class Styleguide {
     type: K,
     listener: (event: StyleguideEventMap[K]) => void,
   ): Styleguide {
-    this.listeners[type] = this.listeners[type].filter(l => l !== listener)
+    this.listeners[type].splice(
+      this.listeners[type].findIndex(l => l === listener),
+      1,
+    )
 
     return this
   }
@@ -114,6 +133,7 @@ export class Styleguide {
     }
 
     this.sources[file] = source
+    this.emit('source-edit', { file, source, type: 'create' })
     this.sourceToContext(source)
     this.clearMenu()
   }
@@ -131,6 +151,7 @@ export class Styleguide {
 
     // write new blocks to source
     this.sources[file].blocks = blocksNew
+    this.emit('source-edit', { file, source: this.sources[file], type: 'update' })
 
     // update and add new blocks to context
     blocksNew.forEach(block => this.blockToContext(block))
@@ -149,6 +170,7 @@ export class Styleguide {
       return
     }
 
+    this.emit('source-edit', { file, source: this.sources[file], type: 'delete' })
     this.sources[file].blocks
       .map(block => block.key)
       .sort((a, b) => b.length - a.length)
@@ -309,45 +331,37 @@ export class Styleguide {
   }
 
   public pageContent(page: ContextEntry, layout?: string): string {
-    return this.renderer.generate(
-      {
-        footerText: this.generate.footerText(),
-        homeLink: this.generate.homeLink(),
-        logo: this.generate.logo(),
-        menu: this.createMenu().map(item => {
-          item.active = item.href === this.generate.pageLink(page)
+    const context = {
+      footerText: this.generate.footerText(),
+      homeLink: this.generate.homeLink(),
+      logo: this.generate.logo(),
+      menu: this.createMenu().map(item => {
+        item.active = item.href === this.generate.pageLink(page)
 
-          return item
-        }),
-        name: this.generate.name(),
-        page: JSON.parse(JSON.stringify(page)),
-        title: this.generate.pageTitle(page),
-      },
-      layout,
-    )
+        return item
+      }),
+      name: this.generate.name(),
+      page: JSON.parse(JSON.stringify(page)),
+      title: this.generate.pageTitle(page),
+    }
+
+    this.emit('page', { layout, page })
+
+    return this.renderer.generate(context, layout)
   }
 
   public exampleContent(example: ContextEntry, layout: 'example'): string {
     const context = JSON.parse(JSON.stringify(example))
 
     context.title = this.generate.exampleTitle(example)
+    this.emit('example', { example, layout })
 
     return this.renderer.generate(context, layout)
   }
 
   protected createMenu(): Context['menu'] {
     if (this.context.menu.length === 0) {
-      this.context.pages.forEach(page => {
-        if (page.id === 'index') {
-          return
-        }
-
-        this.context.menu.push({
-          active: false,
-          href: this.generate.pageLink(page),
-          text: page.title,
-        })
-      })
+      this.context.menu = this.generate.menu(this.context.menu, this.context.pages)
     }
 
     return this.context.menu

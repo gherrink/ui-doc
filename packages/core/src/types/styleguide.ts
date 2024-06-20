@@ -1,6 +1,6 @@
 import type { Block } from './Block'
 import type { BlockParserInterface } from './BlockParser'
-import type { ContextEntry } from './Context'
+import type { Context, ContextEntry } from './Context'
 import type { RendererInterface } from './RendererInterface'
 
 export interface StyleguideOptions {
@@ -16,8 +16,31 @@ export interface ContextEntryEvent extends StyleguideEvent {
   key: string
 }
 
+export interface SourceEditEvent extends StyleguideEvent {
+  file: string
+  source: StyleguideSource
+  type: 'create' | 'update' | 'delete'
+}
+
+export interface PageEvent extends StyleguideEvent {
+  layout?: string
+  page: ContextEntry
+}
+
+export interface ExampleEvent extends StyleguideEvent {
+  example: ContextEntry
+  layout: string
+}
+
 export interface StyleguideEventMap {
   'context-entry': ContextEntryEvent
+  'source-edit': SourceEditEvent
+  page: PageEvent
+  example: ExampleEvent
+}
+
+export type StyleguideListeners<T extends keyof StyleguideEventMap> = {
+  [K in T]: ((event: StyleguideEventMap[K]) => void)[]
 }
 
 export interface StyleguideGenerateMap {
@@ -25,6 +48,7 @@ export interface StyleguideGenerateMap {
   footerText: () => string
   homeLink: () => string
   logo: () => string
+  menu: (menu: Context['menu'], pages: Context['pages']) => Context['menu']
   name: () => string
   pageLink: (page: ContextEntry) => string
   pageTitle: (page: ContextEntry) => string
