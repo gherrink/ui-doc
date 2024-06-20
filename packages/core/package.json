@@ -45,10 +45,8 @@
     "README.md"
   ],
   "sideEffects": false,
-  "peerDependencies": {},
   "dependencies": {
     "comment-parser": "^1.4.1",
     "marked": "^12.0.2"
-  },
-  "devDependencies": {}
+  }
 }
