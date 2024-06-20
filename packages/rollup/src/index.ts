@@ -1,4 +1,9 @@
-import type { BlockParserInterface, FileSystem, RendererInterface } from '@styleguide/core'
+import type {
+  BlockParserInterface,
+  FileSystem,
+  RendererInterface,
+  StyleguideOptions,
+} from '@styleguide/core'
 import { Styleguide } from '@styleguide/core'
 import { NodeFileSystem } from '@styleguide/node'
 import type { Plugin } from 'rollup'
@@ -14,6 +19,7 @@ interface RollupStyleguidePluginOptions {
   highlightStyle?: false | string
   highlightTheme?: false | string
   highlightScript?: false | string
+  settings?: Pick<StyleguideOptions, 'generate' | 'texts'>
 }
 
 const PLUGIN_NAME = 'styleguide'
@@ -51,6 +57,7 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
         blockParser: options.blockParser,
         renderer:
           options.renderer ?? (await createDefaultRenderer(options.templatePath, fileSystem)),
+        ...(options.settings ?? {}),
       })
 
       // TODO detect template updates when templates in workspace
