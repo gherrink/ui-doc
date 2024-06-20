@@ -15,7 +15,6 @@
     "**/dist/": true,
   },
   "conventionalCommits.scopes": ["core", "html-renderer", "node", "rollup", "demos"],
-  "css.validate": false,
   "[css]": {
     "editor.defaultFormatter": "stylelint.vscode-stylelint"
   },
@@ -34,4 +33,6 @@
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "postcss.validate": false,
+  "css.customData": [".vscode/postcss.json"],
 }
