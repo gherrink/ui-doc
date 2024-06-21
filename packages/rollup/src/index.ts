@@ -1,5 +1,6 @@
 import type {
   BlockParserInterface,
+  FileFinder,
   FileSystem,
   RendererInterface,
   StyleguideOptions,
@@ -8,9 +9,11 @@ import { Styleguide } from '@styleguide/core'
 import { NodeFileSystem } from '@styleguide/node'
 import type { Plugin } from 'rollup'
 
-import { version as pluginVersion } from '../package.json'
+import { version } from '../package.json'
 
-interface RollupStyleguidePluginOptions {
+export const PLUGIN_NAME = 'styleguide'
+
+export interface Options {
   renderer?: RendererInterface
   blockParser?: BlockParserInterface
   source: string[]
@@ -19,15 +22,21 @@ interface RollupStyleguidePluginOptions {
   highlightStyle?: false | string
   highlightTheme?: false | string
   highlightScript?: false | string
+  outputDir?: string
   settings?: Pick<StyleguideOptions, 'generate' | 'texts'>
 }
 
-const PLUGIN_NAME = 'styleguide'
+export interface Api {
+  version: string
+  get fileFinder(): FileFinder
+  get fileSystem(): FileSystem
+  get styleguide(): Styleguide
+}
 
-const createDefaultRenderer = async (
+async function createDefaultRenderer(
   templatePath: string | undefined,
   fileSystem: FileSystem,
-): Promise<RendererInterface> => {
+): Promise<RendererInterface> {
   const rendererImport = await import('@styleguide/html-renderer')
   const renderer = new rendererImport.HtmlRenderer(rendererImport.Parser.init())
 
@@ -40,14 +49,33 @@ const createDefaultRenderer = async (
   return renderer
 }
 
-export default function createStyleguidePlugin(options: RollupStyleguidePluginOptions): Plugin {
+export default function createStyleguidePlugin(options: Options): Plugin<Api> {
   const fileSystem = NodeFileSystem.init()
   const finder = fileSystem.createFileFinder(options.source)
   let styleguide: Styleguide
+  let outputDir = options.outputDir ?? ''
+
+  if (!outputDir.endsWith('/') && outputDir !== '') {
+    outputDir += '/'
+  }
 
   return {
     name: PLUGIN_NAME,
-    version: pluginVersion,
+    version,
+
+    // eslint-disable-next-line sort-keys
+    api: {
+      get fileFinder() {
+        return finder
+      },
+      get fileSystem() {
+        return fileSystem
+      },
+      get styleguide() {
+        return styleguide
+      },
+      version,
+    },
 
     // eslint-disable-next-line sort-keys
     async buildStart() {
@@ -76,24 +104,28 @@ export default function createStyleguidePlugin(options: RollupStyleguidePluginOp
       const assetLoader = fileSystem.assetLoader()
 
       await styleguide.output((file, content) => {
+        const fileName = `${outputDir}${file}`
+
         this.emitFile({
-          fileName: file,
+          fileName,
           source: content,
           type: 'asset',
         })
-        this.info({ code: 'OUTPUT', message: `${file}` })
+        this.info({ code: 'OUTPUT', message: `${fileName}` })
       })
 
       const outputFromOption = async (
         fileNameCallback: () => string | false,
         sourceCallback: () => string | false,
       ) => {
-        const fileName = fileNameCallback()
+        let fileName = fileNameCallback()
         const source = sourceCallback()
 
         if (source === false || fileName === false) {
           return
         }
+
+        fileName = `${outputDir}${fileName}`
 
         this.emitFile({
           fileName,
