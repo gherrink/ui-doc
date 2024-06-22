@@ -54,10 +54,14 @@ function styleguideAssetType(fileName: string): AssetType {
   return fileName.match(/\.(css|less|sass|scss)$/) ? 'style' : 'script'
 }
 
-export default function createStyleguidePlugin(options: Options): Plugin<Api> {
+export default async function createStyleguidePlugin(options: Options): Promise<Plugin<Api>> {
   const fileSystem = NodeFileSystem.init()
   const finder = fileSystem.createFileFinder(options.source)
-  let styleguide: Styleguide
+  const styleguide = new Styleguide({
+    blockParser: options.blockParser,
+    renderer: options.renderer ?? (await createDefaultRenderer(options.templatePath, fileSystem)),
+    ...(options.settings ?? {}),
+  })
   let outputDir = options.outputDir ?? ''
 
   if (!outputDir.endsWith('/') && outputDir !== '') {
@@ -85,13 +89,6 @@ export default function createStyleguidePlugin(options: Options): Plugin<Api> {
     // eslint-disable-next-line sort-keys
     async buildStart() {
       const watchedFiles = this.getWatchFiles()
-
-      styleguide = new Styleguide({
-        blockParser: options.blockParser,
-        renderer:
-          options.renderer ?? (await createDefaultRenderer(options.templatePath, fileSystem)),
-        ...(options.settings ?? {}),
-      })
 
       // TODO detect template updates when templates in workspace
 
