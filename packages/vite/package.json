@@ -1,0 +1,59 @@
+{
+  "name": "@styleguide/vite",
+  "description": "Vite plugin for styleguide.",
+  "version": "0.0.0-alpha.0",
+  "license": "MIT",
+  "keywords": [
+    "styleguide",
+    "ui-kit",
+    "documentation",
+    "generation",
+    "vite",
+    "vite-plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gherrink/styleguide",
+    "directory": "packages/vite"
+  },
+  "author": "Maurice Busch",
+  "homepage": "https://github.com/gherrink/styleguide/tree/master/packages/vite#readme",
+  "bugs": "https://github.com/gherrink/styleguide/issues",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.cjs"
+    }
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "prebuild": "rm -rf dist dist",
+    "prepare": "if [ ! -d 'dist' ]; then pnpm build; fi",
+    "prerelease": "pnpm build",
+    "release": "pnpm --workspace-root package:release $(pwd)",
+    "release:dry": "pnpm --workspace-root package:release-dry $(pwd)"
+  },
+  "files": [
+    "dist",
+    "LICENSE.md",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "peerDependencies": {
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "@styleguide/rollup": "workspace:^0.0.0-alpha.0"
+  },
+  "devDependencies": {
+    "@styleguide/rollup": "workspace:*",
+    "vite": "^5.3.1"
+  }
+}
