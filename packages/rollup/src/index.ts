@@ -8,7 +8,7 @@ import type {
 } from '@styleguide/core'
 import { Styleguide } from '@styleguide/core'
 import { NodeFileSystem } from '@styleguide/node'
-import type { OutputAsset, OutputChunk, Plugin } from 'rollup'
+import type { Plugin } from 'rollup'
 
 import { version } from '../package.json'
 
@@ -50,8 +50,16 @@ async function createDefaultRenderer(
   return renderer
 }
 
-function styleguideAssetType(fileName: string): AssetType {
-  return fileName.match(/\.(css|less|sass|scss)$/) ? 'style' : 'script'
+function styleguideAssetType(fileName: string): AssetType | null {
+  if (fileName.match(/\.(css|less|sass|scss)$/)) {
+    return 'style'
+  }
+
+  if (fileName.match(/\.(js|ts)$/)) {
+    return 'script'
+  }
+
+  return null
 }
 
 export default async function createStyleguidePlugin(options: Options): Promise<Plugin<Api>> {
@@ -63,8 +71,27 @@ export default async function createStyleguidePlugin(options: Options): Promise<
     ...(options.settings ?? {}),
   })
   let outputDir = options.outputDir ?? ''
+  const assetsForCopy: string[] = []
+  const styleguideAsset = (src: string, as: 'example' | 'page') => {
+    const type = styleguideAssetType(src)
 
-  if (!outputDir.endsWith('/') && outputDir !== '') {
+    if (!type) {
+      return
+    }
+
+    if (as === 'example') {
+      assetsForCopy.push(src)
+    }
+
+    const method = as === 'example' ? 'addExampleAsset' : 'addAsset'
+
+    styleguide[method]({
+      src,
+      type,
+    })
+  }
+
+  if (outputDir !== '' && !outputDir.endsWith('/')) {
     outputDir += '/'
   }
 
@@ -86,7 +113,6 @@ export default async function createStyleguidePlugin(options: Options): Promise<
       version,
     },
 
-    // eslint-disable-next-line sort-keys
     async buildStart() {
       const watchedFiles = this.getWatchFiles()
 
@@ -105,46 +131,13 @@ export default async function createStyleguidePlugin(options: Options): Promise<
     async generateBundle(_outputOptions, bundle) {
       const assetLoader = fileSystem.assetLoader()
 
-      // extract assets from bundle to use in styleguide
-      if (outputDir !== '') {
-        Object.keys(bundle).forEach(fileName => {
-          if (fileName.startsWith(outputDir)) {
-            return
-          }
-
-          let assetFile
-
-          if (bundle[fileName].type === 'asset') {
-            const file = bundle[fileName] as OutputAsset
-
-            assetFile = fileName
-            this.emitFile({
-              fileName: `${outputDir}${fileName}`,
-              name: file.name,
-              needsCodeReference: file.needsCodeReference,
-              source: file.source,
-              type: 'asset',
-            })
-          } else if (bundle[fileName].type === 'chunk') {
-            const file = bundle[fileName] as OutputChunk
-
-            assetFile = fileName
-            this.emitFile({
-              code: file.code,
-              fileName: `${outputDir}${fileName}`,
-              map: file.map ?? undefined,
-              type: 'prebuilt-chunk',
-            })
-          }
-
-          if (assetFile) {
-            styleguide.addExampleAsset({
-              src: assetFile,
-              type: styleguideAssetType(fileName),
-            })
-          }
-        })
-      }
+      // find assets in bundle and register them in styleguide
+      Object.keys(bundle).forEach(fileName => {
+        if (bundle[fileName].type === 'asset') {
+          console.log('asset', fileName)
+          styleguideAsset(fileName, 'example')
+        }
+      })
 
       const outputFromOption = async (
         fileNameCallback: () => string | false,
@@ -164,10 +157,7 @@ export default async function createStyleguidePlugin(options: Options): Promise<
           source: await assetLoader.read(source),
           type: 'asset',
         })
-        styleguide.addAsset({
-          src: fileName,
-          type: styleguideAssetType(fileName),
-        })
+        styleguideAsset(fileName, 'page')
         this.info({ code: 'OUTPUT', message: `${outputFileName} from ${source}` })
       }
 
@@ -203,6 +193,24 @@ export default async function createStyleguidePlugin(options: Options): Promise<
       })
     },
 
+    async writeBundle(outputOptions) {
+      if (outputDir === '') {
+        return
+      }
+
+      // TODO may copy map file if exists
+      await Promise.all(
+        assetsForCopy.map(async asset => {
+          const destFile = `${outputOptions.dir}/${outputDir}${asset}`
+          const destDir = fileSystem.fileDirname(destFile)
+
+          await fileSystem.ensureDirectoryExists(destDir)
+          await fileSystem.fileCopy(`${outputOptions.dir}/${asset}`, destFile)
+        }),
+      )
+    },
+
+    // eslint-disable-next-line sort-keys
     async watchChange(id, change) {
       if (styleguide.sourceExists(id)) {
         if (change.event === 'update') {
