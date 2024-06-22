@@ -1,6 +1,6 @@
 import type { Block } from './Block'
 import type { BlockParserInterface } from './BlockParser'
-import type { Context, ContextEntry } from './Context'
+import type { Context, ContextEntry } from './context'
 import type { RendererInterface } from './RendererInterface'
 
 export interface StyleguideOptions {

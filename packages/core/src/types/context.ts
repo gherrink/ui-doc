@@ -12,13 +12,23 @@ export interface MenuItem {
   active: boolean
 }
 
+export type AssetType = 'style' | 'script'
+export interface Asset {
+  type: AssetType
+  src: string
+  attrs?: Record<string, string>
+}
+
 export interface Context {
-  pages: ContextEntry[]
+  assets: Asset[]
   entries: Record<string, ContextEntry>
+  exampleAssets: Asset[]
   menu: MenuItem[]
+  pages: ContextEntry[]
 }
 
 export interface OutputContext {
+  assets: Asset[]
   title: string
   footerText: string
   logo: string

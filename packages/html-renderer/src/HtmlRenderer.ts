@@ -1,3 +1,5 @@
+import type { Asset, OutputContext } from '@styleguide/core'
+
 import { HTMLRendererError, HTMLRendererSyntaxError, ParserError } from './errors'
 import { Reader } from './Reader'
 import {
@@ -73,7 +75,7 @@ export class HtmlRenderer implements HtmlRendererInterface {
     }
   }
 
-  public generate(context: RenderContext, layout?: string): string {
+  public generate(context: OutputContext, layout?: string): string {
     layout = layout ?? 'default'
     const content = this.layouts[layout] || undefined
 
@@ -83,7 +85,7 @@ export class HtmlRenderer implements HtmlRendererInterface {
       )
     }
 
-    return this.render(content, context)
+    return this.render(content, this.prepareGenerateContext(context))
   }
 
   public page(name: string, context: RenderContext): string {
@@ -112,5 +114,33 @@ export class HtmlRenderer implements HtmlRendererInterface {
 
   protected render(rootNode: NodeInterface, context: RenderContext): string {
     return rootNode.render(context, this)
+  }
+
+  protected prepareGenerateContext(inputContext: OutputContext): RenderContext {
+    const context = inputContext as RenderContext
+
+    const resolveUrl = (file: string) => `/${file}`
+
+    context.styles = inputContext.assets
+      .filter((asset: Asset) => asset.type === 'style')
+      .map(
+        (asset: Asset) =>
+          `<link href="${resolveUrl(asset.src)}" rel="stylesheet"${this.makeAttributes(asset.attrs)}>`,
+      )
+      .join('\n')
+
+    context.scripts = inputContext.assets
+      .filter((asset: Asset) => asset.type === 'script')
+      .map(
+        (asset: Asset) =>
+          `<script src="${resolveUrl(asset.src)}"${this.makeAttributes(asset.attrs)}></script>`,
+      )
+      .join('\n')
+
+    return context
+  }
+
+  protected makeAttributes(attrs: Record<string, string> = {}): string {
+    return Object.keys(attrs).reduce((result, key) => `${result} ${key}="${attrs[key]}"`, '')
   }
 }

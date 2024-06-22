@@ -5,23 +5,20 @@
     <title>{{var:title}}</title>
     <link rel="shortcut icon" href="./favicon.ico" />
 
-    <link rel="stylesheet" href="/styleguide.css" />
-    <link rel="stylesheet" href="/highlight.css" />
+    {{var:styles}}
   </head>
   <body class="{{var:page.id}}">
     <header>{{partial:nav-main}}</header>
     <main class="width-content">
       {{page:page.id page}}
     </main>
+    <footer class="width-content py mt">
+      <div class="text">{{var:footerText}}</div>
+    </footer>
+
+    {{var:scripts}}
+    <script type="application/javascript">
+      hljs.highlightAll()
+    </script>
   </body>
-
-  <footer class="width-content py mt">
-    <div class="text">{{var:footerText}}</div>
-  </footer>
-
-  <script src="/highlight.js"></script>
-  <script type="application/javascript">
-    hljs.highlightAll()
-  </script>
-  <script src="/styleguide.js"></script>
 </html>

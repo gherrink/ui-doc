@@ -1,4 +1,5 @@
 import type {
+  AssetType,
   BlockParserInterface,
   FileFinder,
   FileSystem,
@@ -7,7 +8,7 @@ import type {
 } from '@styleguide/core'
 import { Styleguide } from '@styleguide/core'
 import { NodeFileSystem } from '@styleguide/node'
-import type { Plugin } from 'rollup'
+import type { OutputAsset, OutputChunk, Plugin } from 'rollup'
 
 import { version } from '../package.json'
 
@@ -47,6 +48,10 @@ async function createDefaultRenderer(
   })
 
   return renderer
+}
+
+function styleguideAssetType(fileName: string): AssetType {
+  return fileName.match(/\.(css|less|sass|scss)$/) ? 'style' : 'script'
 }
 
 export default function createStyleguidePlugin(options: Options): Plugin<Api> {
@@ -100,39 +105,73 @@ export default function createStyleguidePlugin(options: Options): Plugin<Api> {
       })
     },
 
-    async generateBundle() {
+    async generateBundle(_outputOptions, bundle) {
       const assetLoader = fileSystem.assetLoader()
 
-      await styleguide.output((file, content) => {
-        const fileName = `${outputDir}${file}`
+      // extract assets from bundle to use in styleguide
+      if (outputDir !== '') {
+        Object.keys(bundle).forEach(fileName => {
+          if (fileName.startsWith(outputDir)) {
+            return
+          }
 
-        this.emitFile({
-          fileName,
-          source: content,
-          type: 'asset',
+          let assetFile
+
+          if (bundle[fileName].type === 'asset') {
+            const file = bundle[fileName] as OutputAsset
+
+            assetFile = fileName
+            this.emitFile({
+              fileName: `${outputDir}${fileName}`,
+              name: file.name,
+              needsCodeReference: file.needsCodeReference,
+              source: file.source,
+              type: 'asset',
+            })
+          } else if (bundle[fileName].type === 'chunk') {
+            const file = bundle[fileName] as OutputChunk
+
+            assetFile = fileName
+            this.emitFile({
+              code: file.code,
+              fileName: `${outputDir}${fileName}`,
+              map: file.map ?? undefined,
+              type: 'prebuilt-chunk',
+            })
+          }
+
+          if (assetFile) {
+            styleguide.addExampleAsset({
+              src: assetFile,
+              type: styleguideAssetType(fileName),
+            })
+          }
         })
-        this.info({ code: 'OUTPUT', message: `${fileName}` })
-      })
+      }
 
       const outputFromOption = async (
         fileNameCallback: () => string | false,
         sourceCallback: () => string | false,
       ) => {
-        let fileName = fileNameCallback()
+        const fileName = fileNameCallback()
         const source = sourceCallback()
 
         if (source === false || fileName === false) {
           return
         }
 
-        fileName = `${outputDir}${fileName}`
+        const outputFileName = `${outputDir}${fileName}`
 
         this.emitFile({
-          fileName,
+          fileName: outputFileName,
           source: await assetLoader.read(source),
           type: 'asset',
         })
-        this.info({ code: 'OUTPUT', message: `${fileName} from ${source}` })
+        styleguide.addAsset({
+          src: fileName,
+          type: styleguideAssetType(fileName),
+        })
+        this.info({ code: 'OUTPUT', message: `${outputFileName} from ${source}` })
       }
 
       await outputFromOption(
@@ -154,6 +193,17 @@ export default function createStyleguidePlugin(options: Options): Plugin<Api> {
         () => options.highlightScript ?? 'highlight.js',
         () => '@highlightjs/cdn-assets/highlight.min.js',
       )
+
+      await styleguide.output((file, content) => {
+        const fileName = `${outputDir}${file}`
+
+        this.emitFile({
+          fileName,
+          source: content,
+          type: 'asset',
+        })
+        this.info({ code: 'OUTPUT', message: `${fileName}` })
+      })
     },
 
     async watchChange(id, change) {

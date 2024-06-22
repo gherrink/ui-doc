@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>{{var:title}}</title>
 
-    <link rel="stylesheet" href="/app.css">
+    {{var:styles}}
     <style>
       body {
         margin: 0 !important;
@@ -23,5 +23,7 @@
     {{if:modifier}}<div class="{{var:modifier}}">{{/if}}
     {{var:content}}
     {{if:modifier}}</div>{{/if}}
+
+    {{var:scripts}}
   </body>
 </html>

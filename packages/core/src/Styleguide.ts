@@ -1,6 +1,7 @@
 import { BlockParser } from './BlockParser'
 import { DescriptionParser } from './DescriptionParser'
 import type {
+  Asset,
   Block,
   BlockParserInterface,
   Context,
@@ -68,7 +69,9 @@ export class Styleguide {
   constructor(options: StyleguideOptions) {
     this.sources = {}
     this.context = {
+      assets: [],
       entries: {},
+      exampleAssets: [],
       menu: [],
       pages: [],
     }
@@ -112,6 +115,14 @@ export class Styleguide {
     }
 
     this.listeners[type].forEach(listener => listener(event))
+  }
+
+  public addAsset(asset: Asset) {
+    this.context.assets.push(asset)
+  }
+
+  public addExampleAsset(asset: Asset) {
+    this.context.exampleAssets.push(asset)
   }
 
   protected registerListeners() {
@@ -332,6 +343,7 @@ export class Styleguide {
 
   public pageContent(page: ContextEntry, layout?: string): string {
     const context = {
+      assets: this.context.assets,
       footerText: this.generate.footerText(),
       homeLink: this.generate.homeLink(),
       logo: this.generate.logo(),
@@ -354,6 +366,7 @@ export class Styleguide {
     const context = JSON.parse(JSON.stringify(example))
 
     context.title = this.generate.exampleTitle(example)
+    context.assets = this.context.exampleAssets
     this.emit('example', { example, layout })
 
     return this.renderer.generate(context, layout)
