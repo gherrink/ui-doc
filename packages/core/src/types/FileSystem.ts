@@ -8,7 +8,8 @@ export interface FileSystem {
   assetLoader(): AssetLoader
   fileRead(file: FilePath): Promise<string>
   fileWrite(file: FilePath, content: string): Promise<boolean>
-  fileCopy(from: string, to: string): Promise<boolean>
+  fileCopy(from: FilePath, to: FilePath): Promise<boolean>
   fileExists(file: FilePath): Promise<boolean>
   fileBasename(file: FilePath): string
+  fileDirname(file: FilePath): string
 }

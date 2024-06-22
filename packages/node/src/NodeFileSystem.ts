@@ -69,6 +69,10 @@ export class NodeFileSystem implements FileSystem {
     return path.basename(file, path.extname(file))
   }
 
+  public fileDirname(file: string): string {
+    return path.dirname(file)
+  }
+
   public async ensureDirectoryExists(dir: string): Promise<void> {
     await fs.mkdir(path.resolve(dir), { recursive: true })
   }
