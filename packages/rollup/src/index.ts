@@ -32,6 +32,7 @@ export interface Api {
   get fileFinder(): FileFinder
   get fileSystem(): FileSystem
   get styleguide(): Styleguide
+  styleguideAsset(src: string, as: 'example' | 'page'): void
 }
 
 async function createDefaultRenderer(
@@ -89,7 +90,7 @@ export default async function createStyleguidePlugin(options: Options): Promise<
     ...(options.settings ?? {}),
   })
   const assetsForCopy: string[] = []
-  const styleguideAsset = (src: string, as: 'example' | 'page') => {
+  const styleguideAsset: Api['styleguideAsset'] = (src, as) => {
     const type = styleguideAssetType(src)
 
     if (!type) {
@@ -123,6 +124,7 @@ export default async function createStyleguidePlugin(options: Options): Promise<
       get styleguide() {
         return styleguide
       },
+      styleguideAsset,
       version,
     },
 
