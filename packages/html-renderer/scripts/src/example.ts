@@ -1,25 +1,31 @@
 export function initExample() {
   document.querySelectorAll<HTMLIFrameElement>('[data-example] > iframe').forEach(iframe => {
-    iframe.addEventListener('load', () => {
-      if (!iframe.contentWindow) {
-        return
-      }
+    const document = iframe.contentDocument ?? iframe.contentWindow?.document
 
+    if (!document) {
+      return
+    }
+
+    const action = () => {
       const changeHeight = () => {
-        if (iframe.contentWindow) {
-          iframe.style.height = `${iframe.contentWindow.document.body.scrollHeight}px`
-        }
+        iframe.style.height = `${document.body.scrollHeight}px`
       }
 
       changeHeight()
 
       const observer = new MutationObserver(changeHeight)
 
-      observer.observe(iframe.contentWindow.document.body, {
+      observer.observe(document.body, {
         attributes: true,
         childList: true,
         subtree: true,
       })
-    })
+    }
+
+    if (document.readyState === 'complete') {
+      action()
+    } else {
+      iframe.addEventListener('load', action)
+    }
   })
 }
