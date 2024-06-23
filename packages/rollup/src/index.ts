@@ -1,4 +1,5 @@
 import type {
+  AssetLoader,
   AssetType,
   BlockParserInterface,
   FileFinder,
@@ -14,6 +15,29 @@ import { version } from '../package.json'
 
 export const PLUGIN_NAME = 'styleguide'
 
+const ASSETS: {
+  name: (options: Options) => string | false
+  source: (options: Options) => string | false
+}[] = [
+  {
+    name: options => options.styleAsset ?? 'styleguide.css',
+    source: () => '@styleguide/html-renderer/styleguide.min.css',
+  },
+  {
+    name: () => 'styleguide.js',
+    source: () => '@styleguide/html-renderer/styleguide.min.js',
+  },
+  {
+    name: options => options.highlightStyle ?? 'highlight.css',
+    source: options =>
+      `@highlightjs/cdn-assets/styles/${options.highlightTheme ?? 'default'}.min.css`,
+  },
+  {
+    name: options => options.highlightScript ?? 'highlight.js',
+    source: () => '@highlightjs/cdn-assets/highlight.min.js',
+  },
+]
+
 export interface Options {
   renderer?: RendererInterface
   blockParser?: BlockParserInterface
@@ -27,10 +51,22 @@ export interface Options {
   settings?: Pick<StyleguideOptions, 'generate' | 'texts'>
 }
 
+export interface ResolvedOptions {
+  assets: { code: string; name: string; sourceFile: string; sourceName: string }[]
+  assetsForCopy: string[]
+  fileSystem: FileSystem
+  finder: FileFinder
+  pathPrefix: string
+  styleguide: Styleguide
+  source: string[]
+  styleguideAsset: Api['styleguideAsset']
+}
+
 export interface Api {
   version: string
   get fileFinder(): FileFinder
   get fileSystem(): FileSystem
+  get options(): ResolvedOptions
   get styleguide(): Styleguide
   styleguideAsset(src: string, as: 'example' | 'page'): void
 }
@@ -51,18 +87,6 @@ async function createDefaultRenderer(
   return renderer
 }
 
-function styleguideAssetType(fileName: string): AssetType | null {
-  if (fileName.match(/\.(css|less|sass|scss)$/)) {
-    return 'style'
-  }
-
-  if (fileName.match(/\.(js|ts)$/)) {
-    return 'script'
-  }
-
-  return null
-}
-
 function createOutputPathPrefix(options: Options): string {
   const path = options.outputDir
 
@@ -80,7 +104,51 @@ function createOutputPathPrefix(options: Options): string {
   return pathPrefix
 }
 
-export default async function createStyleguidePlugin(options: Options): Promise<Plugin<Api>> {
+function styleguideAssetType(fileName: string): AssetType | null {
+  if (fileName.match(/\.(css|less|sass|scss)$/)) {
+    return 'style'
+  }
+
+  if (fileName.match(/\.(js|ts)$/)) {
+    return 'script'
+  }
+
+  return null
+}
+
+async function resolveAssets(
+  options: Options,
+  assetLoader: AssetLoader,
+  pathPrefix: string,
+): Promise<ResolvedOptions['assets']> {
+  return (
+    await Promise.all(
+      ASSETS.map(async ({ name, source }) => {
+        const fileName = name(options)
+        const sourceName = source(options)
+
+        if (sourceName === false || fileName === false) {
+          return null
+        }
+
+        const sourceFile = await assetLoader.resolve(sourceName)
+
+        if (!sourceFile) {
+          return null
+        }
+
+        return {
+          code: await assetLoader.read(sourceFile),
+          name: `${pathPrefix}${fileName}`,
+          sourceFile,
+          sourceName,
+        }
+      }),
+    )
+  ).filter(asset => asset !== null) as ResolvedOptions['assets']
+}
+
+async function resolveOptions(options: Options): Promise<ResolvedOptions> {
   const pathPrefix = createOutputPathPrefix(options)
   const fileSystem = NodeFileSystem.init()
   const finder = fileSystem.createFileFinder(options.source)
@@ -89,15 +157,15 @@ export default async function createStyleguidePlugin(options: Options): Promise<
     renderer: options.renderer ?? (await createDefaultRenderer(options.templatePath, fileSystem)),
     ...(options.settings ?? {}),
   })
-  const assetsForCopy: string[] = []
-  const styleguideAsset: Api['styleguideAsset'] = (src, as) => {
+  const assetsForCopy: ResolvedOptions['assetsForCopy'] = []
+  const styleguideAsset: ResolvedOptions['styleguideAsset'] = (src, as) => {
     const type = styleguideAssetType(src)
 
     if (!type) {
       return
     }
 
-    if (as === 'example') {
+    if (as === 'example' && !assetsForCopy.includes(src)) {
       assetsForCopy.push(src)
     }
 
@@ -108,6 +176,22 @@ export default async function createStyleguidePlugin(options: Options): Promise<
       type,
     })
   }
+
+  return {
+    assets: await resolveAssets(options, fileSystem.assetLoader(), pathPrefix),
+    assetsForCopy,
+    fileSystem,
+    finder,
+    pathPrefix,
+    source: options.source,
+    styleguide,
+    styleguideAsset,
+  }
+}
+
+export default async function styleguidePlugin(rawOptions: Options): Promise<Plugin<Api>> {
+  const options = await resolveOptions(rawOptions)
+  const { finder, fileSystem, styleguide, pathPrefix, assetsForCopy, styleguideAsset } = options
 
   return {
     name: PLUGIN_NAME,
@@ -121,6 +205,9 @@ export default async function createStyleguidePlugin(options: Options): Promise<
       get fileSystem() {
         return fileSystem
       },
+      get options() {
+        return options
+      },
       get styleguide() {
         return styleguide
       },
@@ -130,6 +217,10 @@ export default async function createStyleguidePlugin(options: Options): Promise<
 
     async buildStart() {
       const watchedFiles = this.getWatchFiles()
+
+      options.assets.forEach(({ name }) => {
+        styleguideAsset(name, 'page')
+      })
 
       // TODO detect template updates when templates in workspace
 
@@ -144,8 +235,6 @@ export default async function createStyleguidePlugin(options: Options): Promise<
     },
 
     async generateBundle(_outputOptions, bundle) {
-      const assetLoader = fileSystem.assetLoader()
-
       // find assets in bundle and register them in styleguide
       Object.keys(bundle).forEach(fileName => {
         if (bundle[fileName].type === 'asset') {
@@ -153,47 +242,14 @@ export default async function createStyleguidePlugin(options: Options): Promise<
         }
       })
 
-      const outputFromOption = async (
-        fileNameCallback: () => string | false,
-        sourceCallback: () => string | false,
-      ) => {
-        const fileName = fileNameCallback()
-        const source = sourceCallback()
-
-        if (source === false || fileName === false) {
-          return
-        }
-
-        const outputFileName = `${pathPrefix}${fileName}`
-
+      options.assets.forEach(({ code, name, sourceName }) => {
         this.emitFile({
-          fileName: outputFileName,
-          source: await assetLoader.read(source),
+          fileName: name,
+          source: code,
           type: 'asset',
         })
-        styleguideAsset(fileName, 'page')
-        this.info({ code: 'OUTPUT', message: `${outputFileName} from ${source}` })
-      }
-
-      await outputFromOption(
-        () => options.styleAsset ?? 'styleguide.css',
-        () => '@styleguide/html-renderer/styleguide.css',
-      )
-
-      await outputFromOption(
-        () => 'styleguide.js',
-        () => '@styleguide/html-renderer/styleguide.js',
-      )
-
-      await outputFromOption(
-        () => options.highlightScript ?? 'highlight.css',
-        () => `@highlightjs/cdn-assets/styles/${options.highlightTheme ?? 'default'}.min.css`,
-      )
-
-      await outputFromOption(
-        () => options.highlightScript ?? 'highlight.js',
-        () => '@highlightjs/cdn-assets/highlight.min.js',
-      )
+        this.info({ code: 'OUTPUT', message: `${name} from ${sourceName}` })
+      })
 
       await styleguide.output((file, content) => {
         const fileName = `${pathPrefix}${file}`
