@@ -3,9 +3,11 @@ import { DescriptionParser } from './DescriptionParser'
 import type {
   Asset,
   Block,
+  BlockExample,
   BlockParserInterface,
   Context,
   ContextEntry,
+  ContextExample,
   FilePath,
   RendererInterface,
   StyleguideEventMap,
@@ -26,8 +28,10 @@ export class Styleguide {
   public renderer: RendererInterface
 
   protected listeners: StyleguideListeners<keyof StyleguideEventMap> = {
-    'context-entry': [],
+    'context-entry-deleted': [],
+    'context-entry-saved': [],
     example: [],
+    output: [],
     page: [],
     'source-edit': [],
   }
@@ -46,7 +50,7 @@ export class Styleguide {
     homeLink: () => '/index.html',
     logo: () => 'LOGO',
     menu: (menu, pages) => {
-      pages.forEach(page => {
+      Object.values(pages).forEach(page => {
         if (page.id === 'index') {
           return
         }
@@ -68,20 +72,27 @@ export class Styleguide {
 
   constructor(options: StyleguideOptions) {
     this.sources = {}
-    this.context = {
-      assets: [],
-      entries: {},
-      exampleAssets: [],
-      menu: [],
-      pages: [],
-    }
-
     this.blockParser = options.blockParser ?? this.createParser()
     this.renderer = options.renderer
     this.generate = Object.assign(this.generate, options.generate ?? {})
     this.texts = Object.assign(this.texts, options.texts ?? {})
+    this.context = {
+      entries: {},
+      exampleAssets: [],
+      examples: {},
+      menu: [],
+      pageAssets: [],
+      pages: {
+        index: {
+          id: 'index',
+          order: 0,
+          sections: [],
+          title: this.generate.name(),
+        },
+      },
+    }
 
-    this.registerListeners()
+    this.registerExampleListeners()
   }
 
   protected createParser(): BlockParserInterface {
@@ -118,19 +129,47 @@ export class Styleguide {
   }
 
   public addAsset(asset: Asset) {
-    this.context.assets.push(asset)
+    this.context.pageAssets.push(asset)
   }
 
   public addExampleAsset(asset: Asset) {
     this.context.exampleAssets.push(asset)
   }
 
-  protected registerListeners() {
-    this.on('context-entry', ({ entry, key }) => {
-      if (entry.example && entry.example.type === 'html' && !entry.example.src) {
-        entry.example.fileName = `${key.replaceAll('.', '-')}.html`
-        entry.example.src = `/examples/${entry.example.fileName}`
+  protected registerExampleListeners() {
+    const exampleKeyToId = (key: string) => key.replaceAll('.', '-')
+
+    this.on('context-entry-saved', ({ entry, key }) => {
+      if (!entry.example || entry.example.type !== 'html') {
+        return
       }
+
+      const example: BlockExample = entry.example
+
+      if (!example.id) {
+        example.id = exampleKeyToId(key)
+      }
+
+      if (!example.src || !example.file) {
+        example.file = `examples/${example.id}.html`
+        example.src = `/${example.file}`
+      }
+
+      this.context.examples[example.id] = example as ContextExample
+    })
+
+    this.on('context-entry-deleted', ({ entry, key }) => {
+      if (entry.example && entry.example.type === 'html') {
+        delete this.context.examples[exampleKeyToId(key)]
+      }
+    })
+
+    this.on('output', ({ promises, write }) => {
+      promises.push(
+        ...Object.values(this.context.examples).map(example =>
+          write(example.file, this.exampleContent(example)),
+        ),
+      )
     })
   }
 
@@ -222,7 +261,7 @@ export class Styleguide {
       }
     })
 
-    this.emit('context-entry', { entry, key: block.key })
+    this.emit('context-entry-saved', { entry, key: block.key })
   }
 
   protected contextEntry(key: string): ContextEntry {
@@ -265,9 +304,7 @@ export class Styleguide {
     }
 
     if (parts.length === 1) {
-      const index = this.context.pages.findIndex(page => page.id === entry.id)
-
-      this.context.pages.splice(index, 1)
+      delete this.context.entries[entry.id]
     } else {
       const parent = this.context.entries[parts.slice(0, -1).join('.')]
       const index = parent.sections.findIndex(section => section.id === entry.id)
@@ -276,6 +313,8 @@ export class Styleguide {
     }
 
     delete this.context.entries[key]
+
+    this.emit('context-entry-deleted', { entry, key })
   }
 
   protected contextEntryKeyToId(key: string) {
@@ -290,7 +329,7 @@ export class Styleguide {
     const parts = key.split('.')
 
     if (parts.length === 1) {
-      this.context.pages.push(entry)
+      this.context.pages[key] = entry
     } else {
       const parent = this.contextEntry(parts.slice(0, -1).join('.'))
 
@@ -299,11 +338,11 @@ export class Styleguide {
     }
   }
 
-  public pages(): ContextEntry[] {
+  public pages(): Context['pages'] {
     return this.context.pages
   }
 
-  public entries(): Record<string, ContextEntry> {
+  public entries(): Context['entries'] {
     return this.context.entries
   }
 
@@ -314,36 +353,25 @@ export class Styleguide {
       return result instanceof Promise ? result : Promise.resolve(result)
     }
 
-    const pages: ContextEntry[] = [...this.context.pages]
+    const pages = Object.values(this.context.pages)
+    const promises = pages.map(page =>
+      write(`${page.id}.html`, this.pageContent(page, page.layout)),
+    )
 
-    // if no index page exists, create one
-    if (!pages.find(page => page.id === 'index')) {
-      pages.unshift({
-        id: 'index',
-        order: 0,
-        sections: [],
-        title: this.generate.name(),
-      })
-    }
+    this.emit('output', { promises, write })
 
-    await Promise.all([
-      ...pages.map(page => write(`${page.id}.html`, this.pageContent(page, page.layout))),
-      ...Object.keys(this.context.entries).map(key => {
-        const entry = this.context.entries[key]
+    await Promise.all(promises)
+  }
 
-        return entry.example && entry.example.type === 'html' && entry.example.src
-          ? write(
-              `examples/${entry.example.fileName}`,
-              this.exampleContent(entry.example, 'example'),
-            )
-          : Promise.resolve()
-      }),
-    ])
+  public page(pageId: string): string | null {
+    const page = this.context.pages[pageId]
+
+    return page ? this.pageContent(page, page.layout) : null
   }
 
   public pageContent(page: ContextEntry, layout?: string): string {
     const context = {
-      assets: this.context.assets,
+      assets: this.context.pageAssets,
       footerText: this.generate.footerText(),
       homeLink: this.generate.homeLink(),
       logo: this.generate.logo(),
@@ -362,7 +390,13 @@ export class Styleguide {
     return this.renderer.generate(context, layout)
   }
 
-  public exampleContent(example: ContextEntry, layout: 'example'): string {
+  public example(exampleId: string): string | null {
+    const example = this.context.examples[exampleId]
+
+    return example ? this.exampleContent(example) : null
+  }
+
+  public exampleContent(example: ContextExample, layout = 'example'): string {
     const context = JSON.parse(JSON.stringify(example))
 
     context.title = this.generate.exampleTitle(example)

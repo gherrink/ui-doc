@@ -1,9 +1,17 @@
+import type { BlockExample } from './Block'
+
 export interface ContextEntry {
   [key: string]: any
   id: string
   title: string
   order: number
   sections: ContextEntry[]
+}
+
+export interface ContextExample extends BlockExample {
+  id: string
+  type: 'html'
+  src: string
 }
 
 export interface MenuItem {
@@ -20,11 +28,12 @@ export interface Asset {
 }
 
 export interface Context {
-  assets: Asset[]
   entries: Record<string, ContextEntry>
   exampleAssets: Asset[]
+  examples: Record<string, ContextExample>
   menu: MenuItem[]
-  pages: ContextEntry[]
+  pageAssets: Asset[]
+  pages: Record<string, ContextEntry>
 }
 
 export interface OutputContext {
