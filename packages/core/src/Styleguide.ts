@@ -58,11 +58,25 @@ export class Styleguide {
         menu.push({
           active: false,
           href: this.generate.pageLink(page),
+          order: page.order,
           text: page.title,
         })
       })
 
-      return menu
+      return menu.sort((a, b) => {
+        if (a.order !== b.order) {
+          return a.order - b.order
+        }
+
+        const nameA = a.text.toUpperCase()
+        const nameB = b.text.toUpperCase()
+
+        if (nameA === nameB) {
+          return 0
+        }
+
+        return nameA < nameB ? -1 : 1
+      })
     },
     name: () => this.texts.title,
     pageLink: page => this.generate.resolveUrl(`${page.id}.html`, 'page'),

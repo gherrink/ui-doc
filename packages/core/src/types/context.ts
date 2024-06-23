@@ -15,9 +15,10 @@ export interface ContextExample extends BlockExample {
 }
 
 export interface MenuItem {
-  text: string
-  href: string
   active: boolean
+  href: string
+  order: number
+  text: string
 }
 
 export type AssetType = 'style' | 'script'
