@@ -129,6 +129,13 @@ export class Styleguide {
     this.listeners[type].forEach(listener => listener(event))
   }
 
+  public replaceGenerate<K extends keyof StyleguideGenerateMap>(
+    generate: K,
+    callback: StyleguideGenerateMap[K],
+  ) {
+    this.generate[generate] = callback
+  }
+
   public addAsset(asset: Asset) {
     asset.src = this.generate.resolveUrl(asset.src, 'asset')
     this.context.pageAssets.push(asset)
