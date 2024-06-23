@@ -47,7 +47,7 @@ export class Styleguide {
         ? `${example.title} Example | ${this.texts.title}`
         : `Example | ${this.texts.title}`,
     footerText: () => `© ${new Date().getFullYear()} ${this.texts.copyright}`,
-    homeLink: () => '/index.html',
+    homeLink: () => this.generate.resolveUrl('index.html', 'page'),
     logo: () => 'LOGO',
     menu: (menu, pages) => {
       Object.values(pages).forEach(page => {
@@ -65,9 +65,10 @@ export class Styleguide {
       return menu
     },
     name: () => this.texts.title,
-    pageLink: page => `/${page.id}.html`,
+    pageLink: page => this.generate.resolveUrl(`${page.id}.html`, 'page'),
     pageTitle: page =>
       page.id !== 'index' ? `${page.title} | ${this.texts.title}` : this.texts.title,
+    resolveUrl: uri => `/${uri}`,
   }
 
   constructor(options: StyleguideOptions) {
@@ -129,10 +130,12 @@ export class Styleguide {
   }
 
   public addAsset(asset: Asset) {
+    asset.src = this.generate.resolveUrl(asset.src, 'asset')
     this.context.pageAssets.push(asset)
   }
 
   public addExampleAsset(asset: Asset) {
+    asset.src = this.generate.resolveUrl(asset.src, 'asset-example')
     this.context.exampleAssets.push(asset)
   }
 
@@ -152,7 +155,7 @@ export class Styleguide {
 
       if (!example.src || !example.file) {
         example.file = `examples/${example.id}.html`
-        example.src = `/${example.file}`
+        example.src = this.generate.resolveUrl(example.file, 'example')
       }
 
       this.context.examples[example.id] = example as ContextExample

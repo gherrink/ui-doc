@@ -119,21 +119,18 @@ export class HtmlRenderer implements HtmlRendererInterface {
   protected prepareGenerateContext(inputContext: OutputContext): RenderContext {
     const context = inputContext as RenderContext
 
-    const resolveUrl = (file: string) => `/${file}`
-
     context.styles = inputContext.assets
       .filter((asset: Asset) => asset.type === 'style')
       .map(
         (asset: Asset) =>
-          `<link href="${resolveUrl(asset.src)}" rel="stylesheet"${this.makeAttributes(asset.attrs)}>`,
+          `<link href="${asset.src}" rel="stylesheet"${this.makeAttributes(asset.attrs)}>`,
       )
       .join('\n')
 
     context.scripts = inputContext.assets
       .filter((asset: Asset) => asset.type === 'script')
       .map(
-        (asset: Asset) =>
-          `<script src="${resolveUrl(asset.src)}"${this.makeAttributes(asset.attrs)}></script>`,
+        (asset: Asset) => `<script src="${asset.src}"${this.makeAttributes(asset.attrs)}></script>`,
       )
       .join('\n')
 

@@ -62,7 +62,25 @@ function styleguideAssetType(fileName: string): AssetType | null {
   return null
 }
 
+function createOutputPathPrefix(options: Options): string {
+  const path = options.outputDir
+
+  if (!path) {
+    return ''
+  }
+
+  const pathPrefix = path.endsWith('/') ? path : `${path}/`
+  const prevResolveUrl = options.settings?.generate?.resolveUrl ?? (uri => uri)
+
+  options.settings = options.settings ?? {}
+  options.settings.generate = options.settings.generate ?? {}
+  options.settings.generate.resolveUrl = (uri, type) => prevResolveUrl(`/${pathPrefix}${uri}`, type)
+
+  return pathPrefix
+}
+
 export default async function createStyleguidePlugin(options: Options): Promise<Plugin<Api>> {
+  const pathPrefix = createOutputPathPrefix(options)
   const fileSystem = NodeFileSystem.init()
   const finder = fileSystem.createFileFinder(options.source)
   const styleguide = new Styleguide({
@@ -70,7 +88,6 @@ export default async function createStyleguidePlugin(options: Options): Promise<
     renderer: options.renderer ?? (await createDefaultRenderer(options.templatePath, fileSystem)),
     ...(options.settings ?? {}),
   })
-  let outputDir = options.outputDir ?? ''
   const assetsForCopy: string[] = []
   const styleguideAsset = (src: string, as: 'example' | 'page') => {
     const type = styleguideAssetType(src)
@@ -89,10 +106,6 @@ export default async function createStyleguidePlugin(options: Options): Promise<
       src,
       type,
     })
-  }
-
-  if (outputDir !== '' && !outputDir.endsWith('/')) {
-    outputDir += '/'
   }
 
   return {
@@ -134,7 +147,6 @@ export default async function createStyleguidePlugin(options: Options): Promise<
       // find assets in bundle and register them in styleguide
       Object.keys(bundle).forEach(fileName => {
         if (bundle[fileName].type === 'asset') {
-          console.log('asset', fileName)
           styleguideAsset(fileName, 'example')
         }
       })
@@ -150,7 +162,7 @@ export default async function createStyleguidePlugin(options: Options): Promise<
           return
         }
 
-        const outputFileName = `${outputDir}${fileName}`
+        const outputFileName = `${pathPrefix}${fileName}`
 
         this.emitFile({
           fileName: outputFileName,
@@ -182,7 +194,7 @@ export default async function createStyleguidePlugin(options: Options): Promise<
       )
 
       await styleguide.output((file, content) => {
-        const fileName = `${outputDir}${file}`
+        const fileName = `${pathPrefix}${file}`
 
         this.emitFile({
           fileName,
@@ -194,14 +206,14 @@ export default async function createStyleguidePlugin(options: Options): Promise<
     },
 
     async writeBundle(outputOptions) {
-      if (outputDir === '') {
+      if (pathPrefix === '') {
         return
       }
 
       // TODO may copy map file if exists
       await Promise.all(
         assetsForCopy.map(async asset => {
-          const destFile = `${outputOptions.dir}/${outputDir}${asset}`
+          const destFile = `${outputOptions.dir}/${pathPrefix}${asset}`
           const destDir = fileSystem.fileDirname(destFile)
 
           await fileSystem.ensureDirectoryExists(destDir)

@@ -59,6 +59,7 @@ export interface StyleguideGenerateMap {
   name: () => string
   pageLink: (page: ContextEntry) => string
   pageTitle: (page: ContextEntry) => string
+  resolveUrl: (uri: string, type: string) => string
 }
 
 export interface StyleguideTexts {

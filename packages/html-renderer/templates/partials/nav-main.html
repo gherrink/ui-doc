@@ -1,7 +1,7 @@
 <nav class="nav-main width-content" aria-label="Main navigation" role="menu">
   <div class="bar">
-    <a href="/index.html" class="control logo">{{var:logo}}</a>
-    <a href="/index.html" class="control title">{{var:name}}</a>
+    <a href="{{var:homeLink}}" class="control logo">{{var:logo}}</a>
+    <a href="{{var:homeLink}}" class="control title">{{var:name}}</a>
   </div>
   <div class="menu" role="menubar" id="nav-main-menu">
     {{for:menu}}<a href="{{var:href}}" class="control" role="menuitem" tabindex="0"{{if:active}} aria-current="page"{{/if}}>{{var:text}}</a>{{/for}}
