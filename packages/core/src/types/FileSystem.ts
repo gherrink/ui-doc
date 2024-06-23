@@ -6,6 +6,7 @@ export type FilePath = string
 export interface FileSystem {
   createFileFinder(globs: string[]): FileFinder
   assetLoader(): AssetLoader
+  ensureDirectoryExists(dir: string): Promise<void>
   fileRead(file: FilePath): Promise<string>
   fileWrite(file: FilePath, content: string): Promise<boolean>
   fileCopy(from: FilePath, to: FilePath): Promise<boolean>
