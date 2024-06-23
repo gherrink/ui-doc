@@ -4,6 +4,7 @@ import createRollupPlugin, {
   type Options as RollupPluginOptions,
   PLUGIN_NAME as ROLLUP_PLUGIN_NAME,
 } from '@styleguide/rollup'
+import pc from 'picocolors'
 import type { RollupOptions } from 'rollup'
 import type { Plugin, UserConfig, ViteDevServer } from 'vite'
 
@@ -149,6 +150,21 @@ export default async function styleguidePlugin(rawOptions: Options): Promise<Plu
       }
 
       next()
+    })
+
+    server.httpServer?.once('listening', () => {
+      setTimeout(() => {
+        server.config.logger.info(
+          `\n  ${pc.green(`${pc.bold('Styleguide')} v${version}`)}  under /${pc.gray(pathPrefix)} \n`,
+        )
+        if (Array.isArray(server.resolvedUrls?.local)) {
+          server.resolvedUrls.local.forEach(url => {
+            server.config.logger.info(
+              `  ${pc.green('➜')}  ${pc.bold('Local')}: ${pc.cyan(`${url}${pathPrefix}`)}`,
+            )
+          })
+        }
+      }, 300)
     })
   }
 

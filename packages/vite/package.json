@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@styleguide/rollup": "workspace:*",
+    "picocolors": "^1.0.1",
     "vite": "^5.3.1"
   }
 }
