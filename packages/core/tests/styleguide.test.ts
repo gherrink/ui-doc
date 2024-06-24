@@ -54,7 +54,7 @@ describe('Styleguide', () => {
 
     styleguide.sourceCreate('file.css', '')
     const entries = styleguide.entries()
-    const pages = styleguide.pages()
+    const pageIds = Object.keys(styleguide.pages())
 
     expect(Object.keys(entries)).toEqual(['foo', 'bar', 'foo.bar'])
     expect(entries.foo).toEqual({
@@ -88,7 +88,8 @@ describe('Styleguide', () => {
       titleLevel: 3,
     })
 
-    expect(pages.length).toBe(2)
+    expect(pageIds.length).toBe(3)
+    expect(pageIds.sort()).toEqual(['bar', 'foo', 'index'])
   })
 
   test('changes should be applied', () => {
@@ -251,6 +252,83 @@ describe('Styleguide', () => {
     })
   })
 
+  test('when top level blocks get removed they should be removed from context', () => {
+    const { styleguide } = styleguideMock({
+      blockParserParse: jest
+        .fn<BlockParserInterface['parse']>()
+        .mockReturnValueOnce([
+          {
+            key: 'foo',
+            order: 0,
+            title: 'Foo',
+          },
+          {
+            description: 'Bar description',
+            key: 'bar',
+            order: 0,
+            title: 'Bar',
+          },
+        ])
+        .mockReturnValueOnce([
+          {
+            key: 'foo',
+            order: 0,
+            title: 'Foo',
+          },
+        ])
+        .mockReturnValueOnce([]),
+    })
+
+    styleguide.sourceCreate('file.css', '')
+
+    const entriesFirst = styleguide.entries()
+    const pageIdsFirst = Object.keys(styleguide.pages())
+
+    expect(Object.keys(entriesFirst)).toEqual(['foo', 'bar'])
+    expect(entriesFirst.foo).toEqual({
+      id: 'foo',
+      order: 0,
+      sections: [],
+      title: 'Foo',
+      titleLevel: 2,
+    })
+    expect(entriesFirst.bar).toEqual({
+      description: 'Bar description',
+      id: 'bar',
+      order: 0,
+      sections: [],
+      title: 'Bar',
+      titleLevel: 2,
+    })
+    expect(pageIdsFirst.length).toBe(3)
+    expect(pageIdsFirst.sort()).toEqual(['bar', 'foo', 'index'])
+
+    styleguide.sourceUpdate('file.css', '')
+
+    const entriesSecond = styleguide.entries()
+    const pageIdsSecond = Object.keys(styleguide.pages())
+
+    expect(Object.keys(entriesSecond)).toEqual(['foo'])
+    expect(entriesSecond.foo).toEqual({
+      id: 'foo',
+      order: 0,
+      sections: [],
+      title: 'Foo',
+      titleLevel: 2,
+    })
+    expect(pageIdsSecond.length).toBe(2)
+    expect(pageIdsSecond.sort()).toEqual(['foo', 'index'])
+
+    styleguide.sourceUpdate('file.css', '')
+
+    const entriesThird = styleguide.entries()
+    const pageIdsThird = Object.keys(styleguide.pages())
+
+    expect(Object.keys(entriesThird)).toEqual([])
+    expect(pageIdsThird.length).toBe(1)
+    expect(pageIdsThird.sort()).toEqual(['index'])
+  })
+
   test('when blocks get witch has children they should only reset', () => {
     const { styleguide } = styleguideMock({
       blockParserParse: jest
@@ -383,10 +461,12 @@ describe('Styleguide', () => {
     styleguide.sourceDelete('file.css')
 
     const entriesDeleted = styleguide.entries()
+    const pageIds = Object.keys(styleguide.pages())
 
     expect(Object.keys(entriesDeleted)).toEqual([])
     expect(entriesDeleted.foo).toBeUndefined()
     expect(entriesDeleted['foo.bar']).toBeUndefined()
-    expect(styleguide.pages().length).toBe(0)
+    expect(pageIds.length).toBe(1)
+    expect(pageIds).toEqual(['index'])
   })
 })

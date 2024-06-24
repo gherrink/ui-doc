@@ -329,6 +329,9 @@ export class Styleguide {
 
     if (parts.length === 1) {
       delete this.context.entries[entry.id]
+      if (key !== 'index') {
+        delete this.context.pages[key]
+      }
     } else {
       const parent = this.context.entries[parts.slice(0, -1).join('.')]
       const index = parent.sections.findIndex(section => section.id === entry.id)
