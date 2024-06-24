@@ -11,12 +11,21 @@ export interface StyleguideOptions {
 }
 
 export interface StyleguideEvent {}
-export interface ContextEntryEvent extends StyleguideEvent {
-  entry: ContextEntry
-  key: string
-}
 
-export interface SourceEditEvent extends StyleguideEvent {
+export type ContextEntryEvent = { entry: ContextEntry; key: string } & (
+  | {
+      type: 'create' | 'update'
+      changes: {
+        deleted: string[]
+        updated: Record<string, { from: any; to: any }>
+      }
+    }
+  | {
+      type: 'delete'
+    }
+)
+
+export interface SourceEvent extends StyleguideEvent {
   file: string
   source: StyleguideSource
   type: 'create' | 'update' | 'delete'
@@ -38,12 +47,11 @@ export interface ExampleEvent extends StyleguideEvent {
 }
 
 export interface StyleguideEventMap {
-  'context-entry-deleted': ContextEntryEvent
-  'context-entry-saved': ContextEntryEvent
+  'context-entry': ContextEntryEvent
   example: ExampleEvent
   output: OutputEvent
   page: PageEvent
-  'source-edit': SourceEditEvent
+  source: SourceEvent
 }
 
 export type StyleguideListeners<T extends keyof StyleguideEventMap> = {

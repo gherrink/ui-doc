@@ -152,12 +152,9 @@ export default async function styleguidePlugin(rawOptions: Options): Promise<Plu
       next()
     })
 
-    const reload = () => {
+    styleguide.on('context-entry', () => {
       server.ws.send({ type: 'full-reload', path: `/${pathPrefix}*` })
-    }
-
-    styleguide.on('context-entry-deleted', reload)
-    styleguide.on('context-entry-saved', reload)
+    })
 
     server.httpServer?.once('listening', () => {
       setTimeout(() => {

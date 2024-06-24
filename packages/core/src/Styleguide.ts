@@ -7,6 +7,7 @@ import type {
   BlockParserInterface,
   Context,
   ContextEntry,
+  ContextEntryEvent,
   ContextExample,
   FilePath,
   RendererInterface,
@@ -28,12 +29,11 @@ export class Styleguide {
   public renderer: RendererInterface
 
   protected listeners: StyleguideListeners<keyof StyleguideEventMap> = {
-    'context-entry-deleted': [],
-    'context-entry-saved': [],
+    'context-entry': [],
     example: [],
     output: [],
     page: [],
-    'source-edit': [],
+    source: [],
   }
 
   protected texts = {
@@ -163,8 +163,8 @@ export class Styleguide {
   protected registerExampleListeners() {
     const exampleKeyToId = (key: string) => key.replaceAll('.', '-')
 
-    this.on('context-entry-saved', ({ entry, key }) => {
-      if (!entry.example || entry.example.type !== 'html') {
+    this.on('context-entry', ({ entry, key, type }) => {
+      if (type === 'delete' || !entry.example || entry.example.type !== 'html') {
         return
       }
 
@@ -182,8 +182,8 @@ export class Styleguide {
       this.context.examples[example.id] = example as ContextExample
     })
 
-    this.on('context-entry-deleted', ({ entry, key }) => {
-      if (entry.example && entry.example.type === 'html') {
+    this.on('context-entry', ({ entry, key, type }) => {
+      if (type === 'delete' && entry.example && entry.example.type === 'html') {
         delete this.context.examples[exampleKeyToId(key)]
       }
     })
@@ -207,7 +207,7 @@ export class Styleguide {
     }
 
     this.sources[file] = source
-    this.emit('source-edit', { file, source, type: 'create' })
+    this.emit('source', { file, source, type: 'create' })
     this.sourceToContext(source)
     this.clearMenu()
   }
@@ -225,7 +225,7 @@ export class Styleguide {
 
     // write new blocks to source
     this.sources[file].blocks = blocksNew
-    this.emit('source-edit', { file, source: this.sources[file], type: 'update' })
+    this.emit('source', { file, source: this.sources[file], type: 'update' })
 
     // update and add new blocks to context
     blocksNew.forEach(block => this.blockToContext(block))
@@ -244,7 +244,7 @@ export class Styleguide {
       return
     }
 
-    this.emit('source-edit', { file, source: this.sources[file], type: 'delete' })
+    this.emit('source', { file, source: this.sources[file], type: 'delete' })
     this.sources[file].blocks
       .map(block => block.key)
       .sort((a, b) => b.length - a.length)
@@ -265,27 +265,36 @@ export class Styleguide {
     const blockIgnoredKeys = ['key', 'title', 'page', 'section', 'location']
     const entryIgnoredKeys = ['id', 'title', 'titleLevel', 'order', 'sections']
     const blockKeys = Object.keys(block)
+    const event: ContextEntryEvent = {
+      changes: { deleted: [], updated: {} },
+      entry,
+      key: block.key,
+      type: entry.id === entry.title ? 'create' : 'update',
+    }
 
     if (
       (typeof block.title === 'string' && block.title) ||
       (entry.title === entry.id && block.title)
     ) {
+      event.changes.updated.title = { from: entry.title, to: block.title }
       entry.title = block.title
     }
 
     blockKeys.forEach(blockType => {
       if (!blockIgnoredKeys.includes(blockType)) {
+        event.changes.updated[blockType] = { from: entry[blockType], to: block[blockType] }
         entry[blockType] = block[blockType]
       }
     })
 
     Object.keys(entry).forEach(key => {
       if (!entryIgnoredKeys.includes(key) && !blockKeys.includes(key)) {
+        event.changes.deleted.push(key)
         delete entry[key]
       }
     })
 
-    this.emit('context-entry-saved', { entry, key: block.key })
+    this.emit('context-entry', event)
   }
 
   protected contextEntry(key: string): ContextEntry {
@@ -341,7 +350,7 @@ export class Styleguide {
 
     delete this.context.entries[key]
 
-    this.emit('context-entry-deleted', { entry, key })
+    this.emit('context-entry', { entry, key, type: 'delete' })
   }
 
   protected contextEntryKeyToId(key: string) {
