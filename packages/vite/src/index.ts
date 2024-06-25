@@ -152,10 +152,6 @@ export default async function styleguidePlugin(rawOptions: Options): Promise<Plu
       next()
     })
 
-    styleguide.on('context-entry', () => {
-      server.ws.send({ type: 'full-reload', path: `/${pathPrefix}*` })
-    })
-
     server.httpServer?.once('listening', () => {
       setTimeout(() => {
         server.config.logger.info(
@@ -169,6 +165,10 @@ export default async function styleguidePlugin(rawOptions: Options): Promise<Plu
           })
         }
       }, 300)
+
+      styleguide.on('context-entry', () => {
+        server.ws.send({ type: 'full-reload', path: `/${pathPrefix}*` })
+      })
     })
   }
 
