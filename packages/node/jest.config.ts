@@ -1,3 +1,1 @@
-import config from '../jest.config'
-
-export default config
+../../shared/jest.config.ts

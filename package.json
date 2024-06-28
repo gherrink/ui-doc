@@ -21,6 +21,7 @@
     "package:build": "pnpm -r --filter='./packages/*' run build",
     "package:release": "versioner --stripShortName='^@.+/' --target",
     "package:release-dry": "versioner --dry --stripShortName='^@.+/' --target",
+    "package:test": "pnpm --filter='./packages/*' run test",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky",
     "prettier": "prettier --write .",
