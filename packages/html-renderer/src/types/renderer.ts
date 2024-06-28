@@ -1,17 +1,17 @@
-import { RendererInterface } from '@styleguide/core'
+import { Renderer as CoreRenderer } from '@styleguide/core'
 
-import type { ReaderInterface } from './reader'
+import type { Reader } from './reader'
 
 export type RenderContext = Record<string, any>
 
-export type HtmlRendererSourceInput = { source: string; content: string } | ReaderInterface
+export type SourceInput = { source: string; content: string } | Reader
 
-export interface HtmlRendererInterface extends RendererInterface {
-  addLayout(name: string, layout: HtmlRendererSourceInput): HtmlRendererInterface
+export interface Renderer extends CoreRenderer {
+  addLayout(name: string, layout: SourceInput): this
 
-  addPartial(name: string, partial: HtmlRendererSourceInput): HtmlRendererInterface
+  addPartial(name: string, partial: SourceInput): this
 
-  addPage(name: string, page: HtmlRendererSourceInput): HtmlRendererInterface
+  addPage(name: string, page: SourceInput): this
 
   page(name: string, context: RenderContext): string
 

@@ -1,6 +1,6 @@
 import type { FileSystem } from '@styleguide/core'
 
-import type { HtmlRendererInterface } from './types'
+import type { HtmlRenderer } from './HtmlRenderer'
 
 export class TemplateLoader {
   public static async load({
@@ -8,7 +8,7 @@ export class TemplateLoader {
     fileSystem,
     templateBasePath = '@styleguide/html-renderer/templates',
   }: {
-    renderer: HtmlRendererInterface
+    renderer: HtmlRenderer
     fileSystem: FileSystem
     templateBasePath?: string
   }): Promise<void> {

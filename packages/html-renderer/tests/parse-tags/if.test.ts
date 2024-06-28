@@ -1,17 +1,17 @@
 import { describe, expect, test } from '@jest/globals'
 
+import { InlineReader } from '../../src/InlineReader'
+import { NodeParser } from '../../src/NodeParser'
 import { parseTagIfNode, TagIfNode } from '../../src/nodes/tags/if'
 import { TemplateNode } from '../../src/nodes/TemplateNode'
-import { Parser } from '../../src/Parser'
-import { Reader } from '../../src/Reader'
 
 describe('Parser tag if', () => {
-  const parser = new Parser()
+  const parser = new NodeParser()
 
   parser.registerTagParser(parseTagIfNode)
 
   test('only context key', () => {
-    const reader = new Reader('{{ if:bar }}foo{{ /if }}')
+    const reader = new InlineReader('{{ if:bar }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
 
@@ -27,7 +27,7 @@ describe('Parser tag if', () => {
   })
 
   test('context key === context key', () => {
-    const reader = new Reader('{{ if:bar === baz }}foo{{ /if }}')
+    const reader = new InlineReader('{{ if:bar === baz }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
 
@@ -43,7 +43,7 @@ describe('Parser tag if', () => {
   })
 
   test('context key === string', () => {
-    const reader = new Reader('{{ if:bar === "baz" }}foo{{ /if }}')
+    const reader = new InlineReader('{{ if:bar === "baz" }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
 
@@ -59,7 +59,7 @@ describe('Parser tag if', () => {
   })
 
   test('string === context key', () => {
-    const reader = new Reader('{{ if:"baz" === bar }}foo{{ /if }}')
+    const reader = new InlineReader('{{ if:"baz" === bar }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
 
@@ -75,7 +75,7 @@ describe('Parser tag if', () => {
   })
 
   test('context key === number', () => {
-    const reader = new Reader('{{ if:bar === 123.456 }}foo{{ /if }}')
+    const reader = new InlineReader('{{ if:bar === 123.456 }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
 
@@ -91,7 +91,7 @@ describe('Parser tag if', () => {
   })
 
   test('number === context key', () => {
-    const reader = new Reader('{{ if:123.456 === bar }}foo{{ /if }}')
+    const reader = new InlineReader('{{ if:123.456 === bar }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
 
@@ -107,7 +107,7 @@ describe('Parser tag if', () => {
   })
 
   test('context key === true', () => {
-    const reader = new Reader('{{ if:bar === true }}foo{{ /if }}')
+    const reader = new InlineReader('{{ if:bar === true }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
 
@@ -123,7 +123,7 @@ describe('Parser tag if', () => {
   })
 
   test('true === context key', () => {
-    const reader = new Reader('{{ if:true === bar }}foo{{ /if }}')
+    const reader = new InlineReader('{{ if:true === bar }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
 
@@ -139,7 +139,7 @@ describe('Parser tag if', () => {
   })
 
   test('context key === false', () => {
-    const reader = new Reader('{{ if:bar === false }}foo{{ /if }}')
+    const reader = new InlineReader('{{ if:bar === false }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
 
@@ -155,7 +155,7 @@ describe('Parser tag if', () => {
   })
 
   test('false === context key', () => {
-    const reader = new Reader('{{ if:false === bar }}foo{{ /if }}')
+    const reader = new InlineReader('{{ if:false === bar }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
 
@@ -171,7 +171,7 @@ describe('Parser tag if', () => {
   })
 
   test.each(['==', '===', '!=', '!==', '>', '>=', '<', '<='])('operator %s', operator => {
-    const reader = new Reader(`{{ if:bar ${operator} baz }}foo{{ /if }}`)
+    const reader = new InlineReader(`{{ if:bar ${operator} baz }}foo{{ /if }}`)
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
 
@@ -187,7 +187,7 @@ describe('Parser tag if', () => {
   })
 
   test('throws when first missing', () => {
-    const reader = new Reader('{{ if: }}')
+    const reader = new InlineReader('{{ if: }}')
 
     expect(() => {
       parser.parse(reader)
@@ -195,7 +195,7 @@ describe('Parser tag if', () => {
   })
 
   test('throws when separator is missing', () => {
-    const reader = new Reader('{{ if foo }}')
+    const reader = new InlineReader('{{ if foo }}')
 
     expect(() => {
       parser.parse(reader)
@@ -203,7 +203,7 @@ describe('Parser tag if', () => {
   })
 
   test('throws when invalid identifier is given', () => {
-    const reader = new Reader('{{ if:=== }}')
+    const reader = new InlineReader('{{ if:=== }}')
 
     expect(() => {
       parser.parse(reader)
@@ -211,7 +211,7 @@ describe('Parser tag if', () => {
   })
 
   test('throws when first is not context key', () => {
-    const reader = new Reader('{{ if:123 }}')
+    const reader = new InlineReader('{{ if:123 }}')
 
     expect(() => {
       parser.parse(reader)
@@ -219,7 +219,7 @@ describe('Parser tag if', () => {
   })
 
   test('throws when missing second', () => {
-    const reader = new Reader('{{ if:foo === }}')
+    const reader = new InlineReader('{{ if:foo === }}')
 
     expect(() => {
       parser.parse(reader)
@@ -227,7 +227,7 @@ describe('Parser tag if', () => {
   })
 
   test('throws when invalid operator', () => {
-    const reader = new Reader('{{ if:foo <== bar }}')
+    const reader = new InlineReader('{{ if:foo <== bar }}')
 
     expect(() => {
       parser.parse(reader)

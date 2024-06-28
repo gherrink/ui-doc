@@ -1,4 +1,4 @@
-import type { BlockExample } from './Block'
+import type { BlockExample } from './blocks'
 
 export interface ContextEntry {
   [key: string]: any
@@ -37,7 +37,7 @@ export interface Context {
   pages: Record<string, ContextEntry>
 }
 
-export interface OutputContext {
+export interface GenerateContext {
   assets: Asset[]
   title: string
   footerText: string

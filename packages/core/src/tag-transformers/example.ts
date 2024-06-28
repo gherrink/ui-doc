@@ -1,8 +1,8 @@
 import { TagTransformerError } from '../errors'
-import type { BlockExample, TagTransformerInterface } from '../types'
+import type { BlockExample, TagTransformer } from '../types'
 import { code, isValidHTML } from './utils'
 
-export const tag: TagTransformerInterface = {
+export const tag: TagTransformer = {
   name: 'example',
   transform: (block, spec) => {
     const data: BlockExample | undefined = code(spec)

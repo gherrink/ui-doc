@@ -1,16 +1,16 @@
 import { describe, expect, test } from '@jest/globals'
 
-import { BlockParser } from '../src/BlockParser'
+import { CommentBlockParser } from '../src/BlockParser'
 import { BlockParseError } from '../src/errors'
-import type { DescriptionParserInterface } from '../src/types'
+import type { DescriptionParser } from '../src/types'
 
-class DescriptionParser implements DescriptionParserInterface {
+class TestDescriptionParser implements DescriptionParser {
   public parse(content: string): string {
     return content
   }
 }
 
-const parser = new BlockParser(new DescriptionParser())
+const parser = new CommentBlockParser(new TestDescriptionParser())
 const prepareForBlockParserException = (content: string): string => {
   return content.replace(/^\n+|[\n\s]+$/g, '')
 }

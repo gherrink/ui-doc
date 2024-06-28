@@ -1,22 +1,17 @@
 import { ParserError, TagNodeError } from './errors'
-import { Lexer } from './Lexer'
+import { HtmlCurlyBraceLexer } from './HtmlCurlyBraceLexer'
+import type { TagNode } from './nodes'
 import { CommentNode } from './nodes/CommentNode'
 import { Node } from './nodes/Node'
 import tagParsers from './nodes/tags'
 import { TemplateNode } from './nodes/TemplateNode'
-import type {
-  NodeInterface,
-  ParserInterface,
-  ReaderInterface,
-  TagNodeInterface,
-  TagNodeParse,
-} from './types'
+import type { Parser, Reader, TagNodeParse } from './types'
 
-export class Parser implements ParserInterface {
+export class NodeParser implements Parser {
   protected tags: Record<string, TagNodeParse> = {}
 
-  public static init(): Parser {
-    const parser = new Parser()
+  public static init(): NodeParser {
+    const parser = new NodeParser()
 
     tagParsers.forEach(tag => parser.registerTagParser(tag))
 
@@ -26,20 +21,20 @@ export class Parser implements ParserInterface {
     return parser
   }
 
-  public registerTagParser(tag: TagNodeParse): Parser {
+  public registerTagParser(tag: TagNodeParse): this {
     this.tags[tag.identifier] = tag
 
     return this
   }
 
-  public parse(reader: ReaderInterface): NodeInterface {
-    const lexer = new Lexer(reader)
+  public parse(reader: Reader): Node {
+    const lexer = new HtmlCurlyBraceLexer(reader)
     const tree = new Node('root')
 
     return this.parseChildren(lexer, tree)
   }
 
-  protected parseChildren(lexer: Lexer, parent: NodeInterface): NodeInterface {
+  protected parseChildren(lexer: HtmlCurlyBraceLexer, parent: Node): Node {
     let token = lexer.consume()
 
     while (token) {
@@ -65,7 +60,7 @@ export class Parser implements ParserInterface {
     return parent
   }
 
-  protected parseTag(lexer: Lexer): TagNodeInterface {
+  protected parseTag(lexer: HtmlCurlyBraceLexer): TagNode {
     const tagIdentifier = lexer.consume()
 
     if (!tagIdentifier || tagIdentifier.type !== 'tag-identifier') {
@@ -80,7 +75,7 @@ export class Parser implements ParserInterface {
 
     const { addToken, create } = tagDefinition.parse()
     let nextToken = lexer.consume()
-    let node: TagNodeInterface
+    let node: TagNode
 
     try {
       while (nextToken && nextToken.type !== 'tag-close') {

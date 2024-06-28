@@ -1,6 +1,6 @@
-import type { PositiveInteger, ReaderInterface, TokenReturn } from './index'
+import type { PositiveInteger, Reader, TokenReturn } from './index'
 
-export interface LexerInterface {
+export interface Lexer {
   /**
    * Get the next token /next k-th token.
    * This is used to look ahead the tokens without consuming/removing them from the input stream.
@@ -22,5 +22,5 @@ export interface LexerInterface {
    * Get the debug information about the current state of the lexer.
    * @returns {object} debug information
    */
-  debug(): ReturnType<ReaderInterface['debug']>
+  debug(): ReturnType<Reader['debug']>
 }

@@ -1,5 +1,5 @@
 import { TagNodeError } from '../../errors'
-import type { HtmlRendererInterface, RenderContext, TagNodeParse, TokenValue } from '../../types'
+import type { RenderContext, Renderer, TagNodeParse, TokenValue } from '../../types'
 import { readNestedValue } from '../../utils'
 import { TagNode } from '../TagNode'
 
@@ -15,7 +15,7 @@ export class TagForNode extends TagNode {
     this.contextKey = contextKey ?? 'this'
   }
 
-  public render(context: RenderContext, renderer: HtmlRendererInterface): string {
+  public render(context: RenderContext, renderer: Renderer): string {
     const contextNew =
       this.contextKey === 'this' ? context : readNestedValue(this.contextKey, context)
 
@@ -30,11 +30,7 @@ export class TagForNode extends TagNode {
     return ''
   }
 
-  protected renderArray(
-    context: any[],
-    parentContext: RenderContext,
-    renderer: HtmlRendererInterface,
-  ): string {
+  protected renderArray(context: any[], parentContext: RenderContext, renderer: Renderer): string {
     return context
       .map((item, index) => {
         return this.renderChildNodes(
@@ -53,7 +49,7 @@ export class TagForNode extends TagNode {
   protected renderObject(
     context: Record<string, any>,
     parentContext: RenderContext,
-    renderer: HtmlRendererInterface,
+    renderer: Renderer,
   ): string {
     return Object.keys(context)
       .map((key, index) => {

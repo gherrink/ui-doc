@@ -2,10 +2,10 @@ import { describe, expect, jest, test } from '@jest/globals'
 
 import { Node } from '../../src/nodes'
 import { TagForNode } from '../../src/nodes/tags/for'
-import type { HtmlRendererInterface } from '../../src/types'
+import type { Renderer } from '../../src/types'
 
 describe('render tag for', () => {
-  const renderer = {} as HtmlRendererInterface
+  const renderer = {} as Renderer
 
   test('using array context expect call content node', () => {
     const context = [1]

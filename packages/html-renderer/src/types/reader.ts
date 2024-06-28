@@ -1,6 +1,6 @@
 import type { PositiveInteger } from './base'
 
-export interface ReaderInterface {
+export interface Reader {
   /**
    * Get the next character / next k-th character from the input.
    * This is used to look ahead the characters without consuming/removing them from the input stream.

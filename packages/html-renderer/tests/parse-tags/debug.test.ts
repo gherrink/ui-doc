@@ -1,16 +1,16 @@
 import { describe, expect, test } from '@jest/globals'
 
+import { InlineReader } from '../../src/InlineReader'
+import { NodeParser } from '../../src/NodeParser'
 import { parseTagDebugNode, TagDebugNode } from '../../src/nodes/tags/debug'
-import { Parser } from '../../src/Parser'
-import { Reader } from '../../src/Reader'
 
 describe('Parser tag debug', () => {
-  const parser = new Parser()
+  const parser = new NodeParser()
 
   parser.registerTagParser(parseTagDebugNode)
 
   test('simple tag', () => {
-    const reader = new Reader('{{ debug }}')
+    const reader = new InlineReader('{{ debug }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagDebugNode
 
@@ -21,7 +21,7 @@ describe('Parser tag debug', () => {
   })
 
   test('with context', () => {
-    const reader = new Reader('{{ debug:foo }}')
+    const reader = new InlineReader('{{ debug:foo }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagDebugNode
 
@@ -32,7 +32,7 @@ describe('Parser tag debug', () => {
   })
 
   test('ignores missing identifier and falls back to this', () => {
-    const reader = new Reader('{{ debug: }}')
+    const reader = new InlineReader('{{ debug: }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagDebugNode
 
@@ -43,7 +43,7 @@ describe('Parser tag debug', () => {
   })
 
   test('throws when separator is missing', () => {
-    const reader = new Reader('{{ debug foo }}')
+    const reader = new InlineReader('{{ debug foo }}')
 
     expect(() => {
       parser.parse(reader)
@@ -51,7 +51,7 @@ describe('Parser tag debug', () => {
   })
 
   test('throws when invalid identifier is given', () => {
-    const reader = new Reader('{{ debug:=== }}')
+    const reader = new InlineReader('{{ debug:=== }}')
 
     expect(() => {
       parser.parse(reader)

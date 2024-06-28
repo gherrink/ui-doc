@@ -1,5 +1,5 @@
-import type { NodeInterface, TagNodeInterface } from './node'
-import type { ReaderInterface } from './reader'
+import type { Node, TagNode } from '../nodes'
+import type { Reader } from './reader'
 import type { Token } from './token'
 
 export interface TagNodeParse {
@@ -8,21 +8,21 @@ export interface TagNodeParse {
   hasContent: boolean
   parse(): {
     addToken(token: Token): void
-    create(): TagNodeInterface
+    create(): TagNode
   }
 }
 
-export interface ParserInterface {
+export interface Parser {
   /**
    * Parse the input stream and return the AST.
-   * @param {ReaderInterface} reader
-   * @returns {NodeInterface} AST
+   * @param {Reader} reader
+   * @returns {Node} AST
    */
-  parse(reader: ReaderInterface): NodeInterface
+  parse(reader: Reader): Node
 
   /**
    * Register a tag parser.
    * @param {TagNodeParse} tag
    */
-  registerTagParser(tag: TagNodeParse): ParserInterface
+  registerTagParser(tag: TagNodeParse): this
 }

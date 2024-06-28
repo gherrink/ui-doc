@@ -1,6 +1,12 @@
-import type { TagNodeInterface, TagNodeType } from '../types'
 import { Node } from './Node'
 
-export abstract class TagNode extends Node implements TagNodeInterface {
-  public readonly type: TagNodeType = 'tag'
-}
+export type TagNodeType =
+  | 'tag'
+  | 'tag-debug'
+  | 'tag-var'
+  | 'tag-for'
+  | 'tag-if'
+  | 'tag-page'
+  | 'tag-partial'
+
+export abstract class TagNode<T extends TagNodeType = TagNodeType> extends Node<T> {}

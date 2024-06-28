@@ -1,5 +1,5 @@
 import { TagNodeError } from '../../errors'
-import type { HtmlRendererInterface, RenderContext, TagNodeParse, TokenValue } from '../../types'
+import type { RenderContext, Renderer, TagNodeParse, TokenValue } from '../../types'
 import { readNestedValue } from '../../utils'
 import { TagNode } from '../TagNode'
 
@@ -19,7 +19,7 @@ export class TagPageNode extends TagNode {
     this.contextKey = contextKey ?? 'this'
   }
 
-  public render(context: RenderContext, renderer: HtmlRendererInterface): string {
+  public render(context: RenderContext, renderer: Renderer): string {
     let pageName: string = this.name
     const newContext =
       this.contextKey === 'this' ? context : readNestedValue(this.contextKey, context)

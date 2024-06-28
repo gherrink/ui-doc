@@ -1,47 +1,41 @@
-import { BlockParser } from './BlockParser'
-import { DescriptionParser } from './DescriptionParser'
+import { createBlockParser } from './BlockParser'
+import { createMarkdownDescriptionParser } from './MarkdownDescriptionParser'
 import type {
   Asset,
   Block,
   BlockExample,
-  BlockParserInterface,
+  BlockParser,
   Context,
   ContextEntry,
   ContextEntryEvent,
   ContextExample,
   FilePath,
-  RendererInterface,
-  StyleguideEventMap,
-  StyleguideGenerateMap,
-  StyleguideListeners,
-  StyleguideOptions,
-  StyleguideOutputCallback,
-  StyleguideSource,
+  GenerateFunctions,
+  Options,
+  OutputCallback,
+  Renderer,
+  Source,
+  StyleguideEventMap as EventMap,
 } from './types'
+import type { EventArgs, EventEmitter, EventListener, EventListenersMap } from './types/events'
 
-export class Styleguide {
-  protected sources: Record<FilePath, StyleguideSource>
+export class Styleguide implements EventEmitter<EventMap> {
+  protected sources: Record<FilePath, Source>
 
   protected context: Context
 
-  public blockParser: BlockParserInterface
+  public blockParser: BlockParser
 
-  public renderer: RendererInterface
+  public renderer: Renderer
 
-  protected listeners: StyleguideListeners<keyof StyleguideEventMap> = {
-    'context-entry': [],
-    example: [],
-    output: [],
-    page: [],
-    source: [],
-  }
+  protected listeners: EventListenersMap<EventMap> = new Map()
 
   protected texts = {
     copyright: 'Styleguide',
     title: 'Styleguide',
   }
 
-  protected generate: StyleguideGenerateMap = {
+  protected generate: GenerateFunctions = {
     exampleTitle: example =>
       example.title
         ? `${example.title} Example | ${this.texts.title}`
@@ -85,7 +79,7 @@ export class Styleguide {
     resolveUrl: uri => `/${uri}`,
   }
 
-  constructor(options: StyleguideOptions) {
+  constructor(options: Options) {
     this.sources = {}
     this.blockParser = options.blockParser ?? this.createParser()
     this.renderer = options.renderer
@@ -110,42 +104,39 @@ export class Styleguide {
     this.registerExampleListeners()
   }
 
-  protected createParser(): BlockParserInterface {
-    return new BlockParser(new DescriptionParser())
+  protected createParser(): BlockParser {
+    return createBlockParser(createMarkdownDescriptionParser())
   }
 
-  public on<K extends keyof StyleguideEventMap>(
-    type: K,
-    listener: (event: StyleguideEventMap[K]) => void,
-  ): Styleguide {
-    this.listeners[type].push(listener)
+  public on<K extends keyof EventMap>(eventName: K, listener: EventListener<EventMap, K>): this {
+    const listeners = this.listeners.get(eventName) ?? []
+
+    listeners.push(listener)
+    this.listeners.set(eventName, listeners)
 
     return this
   }
 
-  public off<K extends keyof StyleguideEventMap>(
-    type: K,
-    listener: (event: StyleguideEventMap[K]) => void,
-  ): Styleguide {
-    this.listeners[type].splice(
-      this.listeners[type].findIndex(l => l === listener),
-      1,
-    )
+  public off<K extends keyof EventMap>(eventName: K, listener: EventListener<EventMap, K>): this {
+    const listeners = this.listeners.get(eventName) ?? []
+    const index = listeners.indexOf(listener)
 
-    return this
-  }
-
-  protected emit<K extends keyof StyleguideEventMap>(type: K, event: StyleguideEventMap[K]): void {
-    if (!this.listeners[type]) {
-      return
+    if (index >= 0) {
+      listeners.splice(index, 1)
     }
 
-    this.listeners[type].forEach(listener => listener(event))
+    return this
   }
 
-  public replaceGenerate<K extends keyof StyleguideGenerateMap>(
+  protected emit<K extends keyof EventMap>(eventName: K, ...args: EventArgs<EventMap, K>): void {
+    const listeners = this.listeners.get(eventName) ?? []
+
+    listeners.forEach(listener => listener(...args))
+  }
+
+  public replaceGenerate<K extends keyof GenerateFunctions>(
     generate: K,
-    callback: StyleguideGenerateMap[K],
+    callback: GenerateFunctions[K],
   ) {
     this.generate[generate] = callback
   }
@@ -202,7 +193,7 @@ export class Styleguide {
   }
 
   public sourceCreate(file: string, content: string) {
-    const source: StyleguideSource = {
+    const source: Source = {
       blocks: this.blockParser.parse({ content, identifier: file }),
     }
 
@@ -254,7 +245,7 @@ export class Styleguide {
     this.clearMenu()
   }
 
-  protected sourceToContext(source: StyleguideSource) {
+  protected sourceToContext(source: Source) {
     source.blocks.forEach(block => {
       this.blockToContext(block)
     })
@@ -382,7 +373,7 @@ export class Styleguide {
     return this.context.entries
   }
 
-  public async output(output: StyleguideOutputCallback): Promise<void> {
+  public async output(output: OutputCallback): Promise<void> {
     const write = async (file: string, content: string) => {
       const result = output(file, content)
 

@@ -1,11 +1,11 @@
 import { describe, expect, jest, test } from '@jest/globals'
 
-import { Node } from '../../src/nodes'
+import type { Node, NodeOperator } from '../../src/nodes/Node'
 import { TagIfNode } from '../../src/nodes/tags/if'
-import type { HtmlRendererInterface, NodeOperator } from '../../src/types'
+import type { Renderer } from '../../src/types'
 
 describe('render tag if', () => {
-  const renderer = {} as HtmlRendererInterface
+  const renderer = {} as Renderer
 
   test('using value true condition expect call content node', () => {
     const context = {}

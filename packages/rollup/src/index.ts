@@ -1,11 +1,11 @@
 import type {
   AssetLoader,
   AssetType,
-  BlockParserInterface,
+  BlockParser,
   FileFinder,
   FileSystem,
-  RendererInterface,
-  StyleguideOptions,
+  Options as StyleguideOptions,
+  Renderer,
 } from '@styleguide/core'
 import { Styleguide } from '@styleguide/core'
 import { NodeFileSystem } from '@styleguide/node'
@@ -39,8 +39,8 @@ const ASSETS: {
 ]
 
 export interface Options {
-  renderer?: RendererInterface
-  blockParser?: BlockParserInterface
+  renderer?: Renderer
+  blockParser?: BlockParser
   source: string[]
   templatePath?: string
   styleAsset?: false | string
@@ -74,9 +74,9 @@ export interface Api {
 async function createDefaultRenderer(
   templatePath: string | undefined,
   fileSystem: FileSystem,
-): Promise<RendererInterface> {
+): Promise<Renderer> {
   const rendererImport = await import('@styleguide/html-renderer')
-  const renderer = new rendererImport.HtmlRenderer(rendererImport.Parser.init())
+  const renderer = new rendererImport.HtmlRenderer(rendererImport.NodeParser.init())
 
   await rendererImport.TemplateLoader.load({
     fileSystem,

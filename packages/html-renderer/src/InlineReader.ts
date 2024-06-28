@@ -1,6 +1,6 @@
-import type { PositiveInteger, ReaderInterface } from './types'
+import type { PositiveInteger, Reader } from './types'
 
-export class Reader implements ReaderInterface {
+export class InlineReader implements Reader {
   protected input: string
 
   protected source: string

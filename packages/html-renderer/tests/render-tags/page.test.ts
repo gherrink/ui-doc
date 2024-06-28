@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, jest, test } from '@jest/globals'
 
 import { TagPageNode } from '../../src/nodes/tags/page'
-import type { HtmlRendererInterface } from '../../src/types'
+import type { Renderer } from '../../src/types'
 
 describe('render tag page', () => {
-  const pageMock = jest.fn<HtmlRendererInterface['page']>(() => '').mockReturnValue('')
-  const renderer = { page: pageMock as HtmlRendererInterface['page'] } as HtmlRendererInterface
+  const pageMock = jest.fn<Renderer['page']>(() => '').mockReturnValue('')
+  const renderer = { page: pageMock as Renderer['page'] } as Renderer
   const context = { page: { foo: { bar: 'foo-bar' }, title: 'World' }, title: 'Hello' }
 
   beforeEach(() => {

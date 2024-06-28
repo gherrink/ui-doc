@@ -1,3 +1,5 @@
+export * from './BlockParser'
 export * from './errors'
+export * from './MarkdownDescriptionParser'
 export * from './Styleguide'
 export * from './types'

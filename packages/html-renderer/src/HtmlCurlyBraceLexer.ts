@@ -1,7 +1,7 @@
 import type {
-  LexerInterface,
+  Lexer,
   PositiveInteger,
-  ReaderInterface,
+  Reader,
   Token,
   TokenBoolean,
   TokenComment,
@@ -19,8 +19,8 @@ const IDENTIFIER_CHARS: Record<TokenTypeIdentifier, string> = {
   'tag-identifier': 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
 }
 
-export class Lexer implements LexerInterface {
-  protected reader: ReaderInterface
+export class HtmlCurlyBraceLexer implements Lexer {
+  protected reader: Reader
 
   protected currentTokens: (Token | undefined)[] = []
 
@@ -28,11 +28,11 @@ export class Lexer implements LexerInterface {
 
   protected tagIdentified = false
 
-  public constructor(reader: ReaderInterface) {
+  public constructor(reader: Reader) {
     this.reader = reader
   }
 
-  public debug(): ReturnType<ReaderInterface['debug']> {
+  public debug(): ReturnType<Reader['debug']> {
     return this.reader.debug()
   }
 

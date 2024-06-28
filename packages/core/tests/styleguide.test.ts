@@ -1,13 +1,13 @@
 import { describe, expect, jest, test } from '@jest/globals'
 
 import { Styleguide } from '../src/Styleguide'
-import type { BlockParserInterface, RendererInterface } from '../src/types'
+import type { BlockParser, Renderer } from '../src/types'
 
 describe('Styleguide', () => {
   const styleguideMock = ({
-    rendererGenerate = jest.fn<RendererInterface['generate']>(),
-    blockParserParse = jest.fn<BlockParserInterface['parse']>().mockReturnValue([]),
-    blockParserRegisterTagTransformer = jest.fn<BlockParserInterface['registerTagTransformer']>(),
+    rendererGenerate = jest.fn<Renderer['generate']>(),
+    blockParserParse = jest.fn<BlockParser['parse']>().mockReturnValue([]),
+    blockParserRegisterTagTransformer = jest.fn<BlockParser['registerTagTransformer']>(),
   }) => {
     const renderer = {
       generate: rendererGenerate,
@@ -32,7 +32,7 @@ describe('Styleguide', () => {
 
   test('should register', () => {
     const { styleguide } = styleguideMock({
-      blockParserParse: jest.fn<BlockParserInterface['parse']>().mockReturnValue([
+      blockParserParse: jest.fn<BlockParser['parse']>().mockReturnValue([
         {
           key: 'foo',
           order: 0,
@@ -95,7 +95,7 @@ describe('Styleguide', () => {
   test('changes should be applied', () => {
     const { styleguide } = styleguideMock({
       blockParserParse: jest
-        .fn<BlockParserInterface['parse']>()
+        .fn<BlockParser['parse']>()
         .mockReturnValueOnce([
           {
             key: 'foo',
@@ -185,7 +185,7 @@ describe('Styleguide', () => {
   test('when blocks get removed they should be removed from context', () => {
     const { styleguide } = styleguideMock({
       blockParserParse: jest
-        .fn<BlockParserInterface['parse']>()
+        .fn<BlockParser['parse']>()
         .mockReturnValueOnce([
           {
             key: 'foo',
@@ -255,7 +255,7 @@ describe('Styleguide', () => {
   test('when top level blocks get removed they should be removed from context', () => {
     const { styleguide } = styleguideMock({
       blockParserParse: jest
-        .fn<BlockParserInterface['parse']>()
+        .fn<BlockParser['parse']>()
         .mockReturnValueOnce([
           {
             key: 'foo',
@@ -332,7 +332,7 @@ describe('Styleguide', () => {
   test('when blocks get witch has children they should only reset', () => {
     const { styleguide } = styleguideMock({
       blockParserParse: jest
-        .fn<BlockParserInterface['parse']>()
+        .fn<BlockParser['parse']>()
         .mockReturnValueOnce([
           {
             description: 'Foo description',
@@ -413,7 +413,7 @@ describe('Styleguide', () => {
 
   test('when blocks get removed they should be removed from context', () => {
     const { styleguide } = styleguideMock({
-      blockParserParse: jest.fn<BlockParserInterface['parse']>().mockReturnValue([
+      blockParserParse: jest.fn<BlockParser['parse']>().mockReturnValue([
         {
           key: 'foo',
           order: 0,

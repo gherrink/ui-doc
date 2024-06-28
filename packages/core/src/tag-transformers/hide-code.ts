@@ -1,6 +1,6 @@
-import type { TagTransformerInterface } from '../types'
+import type { TagTransformer } from '../types'
 
-export const tag: TagTransformerInterface = {
+export const tag: TagTransformer = {
   name: 'hideCode',
   transform: block => {
     block.hideCode = true

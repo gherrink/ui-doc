@@ -1,14 +1,14 @@
 import { describe, expect, test } from '@jest/globals'
 
 import { ParserError } from '../src/errors'
+import { InlineReader } from '../src/InlineReader'
+import { NodeParser } from '../src/NodeParser'
 import { CommentNode, TagDebugNode, TagForNode, TemplateNode } from '../src/nodes'
-import { Parser } from '../src/Parser'
-import { Reader } from '../src/Reader'
 
 describe('Parser', () => {
   test('template', () => {
-    const parser = Parser.init()
-    const reader = new Reader('foo bar')
+    const parser = NodeParser.init()
+    const reader = new InlineReader('foo bar')
     const res = parser.parse(reader)
     const tag = res.children[0] as TemplateNode
 
@@ -19,8 +19,8 @@ describe('Parser', () => {
   })
 
   test('template multiline', () => {
-    const parser = Parser.init()
-    const reader = new Reader('foo bar\nbaz\nfoobar')
+    const parser = NodeParser.init()
+    const reader = new InlineReader('foo bar\nbaz\nfoobar')
     const res = parser.parse(reader)
     const tag = res.children[0] as TemplateNode
 
@@ -31,8 +31,8 @@ describe('Parser', () => {
   })
 
   test('comment', () => {
-    const parser = Parser.init()
-    const reader = new Reader('<!-- foo bar -->')
+    const parser = NodeParser.init()
+    const reader = new InlineReader('<!-- foo bar -->')
     const res = parser.parse(reader)
     const tag = res.children[0] as CommentNode
 
@@ -43,8 +43,8 @@ describe('Parser', () => {
   })
 
   test('comment not closed', () => {
-    const parser = Parser.init()
-    const reader = new Reader('<!-- foo bar ->')
+    const parser = NodeParser.init()
+    const reader = new InlineReader('<!-- foo bar ->')
     const res = parser.parse(reader)
     const tag = res.children[0] as CommentNode
 
@@ -55,8 +55,8 @@ describe('Parser', () => {
   })
 
   test('tag', () => {
-    const parser = Parser.init()
-    const reader = new Reader('{{ debug }}')
+    const parser = NodeParser.init()
+    const reader = new InlineReader('{{ debug }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagDebugNode
 
@@ -67,8 +67,8 @@ describe('Parser', () => {
   })
 
   test('to throw when tag not closed', () => {
-    const parser = Parser.init()
-    const reader = new Reader('{{ debug }')
+    const parser = NodeParser.init()
+    const reader = new InlineReader('{{ debug }')
 
     expect(() => {
       parser.parse(reader)
@@ -76,8 +76,8 @@ describe('Parser', () => {
   })
 
   test('to throw when tag not ended', () => {
-    const parser = Parser.init()
-    const reader = new Reader('{{ for }}inner')
+    const parser = NodeParser.init()
+    const reader = new InlineReader('{{ for }}inner')
 
     expect(() => {
       parser.parse(reader)
@@ -85,8 +85,8 @@ describe('Parser', () => {
   })
 
   test('template with tag', () => {
-    const parser = Parser.init()
-    const reader = new Reader('foo {{ debug }} bar')
+    const parser = NodeParser.init()
+    const reader = new InlineReader('foo {{ debug }} bar')
     const res = parser.parse(reader)
 
     expect(res.children.length).toBe(3)
@@ -99,8 +99,8 @@ describe('Parser', () => {
   })
 
   test('template with tag multiline', () => {
-    const parser = Parser.init()
-    const reader = new Reader('foo\n{{ debug }}\nbar')
+    const parser = NodeParser.init()
+    const reader = new InlineReader('foo\n{{ debug }}\nbar')
     const res = parser.parse(reader)
 
     expect(res.children.length).toBe(3)
@@ -113,8 +113,8 @@ describe('Parser', () => {
   })
 
   test('template, comment and tag multiline', () => {
-    const parser = Parser.init()
-    const reader = new Reader('foo\n{{ debug }}\n<!-- bar -->\nbaz')
+    const parser = NodeParser.init()
+    const reader = new InlineReader('foo\n{{ debug }}\n<!-- bar -->\nbaz')
     const res = parser.parse(reader)
 
     expect(res.children.length).toBe(5)
@@ -131,8 +131,8 @@ describe('Parser', () => {
   })
 
   test('inner content', () => {
-    const parser = Parser.init()
-    const reader = new Reader('bar\n{{ for }}foo{{ /for }}\nbaz')
+    const parser = NodeParser.init()
+    const reader = new InlineReader('bar\n{{ for }}foo{{ /for }}\nbaz')
     const res = parser.parse(reader)
 
     expect(res.children.length).toBe(3)

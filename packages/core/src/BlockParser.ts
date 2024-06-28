@@ -4,66 +4,59 @@ import { BlockParseError, TagTransformerError } from './errors'
 import tagTransformers from './tag-transformers'
 import type {
   Block,
+  BlockParser,
   BlockParserContext,
-  BlockParserEventMap,
-  BlockParserInterface,
-  DescriptionParserInterface,
-  TagTransformerInterface,
+  BlockParserEventMap as EventMap,
+  DescriptionParser,
+  TagTransformer,
   TagTransformFunction,
 } from './types'
+import type { EventArgs, EventEmitter, EventListener, EventListenersMap } from './types/events'
 
 type BlockParserErrorCreate = (reason: string, comment: CommentBlock) => BlockParseError
 
-export class BlockParser implements BlockParserInterface {
+export class CommentBlockParser implements EventEmitter<EventMap>, BlockParser {
+  protected listeners: EventListenersMap<EventMap> = new Map()
+
   protected tagTransformers: Record<string, TagTransformFunction> = {}
 
-  protected listeners: Record<
-    keyof BlockParserEventMap,
-    ((event: BlockParserEventMap[keyof BlockParserEventMap]) => void)[]
-  > = {
-    'block-parsed': [],
-  }
+  protected descriptionParser: DescriptionParser
 
-  protected descriptionParser: DescriptionParserInterface
-
-  constructor(descriptionParser: DescriptionParserInterface) {
+  constructor(descriptionParser: DescriptionParser) {
     tagTransformers.forEach(tag => this.registerTagTransformer(tag))
     this.descriptionParser = descriptionParser
   }
 
-  public registerTagTransformer({ name, transform: parse }: TagTransformerInterface): BlockParser {
+  public registerTagTransformer({ name, transform: parse }: TagTransformer): this {
     this.tagTransformers[name] = parse
 
     return this
   }
 
-  public on<K extends keyof BlockParserEventMap>(
-    type: K,
-    listener: (event: BlockParserEventMap[K]) => void,
-  ): BlockParser {
-    this.listeners[type].push(listener)
+  public on<K extends keyof EventMap>(eventName: K, listener: EventListener<EventMap, K>): this {
+    const listeners = this.listeners.get(eventName) ?? []
+
+    listeners.push(listener)
+    this.listeners.set(eventName, listeners)
 
     return this
   }
 
-  public off<K extends keyof BlockParserEventMap>(
-    type: K,
-    listener: (event: BlockParserEventMap[K]) => void,
-  ): BlockParser {
-    this.listeners[type] = this.listeners[type].filter(l => l !== listener)
+  public off<K extends keyof EventMap>(eventName: K, listener: EventListener<EventMap, K>): this {
+    const listeners = this.listeners.get(eventName) ?? []
+    const index = listeners.indexOf(listener)
 
-    return this
-  }
-
-  protected emit<K extends keyof BlockParserEventMap>(
-    type: K,
-    event: BlockParserEventMap[K],
-  ): void {
-    if (!this.listeners[type]) {
-      return
+    if (index >= 0) {
+      listeners.splice(index, 1)
     }
 
-    this.listeners[type].forEach(listener => listener(event))
+    return this
+  }
+
+  protected emit<K extends keyof EventMap>(eventName: K, ...args: EventArgs<EventMap, K>): void {
+    const listeners = this.listeners.get(eventName) ?? []
+
+    listeners.forEach(listener => listener(...args))
   }
 
   public parse(context: BlockParserContext): Block[] {
@@ -127,7 +120,7 @@ export class BlockParser implements BlockParserInterface {
       return undefined
     }
 
-    this.emit('block-parsed', { block: block as Block })
+    this.emit('parsed', block as Block)
 
     return block as Block
   }
@@ -147,4 +140,8 @@ export class BlockParser implements BlockParserInterface {
 
     return (block.page ?? '') + (block.section ? `.${block.section}` : '')
   }
+}
+
+export function createBlockParser(descriptionParser: DescriptionParser): CommentBlockParser {
+  return new CommentBlockParser(descriptionParser)
 }

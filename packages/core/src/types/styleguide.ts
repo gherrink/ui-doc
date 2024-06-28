@@ -1,64 +1,15 @@
-import type { Block } from './Block'
-import type { BlockParserInterface } from './BlockParser'
+import type { BlockParser } from './block-parser'
+import type { Block } from './blocks'
 import type { Context, ContextEntry, ContextExample } from './context'
-import type { RendererInterface } from './RendererInterface'
+import type { Renderer } from './renderer'
 
-export interface StyleguideOptions {
-  blockParser?: BlockParserInterface
-  generate?: Partial<StyleguideGenerateMap>
-  renderer: RendererInterface
-  texts?: Partial<StyleguideTexts>
+export interface Options {
+  blockParser?: BlockParser
+  generate?: Partial<GenerateFunctions>
+  renderer: Renderer
+  texts?: Partial<Texts>
 }
-
-export interface StyleguideEvent {}
-
-export type ContextEntryEvent = { entry: ContextEntry; key: string } & (
-  | {
-      type: 'create' | 'update'
-      changes: {
-        deleted: string[]
-        updated: Record<string, { from: any; to: any }>
-      }
-    }
-  | {
-      type: 'delete'
-    }
-)
-
-export interface SourceEvent extends StyleguideEvent {
-  file: string
-  source: StyleguideSource
-  type: 'create' | 'update' | 'delete'
-}
-
-export interface OutputEvent extends StyleguideEvent {
-  promises: Promise<void>[]
-  write: (file: string, content: string) => Promise<void>
-}
-
-export interface PageEvent extends StyleguideEvent {
-  layout?: string
-  page: ContextEntry
-}
-
-export interface ExampleEvent extends StyleguideEvent {
-  example: ContextExample
-  layout: string
-}
-
-export interface StyleguideEventMap {
-  'context-entry': ContextEntryEvent
-  example: ExampleEvent
-  output: OutputEvent
-  page: PageEvent
-  source: SourceEvent
-}
-
-export type StyleguideListeners<T extends keyof StyleguideEventMap> = {
-  [K in T]: ((event: StyleguideEventMap[K]) => void)[]
-}
-
-export interface StyleguideGenerateMap {
+export interface GenerateFunctions {
   exampleTitle: (example: ContextExample) => string
   footerText: () => string
   homeLink: () => string
@@ -70,13 +21,13 @@ export interface StyleguideGenerateMap {
   resolveUrl: (uri: string, type: string) => string
 }
 
-export interface StyleguideTexts {
-  copyright: 'Styleguide'
+export interface Texts {
+  copyright: string
   title: string
 }
 
-export interface StyleguideSource {
+export interface Source {
   blocks: Block[]
 }
 
-export type StyleguideOutputCallback = (file: string, content: string) => Promise<void> | void
+export type OutputCallback = (file: string, content: string) => Promise<void> | void

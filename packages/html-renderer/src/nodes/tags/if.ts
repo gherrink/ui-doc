@@ -1,13 +1,7 @@
 import { TagNodeError } from '../../errors'
-import type {
-  HtmlRendererInterface,
-  NodeOperator,
-  RenderContext,
-  TagNodeParse,
-  TokenValue,
-} from '../../types'
+import type { RenderContext, Renderer, TagNodeParse, TokenValue } from '../../types'
 import { readNestedValue } from '../../utils'
-import { nodeOperators } from '../Node'
+import { type NodeOperator, nodeOperators } from '../Node'
 import { TagNode } from '../TagNode'
 
 export interface TagIfNodeOptions {
@@ -26,7 +20,7 @@ export class TagIfNode extends TagNode {
     this.options = options
   }
 
-  public render(context: RenderContext, renderer: HtmlRendererInterface): string {
+  public render(context: RenderContext, renderer: Renderer): string {
     let value = this.getValue(context, 'firstValue', 'firstContextKey')
 
     if (this.options.operator) {

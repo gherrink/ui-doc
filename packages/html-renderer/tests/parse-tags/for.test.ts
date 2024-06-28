@@ -1,17 +1,17 @@
 import { describe, expect, test } from '@jest/globals'
 
+import { InlineReader } from '../../src/InlineReader'
+import { NodeParser } from '../../src/NodeParser'
 import { parseTagForNode, TagForNode } from '../../src/nodes/tags/for'
 import { TemplateNode } from '../../src/nodes/TemplateNode'
-import { Parser } from '../../src/Parser'
-import { Reader } from '../../src/Reader'
 
 describe('Parser tag for', () => {
-  const parser = new Parser()
+  const parser = new NodeParser()
 
   parser.registerTagParser(parseTagForNode)
 
   test('simple tag', () => {
-    const reader = new Reader('{{ for }}foo{{ /for }}')
+    const reader = new InlineReader('{{ for }}foo{{ /for }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagForNode
 
@@ -23,7 +23,7 @@ describe('Parser tag for', () => {
   })
 
   test('with context', () => {
-    const reader = new Reader('{{ for:foo }}foo{{ /for }}')
+    const reader = new InlineReader('{{ for:foo }}foo{{ /for }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagForNode
 
@@ -35,7 +35,7 @@ describe('Parser tag for', () => {
   })
 
   test('ignores missing identifier and falls back to this', () => {
-    const reader = new Reader('{{ for: }}foo{{ /for }}')
+    const reader = new InlineReader('{{ for: }}foo{{ /for }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagForNode
 
@@ -47,7 +47,7 @@ describe('Parser tag for', () => {
   })
 
   test('throws when separator is missing', () => {
-    const reader = new Reader('{{ for foo }}')
+    const reader = new InlineReader('{{ for foo }}')
 
     expect(() => {
       parser.parse(reader)
@@ -55,7 +55,7 @@ describe('Parser tag for', () => {
   })
 
   test('throws when invalid identifier is given', () => {
-    const reader = new Reader('{{ for:=== }}')
+    const reader = new InlineReader('{{ for:=== }}')
 
     expect(() => {
       parser.parse(reader)

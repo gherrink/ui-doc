@@ -1,17 +1,12 @@
-import type { Asset, OutputContext } from '@styleguide/core'
+import type { Asset, GenerateContext } from '@styleguide/core'
 
 import { HTMLRendererError, HTMLRendererSyntaxError, ParserError } from './errors'
-import { Reader } from './Reader'
-import {
-  HtmlRendererInterface,
-  type HtmlRendererSourceInput,
-  NodeInterface,
-  type ReaderInterface,
-  type RenderContext,
-} from './types'
-import type { ParserInterface } from './types/parser'
+import { InlineReader } from './InlineReader'
+import type { Node } from './nodes'
+import type { Reader, RenderContext, Renderer, SourceInput } from './types'
+import type { Parser } from './types/parser'
 
-function instanceofReaderInterface(object: any): object is ReaderInterface {
+function instanceofReader(object: any): object is Reader {
   return (
     typeof object.peak === 'function' &&
     typeof object.consume === 'function' &&
@@ -20,41 +15,39 @@ function instanceofReaderInterface(object: any): object is ReaderInterface {
   )
 }
 
-export class HtmlRenderer implements HtmlRendererInterface {
-  protected parser: ParserInterface
+export class HtmlRenderer implements Renderer {
+  protected parser: Parser
 
-  protected layouts: Record<string, NodeInterface> = {}
+  protected layouts: Record<string, Node> = {}
 
-  protected partials: Record<string, NodeInterface> = {}
+  protected partials: Record<string, Node> = {}
 
-  protected pages: Record<string, NodeInterface> = {}
+  protected pages: Record<string, Node> = {}
 
-  public constructor(parser: ParserInterface) {
+  public constructor(parser: Parser) {
     this.parser = parser
   }
 
-  public addLayout(name: string, layout: HtmlRendererSourceInput): HtmlRenderer {
+  public addLayout(name: string, layout: SourceInput): this {
     this.layouts[name] = this.parse(layout)
 
     return this
   }
 
-  public addPartial(name: string, partial: HtmlRendererSourceInput): HtmlRenderer {
+  public addPartial(name: string, partial: SourceInput): this {
     this.partials[name] = this.parse(partial)
 
     return this
   }
 
-  public addPage(name: string, page: HtmlRendererSourceInput): HtmlRenderer {
+  public addPage(name: string, page: SourceInput): this {
     this.pages[name] = this.parse(page)
 
     return this
   }
 
-  protected parse(input: HtmlRendererSourceInput): NodeInterface {
-    const reader = !instanceofReaderInterface(input)
-      ? new Reader(input.content, input.source)
-      : input
+  protected parse(input: SourceInput): Node {
+    const reader = !instanceofReader(input) ? new InlineReader(input.content, input.source) : input
 
     try {
       return this.parser.parse(reader)
@@ -75,7 +68,7 @@ export class HtmlRenderer implements HtmlRendererInterface {
     }
   }
 
-  public generate(context: OutputContext, layout?: string): string {
+  public generate(context: GenerateContext, layout?: string): string {
     layout = layout ?? 'default'
     const content = this.layouts[layout] || undefined
 
@@ -85,7 +78,7 @@ export class HtmlRenderer implements HtmlRendererInterface {
       )
     }
 
-    return this.render(content, this.prepareGenerateContext(context))
+    return this.render(content, this.generateContext(context))
   }
 
   public page(name: string, context: RenderContext): string {
@@ -112,14 +105,14 @@ export class HtmlRenderer implements HtmlRendererInterface {
     return this.render(content, context ?? {})
   }
 
-  protected render(rootNode: NodeInterface, context: RenderContext): string {
+  protected render(rootNode: Node, context: RenderContext): string {
     return rootNode.render(context, this)
   }
 
-  protected prepareGenerateContext(inputContext: OutputContext): RenderContext {
-    const context = inputContext as RenderContext
+  protected generateContext(context: GenerateContext): RenderContext {
+    const renderContext = context as RenderContext
 
-    context.styles = inputContext.assets
+    renderContext.styles = context.assets
       .filter((asset: Asset) => asset.type === 'style')
       .map(
         (asset: Asset) =>
@@ -127,14 +120,14 @@ export class HtmlRenderer implements HtmlRendererInterface {
       )
       .join('\n')
 
-    context.scripts = inputContext.assets
+    renderContext.scripts = context.assets
       .filter((asset: Asset) => asset.type === 'script')
       .map(
         (asset: Asset) => `<script src="${asset.src}"${this.makeAttributes(asset.attrs)}></script>`,
       )
       .join('\n')
 
-    return context
+    return renderContext
   }
 
   protected makeAttributes(attrs: Record<string, string> = {}): string {

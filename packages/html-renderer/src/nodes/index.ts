@@ -1,6 +1,6 @@
 export { CommentNode } from './CommentNode'
-export { Node, nodeOperators } from './Node'
-export { TagNode } from './TagNode'
+export { Node, NodeOperator, nodeOperators, NodeType } from './Node'
+export { TagNode, TagNodeType } from './TagNode'
 export { TagDebugNode } from './tags/debug'
 export { TagForNode } from './tags/for'
 export { TagIfNode } from './tags/if'
