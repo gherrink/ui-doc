@@ -1,4 +1,4 @@
-import { createBlockParser } from './BlockParser'
+import { createCommentBlockParser } from './CommentBlockParser'
 import { createMarkdownDescriptionParser } from './MarkdownDescriptionParser'
 import type {
   Asset,
@@ -105,7 +105,7 @@ export class Styleguide implements EventEmitter<EventMap> {
   }
 
   protected createParser(): BlockParser {
-    return createBlockParser(createMarkdownDescriptionParser())
+    return createCommentBlockParser(createMarkdownDescriptionParser())
   }
 
   public on<K extends keyof EventMap>(eventName: K, listener: EventListener<EventMap, K>): this {

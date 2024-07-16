@@ -142,6 +142,6 @@ export class CommentBlockParser implements EventEmitter<EventMap>, BlockParser {
   }
 }
 
-export function createBlockParser(descriptionParser: DescriptionParser): CommentBlockParser {
+export function createCommentBlockParser(descriptionParser: DescriptionParser): CommentBlockParser {
   return new CommentBlockParser(descriptionParser)
 }

@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals'
 
-import { CommentBlockParser } from '../src/BlockParser'
+import { CommentBlockParser } from '../src/CommentBlockParser'
 import { BlockParseError } from '../src/errors'
 import type { DescriptionParser } from '../src/types'
 
@@ -15,7 +15,7 @@ const prepareForBlockParserException = (content: string): string => {
   return content.replace(/^\n+|[\n\s]+$/g, '')
 }
 
-describe('BlockParser', () => {
+describe('CommentBlockParser', () => {
   test('should parse comment', () => {
     const content = `
     /**

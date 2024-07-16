@@ -1,4 +1,4 @@
-export * from './BlockParser'
+export * from './CommentBlockParser'
 export * from './errors'
 export * from './MarkdownDescriptionParser'
 export * from './Styleguide'
