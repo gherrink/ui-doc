@@ -2,7 +2,7 @@ import { BlockParseError, Styleguide } from '@styleguide/core'
 import {
   HtmlRenderer,
   HTMLRendererSyntaxError,
-  Parser,
+  NodeParser,
   TemplateLoader,
 } from '@styleguide/html-renderer'
 import { NodeFileSystem } from '@styleguide/node'
@@ -13,7 +13,7 @@ async function main() {
   const outputDir = './dist/base'
   const fileSystem = new NodeFileSystem()
   const assetLoader = fileSystem.assetLoader()
-  const renderer = new HtmlRenderer(Parser.init())
+  const renderer = new HtmlRenderer(NodeParser.init())
   const finder = fileSystem.createFileFinder(['css/**/*.css'])
 
   try {
