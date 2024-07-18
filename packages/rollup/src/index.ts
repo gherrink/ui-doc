@@ -45,7 +45,7 @@ export interface Options {
   templatePath?: string
   styleAsset?: false | string
   highlightStyle?: false | string
-  highlightTheme?: false | string
+  highlightTheme?: string
   highlightScript?: false | string
   outputDir?: string
   settings?: Pick<StyleguideOptions, 'generate' | 'texts'>
