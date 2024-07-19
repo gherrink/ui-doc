@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import type { FileFinder, FileFinderOnFoundCallback } from '@styleguide/core'
+import type { FileFinder, FileFinderOnFoundCallback } from '@ui-doc/core'
 import picomatch from 'picomatch'
 
 export class NodeFileFinder implements FileFinder {

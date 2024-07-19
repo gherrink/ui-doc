@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import type { FileSystem } from '@styleguide/core'
+import type { FileSystem } from '@ui-doc/core'
 
 import { NodeAssetLoader } from './NodeAssetLoader'
 import { NodeFileFinder } from './NodeFileFinder'

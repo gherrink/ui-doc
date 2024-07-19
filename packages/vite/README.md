@@ -1,24 +1,24 @@
-# Styleguide vite plugin
+# UI-Doc vite plugin
 
-Integrates styleguide into vite by using the `@styleguide/rollup` plugin and add functionality to vite dev server to display the styleguide.
+Integrates UI-Doc into vite by using the `@ui-doc/rollup` plugin and add functionality to vite dev server to display / preview the UI-Doc.
 
 ## Install
 
 ```sh
 # npm
-npm install --save-dev @styleguide/vite @styleguide/html-renderer @highlightjs/cdn-assets
+npm install --save-dev @ui-doc/vite @ui-doc/html-renderer @highlightjs/cdn-assets
 
 # yarn
-yarn add --dev @styleguide/vite @styleguide/html-renderer @highlightjs/cdn-assets
+yarn add --dev @ui-doc/vite @ui-doc/html-renderer @highlightjs/cdn-assets
 
 # pnpm
-pnpm install --save-dev @styleguide/vite @styleguide/html-renderer @highlightjs/cdn-assets
+pnpm install --save-dev @ui-doc/vite @ui-doc/html-renderer @highlightjs/cdn-assets
 ```
 
 ## Setup
 
 ```js
-import styleguide from '@styleguide/vite'
+import uidoc from '@ui-doc/vite'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
@@ -32,7 +32,7 @@ export default defineConfig({
   },
 
   plugins: [
-    styleguide({
+    uidoc({
       settings: {
         generate: {
           logo: () => 'Vite',
@@ -49,4 +49,4 @@ export default defineConfig({
 
 ## Options
 
-Please see the Options from `@styleguide/rollup` they are the same.
+Please see the Options from `@ui-doc/rollup` they are the same.

@@ -8,9 +8,9 @@ export default [
     pkg: JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')),
   }),
   configPostcssWeb({
-    input: { styleguide: 'styles/index.css' },
+    input: { 'ui-doc': 'styles/index.css' },
   }),
   configTsWeb({
-    input: { styleguide: 'scripts/styleguide.ts' },
+    input: { 'ui-doc': 'scripts/app.ts' },
   }),
 ]

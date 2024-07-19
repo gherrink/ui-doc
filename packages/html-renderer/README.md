@@ -1,4 +1,4 @@
-# Styleguide HTML Renderer
+# UI-Doc HTML Renderer
 
 Simple and light HTML Rendering Engine. Its purpose is to create HTML from a Context Object by using a simple template syntax and have no dependencies. This project should not be used for complexer projects, because of it's simplicity.
 
@@ -201,7 +201,7 @@ Define a partial that can be reused, to get the same output inside layouts, page
 ## Usage
 
 ```
-import { HtmlRenderer } from '@styleguide/html-renderer'
+import { HtmlRenderer } from '@ui-doc/html-renderer'
 
 const layout = `
 <html>

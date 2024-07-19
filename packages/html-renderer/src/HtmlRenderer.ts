@@ -1,4 +1,4 @@
-import type { Asset, GenerateContext } from '@styleguide/core'
+import type { Asset, GenerateContext } from '@ui-doc/core'
 
 import { HTMLRendererError, HTMLRendererSyntaxError, ParserError } from './errors'
 import { InlineReader } from './InlineReader'

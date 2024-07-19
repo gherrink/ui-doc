@@ -149,24 +149,24 @@ importers:
       '@highlightjs/cdn-assets':
         specifier: ^11.9.0
         version: 11.9.0
-      '@styleguide/core':
-        specifier: workspace:0.0.0-alpha.0
-        version: link:../packages/core
-      '@styleguide/html-renderer':
-        specifier: workspace:0.0.0-alpha.0
-        version: link:../packages/html-renderer
-      '@styleguide/node':
-        specifier: workspace:0.0.0-alpha.0
-        version: link:../packages/node
-      '@styleguide/rollup':
-        specifier: workspace:0.0.0-alpha.0
-        version: link:../packages/rollup
-      '@styleguide/vite':
-        specifier: workspace:0.0.0-alpha.0
-        version: link:../packages/vite
       '@types/node':
         specifier: ^20.12.7
         version: 20.14.0
+      '@ui-doc/core':
+        specifier: workspace:0.0.0
+        version: link:../packages/core
+      '@ui-doc/html-renderer':
+        specifier: workspace:0.0.0
+        version: link:../packages/html-renderer
+      '@ui-doc/node':
+        specifier: workspace:0.0.0
+        version: link:../packages/node
+      '@ui-doc/rollup':
+        specifier: workspace:0.0.0
+        version: link:../packages/rollup
+      '@ui-doc/vite':
+        specifier: workspace:0.0.0
+        version: link:../packages/vite
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@20.14.0)(typescript@4.9.5)
@@ -188,8 +188,8 @@ importers:
 
   packages/html-renderer:
     dependencies:
-      '@styleguide/core':
-        specifier: workspace:^0.0.0-alpha.0
+      '@ui-doc/core':
+        specifier: workspace:^0.0.0
         version: link:../core
     optionalDependencies:
       '@highlightjs/cdn-assets':
@@ -205,36 +205,36 @@ importers:
         specifier: ^4.0.2
         version: 4.0.2
     devDependencies:
-      '@styleguide/core':
-        specifier: workspace:^0.0.0-alpha.0
-        version: link:../core
       '@types/node':
         specifier: ^20.12.7
         version: 20.14.0
       '@types/picomatch':
         specifier: ^2.3.3
         version: 2.3.3
+      '@ui-doc/core':
+        specifier: workspace:^0.0.0
+        version: link:../core
 
   packages/rollup:
     dependencies:
-      '@styleguide/core':
-        specifier: workspace:^0.0.0-alpha.0
+      '@ui-doc/core':
+        specifier: workspace:^0.0.0
         version: link:../core
-      '@styleguide/node':
-        specifier: workspace:^0.0.0-alpha.0
+      '@ui-doc/node':
+        specifier: workspace:^0.0.0
         version: link:../node
       rollup:
         specifier: ^4.0.0
         version: 4.18.0
     devDependencies:
-      '@styleguide/html-renderer':
+      '@ui-doc/html-renderer':
         specifier: workspace:*
         version: link:../html-renderer
 
   packages/vite:
     dependencies:
-      '@styleguide/rollup':
-        specifier: workspace:^0.0.0-alpha.0
+      '@ui-doc/rollup':
+        specifier: workspace:^0.0.0
         version: link:../rollup
     devDependencies:
       picocolors:

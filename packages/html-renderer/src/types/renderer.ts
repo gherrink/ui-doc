@@ -1,4 +1,4 @@
-import { Renderer as CoreRenderer } from '@styleguide/core'
+import { Renderer as CoreRenderer } from '@ui-doc/core'
 
 import type { Reader } from './reader'
 

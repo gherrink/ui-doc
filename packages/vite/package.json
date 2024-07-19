@@ -1,9 +1,10 @@
 {
-  "name": "@styleguide/vite",
-  "description": "Vite plugin for styleguide.",
+  "name": "@ui-doc/vite",
+  "description": "Vite plugin for UI-Doc generation and preview.",
   "version": "0.0.0",
   "license": "MIT",
   "keywords": [
+    "ui-doc",
     "styleguide",
     "ui-kit",
     "documentation",
@@ -13,12 +14,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/gherrink/styleguide",
+    "url": "https://github.com/gherrink/ui-doc",
     "directory": "packages/vite"
   },
   "author": "Maurice Busch",
-  "homepage": "https://github.com/gherrink/styleguide/tree/master/packages/vite#readme",
-  "bugs": "https://github.com/gherrink/styleguide/issues",
+  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/vite#readme",
+  "bugs": "https://github.com/gherrink/ui-doc/issues",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -53,10 +54,10 @@
     "vite": "^5.0.0"
   },
   "dependencies": {
-    "@styleguide/rollup": "workspace:^0.0.0-alpha.0"
+    "@ui-doc/rollup": "workspace:^0.0.0"
   },
   "devDependencies": {
-    "@styleguide/rollup": "workspace:*",
+    "@ui-doc/rollup": "workspace:*",
     "picocolors": "^1.0.1",
     "vite": "^5.3.1"
   }

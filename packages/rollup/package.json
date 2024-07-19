@@ -1,9 +1,10 @@
 {
-  "name": "@styleguide/rollup",
-  "description": "Rollup plugin for styleguide.",
+  "name": "@ui-doc/rollup",
+  "description": "Rollup plugin for UI-Doc generation.",
   "version": "0.0.0",
   "license": "MIT",
   "keywords": [
+    "ui-doc",
     "styleguide",
     "ui-kit",
     "documentation",
@@ -13,12 +14,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/gherrink/styleguide",
+    "url": "https://github.com/gherrink/ui-doc",
     "directory": "packages/rollup"
   },
   "author": "Maurice Busch",
-  "homepage": "https://github.com/gherrink/styleguide/tree/master/packages/rollup#readme",
-  "bugs": "https://github.com/gherrink/styleguide/issues",
+  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/rollup#readme",
+  "bugs": "https://github.com/gherrink/ui-doc/issues",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -50,16 +51,16 @@
   },
   "sideEffects": false,
   "peerDependencies": {
-    "@styleguide/html-renderer": "workspace:^0.0.0-alpha.0",
+    "@ui-doc/html-renderer": "workspace:^0.0.0",
     "rollup": "^4.0.0"
   },
   "dependencies": {
-    "@styleguide/core": "workspace:^0.0.0-alpha.0",
-    "@styleguide/node": "workspace:^0.0.0-alpha.0"
+    "@ui-doc/core": "workspace:^0.0.0",
+    "@ui-doc/node": "workspace:^0.0.0"
   },
   "devDependencies": {
-    "@styleguide/core": "workspace:*",
-    "@styleguide/html-renderer": "workspace:*",
-    "@styleguide/node": "workspace:*"
+    "@ui-doc/core": "workspace:*",
+    "@ui-doc/html-renderer": "workspace:*",
+    "@ui-doc/node": "workspace:*"
   }
 }

@@ -9,7 +9,8 @@
   "cSpell.words": [
     "atomico",
     "highlightjs",
-    "styleguide"
+    "styleguide",
+    "uidoc"
   ],
   "search.exclude": {
     "**/dist/": true,

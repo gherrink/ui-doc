@@ -1,5 +1,5 @@
 {
-  "name": "styleguide",
+  "name": "ui-doc",
   "private": true,
   "workspaces": [
     "packages/*",
@@ -24,8 +24,8 @@
     "prepare": "husky",
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check .",
-    "release": "pnpm lint && pnpm --filter [HEAD^] test && pnpm --filter [HEAD^] --workspace-concurrency=1 release",
-    "release:dry": "pnpm lint && pnpm --filter \"@styleguide/*\" test && pnpm --filter \"@styleguide/*\" --workspace-concurrency=1 release:dry",
+    "release": "pnpm lint && pnpm --filter \"@ui-doc/*\" test && pnpm --filter \"@ui-doc/*\" --workspace-concurrency=1 release",
+    "release:dry": "pnpm lint && pnpm --filter \"@ui-doc/*\" test && pnpm --filter \"@ui-doc/*\" --workspace-concurrency=1 release:dry",
     "security": "pnpm audit --audit-level=high",
     "workspace:build": "pnpm -r --filter='./packages/*' run build",
     "workspace:test": "pnpm --filter='./packages/*' run test"

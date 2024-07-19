@@ -15,11 +15,11 @@ import type {
   OutputCallback,
   Renderer,
   Source,
-  StyleguideEventMap as EventMap,
+  UIDocEventMap as EventMap,
 } from './types'
 import type { EventArgs, EventEmitter, EventListener, EventListenersMap } from './types/events'
 
-export class Styleguide implements EventEmitter<EventMap> {
+export class UIDoc implements EventEmitter<EventMap> {
   protected sources: Record<FilePath, Source>
 
   protected context: Context
@@ -31,8 +31,8 @@ export class Styleguide implements EventEmitter<EventMap> {
   protected listeners: EventListenersMap<EventMap> = new Map()
 
   protected texts = {
-    copyright: 'Styleguide',
-    title: 'Styleguide',
+    copyright: 'UI-Doc',
+    title: 'UI-Doc',
   }
 
   protected generate: GenerateFunctions = {

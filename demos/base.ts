@@ -1,11 +1,11 @@
-import { BlockParseError, Styleguide } from '@styleguide/core'
+import { BlockParseError, UIDoc } from '@ui-doc/core'
 import {
   HtmlRenderer,
   HTMLRendererSyntaxError,
   NodeParser,
   TemplateLoader,
-} from '@styleguide/html-renderer'
-import { NodeFileSystem } from '@styleguide/node'
+} from '@ui-doc/html-renderer'
+import { NodeFileSystem } from '@ui-doc/node'
 
 // TODO clean up output directory
 // TODO make it run parallel
@@ -31,13 +31,13 @@ async function main() {
     return
   }
 
-  const styleguide = new Styleguide({
+  const uidoc = new UIDoc({
     renderer,
   })
 
   try {
     await finder.search(async file => {
-      styleguide.sourceCreate(file, await fileSystem.fileRead(file))
+      uidoc.sourceCreate(file, await fileSystem.fileRead(file))
     })
   } catch (e) {
     if (e instanceof BlockParseError) {
@@ -50,17 +50,11 @@ async function main() {
 
   await fileSystem.ensureDirectoryExists(outputDir)
   await fileSystem.ensureDirectoryExists(`${outputDir}/examples`)
-  await styleguide.output(async (file, content) => {
+  await uidoc.output(async (file, content) => {
     await fileSystem.fileWrite(`${outputDir}/${file}`, content)
   })
-  await assetLoader.copy(
-    '@styleguide/html-renderer/styleguide.min.css',
-    `${outputDir}/styleguide.css`,
-  )
-  await assetLoader.copy(
-    '@styleguide/html-renderer/styleguide.min.js',
-    `${outputDir}/styleguide.js`,
-  )
+  await assetLoader.copy('@ui-doc/html-renderer/ui-doc.min.css', `${outputDir}/ui-doc.css`)
+  await assetLoader.copy('@ui-doc/html-renderer/ui-doc.min.js', `${outputDir}/ui-doc.js`)
   await assetLoader.copy(
     '@highlightjs/cdn-assets/styles/default.min.css',
     `${outputDir}/highlight.css`,

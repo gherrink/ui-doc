@@ -1,1 +1,1 @@
-# @styleguide/core ChangeLog
+# @ui-doc/core ChangeLog

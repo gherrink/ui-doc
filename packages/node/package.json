@@ -1,9 +1,10 @@
 {
-  "name": "@styleguide/node",
-  "description": "Node implementations for styleguide.",
+  "name": "@ui-doc/node",
+  "description": "Node implementations for UI-Doc.",
   "version": "0.0.0",
   "license": "MIT",
   "keywords": [
+    "ui-doc",
     "styleguide",
     "ui-kit",
     "documentation",
@@ -12,12 +13,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/gherrink/styleguide",
+    "url": "https://github.com/gherrink/ui-doc",
     "directory": "packages/node"
   },
   "author": "Maurice Busch",
-  "homepage": "https://github.com/gherrink/styleguide/tree/master/packages/node#readme",
-  "bugs": "https://github.com/gherrink/styleguide/issues",
+  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/node#readme",
+  "bugs": "https://github.com/gherrink/ui-doc/issues",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -50,15 +51,15 @@
   },
   "sideEffects": false,
   "peerDependencies": {
-    "@styleguide/core": "workspace:^0.0.0-alpha.0",
+    "@ui-doc/core": "workspace:^0.0.0",
     "node": "^16.0.0||^18.0.0||^20.0.0||^22.0.0"
   },
   "dependencies": {
     "picomatch": "^4.0.2"
   },
   "devDependencies": {
-    "@styleguide/core": "workspace:^0.0.0-alpha.0",
     "@types/node": "^20.12.7",
-    "@types/picomatch": "^2.3.3"
+    "@types/picomatch": "^2.3.3",
+    "@ui-doc/core": "workspace:^0.0.0"
   }
 }

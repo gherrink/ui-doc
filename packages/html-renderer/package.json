@@ -1,9 +1,10 @@
 {
-  "name": "@styleguide/html-renderer",
-  "description": "HTML renderer for Styleguide.",
+  "name": "@ui-doc/html-renderer",
+  "description": "HTML renderer for UI-Doc.",
   "version": "0.0.0",
   "license": "MIT",
   "keywords": [
+    "ui-doc",
     "styleguide",
     "ui-kit",
     "documentation",
@@ -13,12 +14,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/gherrink/styleguide",
+    "url": "https://github.com/gherrink/ui-doc",
     "directory": "packages/html-renderer"
   },
   "author": "Maurice Busch",
-  "homepage": "https://github.com/gherrink/styleguide/tree/master/packages/html-renderer#readme",
-  "bugs": "https://github.com/gherrink/styleguide/issues",
+  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/html-renderer#readme",
+  "bugs": "https://github.com/gherrink/ui-doc/issues",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -28,15 +29,15 @@
       "import": "./dist/index.mjs",
       "default": "./dist/index.cjs"
     },
-    "./styleguide.css": "./dist/assets/styleguide.css",
-    "./styleguide.min.css": "./dist/assets/styleguide.min.css",
-    "./styleguide.js": {
-      "types": "./dist/assets/styleguide.d.ts",
-      "import": "./dist/assets/styleguide.mjs",
-      "script": "./dist/assets/styleguide.min.js",
-      "default": "./dist/assets/styleguide.cjs"
+    "./ui-doc.css": "./dist/assets/ui-doc.css",
+    "./ui-doc.min.css": "./dist/assets/ui-doc.min.css",
+    "./ui-doc.js": {
+      "types": "./dist/assets/ui-doc.d.ts",
+      "import": "./dist/assets/ui-doc.mjs",
+      "script": "./dist/assets/ui-doc.min.js",
+      "default": "./dist/assets/ui-doc.cjs"
     },
-    "./styleguide.min.js": "./dist/assets/styleguide.min.js"
+    "./ui-doc.min.js": "./dist/assets/ui-doc.min.js"
   },
   "engines": {
     "node": ">=16.0.0"
@@ -63,7 +64,7 @@
   },
   "sideEffects": false,
   "peerDependencies": {
-    "@styleguide/core": "workspace:^0.0.0-alpha.0"
+    "@ui-doc/core": "workspace:^0.0.0"
   },
   "dependencies": {},
   "optionalDependencies": {

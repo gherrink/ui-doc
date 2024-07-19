@@ -1,4 +1,4 @@
-import type { FileSystem } from '@styleguide/core'
+import type { FileSystem } from '@ui-doc/core'
 
 import type { HtmlRenderer } from './HtmlRenderer'
 
@@ -6,7 +6,7 @@ export class TemplateLoader {
   public static async load({
     renderer,
     fileSystem,
-    templateBasePath = '@styleguide/html-renderer/templates',
+    templateBasePath = '@ui-doc/html-renderer/templates',
   }: {
     renderer: HtmlRenderer
     fileSystem: FileSystem

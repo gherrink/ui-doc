@@ -1,6 +1,6 @@
-# Styleguide
+# UI-Doc
 
-Styleguide uses JavaScript similar dock-blocks to create a nice looking documentation of your work. It's main purpose is to combine the task of documentation with testing.
+UI-Doc uses JavaScript similar dock-blocks to create a nice looking documentation of your work. It's main purpose is to combine the task of documentation with testing.
 
 ## Why?
 

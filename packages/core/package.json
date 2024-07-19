@@ -1,9 +1,10 @@
 {
-  "name": "@styleguide/core",
-  "description": "Core to generate a styleguide out of css comments.",
+  "name": "@ui-doc/core",
+  "description": "Core to generate a ui documentation out of comments.",
   "version": "0.0.0",
   "license": "MIT",
   "keywords": [
+    "ui-doc",
     "styleguide",
     "ui-kit",
     "documentation",
@@ -11,12 +12,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/gherrink/styleguide",
+    "url": "https://github.com/gherrink/ui-doc",
     "directory": "packages/core"
   },
   "author": "Maurice Busch",
-  "homepage": "https://github.com/gherrink/styleguide/tree/master/packages/core#readme",
-  "bugs": "https://github.com/gherrink/styleguide/issues",
+  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/core#readme",
+  "bugs": "https://github.com/gherrink/ui-doc/issues",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

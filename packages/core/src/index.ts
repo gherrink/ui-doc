@@ -1,5 +1,5 @@
 export * from './CommentBlockParser'
 export * from './errors'
 export * from './MarkdownDescriptionParser'
-export * from './Styleguide'
 export * from './types'
+export * from './UIDoc'

@@ -1,1 +1,1 @@
-# @styleguide/html-renderer ChangeLog
+# @ui-doc/html-renderer ChangeLog

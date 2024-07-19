@@ -3,14 +3,14 @@ import createRollupPlugin, {
   type Api as RollupPluginApi,
   type Options as RollupPluginOptions,
   PLUGIN_NAME as ROLLUP_PLUGIN_NAME,
-} from '@styleguide/rollup'
+} from '@ui-doc/rollup'
 import pc from 'picocolors'
 import type { RollupOptions } from 'rollup'
 import type { Plugin, UserConfig, ViteDevServer } from 'vite'
 
 import { version } from '../package.json'
 
-const PLUGIN_NAME = 'styleguide'
+const PLUGIN_NAME = 'ui-doc'
 
 export interface Options extends RollupPluginOptions {}
 
@@ -19,7 +19,7 @@ export interface Api extends RollupPluginApi {
 }
 
 function resolveOptions(options: Options): Options {
-  options.outputDir = options.outputDir ?? 'styleguide'
+  options.outputDir = options.outputDir ?? 'ui-doc'
 
   return options
 }
@@ -48,7 +48,7 @@ function prepareServe(plugin: Plugin<Api>, options: Options, config: UserConfig)
   const pathPrefix = `/${options.outputDir.endsWith('/') ? options.outputDir : `${options.outputDir}/`}`
 
   // replace resolveUrl to make sure that all assets are resolved correctly for vite server
-  plugin.api?.styleguide.replaceGenerate('resolveUrl', (uri, type) => {
+  plugin.api?.uidoc.replaceGenerate('resolveUrl', (uri, type) => {
     if (type === 'asset' || type === 'asset-example') {
       return `/${uri}`
     }
@@ -57,7 +57,7 @@ function prepareServe(plugin: Plugin<Api>, options: Options, config: UserConfig)
   })
 
   // include vite client in ui-kit assets
-  plugin.api?.styleguide.addAsset({
+  plugin.api?.uidoc.addAsset({
     type: 'script',
     src: '@vite/client',
     attrs: { type: 'module' },
@@ -65,18 +65,18 @@ function prepareServe(plugin: Plugin<Api>, options: Options, config: UserConfig)
 
   // use user inputs as example assets
   normalizeRollupInput(config.build?.rollupOptions?.input).forEach(input => {
-    plugin.api?.styleguideAsset(input, 'example')
+    plugin.api?.uidocAsset(input, 'example')
   })
 }
 
-export default async function styleguidePlugin(rawOptions: Options): Promise<Plugin<Api>> {
+export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<Api>> {
   const options = resolveOptions(rawOptions)
   const plugin = (await createRollupPlugin(options)) as Plugin<Api>
 
   plugin.name = PLUGIN_NAME
   plugin.version = version
   if (!plugin.api) {
-    throw new Error('Styleguide rollup plugin API is not available')
+    throw new Error('UI-Doc rollup plugin API is not available')
   }
   plugin.api.version = version
   plugin.onLog = (_level, log) => {
@@ -93,12 +93,12 @@ export default async function styleguidePlugin(rawOptions: Options): Promise<Plu
   }
 
   plugin.configureServer = async (server: ViteDevServer) => {
-    const styleguide = plugin.api?.styleguide
+    const uidoc = plugin.api?.uidoc
     const pathPrefix = plugin.api?.options.pathPrefix
     const assets = plugin.api?.options.assets ?? []
 
-    if (!styleguide || !pathPrefix) {
-      throw new Error('Styleguide API is not available')
+    if (!uidoc || !pathPrefix) {
+      throw new Error('UI-Doc API is not available')
     }
 
     const regexPage = new RegExp(`^/${pathPrefix}([a-z0-9_\\-]+).html$`)
@@ -111,7 +111,7 @@ export default async function styleguidePlugin(rawOptions: Options): Promise<Plu
       }
 
       if (req.originalUrl.match(new RegExp(`^/${pathPrefix}?$`))) {
-        res.write(styleguide.page('index'))
+        res.write(uidoc.page('index'))
         res.end()
         return
       }
@@ -127,14 +127,14 @@ export default async function styleguidePlugin(rawOptions: Options): Promise<Plu
       const pageMatch = req.originalUrl.match(regexPage)
 
       if (pageMatch) {
-        writeContent(styleguide.page(pageMatch[1]))
+        writeContent(uidoc.page(pageMatch[1]))
         return
       }
 
       const exampleMatch = req.originalUrl.match(regexExample)
 
       if (exampleMatch) {
-        writeContent(styleguide.example(exampleMatch[1]))
+        writeContent(uidoc.example(exampleMatch[1]))
         return
       }
 
@@ -155,7 +155,7 @@ export default async function styleguidePlugin(rawOptions: Options): Promise<Plu
     server.httpServer?.once('listening', () => {
       setTimeout(() => {
         server.config.logger.info(
-          `\n  ${pc.green(`${pc.bold('Styleguide')} v${version}`)}  under /${pc.gray(pathPrefix)} \n`,
+          `\n  ${pc.green(`${pc.bold('UI-Doc')} v${version}`)} under /${pc.gray(pathPrefix)} \n`,
         )
         if (Array.isArray(server.resolvedUrls?.local)) {
           server.resolvedUrls.local.forEach(url => {
@@ -166,7 +166,7 @@ export default async function styleguidePlugin(rawOptions: Options): Promise<Plu
         }
       }, 300)
 
-      styleguide.on('context-entry', () => {
+      uidoc.on('context-entry', () => {
         server.ws.send({ type: 'full-reload', path: `/${pathPrefix}*` })
       })
     })

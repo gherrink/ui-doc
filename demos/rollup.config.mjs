@@ -1,4 +1,4 @@
-import styleguide from '@styleguide/rollup'
+import uidoc from '@ui-doc/rollup'
 import autoprefixer from 'autoprefixer'
 import postcssExtend from 'postcss-extend'
 import postcssImport from 'postcss-import'
@@ -22,7 +22,7 @@ export default [
         plugins: [postcssImport(), postcssNested(), postcssExtend(), autoprefixer()],
         sourceMap: true,
       }),
-      styleguide({
+      uidoc({
         settings: {
           generate: {
             logo: () => 'Rollup',

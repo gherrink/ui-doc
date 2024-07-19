@@ -1,10 +1,10 @@
-# Styleguide Core
+# UI-Doc Core
 
-This is the heart of Styleguide. The following steps will be performed:
+This is the heart of UI-Doc. The following steps will be performed:
 
 - Take source text
 - identify blocks and parse them
-- transform the blocks into a Styleguide context
+- transform the blocks into a UI-Doc context
 - use a renderer to output the context
 
 This is how your dock blocks can look like. The syntax is similar to JS-Documentation blocks.
@@ -29,7 +29,7 @@ This is how your dock blocks can look like. The syntax is similar to JS-Document
  */
 ```
 
-You will use different tags to define how and where your block will be displayed in the styleguide. Tags look like the following `@tag-name[ {your-type}][ name][ description]`.
+You will use different tags to define how and where your block will be displayed in the documentation. Tags look like the following `@tag-name[ {your-type}][ name][ description]`.
 
 ## Available Tags
 
@@ -214,7 +214,7 @@ Define the order who pages or sections should be ordered by giving a number. If 
 
 ## Integration
 
-The styleguide can be used in any context you want it to run. There are already integrations for:
+UI-Doc can be used in any context you want it to run. There are already integrations for:
 
 - Rollup
 - Vite
@@ -223,19 +223,19 @@ But you can write your own integration or just write a node script.
 
 ### Short example
 
-To use styleguide in a node script your code need something like this
+To use UI-Doc in a node script your code need something like this
 
 ```js
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { Styleguide } from '@styleguide/core'
+import { UIDoc } from '@ui-doc/core'
 
 // const renderer = ... // create a renderer instance, this depends on the renderer you want to use
 const outputDir = './dist'
 const filePath = path.resolve('./my-css-file-to-source.css')
 
-// create a styleguide instance
-const styleguide = new Styleguide({
+// create a UI-Doc instance
+const uidoc = new UIDoc({
   renderer,
   // ... other options
 })
@@ -243,11 +243,11 @@ const styleguide = new Styleguide({
 // read the file content
 const content = await fs.readFile(path.resolve(filePath), 'utf8')
 
-// create a new styleguide source, by giving the filename and the file content
-styleguide.sourceCreate(filePath, content)
+// create a new source, by giving the filename and the file content
+uidoc.sourceCreate(filePath, content)
 
 // use the output function to get all files that should be created
-await styleguide.output(async (fileName, content) => {
+await uidoc.output(async (fileName, content) => {
   await fs.writeFile(`${outputDir}/${fileName}`, content, 'utf8')
 })
 ```
@@ -256,7 +256,7 @@ await styleguide.output(async (fileName, content) => {
 
 | Name | Required | Type | Description |
 | --- | --- | --- | --- |
-| blockParser | no | BlockParser | Change implementation of the parses that interprets the source and creates blocks for the Styleguide. |
+| blockParser | no | BlockParser | Change implementation of the parses that interprets the source and creates blocks for the UI-Doc. |
 | generate | no | object of functions | Functions that will generate content for the renderer. |
 | renderer | yes | Renderer | The renderer that should be used to generate the output. |
 | texts | no | object of texts | Texts used by the default generate functions |
@@ -266,7 +266,7 @@ await styleguide.output(async (fileName, content) => {
 | Name      | Description                                           |
 | --------- | ----------------------------------------------------- |
 | copyright | Used in footer text to display copyright information. |
-| title     | Title of your Styleguide                              |
+| title     | Title of your UI-Doc                                  |
 
 ### Generate functions
 
@@ -277,7 +277,7 @@ await styleguide.output(async (fileName, content) => {
 | homeLink | string |  | Link to the homepage (frontpage) |
 | logo | string |  | Logo you want to display, give text, html or an svg |
 | menu | {active: boolean, href: string, order: number, text: string}[] | menu array, pages array | Create/manipulate the menu |
-| name | string |  | Name of your Styleguide |
+| name | string |  | Name of your UI-Doc |
 | pageLink | string | page context | Link to a page |
 | pageTitle | string | page context | Title of a page |
 | resolveUrl | string | uri string | Change/manipulate a uri |
@@ -286,25 +286,25 @@ You can change generate functions in two ways:
 
 ```ts
 // set over options
-const styleguide = new Styleguide({
+const uidoc = new UIDoc({
   generate: {
     footerText: () => 'Custom Footer Text',
   },
 })
 
 // using a function
-styleguide.replaceGenerate('name', () => 'MyStyleguide')
+uidoc.replaceGenerate('name', () => 'MyUIDoc')
 ```
 
 ## Events
 
-The Styleguide provides functionality to register events.
+UI-Doc provides functionality to register events.
 
 | Name          | Params            | When                                                   |
 | ------------- | ----------------- | ------------------------------------------------------ |
 | context-entry | ContextEntryEvent | Before context entry gets created, updated or deleted. |
 | example       | ExampleEvent      | Before an example gets outputted.                      |
-| output        | OutputEvent       | Before the complete styleguide gets outputted.         |
+| output        | OutputEvent       | Before the complete documentation gets outputted.      |
 | page          | PageEvent         | Before a page gets outputted.                          |
 | source        | SourceEvent       | Before a source gets created, updated or deleted.      |
 
@@ -315,10 +315,10 @@ const onContextEntry = ({ entry }) => {
 }
 
 // register your listener
-styleguide.on('context-entry', onContextEntry)
+uidoc.on('context-entry', onContextEntry)
 
 // unregister your listener
-styleguide.off('context-entry', onContextEntry)
+uidoc.off('context-entry', onContextEntry)
 ```
 
 ## CommentBlockParser

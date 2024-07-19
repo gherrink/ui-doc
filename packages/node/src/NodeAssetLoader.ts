@@ -3,7 +3,7 @@ import fs from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import path from 'node:path'
 
-import type { AssetLoader, FileSystem } from '@styleguide/core'
+import type { AssetLoader, FileSystem } from '@ui-doc/core'
 
 export class NodeAssetLoader implements AssetLoader {
   protected resolvedPackages: Record<string, string | null> = {}

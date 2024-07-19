@@ -1,1 +1,1 @@
-# @styleguide/vite ChangeLog
+# @ui-doc/vite ChangeLog

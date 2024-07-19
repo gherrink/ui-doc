@@ -1,4 +1,4 @@
-import styleguide from '@styleguide/vite'
+import uidoc from '@ui-doc/vite'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
@@ -12,7 +12,7 @@ export default defineConfig({
   },
 
   plugins: [
-    styleguide({
+    uidoc({
       source: ['css/**/*.css'],
     }),
   ],

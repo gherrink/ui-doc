@@ -1,5 +1,5 @@
 import type { ContextEntry, ContextExample } from './context'
-import type { Source } from './styleguide'
+import type { Source } from './ui-doc'
 
 export type ContextEntryEvent = { entry: ContextEntry; key: string } & (
   | {
@@ -35,7 +35,7 @@ export interface ExampleEvent {
   layout: string
 }
 
-export interface StyleguideEventMap {
+export interface UIDocEventMap {
   'context-entry': [ContextEntryEvent]
   example: [ExampleEvent]
   output: [OutputEvent]

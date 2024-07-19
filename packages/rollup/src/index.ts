@@ -4,28 +4,28 @@ import type {
   BlockParser,
   FileFinder,
   FileSystem,
-  Options as StyleguideOptions,
+  Options as UIDocOptions,
   Renderer,
-} from '@styleguide/core'
-import { Styleguide } from '@styleguide/core'
-import { NodeFileSystem } from '@styleguide/node'
+} from '@ui-doc/core'
+import { UIDoc } from '@ui-doc/core'
+import { NodeFileSystem } from '@ui-doc/node'
 import type { Plugin } from 'rollup'
 
 import { version } from '../package.json'
 
-export const PLUGIN_NAME = 'styleguide'
+export const PLUGIN_NAME = 'ui-doc'
 
 const ASSETS: {
   name: (options: Options) => string | false
   source: (options: Options) => string | false
 }[] = [
   {
-    name: options => options.styleAsset ?? 'styleguide.css',
-    source: () => '@styleguide/html-renderer/styleguide.min.css',
+    name: options => options.styleAsset ?? 'ui-doc.css',
+    source: () => '@ui-doc/html-renderer/ui-doc.min.css',
   },
   {
-    name: () => 'styleguide.js',
-    source: () => '@styleguide/html-renderer/styleguide.min.js',
+    name: () => 'ui-doc.js',
+    source: () => '@ui-doc/html-renderer/ui-doc.min.js',
   },
   {
     name: options => options.highlightStyle ?? 'highlight.css',
@@ -48,7 +48,7 @@ export interface Options {
   highlightTheme?: string
   highlightScript?: false | string
   outputDir?: string
-  settings?: Pick<StyleguideOptions, 'generate' | 'texts'>
+  settings?: Pick<UIDocOptions, 'generate' | 'texts'>
 }
 
 export interface ResolvedOptions {
@@ -57,9 +57,9 @@ export interface ResolvedOptions {
   fileSystem: FileSystem
   finder: FileFinder
   pathPrefix: string
-  styleguide: Styleguide
+  uidoc: UIDoc
   source: string[]
-  styleguideAsset: Api['styleguideAsset']
+  uidocAsset: Api['uidocAsset']
 }
 
 export interface Api {
@@ -67,15 +67,15 @@ export interface Api {
   get fileFinder(): FileFinder
   get fileSystem(): FileSystem
   get options(): ResolvedOptions
-  get styleguide(): Styleguide
-  styleguideAsset(src: string, as: 'example' | 'page'): void
+  get uidoc(): UIDoc
+  uidocAsset(src: string, as: 'example' | 'page'): void
 }
 
 async function createDefaultRenderer(
   templatePath: string | undefined,
   fileSystem: FileSystem,
 ): Promise<Renderer> {
-  const rendererImport = await import('@styleguide/html-renderer')
+  const rendererImport = await import('@ui-doc/html-renderer')
   const renderer = new rendererImport.HtmlRenderer(rendererImport.NodeParser.init())
 
   await rendererImport.TemplateLoader.load({
@@ -104,7 +104,7 @@ function createOutputPathPrefix(options: Options): string {
   return pathPrefix
 }
 
-function styleguideAssetType(fileName: string): AssetType | null {
+function uidocAssetType(fileName: string): AssetType | null {
   if (fileName.match(/\.(css|less|sass|scss)$/)) {
     return 'style'
   }
@@ -152,14 +152,14 @@ async function resolveOptions(options: Options): Promise<ResolvedOptions> {
   const pathPrefix = createOutputPathPrefix(options)
   const fileSystem = NodeFileSystem.init()
   const finder = fileSystem.createFileFinder(options.source)
-  const styleguide = new Styleguide({
+  const uidoc = new UIDoc({
     blockParser: options.blockParser,
     renderer: options.renderer ?? (await createDefaultRenderer(options.templatePath, fileSystem)),
     ...(options.settings ?? {}),
   })
   const assetsForCopy: ResolvedOptions['assetsForCopy'] = []
-  const styleguideAsset: ResolvedOptions['styleguideAsset'] = (src, as) => {
-    const type = styleguideAssetType(src)
+  const uidocAsset: ResolvedOptions['uidocAsset'] = (src, as) => {
+    const type = uidocAssetType(src)
 
     if (!type) {
       return
@@ -171,7 +171,7 @@ async function resolveOptions(options: Options): Promise<ResolvedOptions> {
 
     const method = as === 'example' ? 'addExampleAsset' : 'addAsset'
 
-    styleguide[method]({
+    uidoc[method]({
       src,
       type,
     })
@@ -184,14 +184,14 @@ async function resolveOptions(options: Options): Promise<ResolvedOptions> {
     finder,
     pathPrefix,
     source: options.source,
-    styleguide,
-    styleguideAsset,
+    uidoc,
+    uidocAsset,
   }
 }
 
-export default async function styleguidePlugin(rawOptions: Options): Promise<Plugin<Api>> {
+export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<Api>> {
   const options = await resolveOptions(rawOptions)
-  const { finder, fileSystem, styleguide, pathPrefix, assetsForCopy, styleguideAsset } = options
+  const { finder, fileSystem, uidoc, pathPrefix, assetsForCopy, uidocAsset } = options
 
   return {
     name: PLUGIN_NAME,
@@ -208,10 +208,10 @@ export default async function styleguidePlugin(rawOptions: Options): Promise<Plu
       get options() {
         return options
       },
-      get styleguide() {
-        return styleguide
+      get uidoc() {
+        return uidoc
       },
-      styleguideAsset,
+      uidocAsset,
       version,
     },
 
@@ -219,7 +219,7 @@ export default async function styleguidePlugin(rawOptions: Options): Promise<Plu
       const watchedFiles = this.getWatchFiles()
 
       options.assets.forEach(({ name }) => {
-        styleguideAsset(name, 'page')
+        uidocAsset(name, 'page')
       })
 
       // TODO detect template updates when templates in workspace
@@ -228,17 +228,17 @@ export default async function styleguidePlugin(rawOptions: Options): Promise<Plu
         if (!watchedFiles.includes(file)) {
           this.addWatchFile(file)
         }
-        if (!styleguide.sourceExists(file)) {
-          styleguide.sourceCreate(file, await fileSystem.fileRead(file))
+        if (!uidoc.sourceExists(file)) {
+          uidoc.sourceCreate(file, await fileSystem.fileRead(file))
         }
       })
     },
 
     async generateBundle(_outputOptions, bundle) {
-      // find assets in bundle and register them in styleguide
+      // find assets in bundle and register them to UI-Doc
       Object.keys(bundle).forEach(fileName => {
         if (bundle[fileName].type === 'asset') {
-          styleguideAsset(fileName, 'example')
+          uidocAsset(fileName, 'example')
         }
       })
 
@@ -251,7 +251,7 @@ export default async function styleguidePlugin(rawOptions: Options): Promise<Plu
         this.info({ code: 'OUTPUT', message: `${name} from ${sourceName}` })
       })
 
-      await styleguide.output((file, content) => {
+      await uidoc.output((file, content) => {
         const fileName = `${pathPrefix}${file}`
 
         this.emitFile({
@@ -282,18 +282,18 @@ export default async function styleguidePlugin(rawOptions: Options): Promise<Plu
 
     // eslint-disable-next-line sort-keys
     async watchChange(id, change) {
-      if (styleguide.sourceExists(id)) {
+      if (uidoc.sourceExists(id)) {
         if (change.event === 'update') {
-          styleguide.sourceUpdate(id, await fileSystem.fileRead(id))
+          uidoc.sourceUpdate(id, await fileSystem.fileRead(id))
         } else if (change.event === 'delete') {
-          styleguide.sourceDelete(id)
+          uidoc.sourceDelete(id)
         }
 
         return
       }
 
       if (change.event === 'create' && finder.matches(id)) {
-        styleguide.sourceCreate(id, await fileSystem.fileRead(id))
+        uidoc.sourceCreate(id, await fileSystem.fileRead(id))
       }
     },
   }

@@ -1,10 +1,10 @@
 import { describe, expect, jest, test } from '@jest/globals'
 
-import { Styleguide } from '../src/Styleguide'
 import type { BlockParser, Renderer } from '../src/types'
+import { UIDoc } from '../src/UIDoc'
 
-describe('Styleguide', () => {
-  const styleguideMock = ({
+describe('UI-Doc', () => {
+  const uidocMock = ({
     rendererGenerate = jest.fn<Renderer['generate']>(),
     blockParserParse = jest.fn<BlockParser['parse']>().mockReturnValue([]),
     blockParserRegisterTagTransformer = jest.fn<BlockParser['registerTagTransformer']>(),
@@ -18,7 +18,7 @@ describe('Styleguide', () => {
       registerTagTransformer: blockParserRegisterTagTransformer,
     }
 
-    const styleguide = new Styleguide({
+    const uidoc = new UIDoc({
       blockParser,
       renderer,
     })
@@ -26,12 +26,12 @@ describe('Styleguide', () => {
     return {
       blockParser,
       renderer,
-      styleguide,
+      uidoc,
     }
   }
 
   test('should register', () => {
-    const { styleguide } = styleguideMock({
+    const { uidoc } = uidocMock({
       blockParserParse: jest.fn<BlockParser['parse']>().mockReturnValue([
         {
           key: 'foo',
@@ -52,9 +52,9 @@ describe('Styleguide', () => {
       ]),
     })
 
-    styleguide.sourceCreate('file.css', '')
-    const entries = styleguide.entries()
-    const pageIds = Object.keys(styleguide.pages())
+    uidoc.sourceCreate('file.css', '')
+    const entries = uidoc.entries()
+    const pageIds = Object.keys(uidoc.pages())
 
     expect(Object.keys(entries)).toEqual(['foo', 'bar', 'foo.bar'])
     expect(entries.foo).toEqual({
@@ -93,7 +93,7 @@ describe('Styleguide', () => {
   })
 
   test('changes should be applied', () => {
-    const { styleguide } = styleguideMock({
+    const { uidoc } = uidocMock({
       blockParserParse: jest
         .fn<BlockParser['parse']>()
         .mockReturnValueOnce([
@@ -123,9 +123,9 @@ describe('Styleguide', () => {
         ]),
     })
 
-    styleguide.sourceCreate('file.css', '')
+    uidoc.sourceCreate('file.css', '')
 
-    const entriesFirst = styleguide.entries()
+    const entriesFirst = uidoc.entries()
 
     expect(Object.keys(entriesFirst)).toEqual(['foo', 'foo.bar'])
     expect(entriesFirst.foo).toEqual({
@@ -153,9 +153,9 @@ describe('Styleguide', () => {
       titleLevel: 3,
     })
 
-    styleguide.sourceUpdate('file.css', '')
+    uidoc.sourceUpdate('file.css', '')
 
-    const entriesSecond = styleguide.entries()
+    const entriesSecond = uidoc.entries()
 
     expect(Object.keys(entriesSecond)).toEqual(['foo', 'foo.bar'])
     expect(entriesSecond.foo).toEqual({
@@ -183,7 +183,7 @@ describe('Styleguide', () => {
   })
 
   test('when blocks get removed they should be removed from context', () => {
-    const { styleguide } = styleguideMock({
+    const { uidoc } = uidocMock({
       blockParserParse: jest
         .fn<BlockParser['parse']>()
         .mockReturnValueOnce([
@@ -208,9 +208,9 @@ describe('Styleguide', () => {
         ]),
     })
 
-    styleguide.sourceCreate('file.css', '')
+    uidoc.sourceCreate('file.css', '')
 
-    const entriesFirst = styleguide.entries()
+    const entriesFirst = uidoc.entries()
 
     expect(Object.keys(entriesFirst)).toEqual(['foo', 'foo.bar'])
     expect(entriesFirst.foo).toEqual({
@@ -238,9 +238,9 @@ describe('Styleguide', () => {
       titleLevel: 3,
     })
 
-    styleguide.sourceUpdate('file.css', '')
+    uidoc.sourceUpdate('file.css', '')
 
-    const entriesSecond = styleguide.entries()
+    const entriesSecond = uidoc.entries()
 
     expect(Object.keys(entriesSecond)).toEqual(['foo'])
     expect(entriesSecond.foo).toEqual({
@@ -253,7 +253,7 @@ describe('Styleguide', () => {
   })
 
   test('when top level blocks get removed they should be removed from context', () => {
-    const { styleguide } = styleguideMock({
+    const { uidoc } = uidocMock({
       blockParserParse: jest
         .fn<BlockParser['parse']>()
         .mockReturnValueOnce([
@@ -279,10 +279,10 @@ describe('Styleguide', () => {
         .mockReturnValueOnce([]),
     })
 
-    styleguide.sourceCreate('file.css', '')
+    uidoc.sourceCreate('file.css', '')
 
-    const entriesFirst = styleguide.entries()
-    const pageIdsFirst = Object.keys(styleguide.pages())
+    const entriesFirst = uidoc.entries()
+    const pageIdsFirst = Object.keys(uidoc.pages())
 
     expect(Object.keys(entriesFirst)).toEqual(['foo', 'bar'])
     expect(entriesFirst.foo).toEqual({
@@ -303,10 +303,10 @@ describe('Styleguide', () => {
     expect(pageIdsFirst.length).toBe(3)
     expect(pageIdsFirst.sort()).toEqual(['bar', 'foo', 'index'])
 
-    styleguide.sourceUpdate('file.css', '')
+    uidoc.sourceUpdate('file.css', '')
 
-    const entriesSecond = styleguide.entries()
-    const pageIdsSecond = Object.keys(styleguide.pages())
+    const entriesSecond = uidoc.entries()
+    const pageIdsSecond = Object.keys(uidoc.pages())
 
     expect(Object.keys(entriesSecond)).toEqual(['foo'])
     expect(entriesSecond.foo).toEqual({
@@ -319,10 +319,10 @@ describe('Styleguide', () => {
     expect(pageIdsSecond.length).toBe(2)
     expect(pageIdsSecond.sort()).toEqual(['foo', 'index'])
 
-    styleguide.sourceUpdate('file.css', '')
+    uidoc.sourceUpdate('file.css', '')
 
-    const entriesThird = styleguide.entries()
-    const pageIdsThird = Object.keys(styleguide.pages())
+    const entriesThird = uidoc.entries()
+    const pageIdsThird = Object.keys(uidoc.pages())
 
     expect(Object.keys(entriesThird)).toEqual([])
     expect(pageIdsThird.length).toBe(1)
@@ -330,7 +330,7 @@ describe('Styleguide', () => {
   })
 
   test('when blocks get witch has children they should only reset', () => {
-    const { styleguide } = styleguideMock({
+    const { uidoc } = uidocMock({
       blockParserParse: jest
         .fn<BlockParser['parse']>()
         .mockReturnValueOnce([
@@ -355,9 +355,9 @@ describe('Styleguide', () => {
         ]),
     })
 
-    styleguide.sourceCreate('file.css', '')
+    uidoc.sourceCreate('file.css', '')
 
-    const entriesFirst = styleguide.entries()
+    const entriesFirst = uidoc.entries()
 
     expect(Object.keys(entriesFirst)).toEqual(['foo', 'foo.bar'])
     expect(entriesFirst.foo).toEqual({
@@ -384,7 +384,7 @@ describe('Styleguide', () => {
       titleLevel: 3,
     })
 
-    styleguide.sourceUpdate('file.css', '')
+    uidoc.sourceUpdate('file.css', '')
 
     expect(Object.keys(entriesFirst)).toEqual(['foo', 'foo.bar'])
     expect(entriesFirst.foo).toEqual({
@@ -412,7 +412,7 @@ describe('Styleguide', () => {
   })
 
   test('when blocks get removed they should be removed from context', () => {
-    const { styleguide } = styleguideMock({
+    const { uidoc } = uidocMock({
       blockParserParse: jest.fn<BlockParser['parse']>().mockReturnValue([
         {
           key: 'foo',
@@ -428,9 +428,9 @@ describe('Styleguide', () => {
       ]),
     })
 
-    styleguide.sourceCreate('file.css', '')
+    uidoc.sourceCreate('file.css', '')
 
-    const entries = styleguide.entries()
+    const entries = uidoc.entries()
 
     expect(Object.keys(entries)).toEqual(['foo', 'foo.bar'])
     expect(entries.foo).toEqual({
@@ -458,10 +458,10 @@ describe('Styleguide', () => {
       titleLevel: 3,
     })
 
-    styleguide.sourceDelete('file.css')
+    uidoc.sourceDelete('file.css')
 
-    const entriesDeleted = styleguide.entries()
-    const pageIds = Object.keys(styleguide.pages())
+    const entriesDeleted = uidoc.entries()
+    const pageIds = Object.keys(uidoc.pages())
 
     expect(Object.keys(entriesDeleted)).toEqual([])
     expect(entriesDeleted.foo).toBeUndefined()
