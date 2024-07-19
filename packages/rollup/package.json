@@ -1,7 +1,7 @@
 {
   "name": "@ui-doc/rollup",
   "description": "Rollup plugin for UI-Doc generation.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "keywords": [
     "ui-doc",
