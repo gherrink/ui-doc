@@ -16,11 +16,11 @@
   "dependencies": {
     "@highlightjs/cdn-assets": "^11.9.0",
     "@types/node": "^20.12.7",
-    "@ui-doc/core": "workspace:0.0.0",
-    "@ui-doc/html-renderer": "workspace:0.0.0",
-    "@ui-doc/node": "workspace:0.0.0",
-    "@ui-doc/rollup": "workspace:0.0.0",
-    "@ui-doc/vite": "workspace:0.0.0",
+    "@ui-doc/core": "workspace:*",
+    "@ui-doc/html-renderer": "workspace:*",
+    "@ui-doc/node": "workspace:*",
+    "@ui-doc/rollup": "workspace:*",
+    "@ui-doc/vite": "workspace:*",
     "ts-node": "^10.9.2",
     "typescript": "^4.9.5",
     "vite": "^5.3.1"

@@ -51,7 +51,7 @@
   },
   "sideEffects": false,
   "peerDependencies": {
-    "@ui-doc/core": "workspace:^0.0.0",
+    "@ui-doc/core": "workspace:^",
     "node": "^16.0.0||^18.0.0||^20.0.0||^22.0.0"
   },
   "dependencies": {
@@ -60,6 +60,6 @@
   "devDependencies": {
     "@types/node": "^20.12.7",
     "@types/picomatch": "^2.3.3",
-    "@ui-doc/core": "workspace:^0.0.0"
+    "@ui-doc/core": "workspace:^"
   }
 }

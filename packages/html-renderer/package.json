@@ -64,7 +64,7 @@
   },
   "sideEffects": false,
   "peerDependencies": {
-    "@ui-doc/core": "workspace:^0.0.0"
+    "@ui-doc/core": "workspace:^"
   },
   "optionalDependencies": {
     "@highlightjs/cdn-assets": "^11.9.0"
