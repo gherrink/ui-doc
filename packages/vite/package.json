@@ -45,6 +45,9 @@
     "LICENSE.md",
     "README.md"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "sideEffects": false,
   "peerDependencies": {
     "vite": "^5.0.0"

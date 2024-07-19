@@ -58,6 +58,9 @@
     "templates",
     "README.md"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "sideEffects": false,
   "peerDependencies": {
     "@styleguide/core": "workspace:^0.0.0-alpha.0"
