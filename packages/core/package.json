@@ -1,7 +1,7 @@
 {
   "name": "@styleguide/core",
   "description": "Core to generate a styleguide out of css comments.",
-  "version": "0.0.0-alpha.0",
+  "version": "0.0.0",
   "license": "MIT",
   "keywords": [
     "styleguide",

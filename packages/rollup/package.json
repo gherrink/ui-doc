@@ -1,7 +1,7 @@
 {
   "name": "@styleguide/rollup",
   "description": "Rollup plugin for styleguide.",
-  "version": "0.0.0-alpha.0",
+  "version": "0.0.0",
   "license": "MIT",
   "keywords": [
     "styleguide",

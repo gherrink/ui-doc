@@ -1,7 +1,7 @@
 {
   "name": "@styleguide/node",
   "description": "Node implementations for styleguide.",
-  "version": "0.0.0-alpha.0",
+  "version": "0.0.0",
   "license": "MIT",
   "keywords": [
     "styleguide",
