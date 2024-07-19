@@ -18,17 +18,17 @@
     "lint:js": "eslint --cache packages demos shared --ext .js,.ts,.mjs",
     "lint:json": "prettier --write **/tsconfig.json tsconfig.*.json pnpm-workspace.yaml",
     "lint:package": "prettier --write **/package.json",
-    "package:build": "pnpm -r --filter='./packages/*' run build",
     "package:release": "versioner --stripShortName='^@.+/' --target",
     "package:release-dry": "versioner --dry --stripShortName='^@.+/' --target",
-    "package:test": "pnpm --filter='./packages/*' run test",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky",
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check .",
     "release": "pnpm lint && pnpm --filter [HEAD^] test && pnpm --filter [HEAD^] --workspace-concurrency=1 release",
     "release:dry": "pnpm lint && pnpm --filter \"@styleguide/*\" test && pnpm --filter \"@styleguide/*\" --workspace-concurrency=1 release:dry",
-    "security": "pnpm audit --audit-level=high"
+    "security": "pnpm audit --audit-level=high",
+    "workspace:build": "pnpm -r --filter='./packages/*' run build",
+    "workspace:test": "pnpm --filter='./packages/*' run test"
   },
   "devDependencies": {
     "@babel/core": "^7.24.6",
