@@ -1,5 +1,13 @@
 # @ui-doc/vite ChangeLog
 
+## v0.1.1
+
+_2024-07-19_
+
+### Bugfixes
+
+- html-renderer,node,rollup,vite,demos: workspace dependencies (6961c13)
+
 ## v0.1.0
 
 _2024-07-19_
