@@ -63,3 +63,4 @@ export default [
 | styleAsset | no | false / string | With false prevent including the UI-Doc style. With string change the included style name. |
 | outputDir | no | string | Change output directory to create the UI-Doc in a subfolder of your application. |
 | templatePath | no | string | When using the default renderer you can change the path were to find the templates for generating. |
+| staticAssets | no | string | Give a static assets folder (path relativ to your working directory), files and sub folders will be copied to the ui-doc output folder |

@@ -32,6 +32,7 @@ export default [
           },
         },
         source: ['css/**/*.css'],
+        staticAssets: './assets',
       }),
     ],
   },

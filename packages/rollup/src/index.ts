@@ -49,11 +49,13 @@ export interface Options {
   highlightScript?: false | string
   outputDir?: string
   settings?: Pick<UIDocOptions, 'generate' | 'texts'>
+  staticAssets?: string
 }
 
 export interface ResolvedOptions {
   assets: { code: string; name: string; sourceFile: string; sourceName: string }[]
   assetsForCopy: string[]
+  staticAssets?: string
   fileSystem: FileSystem
   finder: FileFinder
   pathPrefix: string
@@ -184,6 +186,7 @@ async function resolveOptions(options: Options): Promise<ResolvedOptions> {
     finder,
     pathPrefix,
     source: options.source,
+    staticAssets: options.staticAssets,
     uidoc,
     uidocAsset,
   }
@@ -191,7 +194,7 @@ async function resolveOptions(options: Options): Promise<ResolvedOptions> {
 
 export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<Api>> {
   const options = await resolveOptions(rawOptions)
-  const { finder, fileSystem, uidoc, pathPrefix, assetsForCopy, uidocAsset } = options
+  const { finder, fileSystem, uidoc, pathPrefix, assetsForCopy, uidocAsset, staticAssets } = options
 
   return {
     name: PLUGIN_NAME,
@@ -264,20 +267,31 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     },
 
     async writeBundle(outputOptions) {
-      if (pathPrefix === '') {
-        return
+      const promises: Promise<void | boolean>[] = []
+
+      // if ui-doc is created into subfolder we need to copy assets referenced in examples and are generated through other plugins
+      if (pathPrefix) {
+        // TODO may copy map file if exists
+        promises.push(
+          ...assetsForCopy.map(async asset => {
+            const destFile = `${outputOptions.dir}/${pathPrefix}${asset}`
+            const destDir = fileSystem.fileDirname(destFile)
+
+            await fileSystem.ensureDirectoryExists(destDir)
+            await fileSystem.fileCopy(`${outputOptions.dir}/${asset}`, destFile)
+          }),
+        )
       }
 
-      // TODO may copy map file if exists
-      await Promise.all(
-        assetsForCopy.map(async asset => {
-          const destFile = `${outputOptions.dir}/${pathPrefix}${asset}`
-          const destDir = fileSystem.fileDirname(destFile)
+      if (staticAssets) {
+        promises.push(fileSystem.directoryCopy(staticAssets, `${outputOptions.dir}${pathPrefix}`))
+        this.info({
+          code: 'OUTPUT',
+          message: `assets: ${staticAssets} > ${outputOptions.dir}${pathPrefix}`,
+        })
+      }
 
-          await fileSystem.ensureDirectoryExists(destDir)
-          await fileSystem.fileCopy(`${outputOptions.dir}/${asset}`, destFile)
-        }),
-      )
+      await Promise.all(promises)
     },
 
     // eslint-disable-next-line sort-keys
