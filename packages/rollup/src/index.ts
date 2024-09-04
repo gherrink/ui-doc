@@ -121,7 +121,6 @@ function uidocAssetType(fileName: string): AssetType | null {
 async function resolveAssets(
   options: Options,
   assetLoader: AssetLoader,
-  pathPrefix: string,
 ): Promise<ResolvedOptions['assets']> {
   return (
     await Promise.all(
@@ -141,7 +140,7 @@ async function resolveAssets(
 
         return {
           code: await assetLoader.read(sourceFile),
-          name: `${pathPrefix}${fileName}`,
+          name: `${fileName}`,
           sourceFile,
           sourceName,
         }
@@ -180,7 +179,7 @@ async function resolveOptions(options: Options): Promise<ResolvedOptions> {
   }
 
   return {
-    assets: await resolveAssets(options, fileSystem.assetLoader(), pathPrefix),
+    assets: await resolveAssets(options, fileSystem.assetLoader()),
     assetsForCopy,
     fileSystem,
     finder,
@@ -284,7 +283,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       }
 
       if (staticAssets) {
-        promises.push(fileSystem.directoryCopy(staticAssets, `${outputOptions.dir}${pathPrefix}`))
+        promises.push(fileSystem.directoryCopy(staticAssets, `${outputOptions.dir}/${pathPrefix}`))
         this.info({
           code: 'OUTPUT',
           message: `assets: ${staticAssets} > ${outputOptions.dir}${pathPrefix}`,

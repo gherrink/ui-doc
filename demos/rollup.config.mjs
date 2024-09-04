@@ -23,6 +23,7 @@ export default [
         sourceMap: true,
       }),
       uidoc({
+        outputDir: 'ui-doc',
         settings: {
           generate: {
             logo: () => 'Rollup',
