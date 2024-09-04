@@ -64,3 +64,4 @@ export default [
 | outputDir | no | string | Change output directory to create the UI-Doc in a subfolder of your application. |
 | templatePath | no | string | When using the default renderer you can change the path were to find the templates for generating. |
 | staticAssets | no | string | Give a static assets folder (path relativ to your working directory), files and sub folders will be copied to the ui-doc output folder |
+| outputBaseUri | no | string | Change the base uri if not provided and the `outputDir` is given the `outputDir` will be used as base uri. You can give `.` so relative urls will be used. |

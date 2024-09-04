@@ -23,6 +23,7 @@ export default [
         sourceMap: true,
       }),
       uidoc({
+        outputBaseUri: '.',
         outputDir: 'ui-doc',
         settings: {
           generate: {

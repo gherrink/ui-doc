@@ -42,21 +42,15 @@ function normalizeRollupInput(input: RollupOptions['input']): string[] {
   return Object.values(input)
 }
 
-function prepareServe(plugin: Plugin<Api>, options: Options, config: UserConfig) {
-  if (options.outputDir === undefined) {
-    return
+function prepareServe(plugin: Plugin<Api>, config: UserConfig) {
+  if (plugin.api?.options.prefix.uri) {
+    // replace resolveUrl to make sure that all urls (pages and assets) are generated correctly for vite server
+    plugin.api?.uidoc.replaceGenerate('resolveUrl', (uri, type) => {
+      return type === 'asset-example' || (type === 'asset' && uri.startsWith('@'))
+        ? `/${uri}`
+        : `/${plugin.api?.options.prefix.uri}${uri}`
+    })
   }
-
-  const pathPrefix = `/${options.outputDir.endsWith('/') ? options.outputDir : `${options.outputDir}/`}`
-
-  // replace resolveUrl to make sure that all assets are resolved correctly for vite server
-  plugin.api?.uidoc.replaceGenerate('resolveUrl', (uri, type) => {
-    if (type === 'asset' || type === 'asset-example') {
-      return `/${uri}`
-    }
-
-    return `${pathPrefix}${uri}`
-  })
 
   // include vite client in ui-kit assets
   plugin.api?.uidoc.addAsset({
@@ -90,31 +84,31 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
 
   plugin.config = (config, { command }) => {
     if (command === 'serve') {
-      prepareServe(plugin, options, config)
+      prepareServe(plugin, config)
     }
   }
 
   plugin.configureServer = async (server: ViteDevServer) => {
     const uidoc = plugin.api?.uidoc
-    const pathPrefix = plugin.api?.options.pathPrefix
+    const uriPrefix = plugin.api?.options.prefix.uri
     const assets = plugin.api?.options.assets ?? []
     const staticAssets = plugin.api?.options.staticAssets ?? undefined
 
-    if (!uidoc || !pathPrefix) {
+    if (!uidoc || !uriPrefix) {
       throw new Error('UI-Doc API is not available')
     }
 
-    const regexPage = new RegExp(`^/${pathPrefix}([a-z0-9_\\-]+).html$`)
-    const regexExample = new RegExp(`^/${pathPrefix}examples/([a-z0-9_\\-]+).html$`)
-    const regexAsset = new RegExp(`^/${pathPrefix}([a-z0-9\\._\\-]+)$`)
+    const regexPage = new RegExp(`^/${uriPrefix}([a-z0-9_\\-]+).html$`)
+    const regexExample = new RegExp(`^/${uriPrefix}examples/([a-z0-9_\\-]+).html$`)
+    const regexAsset = new RegExp(`^/${uriPrefix}([a-z0-9\\._\\-]+)$`)
 
     server.middlewares.use((req, res, next) => {
       // only handle requests that start with the path prefix
-      if (!req.originalUrl?.startsWith(`/${pathPrefix}`)) {
+      if (!req.originalUrl?.startsWith(`/${uriPrefix}`)) {
         return next()
       }
 
-      if (req.originalUrl.match(new RegExp(`^/${pathPrefix}?$`))) {
+      if (req.originalUrl.match(new RegExp(`^/${uriPrefix}?$`))) {
         res.write(uidoc.page('index'))
         res.end()
         return
@@ -143,7 +137,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       }
 
       if (req.originalUrl.match(regexAsset)) {
-        const assetName = req.originalUrl.substring(1)
+        const assetName = req.originalUrl.replace(`/${uriPrefix}`, '')
         const asset = assets.find(entry => entry.name === assetName)
 
         if (asset) {
@@ -159,7 +153,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         return next()
       }
 
-      const assetName = req.originalUrl.replace(`/${pathPrefix}`, '')
+      const assetName = req.originalUrl.replace(`/${uriPrefix}`, '')
       const assetFile = `${staticAssets}/${assetName}`
 
       fileSystem
@@ -177,19 +171,19 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     server.httpServer?.once('listening', () => {
       setTimeout(() => {
         server.config.logger.info(
-          `\n  ${pc.green(`${pc.bold('UI-Doc')} v${version}`)} under /${pc.gray(pathPrefix)} \n`,
+          `\n  ${pc.green(`${pc.bold('UI-Doc')} v${version}`)} under /${pc.gray(uriPrefix)} \n`,
         )
         if (Array.isArray(server.resolvedUrls?.local)) {
           server.resolvedUrls.local.forEach(url => {
             server.config.logger.info(
-              `  ${pc.green('➜')}  ${pc.bold('Local')}: ${pc.cyan(`${url}${pathPrefix}`)}`,
+              `  ${pc.green('➜')}  ${pc.bold('Local')}: ${pc.cyan(`${url}${uriPrefix}`)}`,
             )
           })
         }
       }, 300)
 
       uidoc.on('context-entry', () => {
-        server.ws.send({ type: 'full-reload', path: `/${pathPrefix}*` })
+        server.ws.send({ type: 'full-reload', path: `/${uriPrefix}*` })
       })
     })
   }

@@ -47,6 +47,7 @@ export interface Options {
   highlightStyle?: false | string
   highlightTheme?: string
   highlightScript?: false | string
+  outputBaseUri?: string
   outputDir?: string
   settings?: Pick<UIDocOptions, 'generate' | 'texts'>
   staticAssets?: string
@@ -58,7 +59,10 @@ export interface ResolvedOptions {
   staticAssets?: string
   fileSystem: FileSystem
   finder: FileFinder
-  pathPrefix: string
+  prefix: {
+    path: string
+    uri: string
+  }
   uidoc: UIDoc
   source: string[]
   uidocAsset: Api['uidocAsset']
@@ -89,21 +93,30 @@ async function createDefaultRenderer(
   return renderer
 }
 
-function createOutputPathPrefix(options: Options): string {
+function createOutputPrefix(options: Options): ResolvedOptions['prefix'] {
+  const prefix: ResolvedOptions['prefix'] = { path: '', uri: '' }
   const path = options.outputDir
 
   if (!path) {
-    return ''
+    return prefix
   }
 
-  const pathPrefix = path.endsWith('/') ? path : `${path}/`
+  prefix.path = path.endsWith('/') ? path : `${path}/`
+
+  if (options.outputBaseUri === '.') {
+    return prefix
+  }
+
+  prefix.uri = options.outputBaseUri ?? prefix.path
+  prefix.uri = prefix.uri.endsWith('/') ? prefix.uri : `${prefix.uri}/`
+
   const prevResolveUrl = options.settings?.generate?.resolveUrl ?? (uri => uri)
 
   options.settings = options.settings ?? {}
   options.settings.generate = options.settings.generate ?? {}
-  options.settings.generate.resolveUrl = (uri, type) => prevResolveUrl(`/${pathPrefix}${uri}`, type)
+  options.settings.generate.resolveUrl = (uri, type) => prevResolveUrl(`/${prefix.uri}${uri}`, type)
 
-  return pathPrefix
+  return prefix
 }
 
 function uidocAssetType(fileName: string): AssetType | null {
@@ -150,7 +163,7 @@ async function resolveAssets(
 }
 
 async function resolveOptions(options: Options): Promise<ResolvedOptions> {
-  const pathPrefix = createOutputPathPrefix(options)
+  const prefix = createOutputPrefix(options)
   const fileSystem = NodeFileSystem.init()
   const finder = fileSystem.createFileFinder(options.source)
   const uidoc = new UIDoc({
@@ -183,7 +196,7 @@ async function resolveOptions(options: Options): Promise<ResolvedOptions> {
     assetsForCopy,
     fileSystem,
     finder,
-    pathPrefix,
+    prefix,
     source: options.source,
     staticAssets: options.staticAssets,
     uidoc,
@@ -193,7 +206,7 @@ async function resolveOptions(options: Options): Promise<ResolvedOptions> {
 
 export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<Api>> {
   const options = await resolveOptions(rawOptions)
-  const { finder, fileSystem, uidoc, pathPrefix, assetsForCopy, uidocAsset, staticAssets } = options
+  const { finder, fileSystem, uidoc, prefix, assetsForCopy, uidocAsset, staticAssets } = options
 
   return {
     name: PLUGIN_NAME,
@@ -246,7 +259,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
 
       options.assets.forEach(({ code, name, sourceName }) => {
         this.emitFile({
-          fileName: name,
+          fileName: `${prefix.path}${name}`,
           source: code,
           type: 'asset',
         })
@@ -254,7 +267,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       })
 
       await uidoc.output((file, content) => {
-        const fileName = `${pathPrefix}${file}`
+        const fileName = `${prefix.path}${file}`
 
         this.emitFile({
           fileName,
@@ -269,11 +282,11 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       const promises: Promise<void | boolean>[] = []
 
       // if ui-doc is created into subfolder we need to copy assets referenced in examples and are generated through other plugins
-      if (pathPrefix) {
+      if (prefix.path) {
         // TODO may copy map file if exists
         promises.push(
           ...assetsForCopy.map(async asset => {
-            const destFile = `${outputOptions.dir}/${pathPrefix}${asset}`
+            const destFile = `${outputOptions.dir}/${prefix.path}${asset}`
             const destDir = fileSystem.fileDirname(destFile)
 
             await fileSystem.ensureDirectoryExists(destDir)
@@ -283,10 +296,10 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       }
 
       if (staticAssets) {
-        promises.push(fileSystem.directoryCopy(staticAssets, `${outputOptions.dir}/${pathPrefix}`))
+        promises.push(fileSystem.directoryCopy(staticAssets, `${outputOptions.dir}/${prefix.path}`))
         this.info({
           code: 'OUTPUT',
-          message: `assets: ${staticAssets} > ${outputOptions.dir}${pathPrefix}`,
+          message: `assets: ${staticAssets} > ${outputOptions.dir}${prefix.path}`,
         })
       }
 
