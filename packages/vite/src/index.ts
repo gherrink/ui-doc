@@ -1,4 +1,6 @@
 /* eslint-disable sort-keys */
+import path from 'node:path'
+
 import createRollupPlugin, {
   type Api as RollupPluginApi,
   type Options as RollupPluginOptions,
@@ -96,6 +98,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     const uidoc = plugin.api?.uidoc
     const pathPrefix = plugin.api?.options.pathPrefix
     const assets = plugin.api?.options.assets ?? []
+    const staticAssets = plugin.api?.options.staticAssets ?? undefined
 
     if (!uidoc || !pathPrefix) {
       throw new Error('UI-Doc API is not available')
@@ -106,8 +109,9 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     const regexAsset = new RegExp(`^/${pathPrefix}([a-z0-9\\._\\-]+)$`)
 
     server.middlewares.use((req, res, next) => {
-      if (!req.originalUrl) {
-        return
+      // only handle requests that start with the path prefix
+      if (!req.originalUrl?.startsWith(`/${pathPrefix}`)) {
+        return next()
       }
 
       if (req.originalUrl.match(new RegExp(`^/${pathPrefix}?$`))) {
@@ -149,7 +153,25 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         }
       }
 
-      next()
+      const fileSystem = plugin.api?.fileSystem
+
+      if (!staticAssets || !fileSystem) {
+        return next()
+      }
+
+      const assetName = req.originalUrl.replace(`/${pathPrefix}`, '')
+      const assetFile = `${staticAssets}/${assetName}`
+
+      fileSystem
+        .fileExists(assetFile)
+        .then(exists => {
+          if (exists) {
+            req.url = `/@fs${path.resolve(assetFile)}`
+          }
+        })
+        .finally(() => {
+          next()
+        })
     })
 
     server.httpServer?.once('listening', () => {

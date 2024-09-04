@@ -14,6 +14,7 @@ export default defineConfig({
   plugins: [
     uidoc({
       source: ['css/**/*.css'],
+      staticAssets: './assets',
     }),
   ],
 })
