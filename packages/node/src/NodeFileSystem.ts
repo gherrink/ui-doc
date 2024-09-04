@@ -73,8 +73,44 @@ export class NodeFileSystem implements FileSystem {
     return path.dirname(file)
   }
 
-  public async ensureDirectoryExists(dir: string): Promise<void> {
+  public async ensureDirectoryExists(dir: string): Promise<boolean> {
     await fs.mkdir(path.resolve(dir), { recursive: true })
+
+    return true
+  }
+
+  public async isDirectory(dir: string): Promise<boolean> {
+    try {
+      const stats = await fs.stat(path.resolve(dir))
+
+      return stats.isDirectory()
+    } catch (e) {
+      return false
+    }
+  }
+
+  public async directoryCopy(from: string, to: string): Promise<boolean> {
+    const fromDir = path.resolve(from)
+    const toDir = path.resolve(to)
+
+    if (!(await this.isDirectory(fromDir)) || !(await this.ensureDirectoryExists(toDir))) {
+      return false
+    }
+
+    const dirents = await fs.readdir(fromDir, { withFileTypes: true })
+
+    const res = await Promise.all(
+      dirents.map(async dirent => {
+        const fromPath = path.join(fromDir, dirent.name)
+        const toPath = path.join(toDir, dirent.name)
+
+        return (await dirent.isDirectory())
+          ? this.directoryCopy(fromPath, toPath)
+          : this.fileCopy(fromPath, toPath)
+      }),
+    )
+
+    return Promise.resolve(res.every(value => value === true))
   }
 }
 
