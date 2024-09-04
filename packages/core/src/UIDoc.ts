@@ -76,7 +76,7 @@ export class UIDoc implements EventEmitter<EventMap> {
     pageLink: page => this.generate.resolveUrl(`${page.id}.html`, 'page'),
     pageTitle: page =>
       page.id !== 'index' ? `${page.title} | ${this.texts.title}` : this.texts.title,
-    resolveUrl: uri => `/${uri}`,
+    resolveUrl: uri => `${uri}`,
   }
 
   constructor(options: Options) {
