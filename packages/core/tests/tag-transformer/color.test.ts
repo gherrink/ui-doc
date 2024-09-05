@@ -3,7 +3,7 @@ import { describe, expect, test } from '@jest/globals'
 import color from '../../src/tag-transformers/color'
 import { Block } from '../../src/types'
 
-describe('Code tag transformer', () => {
+describe('Color tag transformer', () => {
   test('should transform with hex', () => {
     const comment = {
       description: 'White',

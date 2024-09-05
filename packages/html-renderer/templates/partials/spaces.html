@@ -1,0 +1,15 @@
+<div class="spaces">
+  {{for:this}}
+  <div
+    class="item"
+    style="--space-value: {{var:value}};"
+  >
+    <div class="bg"></div>
+    <div class="bg">
+      <span class="name">{{var:name}}</span>
+      <span class="value">{{var:value}}</span>
+      <span class="text">{{var:text}}</span>
+    </div>
+  </div>
+  {{/for}}
+</div>

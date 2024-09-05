@@ -1,6 +1,7 @@
 import { TagTransformerError } from '../errors'
 import { ColorParseError } from '../errors/ColorParseError'
 import type { TagTransformer } from '../types'
+import { trimDescription } from './utils'
 import { colorValue } from './utils/color'
 
 export const tag: TagTransformer = {
@@ -20,7 +21,7 @@ export const tag: TagTransformer = {
       block.colors.push({
         font: colorFont ? colorValue(colorFont) : undefined,
         name: spec.name,
-        text: spec.description.replace(/^\/|^\|/, '').trim(),
+        text: trimDescription(spec.description),
         value: colorValue(value),
       })
     } catch (error) {

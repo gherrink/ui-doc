@@ -62,3 +62,12 @@ export function isValidHTML(html: string): boolean {
   // remove left over whitespace
   return remaining.trim() === ''
 }
+
+/**
+ * Trim a description by removing leading `-` or `|`
+ * @param {string} text
+ * @returns string
+ */
+export function trimDescription(text: string): string {
+  return text.replace(/^-|^\|/, '').trim()
+}

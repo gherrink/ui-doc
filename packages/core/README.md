@@ -50,6 +50,7 @@ The tags are separated into two different roles:
 | @page     | placement | create page or give page where your block should be shown         |
 | @section  | placement | define give section where your block should be shown              |
 | @color    | display   | define a color that is used in your style                         |
+| @space    | display   | define a space variable used in your style                        |
 
 Please note that you can combine tags to get an different outcome. Please see the documentation of the different tags for more details.
 
@@ -231,7 +232,26 @@ Define colors you are using in your layout.
  */
 ```
 
-You can define multiple colors in on codeblock the colors will then be displayed together. The color tag expects as type the rgb or hex value of the color you are going to use. As a second type you can define the font color that should be used for this color. A variable name and description also need to be given, both can be separated by `|`, `-` or nothing.
+You can define multiple colors in on codeblock the colors will then be displayed together. The color tag expects as type the rgb or hex value of the color you are going to use. As a second type you can define the font color that should be used for this color. A variable name and description also need to be given, both can be separated by `|`, `-` or just whitespace.
+
+### @space
+
+Define spacings you are using in your layout.
+
+```js
+/**
+ *
+ * @location variables.spaces Spaces
+ * @space {0.5rem} --space-xs | XS
+ * @space {0.8rem} --space-sm | SM
+ * @space {1rem} --space-normal | Normal
+ * @space {1.2rem} --space-md | MD
+ * @space {1.6rem} --space-lg - LG
+ * @space {2.4rem} --space-xl XL
+ */
+```
+
+You can define multiple spaces in on codeblock the paces will then be displayed together. The space tag expects as type a spacing value, the variable name and description. Like in the color tag you can separate variable name and description by `|`, `-` or just whitespace. The given spacing value will be used when displaying, to make the targeted space visible.
 
 ## Integration
 

@@ -1,0 +1,39 @@
+.spaces {
+  --spaces-bg-color: var(--font-color);
+  --spaces-font-color: var(--bg-color);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spaces-gap, var(--size-xs));
+}
+
+.spaces > .item {
+  display: flex;
+
+  > .bg {
+    --bg-color: var(--spaces-bg-color);
+    --font-color: var(--spaces-font-color);
+  }
+
+  > div {
+    padding: var(--size-sm) var(--size-normal);
+  }
+
+  > div:first-child {
+    margin-right: var(--space-value);
+  }
+
+  > div:last-child {
+    display: flex;
+
+    > *:not(:last-child) {
+      margin-right: var(--size-xs);
+      padding-right: var(--size-xs);
+      border-right: 1px solid currentcolor;
+    }
+
+    > .name {
+      font-weight: var(--font-weight-bold);
+    }
+  }
+}
