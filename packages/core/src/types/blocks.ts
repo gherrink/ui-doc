@@ -1,3 +1,9 @@
+export interface Color {
+  hex: string
+  rgb: string
+  value: { r: number; g: number; b: number }
+}
+
 export type BlockEntry = Record<string, any>
 
 export type BlockCode = BlockEntry & {
