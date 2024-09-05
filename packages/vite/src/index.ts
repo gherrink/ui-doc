@@ -94,8 +94,14 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     const assets = plugin.api?.options.assets ?? []
     const staticAssets = plugin.api?.options.staticAssets ?? undefined
 
-    if (!uidoc || !uriPrefix) {
+    if (!uidoc) {
       throw new Error('UI-Doc API is not available')
+    }
+
+    if (!uriPrefix) {
+      throw new Error(
+        'UI-Doc base url is not available. Please don\'t set "outputBaseUri" to "." in dev mode.',
+      )
     }
 
     const regexPage = new RegExp(`^/${uriPrefix}([a-z0-9_\\-]+).html$`)
