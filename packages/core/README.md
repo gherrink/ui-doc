@@ -49,6 +49,7 @@ The tags are separated into two different roles:
 | @order    | placement | define sorting between pages/sections                             |
 | @page     | placement | create page or give page where your block should be shown         |
 | @section  | placement | define give section where your block should be shown              |
+| @color    | display   | define a color that is used in your style                         |
 
 Please note that you can combine tags to get an different outcome. Please see the documentation of the different tags for more details.
 
@@ -211,6 +212,26 @@ Define the order who pages or sections should be ordered by giving a number. If 
 
 // order will be Foo | Bar. Equal to the example above
 ```
+
+### @color
+
+Define colors you are using in your layout.
+
+```js
+/**
+ * The colors used in this style.
+ *
+ * @location variables.colors Colors
+ * @color {0 0 0|255 255 255} --color-black | black
+ * @color {20 33 61|255 255 255} --color-blue | blue
+ * @color {252 163 17} --color-yellow | yellow
+ * @color {229 229 229} --color-gray | gray
+ * @color {255 255 255} --color-white-rgb - white rgb
+ * @color {#fff} --color-white-hex white hex
+ */
+```
+
+You can define multiple colors in on codeblock the colors will then be displayed together. The color tag expects as type the rgb or hex value of the color you are going to use. As a second type you can define the font color that should be used for this color. A variable name and description also need to be given, both can be separated by `|`, `-` or nothing.
 
 ## Integration
 

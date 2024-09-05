@@ -380,7 +380,7 @@ export class UIDoc implements EventEmitter<EventMap> {
       return result instanceof Promise ? result : Promise.resolve(result)
     }
 
-    const pages = Object.values(this.context.pages)
+    const pages = Object.values(this.pages())
     const promises = pages.map(page =>
       write(`${page.id}.html`, this.pageContent(page, page.layout)),
     )

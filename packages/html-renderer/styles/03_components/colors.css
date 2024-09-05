@@ -1,0 +1,35 @@
+.colors {
+  display: grid;
+  grid-template-columns: repeat(var(--colors-columns, 1), 1fr);
+  gap: var(--colors-gap, var(--size-normal));
+
+  @container content (width > 300px) {
+    --colors-columns: 2;
+  }
+
+  @container content (width > 620px) {
+    --colors-columns: 3;
+  }
+
+  @container content (width > 940px) {
+    --colors-columns: 4;
+  }
+}
+
+.colors > .item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-xs);
+  justify-content: center;
+
+  padding: var(--size-xl) var(--size-md);
+
+  text-align: center;
+
+  border: 1px solid rgb(var(--border-color, currentColor));
+
+  > .text {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-bold);
+  }
+}

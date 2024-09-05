@@ -17,6 +17,13 @@ export type BlockExample = BlockCode & {
   code?: string
 }
 
+export type BlockColor = BlockEntry & {
+  font?: Color
+  name: string
+  text: string
+  value: Color
+}
+
 export interface Block {
   [key: string]: any
   key: string
@@ -27,5 +34,6 @@ export interface Block {
   title?: string
   description?: string
   code?: BlockCode
+  colors?: BlockColor[]
   example?: BlockExample
 }

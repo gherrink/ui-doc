@@ -1,0 +1,12 @@
+<div class="colors">
+  {{for:this}}
+  <div
+    class="item bg"
+    style="--bg-color: {{var:value.rgb}};{{if:font}} --font-color: {{var:font.rgb}};{{/if}}"
+  >
+    <span class="value">{{var:value.hex}}</span>
+    <span class="text">{{var:text}}</span>
+    <span class="name">{{var:name}}</span>
+  </div>
+  {{/for}}
+</div>
