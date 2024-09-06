@@ -46,7 +46,10 @@ function prepareServe(plugin: Plugin<Api>, config: UserConfig) {
   if (plugin.api?.options.prefix.uri) {
     // replace resolveUrl to make sure that all urls (pages and assets) are generated correctly for vite server
     plugin.api?.uidoc.replaceGenerate('resolveUrl', (uri, type) => {
-      return type === 'asset-example' || (type === 'asset' && uri.startsWith('@'))
+      // don't add prefix if asset is from vite
+      return ['asset', 'asset-example'].includes(type) &&
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        (plugin.api?.isCopiedAsset(uri) || uri.startsWith('@'))
         ? `/${uri}`
         : `/${plugin.api?.options.prefix.uri}${uri}`
     })
@@ -61,7 +64,11 @@ function prepareServe(plugin: Plugin<Api>, config: UserConfig) {
 
   // use user inputs as example assets
   normalizeRollupInput(config.build?.rollupOptions?.input).forEach(input => {
-    plugin.api?.uidocAsset(input, 'example')
+    plugin.api?.uidocAsset(
+      input,
+      input === plugin.api.options.customStyle ? 'page' : 'example',
+      true,
+    )
   })
 }
 

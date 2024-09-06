@@ -17,12 +17,33 @@ export default [
     },
     plugins: [
       postcss({
-        extract: 'app.css',
+        autoModules: true,
+        extract: true,
+        minimize: true,
+        plugins: [postcssImport(), postcssNested(), postcssExtend(), autoprefixer()],
+        sourceMap: true,
+      }),
+    ],
+  },
+  {
+    input: {
+      'ui-doc-custom': 'css/ui-doc.css',
+    },
+    output: {
+      dir: 'dist/rollup',
+      format: 'es',
+      sourcemap: true,
+    },
+    plugins: [
+      postcss({
+        autoModules: true,
+        extract: true,
         minimize: true,
         plugins: [postcssImport(), postcssNested(), postcssExtend(), autoprefixer()],
         sourceMap: true,
       }),
       uidoc({
+        customStyle: 'ui-doc-custom.css',
         outputBaseUri: '.',
         outputDir: 'ui-doc',
         settings: {

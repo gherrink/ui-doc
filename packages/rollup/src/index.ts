@@ -43,6 +43,7 @@ export interface Options {
   blockParser?: BlockParser
   source: string[]
   templatePath?: string
+  customStyle?: string
   styleAsset?: false | string
   highlightStyle?: false | string
   highlightTheme?: string
@@ -56,6 +57,7 @@ export interface Options {
 export interface ResolvedOptions {
   assets: { code: string; name: string; sourceFile: string; sourceName: string }[]
   assetsForCopy: string[]
+  customStyle?: string
   staticAssets?: string
   fileSystem: FileSystem
   finder: FileFinder
@@ -74,7 +76,8 @@ export interface Api {
   get fileSystem(): FileSystem
   get options(): ResolvedOptions
   get uidoc(): UIDoc
-  uidocAsset(src: string, as: 'example' | 'page'): void
+  uidocAsset(src: string, as: 'example' | 'page', copy?: boolean): void
+  isCopiedAsset(src: string): boolean
 }
 
 async function createDefaultRenderer(
@@ -172,14 +175,14 @@ async function resolveOptions(options: Options): Promise<ResolvedOptions> {
     ...(options.settings ?? {}),
   })
   const assetsForCopy: ResolvedOptions['assetsForCopy'] = []
-  const uidocAsset: ResolvedOptions['uidocAsset'] = (src, as) => {
+  const uidocAsset: ResolvedOptions['uidocAsset'] = (src, as, copy = false) => {
     const type = uidocAssetType(src)
 
     if (!type) {
       return
     }
 
-    if (as === 'example' && !assetsForCopy.includes(src)) {
+    if (copy && !assetsForCopy.includes(src)) {
       assetsForCopy.push(src)
     }
 
@@ -194,6 +197,7 @@ async function resolveOptions(options: Options): Promise<ResolvedOptions> {
   return {
     assets: await resolveAssets(options, fileSystem.assetLoader()),
     assetsForCopy,
+    customStyle: options.customStyle,
     fileSystem,
     finder,
     prefix,
@@ -206,7 +210,16 @@ async function resolveOptions(options: Options): Promise<ResolvedOptions> {
 
 export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<Api>> {
   const options = await resolveOptions(rawOptions)
-  const { finder, fileSystem, uidoc, prefix, assetsForCopy, uidocAsset, staticAssets } = options
+  const {
+    finder,
+    fileSystem,
+    uidoc,
+    prefix,
+    assetsForCopy,
+    uidocAsset,
+    staticAssets,
+    customStyle,
+  } = options
 
   return {
     name: PLUGIN_NAME,
@@ -219,6 +232,9 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       },
       get fileSystem() {
         return fileSystem
+      },
+      isCopiedAsset(src: string): boolean {
+        return assetsForCopy.includes(src)
       },
       get options() {
         return options
@@ -253,7 +269,12 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       // find assets in bundle and register them to UI-Doc
       Object.keys(bundle).forEach(fileName => {
         if (bundle[fileName].type === 'asset') {
-          uidocAsset(fileName, 'example')
+          uidocAsset(
+            fileName,
+            // if asset matches custom style include it as page asset
+            fileName === customStyle || bundle[fileName].name === customStyle ? 'page' : 'example',
+            true,
+          )
         }
       })
 
