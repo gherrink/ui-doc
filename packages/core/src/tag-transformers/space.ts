@@ -1,6 +1,7 @@
+import { CSSParseError } from '../errors/CSSParseError'
 import type { TagTransformer } from '../types'
 import { CSSValue, CSSVariable } from './nodes'
-import { trimDescription } from './utils'
+import { createTagTransformerError, trimDescription } from './utils'
 
 export const tag: TagTransformer = {
   name: 'space',
@@ -20,11 +21,21 @@ export const tag: TagTransformer = {
       block.spaces = []
     }
 
-    block.spaces.push({
-      name: spec.name,
-      text: trimDescription(spec.description),
-      value: isCssVariable ? CSSVariable.fromString(valueString) : CSSValue.fromString(valueString),
-    })
+    try {
+      block.spaces.push({
+        name: spec.name,
+        text: trimDescription(spec.description),
+        value: isCssVariable
+          ? CSSVariable.fromString(valueString)
+          : CSSValue.fromString(valueString),
+      })
+    } catch (error) {
+      if (error instanceof CSSParseError) {
+        throw createTagTransformerError(error.message, spec)
+      } else {
+        throw error
+      }
+    }
 
     return block
   },

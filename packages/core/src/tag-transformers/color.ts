@@ -1,4 +1,4 @@
-import { ColorParseError } from '../errors/ColorParseError'
+import { CSSParseError } from '../errors/CSSParseError'
 import type { TagTransformer } from '../types'
 import { CSSVariable } from './nodes'
 import { createTagTransformerError, cssColorValue, trimDescription } from './utils'
@@ -24,7 +24,7 @@ export const tag: TagTransformer = {
         value: cssColorValue(value || spec.name),
       })
     } catch (error) {
-      if (error instanceof ColorParseError) {
+      if (error instanceof CSSParseError) {
         throw createTagTransformerError(error.message, spec)
       } else {
         throw error
