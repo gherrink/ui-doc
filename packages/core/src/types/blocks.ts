@@ -28,6 +28,12 @@ export type BlockSpace = BlockEntry & {
   value: CSSValue | CSSVariable
 }
 
+export type BlockIcon = BlockEntry & {
+  name: string
+  text: string
+  value: CSSValue | CSSVariable
+}
+
 export interface Block {
   [key: string]: any
   key: string
@@ -41,4 +47,5 @@ export interface Block {
   colors?: BlockColor[]
   example?: BlockExample
   spaces?: BlockSpace[]
+  icons?: BlockIcon[]
 }

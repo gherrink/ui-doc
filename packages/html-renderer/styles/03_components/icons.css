@@ -1,0 +1,60 @@
+.icons {
+  display: grid;
+  grid-template-columns: repeat(var(--icons-columns, 1), 1fr);
+  gap: var(--icons-gap, var(--size-normal));
+
+  @container content (width > 300px) {
+    --icons-columns: 2;
+  }
+
+  @container content (width > 620px) {
+    --icons-columns: 3;
+  }
+
+  @container content (width > 940px) {
+    --icons-columns: 4;
+  }
+}
+
+.icons > .item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--size-xs);
+  justify-content: center;
+
+  padding: var(--size-xl) var(--size-md);
+
+  text-align: center;
+
+  border: 1px solid rgb(var(--border-color));
+
+  > .show,
+  > .show::before,
+  > .text::before,
+  > .text::after {
+    font-family: var(--icons-font-family);
+  }
+
+  > .show {
+    font-size: var(--icons-show-font-size, 3em);
+  }
+
+  > .name {
+    font-weight: var(--font-weight-bold);
+  }
+
+  &.from-var {
+    > .show::before,
+    > .text::before,
+    > .text::after {
+      content: var(--icon);
+    }
+  }
+
+  &.from-data {
+    > .text::before,
+    > .text::after {
+      content: attr(data-icon);
+    }
+  }
+}

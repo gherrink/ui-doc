@@ -51,6 +51,7 @@ The tags are separated into two different roles:
 | @section  | placement | define give section where your block should be shown              |
 | @color    | display   | define a color that is used in your style                         |
 | @space    | display   | define a space variable used in your style                        |
+| @icon     | display   | define a icon used in your style                                  |
 
 Please note that you can combine tags to get an different outcome. Please see the documentation of the different tags for more details.
 
@@ -252,6 +253,44 @@ Define spacings you are using in your layout.
 ```
 
 You can define multiple spaces in on codeblock the paces will then be displayed together. The space tag expects as type a spacing value, the variable name and description. Like in the color tag you can separate variable name and description by `|`, `-` or just whitespace. The given spacing value will be used when displaying, to make the targeted space visible.
+
+### @icon
+
+Define icons you are using in your icon font.
+
+```js
+/**
+ *
+ * @location variables.icons Icons
+ * @icon {e900} --icon-chevron-down - chevron-down
+ * @icon {e901} --icon-chevron-left - chevron-left
+ * @icon {--icon-chevron-right} --icon-chevron-right | chevron-right
+ * @icon --icon-chevron-up | chevron-up
+ */
+```
+
+You can define multiple icons in on codeblock the icons will then be displayed together. As type a css variable or the char code can be given. Variable name and description can be separated by `|`, `-` or just whitespace.
+
+Please not that you will require a custom style to define the `@font-face` for your icon font and set the `--icons-font-family` variable to your icon font name.
+
+```css
+@font-face {
+  font-family: icons;
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+  src: url('fonts/icons.eot');
+  src:
+    url('fonts/icons.eot#iefix') format('embedded-opentype'),
+    url('fonts/icons.ttf') format('truetype'),
+    url('fonts/icons.woff') format('woff'),
+    url('fonts/icons.svg#icons') format('svg');
+}
+
+:root {
+  --icons-font-family: icons;
+}
+```
 
 ## Integration
 

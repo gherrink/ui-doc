@@ -1,0 +1,18 @@
+<div class="icons">
+  {{for:this}}
+    {{if:value.name}}
+    <div class="item from-var" style="--icon: {{var:value.output}}">
+      <span class="show"></span>
+      <span class="text">{{var:text}}</span>
+      <span class="name">{{var:name}}</span>
+    </div>
+    {{/if}}
+    {{if:value.value}}
+    <div class="item from-data">
+      <span class="show">{{var:value.output}}</span>
+      <span class="text" data-icon="{{var:value.output}}">{{var:text}}</span>
+      <span class="name">{{var:name}}</span>
+    </div>
+    {{/if}}
+  {{/for}}
+</div>
