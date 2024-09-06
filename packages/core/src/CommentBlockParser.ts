@@ -1,4 +1,8 @@
-import { Block as CommentBlock, parse as parseComments } from 'comment-parser'
+import {
+  Block as CommentBlock,
+  parse as parseComments,
+  type Spec as CommentSpec,
+} from 'comment-parser'
 
 import { BlockParseError, TagTransformerError } from './errors'
 import tagTransformers from './tag-transformers'
@@ -13,7 +17,11 @@ import type {
 } from './types'
 import type { EventArgs, EventEmitter, EventListener, EventListenersMap } from './types/events'
 
-type BlockParserErrorCreate = (reason: string, comment: CommentBlock) => BlockParseError
+type BlockParserErrorCreate = (
+  reason: string,
+  comment: CommentBlock,
+  info?: { tag?: CommentSpec },
+) => BlockParseError
 
 export class CommentBlockParser implements EventEmitter<EventMap>, BlockParser {
   protected listeners: EventListenersMap<EventMap> = new Map()
@@ -60,12 +68,13 @@ export class CommentBlockParser implements EventEmitter<EventMap>, BlockParser {
   }
 
   public parse(context: BlockParserContext): Block[] {
-    const createError: BlockParserErrorCreate = (reason, comment) => {
+    const createError: BlockParserErrorCreate = (reason, comment, { tag = undefined } = {}) => {
       const code = comment.source.map(line => line.source).join('\n')
 
       return new BlockParseError({
         code,
-        line: comment.source[0].number,
+        column: 0,
+        line: (tag ? tag.source[0].number : comment.source[0].number) + 1,
         message: reason,
         source: context.identifier,
       })
@@ -88,7 +97,7 @@ export class CommentBlockParser implements EventEmitter<EventMap>, BlockParser {
 
     comment.tags.forEach(tag => {
       if (!this.tagTransformers[tag.tag]) {
-        throw createError(`Undefined tag type '${tag.tag}'.`, comment)
+        throw createError(`Undefined tag type '${tag.tag}'.`, comment, { tag })
       }
 
       tag.description = tag.description.trim()
@@ -98,7 +107,7 @@ export class CommentBlockParser implements EventEmitter<EventMap>, BlockParser {
         block = this.tagTransformers[tag.tag](block, tag)
       } catch (e) {
         if (e instanceof TagTransformerError) {
-          throw createError(e.message, comment)
+          throw createError(e.message, comment, { tag })
         } else {
           throw e
         }

@@ -7,9 +7,9 @@ import type {
   Options as UIDocOptions,
   Renderer,
 } from '@ui-doc/core'
-import { UIDoc } from '@ui-doc/core'
+import { BlockParseError, UIDoc } from '@ui-doc/core'
 import { NodeFileSystem } from '@ui-doc/node'
-import type { Plugin } from 'rollup'
+import type { Plugin, PluginContext } from 'rollup'
 
 import { version } from '../package.json'
 
@@ -208,6 +208,19 @@ async function resolveOptions(options: Options): Promise<ResolvedOptions> {
   }
 }
 
+function handleBlockParseError(this: PluginContext, error: any) {
+  if (!(error instanceof BlockParseError)) {
+    throw error
+  }
+
+  this.warn({
+    cause: error,
+    loc: { column: 0, file: error.source, line: error.line },
+    message: error.message,
+    stack: error.code,
+  })
+}
+
 export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<Api>> {
   const options = await resolveOptions(rawOptions)
   const {
@@ -260,7 +273,11 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
           this.addWatchFile(file)
         }
         if (!uidoc.sourceExists(file)) {
-          uidoc.sourceCreate(file, await fileSystem.fileRead(file))
+          try {
+            uidoc.sourceCreate(file, await fileSystem.fileRead(file))
+          } catch (error) {
+            handleBlockParseError.call(this, error)
+          }
         }
       })
     },
@@ -329,18 +346,22 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
 
     // eslint-disable-next-line sort-keys
     async watchChange(id, change) {
-      if (uidoc.sourceExists(id)) {
-        if (change.event === 'update') {
-          uidoc.sourceUpdate(id, await fileSystem.fileRead(id))
-        } else if (change.event === 'delete') {
-          uidoc.sourceDelete(id)
+      try {
+        if (uidoc.sourceExists(id)) {
+          if (change.event === 'update') {
+            uidoc.sourceUpdate(id, await fileSystem.fileRead(id))
+          } else if (change.event === 'delete') {
+            uidoc.sourceDelete(id)
+          }
+
+          return
         }
 
-        return
-      }
-
-      if (change.event === 'create' && finder.matches(id)) {
-        uidoc.sourceCreate(id, await fileSystem.fileRead(id))
+        if (change.event === 'create' && finder.matches(id)) {
+          uidoc.sourceCreate(id, await fileSystem.fileRead(id))
+        }
+      } catch (error) {
+        handleBlockParseError.call(this, error)
       }
     },
   }
