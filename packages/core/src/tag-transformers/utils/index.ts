@@ -3,11 +3,15 @@ import { Spec } from 'comment-parser'
 import { TagTransformerError } from '../../errors'
 import type { BlockCode } from '../../types'
 
+export function createTagTransformerError(message: string, spec: Spec): TagTransformerError {
+  return new TagTransformerError(message, spec.tag, { line: spec.source[0].number + 1 })
+}
+
 export function identifier(data: Spec): { key: string; name: string } {
   if (!data.name) {
-    throw new TagTransformerError(
+    throw createTagTransformerError(
       `Missing key. You should use "@${data.tag} your-${data.tag}-key"`,
-      data.tag,
+      data,
     )
   }
 

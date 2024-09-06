@@ -1,7 +1,6 @@
-import { TagTransformerError } from '../errors'
 import { ColorParseError } from '../errors/ColorParseError'
 import type { TagTransformer } from '../types'
-import { trimDescription } from './utils'
+import { createTagTransformerError, trimDescription } from './utils'
 import { colorValue } from './utils/color'
 
 export const tag: TagTransformer = {
@@ -26,7 +25,7 @@ export const tag: TagTransformer = {
       })
     } catch (error) {
       if (error instanceof ColorParseError) {
-        throw new TagTransformerError(error.message, spec.tag)
+        throw createTagTransformerError(error.message, spec)
       } else {
         throw error
       }
