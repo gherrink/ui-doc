@@ -166,7 +166,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         return next()
       }
 
-      const assetName = req.originalUrl.replace(`/${uriPrefix}`, '')
+      const assetName = req.originalUrl.replace(`/${uriPrefix}`, '').split('?')[0]
       const assetFile = `${staticAssets}/${assetName}`
 
       fileSystem
