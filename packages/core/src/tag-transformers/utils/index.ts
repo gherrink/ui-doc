@@ -4,7 +4,9 @@ import { TagTransformerError } from '../../errors'
 import type { BlockCode } from '../../types'
 
 export function createTagTransformerError(message: string, spec: Spec): TagTransformerError {
-  return new TagTransformerError(message, spec.tag, { line: spec.source[0].number + 1 })
+  const line = spec.source && spec.source.length > 0 ? spec.source[0].number + 1 : 0
+
+  return new TagTransformerError(message, spec.tag, { line })
 }
 
 export function identifier(data: Spec): { key: string; name: string } {

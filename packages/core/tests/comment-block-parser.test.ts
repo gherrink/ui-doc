@@ -67,6 +67,7 @@ describe('CommentBlockParser', () => {
     expect(() => parser.parse({ content, identifier: 'inline:test' })).toThrowError(
       new BlockParseError({
         code: prepareForBlockParserException(content),
+        column: 0,
         line: 1,
         message: "Undefined tag type 'fooo'.",
         source: 'inline:test',
@@ -107,6 +108,7 @@ describe('CommentBlockParser', () => {
     expect(() => parser.parse({ content, identifier: 'inline:test' })).toThrowError(
       new BlockParseError({
         code: prepareForBlockParserException(content),
+        column: 0,
         line: 1,
         message: 'Empty block.',
         source: 'inline:test',
@@ -124,6 +126,7 @@ describe('CommentBlockParser', () => {
     expect(() => parser.parse({ content, identifier: 'inline:test' })).toThrowError(
       new BlockParseError({
         code: prepareForBlockParserException(content),
+        column: 0,
         line: 1,
         message:
           "Missing block location. Don't know where to place this block, please use @location, @page or @section + @page.",
