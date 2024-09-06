@@ -2,9 +2,9 @@
   {{for:this}}
   <div
     class="item bg"
-    style="--bg-color: {{var:value.rgb}};{{if:font}} --font-color: {{var:font.rgb}};{{/if}}"
+    style="--bg-color: {{var:value.output}};{{if:font}} --font-color: {{var:font.output}};{{/if}}"
   >
-    <span class="value">{{var:value.hex}}</span>
+    {{if:value.hex}}<span class="value">{{var:value.hex}}</span>{{/if}}
     <span class="text">{{var:text}}</span>
     <span class="name">{{var:name}}</span>
   </div>

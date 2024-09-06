@@ -1,5 +1,6 @@
 export * from './CommentBlockParser'
 export * from './errors'
 export * from './MarkdownDescriptionParser'
+export * from './tag-transformers/nodes'
 export * from './types'
 export * from './UIDoc'

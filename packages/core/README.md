@@ -415,3 +415,7 @@ commentBlockParser.registerTagTransformer({
   },
 })
 ```
+
+# Upcoming Features
+
+[] Read custom stylesheet to read variable value so in color tag the color variable value can be used

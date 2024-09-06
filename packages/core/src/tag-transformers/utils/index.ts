@@ -2,6 +2,8 @@ import { Spec } from 'comment-parser'
 
 import { TagTransformerError } from '../../errors'
 import type { BlockCode } from '../../types'
+import { CSSColor } from '../nodes/CSSColor'
+import { CSSVariable } from '../nodes/CSSVariable'
 
 export function createTagTransformerError(message: string, spec: Spec): TagTransformerError {
   const line = spec.source && spec.source.length > 0 ? spec.source[0].number + 1 : 0
@@ -76,4 +78,10 @@ export function isValidHTML(html: string): boolean {
  */
 export function trimDescription(text: string): string {
   return text.replace(/^-|^\|/, '').trim()
+}
+
+export function cssColorValue(value: string): CSSColor | CSSVariable {
+  return CSSVariable.isVariableString(value)
+    ? CSSVariable.fromString(value)
+    : CSSColor.fromString(value)
 }

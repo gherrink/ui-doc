@@ -1,14 +1,14 @@
 import { ColorParseError } from '../errors/ColorParseError'
 import type { TagTransformer } from '../types'
-import { createTagTransformerError, trimDescription } from './utils'
-import { colorValue } from './utils/color'
+import { CSSVariable } from './nodes'
+import { createTagTransformerError, cssColorValue, trimDescription } from './utils'
 
 export const tag: TagTransformer = {
   name: 'color',
   transform: (block, spec) => {
     const [value, colorFont] = spec.type.split('|')
 
-    if (!spec.description || !spec.name || !value) {
+    if (!spec.description || !spec.name || (!value && !CSSVariable.isVariableString(spec.name))) {
       return block
     }
 
@@ -18,10 +18,10 @@ export const tag: TagTransformer = {
 
     try {
       block.colors.push({
-        font: colorFont ? colorValue(colorFont) : undefined,
+        font: colorFont ? cssColorValue(colorFont) : undefined,
         name: spec.name,
         text: trimDescription(spec.description),
-        value: colorValue(value),
+        value: cssColorValue(value || spec.name),
       })
     } catch (error) {
       if (error instanceof ColorParseError) {

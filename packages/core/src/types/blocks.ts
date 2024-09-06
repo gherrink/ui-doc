@@ -1,8 +1,6 @@
-export interface Color {
-  hex: string
-  rgb: string
-  value: { r: number; g: number; b: number }
-}
+import type { CSSValue } from '../tag-transformers/nodes'
+import type { CSSColor } from '../tag-transformers/nodes/CSSColor'
+import type { CSSVariable } from '../tag-transformers/nodes/CSSVariable'
 
 export type BlockEntry = Record<string, any>
 
@@ -18,10 +16,16 @@ export type BlockExample = BlockCode & {
 }
 
 export type BlockColor = BlockEntry & {
-  font?: Color
+  font?: CSSColor | CSSVariable
   name: string
   text: string
-  value: Color
+  value: CSSColor | CSSVariable
+}
+
+export type BlockSpace = BlockEntry & {
+  name: string
+  text: string
+  value: CSSValue | CSSVariable
 }
 
 export interface Block {
@@ -36,4 +40,5 @@ export interface Block {
   code?: BlockCode
   colors?: BlockColor[]
   example?: BlockExample
+  spaces?: BlockSpace[]
 }

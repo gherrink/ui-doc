@@ -181,6 +181,60 @@ describe('Color tag transformer', () => {
     })
   })
 
+  test('should transform with variable', () => {
+    const comment = {
+      description: 'White',
+      name: '--color-white',
+      optional: false,
+      problems: [],
+      source: [],
+      tag: 'color',
+      type: '--color-white',
+    }
+    const block: Partial<Block> = {}
+
+    color.transform(block, comment)
+
+    expect(block).toHaveProperty('colors')
+    if (!block.colors) {
+      return
+    }
+    expect(block.colors).toHaveLength(1)
+    expect(block.colors[0]).toMatchObject({
+      font: undefined,
+      name: '--color-white',
+      text: 'White',
+      value: { name: '--color-white' },
+    })
+  })
+
+  test('should transform with name as variable', () => {
+    const comment = {
+      description: 'White',
+      name: '--color-white',
+      optional: false,
+      problems: [],
+      source: [],
+      tag: 'color',
+      type: '',
+    }
+    const block: Partial<Block> = {}
+
+    color.transform(block, comment)
+
+    expect(block).toHaveProperty('colors')
+    if (!block.colors) {
+      return
+    }
+    expect(block.colors).toHaveLength(1)
+    expect(block.colors[0]).toMatchObject({
+      font: undefined,
+      name: '--color-white',
+      text: 'White',
+      value: { name: '--color-white' },
+    })
+  })
+
   test('should not transform without background color', () => {
     const comment = {
       description: 'White',
@@ -191,9 +245,9 @@ describe('Color tag transformer', () => {
       tag: 'color',
       type: '',
     }
-    let block: Partial<Block> = {}
+    const block: Partial<Block> = {}
 
-    block = color.transform(block, comment)
+    color.transform(block, comment)
 
     expect(block).not.toHaveProperty('colors')
   })
