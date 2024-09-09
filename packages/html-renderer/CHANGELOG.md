@@ -1,5 +1,17 @@
 # @ui-doc/html-renderer ChangeLog
 
+## v0.2.0
+
+_2024-09-09_
+
+### Features
+
+- core,html-renderer: icon tag (5941543)
+- core,html-renderer: possibility to add css variables over tags (019400a)
+- core,html-renderer: space tag (6e5bece)
+- core,html-renderer: color tag (7a65218)
+- core,html-renderer: simplified url generation and usage (6049267)
+
 ## v0.1.1
 
 _2024-07-19_
