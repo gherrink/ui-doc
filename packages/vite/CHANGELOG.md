@@ -1,5 +1,20 @@
 # @ui-doc/vite ChangeLog
 
+## v0.2.0
+
+_2024-09-09_
+
+### Bugfixes
+
+- vite: static asset files with params are not loaded (596e1df)
+
+### Features
+
+- core,rollup,vite: block parser errors handling and displaying (5ef35ea)
+- rollup,vite: `customStyle` setting (34ab09e)
+- vite: better error reporting on plugin create (944a4c6)
+- vite: serve static asset files (7faae6c)
+
 ## v0.1.1
 
 _2024-07-19_
