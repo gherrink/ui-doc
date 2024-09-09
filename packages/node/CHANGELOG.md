@@ -1,5 +1,17 @@
 # @ui-doc/node ChangeLog
 
+## v0.1.2
+
+_2024-09-09_
+
+### Bugfixes
+
+- node,rollup,vite: package dependency declaration (330c74b)
+
+### Updates
+
+- node: short introduction (19e1047)
+
 ## v0.1.1
 
 _2024-07-19_
