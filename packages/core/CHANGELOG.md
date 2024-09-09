@@ -1,5 +1,28 @@
 # @ui-doc/core ChangeLog
 
+## v0.2.0
+
+_2024-09-09_
+
+### Bugfixes
+
+- core: css parse error handling (6b5c30c)
+
+### Features
+
+- core,html-renderer: icon tag (5941543)
+- core,html-renderer: possibility to add css variables over tags (019400a)
+- core,rollup,vite: block parser errors handling and displaying (5ef35ea)
+- core: more detailed tag transformer error (0310e9a)
+- core,html-renderer: space tag (6e5bece)
+- core,html-renderer: color tag (7a65218)
+- core: color utilities (2868145)
+- core,html-renderer: simplified url generation and usage (6049267)
+
+### Updates
+
+- core: block parser error handling (450c0b1)
+
 ## v0.1.0
 
 _2024-07-19_
