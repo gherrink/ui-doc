@@ -51,12 +51,12 @@
   },
   "sideEffects": false,
   "peerDependencies": {
-    "@ui-doc/html-renderer": "workspace:^",
+    "@ui-doc/html-renderer": "workspace:>=0.2.0",
     "rollup": "^4.0.0"
   },
   "dependencies": {
-    "@ui-doc/core": "workspace:^",
-    "@ui-doc/node": "workspace:^"
+    "@ui-doc/core": "workspace:>=0.2.0",
+    "@ui-doc/node": "workspace:>=0.1.0"
   },
   "devDependencies": {
     "@ui-doc/core": "workspace:*",

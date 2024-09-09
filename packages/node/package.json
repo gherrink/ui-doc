@@ -51,7 +51,7 @@
   },
   "sideEffects": false,
   "peerDependencies": {
-    "@ui-doc/core": "workspace:^",
+    "@ui-doc/core": "workspace:>=0.1.0",
     "node": "^16.0.0||^18.0.0||^20.0.0||^22.0.0"
   },
   "dependencies": {
