@@ -1,5 +1,13 @@
 # @ui-doc/vite ChangeLog
 
+## v0.2.1
+
+_2024-09-09_
+
+### Bugfixes
+
+- node,rollup,vite: package dependency declaration (330c74b)
+
 ## v0.2.0
 
 _2024-09-09_
