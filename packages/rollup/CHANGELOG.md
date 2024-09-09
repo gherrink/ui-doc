@@ -1,5 +1,19 @@
 # @ui-doc/rollup ChangeLog
 
+## v0.2.0
+
+_2024-09-09_
+
+### Bugfixes
+
+- rollup: asset url generation (c2dffe8)
+
+### Features
+
+- core,rollup,vite: block parser errors handling and displaying (5ef35ea)
+- rollup,vite: `customStyle` setting (34ab09e)
+- rollup: static assets integration (86942b3)
+
 ## v0.1.1
 
 _2024-07-19_
