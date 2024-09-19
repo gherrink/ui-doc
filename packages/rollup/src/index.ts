@@ -172,7 +172,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
           return
         }
 
-        if (change.event === 'create' && finder.matches(id)) {
+        if ((change.event === 'create' || change.event === 'update') && finder.matches(id)) {
           uidoc.sourceCreate(id, await fileSystem.fileRead(id))
         }
       } catch (error) {
