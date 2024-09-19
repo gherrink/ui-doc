@@ -1,6 +1,6 @@
 # UI-Doc vite plugin
 
-Integrates UI-Doc into vite by using the `@ui-doc/rollup` plugin and add functionality to vite dev server to display / preview the UI-Doc.
+Integrates UI-Doc into vite by using the `@ui-doc/rollup` plugin and add functionality to vite dev server to display / preview the UI-Doc. Per default it will add a `ui-doc` uri to your vite dev url. You can change the uri by changing the `output.dir` or `output.baseUri` option.
 
 ## Install
 
@@ -42,6 +42,12 @@ export default defineConfig({
         },
       },
       source: ['css/**/*.css'],
+      assets: {
+        example: {
+          name: 'app',
+          input: true,
+        },
+      },
     }),
   ],
 })
@@ -51,11 +57,11 @@ export default defineConfig({
 
 Please see the Options from `@ui-doc/rollup` they are the same.
 
-# Known Issues
+# Good to Know
 
-## The `customStyle` setting need to be changed depending on context
+## The `output.baseUri` setting can be changed depending on context
 
-The custom style detection is a bit wonky and needs to be improved. To get the correct output you need to change the `customStyle` depending on context. In the example below we are using the `command` param to check if we are serving then we need to use the input file so vue serve will load the correct file. When generating we need to use the output file name.
+When using vite serve and build with same setting and you want to extract the UI-Doc into a other system you need to change the `output.baseUri` depending on build context. UI-Doc in vite will set the `output.dir` per default to `ui-doc` so it can run correctly while serving but you may don't want the `ui-doc` uri in your final output.
 
 ```js
 import uidoc from '@ui-doc/vite'
@@ -72,15 +78,27 @@ export default defineConfig(({ command }) => {
         },
       },
     },
-
     plugins: [
       uidoc({
-        customStyle: command === 'serve' ? 'css/ui-doc.css' : 'ui-doc-custom.css',
-        outputBaseUri: command === 'serve' ? undefined : '.',
         source: ['css/**/*.css'],
-        staticAssets: './assets',
+        assets: {
+          output: {
+            baseUri: command === 'serve' ? undefined : '.',
+          }
+          staticAssets: './assets',
+          page: {
+            name: 'ui-doc-custom'
+            input: true
+          }
+          example: {
+            name: 'app',
+            input: true,
+          },
+        },
       }),
     ],
   }
 })
 ```
+
+# Known Issues

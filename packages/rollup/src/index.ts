@@ -1,211 +1,29 @@
-import type {
-  AssetLoader,
-  AssetType,
-  BlockParser,
-  FileFinder,
-  FileSystem,
-  Options as UIDocOptions,
-  Renderer,
-} from '@ui-doc/core'
+import path from 'node:path'
+
+import type { AssetType, FileFinder, FileSystem } from '@ui-doc/core'
 import { BlockParseError, UIDoc } from '@ui-doc/core'
-import { NodeFileSystem } from '@ui-doc/node'
 import type { Plugin, PluginContext } from 'rollup'
 
 import { version } from '../package.json'
+import { resolveAssetType } from './utils/asset'
+import { resolveOptions } from './utils/option'
+import type { Options, ResolvedOptions } from './utils/option.types'
 
 export const PLUGIN_NAME = 'ui-doc'
 
-const ASSETS: {
-  name: (options: Options) => string | false
-  source: (options: Options) => string | false
-}[] = [
-  {
-    name: options => options.styleAsset ?? 'ui-doc.css',
-    source: () => '@ui-doc/html-renderer/ui-doc.min.css',
-  },
-  {
-    name: () => 'ui-doc.js',
-    source: () => '@ui-doc/html-renderer/ui-doc.min.js',
-  },
-  {
-    name: options => options.highlightStyle ?? 'highlight.css',
-    source: options =>
-      `@highlightjs/cdn-assets/styles/${options.highlightTheme ?? 'default'}.min.css`,
-  },
-  {
-    name: options => options.highlightScript ?? 'highlight.js',
-    source: () => '@highlightjs/cdn-assets/highlight.min.js',
-  },
-]
-
-export interface Options {
-  renderer?: Renderer
-  blockParser?: BlockParser
-  source: string[]
-  templatePath?: string
-  customStyle?: string
-  styleAsset?: false | string
-  highlightStyle?: false | string
-  highlightTheme?: string
-  highlightScript?: false | string
-  outputBaseUri?: string
-  outputDir?: string
-  settings?: Pick<UIDocOptions, 'generate' | 'texts'>
-  staticAssets?: string
-}
-
-export interface ResolvedOptions {
-  assets: { code: string; name: string; sourceFile: string; sourceName: string }[]
-  assetsForCopy: string[]
-  customStyle?: string
-  staticAssets?: string
-  fileSystem: FileSystem
-  finder: FileFinder
-  prefix: {
-    path: string
-    uri: string
-  }
-  uidoc: UIDoc
-  source: string[]
-  uidocAsset: Api['uidocAsset']
-}
-
+export { Options }
 export interface Api {
   version: string
   get fileFinder(): FileFinder
   get fileSystem(): FileSystem
   get options(): ResolvedOptions
   get uidoc(): UIDoc
-  uidocAsset(src: string, as: 'example' | 'page', copy?: boolean): void
-  isCopiedAsset(src: string): boolean
-}
-
-async function createDefaultRenderer(
-  templatePath: string | undefined,
-  fileSystem: FileSystem,
-): Promise<Renderer> {
-  const rendererImport = await import('@ui-doc/html-renderer')
-  const renderer = new rendererImport.HtmlRenderer(rendererImport.NodeParser.init())
-
-  await rendererImport.TemplateLoader.load({
-    fileSystem,
-    renderer,
-    templateBasePath: templatePath,
-  })
-
-  return renderer
-}
-
-function createOutputPrefix(options: Options): ResolvedOptions['prefix'] {
-  const prefix: ResolvedOptions['prefix'] = { path: '', uri: '' }
-  const path = options.outputDir
-
-  if (!path) {
-    return prefix
-  }
-
-  prefix.path = path.endsWith('/') ? path : `${path}/`
-
-  if (options.outputBaseUri === '.') {
-    return prefix
-  }
-
-  prefix.uri = options.outputBaseUri ?? prefix.path
-  prefix.uri = prefix.uri.endsWith('/') ? prefix.uri : `${prefix.uri}/`
-
-  const prevResolveUrl = options.settings?.generate?.resolveUrl ?? (uri => uri)
-
-  options.settings = options.settings ?? {}
-  options.settings.generate = options.settings.generate ?? {}
-  options.settings.generate.resolveUrl = (uri, type) => prevResolveUrl(`/${prefix.uri}${uri}`, type)
-
-  return prefix
-}
-
-function uidocAssetType(fileName: string): AssetType | null {
-  if (fileName.match(/\.(css|less|sass|scss)$/)) {
-    return 'style'
-  }
-
-  if (fileName.match(/\.(js|ts)$/)) {
-    return 'script'
-  }
-
-  return null
-}
-
-async function resolveAssets(
-  options: Options,
-  assetLoader: AssetLoader,
-): Promise<ResolvedOptions['assets']> {
-  return (
-    await Promise.all(
-      ASSETS.map(async ({ name, source }) => {
-        const fileName = name(options)
-        const sourceName = source(options)
-
-        if (sourceName === false || fileName === false) {
-          return null
-        }
-
-        const sourceFile = await assetLoader.resolve(sourceName)
-
-        if (!sourceFile) {
-          return null
-        }
-
-        return {
-          code: await assetLoader.read(sourceFile),
-          name: `${fileName}`,
-          sourceFile,
-          sourceName,
-        }
-      }),
-    )
-  ).filter(asset => asset !== null) as ResolvedOptions['assets']
-}
-
-async function resolveOptions(options: Options): Promise<ResolvedOptions> {
-  const prefix = createOutputPrefix(options)
-  const fileSystem = NodeFileSystem.init()
-  const finder = fileSystem.createFileFinder(options.source)
-  const uidoc = new UIDoc({
-    blockParser: options.blockParser,
-    renderer: options.renderer ?? (await createDefaultRenderer(options.templatePath, fileSystem)),
-    ...(options.settings ?? {}),
-  })
-  const assetsForCopy: ResolvedOptions['assetsForCopy'] = []
-  const uidocAsset: ResolvedOptions['uidocAsset'] = (src, as, copy = false) => {
-    const type = uidocAssetType(src)
-
-    if (!type) {
-      return
-    }
-
-    if (copy && !assetsForCopy.includes(src)) {
-      assetsForCopy.push(src)
-    }
-
-    const method = as === 'example' ? 'addExampleAsset' : 'addAsset'
-
-    uidoc[method]({
-      src,
-      type,
-    })
-  }
-
-  return {
-    assets: await resolveAssets(options, fileSystem.assetLoader()),
-    assetsForCopy,
-    customStyle: options.customStyle,
-    fileSystem,
-    finder,
-    prefix,
-    source: options.source,
-    staticAssets: options.staticAssets,
-    uidoc,
-    uidocAsset,
-  }
+  uidocAsset(
+    src: string,
+    context: 'example' | 'page',
+    options?: { fromInput?: boolean; type?: AssetType; attrs?: Record<string, string> },
+  ): void
+  isAssetFromInput(src: string): boolean
 }
 
 function handleBlockParseError(this: PluginContext, error: any) {
@@ -223,16 +41,7 @@ function handleBlockParseError(this: PluginContext, error: any) {
 
 export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<Api>> {
   const options = await resolveOptions(rawOptions)
-  const {
-    finder,
-    fileSystem,
-    uidoc,
-    prefix,
-    assetsForCopy,
-    uidocAsset,
-    staticAssets,
-    customStyle,
-  } = options
+  const { finder, fileSystem, uidoc, prefix, assetsFromInput, uidocAsset, staticAssets } = options
 
   return {
     name: PLUGIN_NAME,
@@ -246,8 +55,8 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       get fileSystem() {
         return fileSystem
       },
-      isCopiedAsset(src: string): boolean {
-        return assetsForCopy.includes(src)
+      isAssetFromInput(src: string): boolean {
+        return assetsFromInput.includes(src)
       },
       get options() {
         return options
@@ -259,11 +68,18 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       version,
     },
 
-    async buildStart() {
+    async buildStart(inputOptions) {
       const watchedFiles = this.getWatchFiles()
 
-      options.assets.forEach(({ name }) => {
-        uidocAsset(name, 'page')
+      options.assets.forEach(({ name, fromInput = false }, index) => {
+        // if input is true, try to use inputOptions.input[name] as fileName
+        if (fromInput && !Array.isArray(inputOptions.input) && inputOptions.input[name]) {
+          options.assets[index].fileName = inputOptions.input[name]
+            .replace(path.resolve('.'), '')
+            .replace(/^\//g, '')
+          options.assets[index].originalFileName = inputOptions.input[name]
+          options.assets[index].type = resolveAssetType(inputOptions.input[name]) ?? undefined
+        }
       })
 
       // TODO detect template updates when templates in workspace
@@ -282,27 +98,26 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       })
     },
 
-    async generateBundle(_outputOptions, bundle) {
-      // find assets in bundle and register them to UI-Doc
-      Object.keys(bundle).forEach(fileName => {
-        if (bundle[fileName].type === 'asset') {
-          uidocAsset(
-            fileName,
-            // if asset matches custom style include it as page asset
-            fileName === customStyle || bundle[fileName].name === customStyle ? 'page' : 'example',
-            true,
-          )
-        }
-      })
+    async generateBundle() {
+      options.assets.forEach(
+        ({ name, fileName, source, originalFileName, context, attrs, type, fromInput = false }) => {
+          if (source) {
+            this.emitFile({
+              name,
+              fileName: `${prefix.path}${fileName}`,
+              source,
+              type: 'asset',
+            })
 
-      options.assets.forEach(({ code, name, sourceName }) => {
-        this.emitFile({
-          fileName: `${prefix.path}${name}`,
-          source: code,
-          type: 'asset',
-        })
-        this.info({ code: 'OUTPUT', message: `${name} from ${sourceName}` })
-      })
+            this.info({
+              code: 'OUTPUT',
+              message: `${fileName} from ${originalFileName}`,
+            })
+          }
+
+          uidocAsset(fileName, context, { attrs, fromInput, type })
+        },
+      )
 
       await uidoc.output((file, content) => {
         const fileName = `${prefix.path}${file}`
@@ -323,7 +138,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       if (prefix.path) {
         // TODO may copy map file if exists
         promises.push(
-          ...assetsForCopy.map(async asset => {
+          ...assetsFromInput.map(async asset => {
             const destFile = `${outputOptions.dir}/${prefix.path}${asset}`
             const destDir = fileSystem.fileDirname(destFile)
 

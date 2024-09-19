@@ -7,8 +7,7 @@ import createRollupPlugin, {
   PLUGIN_NAME as ROLLUP_PLUGIN_NAME,
 } from '@ui-doc/rollup'
 import pc from 'picocolors'
-import type { RollupOptions } from 'rollup'
-import type { Plugin, UserConfig, ViteDevServer } from 'vite'
+import type { Plugin, ViteDevServer } from 'vite'
 
 import { version } from '../package.json'
 
@@ -21,60 +20,38 @@ export interface Api extends RollupPluginApi {
 }
 
 function resolveOptions(options: Options): Options {
-  options.outputDir = options.outputDir ?? 'ui-doc'
+  options.output = options.output ?? {}
+  options.output.dir = options.output.dir ?? 'ui-doc'
 
   return options
 }
 
-function normalizeRollupInput(input: RollupOptions['input']): string[] {
-  if (!input) {
-    return []
-  }
-
-  if (typeof input === 'string') {
-    return [input]
-  }
-
-  if (Array.isArray(input)) {
-    return input
-  }
-
-  return Object.values(input)
-}
-
-function prepareServe(plugin: Plugin<Api>, config: UserConfig) {
+function prepareServe(plugin: Plugin<Api>) {
   if (plugin.api?.options.prefix.uri) {
     // replace resolveUrl to make sure that all urls (pages and assets) are generated correctly for vite server
-    plugin.api?.uidoc.replaceGenerate('resolveUrl', (uri, type) => {
+    plugin.api?.uidoc.replaceGenerate('resolve', (uri, type) => {
       // don't add prefix if asset is from vite
       return ['asset', 'asset-example'].includes(type) &&
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        (plugin.api?.isCopiedAsset(uri) || uri.startsWith('@'))
+        (plugin.api?.isAssetFromInput(uri) || uri.startsWith('@'))
         ? `/${uri}`
         : `/${plugin.api?.options.prefix.uri}${uri}`
     })
   }
 
-  // include vite client in ui-kit assets
-  plugin.api?.uidoc.addAsset({
-    type: 'script',
-    src: '@vite/client',
-    attrs: { type: 'module' },
+  // register all assets to ui-doc
+  plugin.api?.options.assets.forEach(({ fileName, context, attrs, fromInput = false }) => {
+    plugin.api?.uidocAsset(fileName, context, { attrs, fromInput })
   })
 
-  // use user inputs as example assets
-  normalizeRollupInput(config.build?.rollupOptions?.input).forEach(input => {
-    plugin.api?.uidocAsset(
-      input,
-      input === plugin.api.options.customStyle ? 'page' : 'example',
-      true,
-    )
-  })
+  // add vite client script to ui-doc
+  plugin.api?.uidocAsset('@vite/client', 'page', { attrs: { type: 'module' }, type: 'script' })
 }
 
 export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<Api>> {
   const options = resolveOptions(rawOptions)
   const plugin = (await createRollupPlugin(options)) as Plugin<Api>
+  let serving = false
 
   plugin.name = PLUGIN_NAME
   plugin.version = version
@@ -89,13 +66,56 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     }
   }
 
-  plugin.config = (config, { command }) => {
-    if (command === 'serve') {
-      prepareServe(plugin, config)
+  plugin.config = (_config, { command }) => {
+    serving = command === 'serve'
+  }
+
+  const orgBuildStart = plugin.buildStart as Function | undefined
+  const orgGenerateBundle = plugin.generateBundle as Function | undefined
+
+  plugin.buildStart = async function (inputOptions) {
+    if (orgBuildStart) {
+      await orgBuildStart.call(this, inputOptions)
+    }
+
+    if (serving) {
+      prepareServe(plugin)
     }
   }
 
-  plugin.configureServer = async (server: ViteDevServer) => {
+  plugin.generateBundle = async function (outputOptions, bundle, isWrite) {
+    // find and set the correct file name for each asset
+    plugin.api?.options.assets
+      .filter(asset => asset.fromInput)
+      .forEach(asset => {
+        const foundBundle = Object.values(bundle).find(({ name }) => name === asset.name) as
+          | Record<string, any>
+          | undefined
+
+        if (!foundBundle) {
+          return
+        }
+
+        if (asset.type === 'script') {
+          asset.fileName = foundBundle.fileName
+          return
+        }
+
+        if (
+          asset.type === 'style' &&
+          foundBundle?.viteMetadata?.importedCss &&
+          foundBundle.viteMetadata.importedCss.size > 0
+        ) {
+          asset.fileName = foundBundle.viteMetadata.importedCss.values().next().value
+        }
+      })
+
+    if (orgGenerateBundle) {
+      await orgGenerateBundle.call(this, outputOptions, bundle, isWrite)
+    }
+  }
+
+  plugin.configureServer = async function (server: ViteDevServer) {
     const uidoc = plugin.api?.uidoc
     const uriPrefix = plugin.api?.options.prefix.uri
     const assets = plugin.api?.options.assets ?? []
@@ -154,7 +174,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         const asset = assets.find(entry => entry.name === assetName)
 
         if (asset) {
-          res.write(asset.code)
+          res.write(asset.source)
           res.end()
           return
         }

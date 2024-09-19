@@ -15,10 +15,25 @@ export default defineConfig(({ command }) => {
 
     plugins: [
       uidoc({
-        customStyle: command === 'serve' ? 'css/ui-doc.css' : 'ui-doc-custom.css',
-        outputBaseUri: command === 'serve' ? undefined : '.',
+        output: {
+          baseUri: command === 'serve' ? undefined : '.',
+        },
         source: ['css/**/*.css'],
-        staticAssets: './assets',
+        assets: {
+          static: './assets',
+          page: [
+            {
+              name: 'ui-doc-custom',
+              fromInput: true,
+            },
+          ],
+          example: [
+            {
+              name: 'app',
+              fromInput: true,
+            },
+          ],
+        },
       }),
     ],
   }
