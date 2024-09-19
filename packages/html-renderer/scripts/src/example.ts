@@ -1,4 +1,8 @@
+import { throttle } from './utils'
+
 export function initExample() {
+  const changeHeightCallbacks: (() => void)[] = []
+
   document.querySelectorAll<HTMLIFrameElement>('[data-example] > iframe').forEach(iframe => {
     const document = iframe.contentDocument ?? iframe.contentWindow?.document
 
@@ -6,12 +10,13 @@ export function initExample() {
       return
     }
 
-    const action = () => {
+    const initHeightChange = () => {
       const changeHeight = () => {
         iframe.style.height = `${document.body.scrollHeight}px`
       }
 
       changeHeight()
+      changeHeightCallbacks.push(changeHeight)
 
       const observer = new MutationObserver(changeHeight)
 
@@ -23,9 +28,16 @@ export function initExample() {
     }
 
     if (document.readyState === 'complete') {
-      action()
+      initHeightChange()
     } else {
-      iframe.addEventListener('load', action)
+      iframe.addEventListener('load', initHeightChange)
     }
   })
+
+  window.addEventListener(
+    'resize',
+    throttle(() => {
+      changeHeightCallbacks.forEach(callback => callback())
+    }, 200),
+  )
 }
