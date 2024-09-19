@@ -152,7 +152,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         promises.push(fileSystem.directoryCopy(staticAssets, `${outputOptions.dir}/${prefix.path}`))
         this.info({
           code: 'OUTPUT',
-          message: `assets: ${staticAssets} > ${outputOptions.dir}${prefix.path}`,
+          message: `copying assets from ${staticAssets}`,
         })
       }
 
