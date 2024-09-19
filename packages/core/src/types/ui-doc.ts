@@ -18,7 +18,7 @@ export interface GenerateFunctions {
   name: () => string
   pageLink: (page: ContextEntry) => string
   pageTitle: (page: ContextEntry) => string
-  resolveUrl: (uri: string, type: string) => string
+  resolve: (uri: string, type: string) => string
 }
 
 export interface Texts {

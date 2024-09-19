@@ -41,7 +41,7 @@ export class UIDoc implements EventEmitter<EventMap> {
         ? `${example.title} Example | ${this.texts.title}`
         : `Example | ${this.texts.title}`,
     footerText: () => `© ${new Date().getFullYear()} ${this.texts.copyright}`,
-    homeLink: () => this.generate.resolveUrl('index.html', 'page'),
+    homeLink: () => this.generate.resolve('index.html', 'page'),
     logo: () => 'LOGO',
     menu: (menu, pages) => {
       Object.values(pages).forEach(page => {
@@ -73,10 +73,10 @@ export class UIDoc implements EventEmitter<EventMap> {
       })
     },
     name: () => this.texts.title,
-    pageLink: page => this.generate.resolveUrl(`${page.id}.html`, 'page'),
+    pageLink: page => this.generate.resolve(`${page.id}.html`, 'page'),
     pageTitle: page =>
       page.id !== 'index' ? `${page.title} | ${this.texts.title}` : this.texts.title,
-    resolveUrl: uri => `${uri}`,
+    resolve: uri => `${uri}`,
   }
 
   constructor(options: Options) {
@@ -142,12 +142,12 @@ export class UIDoc implements EventEmitter<EventMap> {
   }
 
   public addAsset(asset: Asset) {
-    asset.src = this.generate.resolveUrl(asset.src, 'asset')
+    asset.src = this.generate.resolve(asset.src, 'asset')
     this.context.pageAssets.push(asset)
   }
 
   public addExampleAsset(asset: Asset) {
-    asset.src = this.generate.resolveUrl(asset.src, 'asset-example')
+    asset.src = this.generate.resolve(asset.src, 'asset-example')
     this.context.exampleAssets.push(asset)
   }
 
@@ -167,7 +167,7 @@ export class UIDoc implements EventEmitter<EventMap> {
 
       if (!example.src || !example.file) {
         example.file = `examples/${example.id}.html`
-        example.src = this.generate.resolveUrl(example.file, 'example')
+        example.src = this.generate.resolve(example.file, 'example')
       }
 
       this.context.examples[example.id] = example as ContextExample

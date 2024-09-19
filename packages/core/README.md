@@ -360,7 +360,7 @@ await uidoc.output(async (fileName, content) => {
 | name | string |  | Name of your UI-Doc |
 | pageLink | string | page context | Link to a page |
 | pageTitle | string | page context | Title of a page |
-| resolveUrl | string | uri string | Change/manipulate a uri |
+| resolve | string | uri: string, context: string | Change/manipulate a uri |
 
 You can change generate functions in two ways:
 
