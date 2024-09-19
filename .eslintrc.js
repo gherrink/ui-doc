@@ -89,7 +89,6 @@ module.exports = {
         'prefer-destructuring': 'off',
         'simple-import-sort/exports': 'error',
         'simple-import-sort/imports': 'error',
-        'sort-keys': ['error', 'asc', { caseSensitive: true, natural: false }],
       },
     },
   ],
