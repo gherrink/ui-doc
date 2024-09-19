@@ -31,13 +31,17 @@ export class NodeFileSystem implements FileSystem {
     return this.assetLoaderInstance
   }
 
+  public resolve(file: string): string {
+    return path.resolve(file)
+  }
+
   public async fileRead(file: string): Promise<string> {
-    return fs.readFile(path.resolve(file), 'utf8')
+    return fs.readFile(this.resolve(file), 'utf8')
   }
 
   public async fileWrite(file: string, content: string): Promise<boolean> {
     try {
-      await fs.writeFile(path.resolve(file), content, 'utf8')
+      await fs.writeFile(this.resolve(file), content, 'utf8')
 
       return true
     } catch (e) {
@@ -46,8 +50,8 @@ export class NodeFileSystem implements FileSystem {
   }
 
   public async fileCopy(from: string, to: string): Promise<boolean> {
-    const fromFile = path.resolve(from)
-    const toFile = path.resolve(to)
+    const fromFile = this.resolve(from)
+    const toFile = this.resolve(to)
 
     try {
       await fs.copyFile(fromFile, toFile)
@@ -60,7 +64,7 @@ export class NodeFileSystem implements FileSystem {
 
   public async fileExists(file: string): Promise<boolean> {
     return fs
-      .access(path.resolve(file), fs.constants.F_OK)
+      .access(this.resolve(file), fs.constants.F_OK)
       .then(() => true)
       .catch(() => false)
   }
@@ -74,14 +78,14 @@ export class NodeFileSystem implements FileSystem {
   }
 
   public async ensureDirectoryExists(dir: string): Promise<boolean> {
-    await fs.mkdir(path.resolve(dir), { recursive: true })
+    await fs.mkdir(this.resolve(dir), { recursive: true })
 
     return true
   }
 
   public async isDirectory(dir: string): Promise<boolean> {
     try {
-      const stats = await fs.stat(path.resolve(dir))
+      const stats = await fs.stat(this.resolve(dir))
 
       return stats.isDirectory()
     } catch (e) {
@@ -90,8 +94,8 @@ export class NodeFileSystem implements FileSystem {
   }
 
   public async directoryCopy(from: string, to: string): Promise<boolean> {
-    const fromDir = path.resolve(from)
-    const toDir = path.resolve(to)
+    const fromDir = this.resolve(from)
+    const toDir = this.resolve(to)
 
     if (!(await this.isDirectory(fromDir)) || !(await this.ensureDirectoryExists(toDir))) {
       return false

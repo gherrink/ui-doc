@@ -18,6 +18,7 @@ export interface AssetLoader {
 export interface FileSystem {
   createFileFinder(globs: string[]): FileFinder
   assetLoader(): AssetLoader
+  resolve(file: FilePath): FilePath
   directoryCopy(from: FilePath, to: FilePath): Promise<boolean>
   ensureDirectoryExists(dir: FilePath): Promise<boolean>
   isDirectory(dir: FilePath): Promise<boolean>
