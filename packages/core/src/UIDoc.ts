@@ -318,6 +318,8 @@ export class UIDoc implements EventEmitter<EventMap> {
     if (entry.sections.length > 0) {
       const ignore = ['id', 'title', 'order', 'titleLevel', 'sections']
 
+      entry.title = entry.id
+      entry.order = 0
       Object.keys(entry).forEach(entryKey => {
         if (!ignore.includes(entryKey)) {
           delete entry[entryKey]
