@@ -1,8 +1,4 @@
-import { throttle } from './utils'
-
 export function initExample() {
-  const changeHeightCallbacks: (() => void)[] = []
-
   document.querySelectorAll<HTMLIFrameElement>('[data-example] > iframe').forEach(iframe => {
     const document = iframe.contentDocument ?? iframe.contentWindow?.document
 
@@ -11,20 +7,32 @@ export function initExample() {
     }
 
     const initHeightChange = () => {
+      let currentHeight = 0
       const changeHeight = () => {
-        iframe.style.height = `${document.body.scrollHeight}px`
+        if (document.body.scrollHeight === currentHeight) {
+          return
+        }
+
+        currentHeight = document.body.scrollHeight
+        iframe.style.height = `${currentHeight}px`
       }
 
+      // Initial height change
       changeHeight()
-      changeHeightCallbacks.push(changeHeight)
 
-      const observer = new MutationObserver(changeHeight)
+      // Use MutationObserver to detect changes in the DOM and change height if required
+      const mutationObserver = new MutationObserver(changeHeight)
 
-      observer.observe(document.body, {
+      mutationObserver.observe(document.body, {
         attributes: true,
         childList: true,
         subtree: true,
       })
+
+      // Use ResizeObserver to detect changes in the viewport and change height if required
+      const resizeObserver = new ResizeObserver(changeHeight)
+
+      resizeObserver.observe(document.body)
     }
 
     if (document.readyState === 'complete') {
@@ -33,11 +41,4 @@ export function initExample() {
       iframe.addEventListener('load', initHeightChange)
     }
   })
-
-  window.addEventListener(
-    'resize',
-    throttle(() => {
-      changeHeightCallbacks.forEach(callback => callback())
-    }, 200),
-  )
 }
