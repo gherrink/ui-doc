@@ -399,7 +399,7 @@ describe('UI-Doc', () => {
           titleLevel: 3,
         },
       ],
-      title: 'Foo',
+      title: 'foo',
       titleLevel: 2,
     })
     expect(entriesFirst['foo.bar']).toEqual({
