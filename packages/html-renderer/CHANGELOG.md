@@ -1,5 +1,14 @@
 # @ui-doc/html-renderer ChangeLog
 
+## v0.3.0
+
+_2024-09-20_
+
+### Features
+
+- html-renderer: use resize observer instead instead of resize event (0f63d2c)
+- html-renderer: change example height when resizing (70da45f)
+
 ## v0.2.0
 
 _2024-09-09_
