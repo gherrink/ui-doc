@@ -24,6 +24,7 @@ export interface Api {
     options?: { fromInput?: boolean; type?: AssetType; attrs?: Record<string, string> },
   ): void
   isAssetFromInput(src: string): boolean
+  addAssetFromInput(src: string): void
 }
 
 function handleBlockParseError(this: PluginContext, error: any) {
@@ -41,7 +42,17 @@ function handleBlockParseError(this: PluginContext, error: any) {
 
 export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<Api>> {
   const options = await resolveOptions(rawOptions)
-  const { finder, fileSystem, uidoc, prefix, assetsFromInput, uidocAsset, staticAssets } = options
+  const {
+    finder,
+    fileSystem,
+    uidoc,
+    prefix,
+    assetsFromInput,
+    isAssetFromInput,
+    addAssetFromInput,
+    uidocAsset,
+    staticAssets,
+  } = options
 
   return {
     name: PLUGIN_NAME,
@@ -49,14 +60,12 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
 
     // eslint-disable-next-line sort-keys
     api: {
+      version,
       get fileFinder() {
         return finder
       },
       get fileSystem() {
         return fileSystem
-      },
-      isAssetFromInput(src: string): boolean {
-        return assetsFromInput.includes(src)
       },
       get options() {
         return options
@@ -65,7 +74,8 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         return uidoc
       },
       uidocAsset,
-      version,
+      isAssetFromInput,
+      addAssetFromInput,
     },
 
     async buildStart(inputOptions) {

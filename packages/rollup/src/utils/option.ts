@@ -56,6 +56,12 @@ export async function resolveOptions(options: Options): Promise<ResolvedOptions>
     ...(options.settings ?? {}),
   })
   const assetsFromInput: ResolvedOptions['assetsFromInput'] = []
+  const isAssetFromInput: ResolvedOptions['isAssetFromInput'] = src => assetsFromInput.includes(src)
+  const addAssetFromInput: ResolvedOptions['addAssetFromInput'] = src => {
+    if (!assetsFromInput.includes(src)) {
+      assetsFromInput.push(src)
+    }
+  }
   const uidocAsset: ResolvedOptions['uidocAsset'] = (
     src,
     context,
@@ -90,5 +96,7 @@ export async function resolveOptions(options: Options): Promise<ResolvedOptions>
     staticAssets: options.assets?.static,
     uidoc,
     uidocAsset,
+    isAssetFromInput,
+    addAssetFromInput,
   }
 }

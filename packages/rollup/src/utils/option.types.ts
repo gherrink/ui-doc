@@ -44,4 +44,6 @@ export interface ResolvedOptions {
   uidoc: UIDoc
   source: string[]
   uidocAsset: Api['uidocAsset']
+  isAssetFromInput: Api['isAssetFromInput']
+  addAssetFromInput: Api['addAssetFromInput']
 }
