@@ -1,7 +1,7 @@
 {
   "name": "@ui-doc/vite",
   "description": "Vite plugin for UI-Doc generation and preview.",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "license": "MIT",
   "keywords": [
     "ui-doc",
@@ -54,7 +54,7 @@
     "vite": "^5.0.0"
   },
   "dependencies": {
-    "@ui-doc/rollup": "workspace:>=0.2.0"
+    "@ui-doc/rollup": "workspace:>=0.3.0"
   },
   "devDependencies": {
     "@ui-doc/rollup": "workspace:*",

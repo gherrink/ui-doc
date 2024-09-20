@@ -1,5 +1,14 @@
 # @ui-doc/vite ChangeLog
 
+## v0.3.0
+
+_2024-09-20_
+
+### Features
+
+- vite: include imported assets and css when using asset from input (1b4530f)
+- rollup,vite: more customizable asset definition (344f577)
+
 ## v0.2.1
 
 _2024-09-09_
