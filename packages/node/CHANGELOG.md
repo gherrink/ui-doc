@@ -1,5 +1,13 @@
 # @ui-doc/node ChangeLog
 
+## v0.2.0
+
+_2024-09-20_
+
+### Features
+
+- core,node: filesystem path resolving (9796ba8)
+
 ## v0.1.2
 
 _2024-09-09_
