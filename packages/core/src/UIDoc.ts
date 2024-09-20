@@ -335,10 +335,16 @@ export class UIDoc implements EventEmitter<EventMap> {
         delete this.context.pages[key]
       }
     } else {
+      // remove from parent
       const parent = this.context.entries[parts.slice(0, -1).join('.')]
       const index = parent.sections.findIndex(section => section.id === entry.id)
 
       parent.sections.splice(index, 1)
+
+      // if parent has no more sections and title equal id (means it dose only exist as placeholder and was not defined in source), we can delete it
+      if (parent.sections.length === 0 && parent.title === parent.id) {
+        this.contextEntryDelete(parts.slice(0, -1).join('.'))
+      }
     }
 
     delete this.context.entries[key]
