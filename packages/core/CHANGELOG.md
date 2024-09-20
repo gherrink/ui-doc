@@ -1,5 +1,23 @@
 # @ui-doc/core ChangeLog
 
+## v0.3.0
+
+_2024-09-20_
+
+### Bugfixes
+
+- core: delete of required but not defined parent context entries (3a56bf7)
+- core: resetting of deleted entries (c56a076)
+
+### Features
+
+- core,node: filesystem path resolving (9796ba8)
+
+### Updates
+
+- core: fix resetting of parent entries (d2c688a)
+- core: `resolveUrl` generate function into generalized `resolve` (0634f9e)
+
 ## v0.2.0
 
 _2024-09-09_
