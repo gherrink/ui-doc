@@ -96,8 +96,23 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
           return
         }
 
+        // copy imported assets from vite into UI-Doc output
+        if (foundBundle?.viteMetadata?.importedAssets) {
+          foundBundle.viteMetadata.importedAssets.forEach((importedAsset: string) => {
+            plugin.api?.addAssetFromInput(importedAsset)
+          })
+        }
+
         if (asset.type === 'script') {
           asset.fileName = foundBundle.fileName
+
+          // copy imported css files to ui-doc
+          if (foundBundle?.viteMetadata?.importedCss) {
+            foundBundle.viteMetadata.importedCss.forEach((imported: string) => {
+              plugin.api?.addAssetFromInput(imported)
+            })
+          }
+
           return
         }
 
