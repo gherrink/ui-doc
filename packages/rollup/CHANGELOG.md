@@ -1,5 +1,22 @@
 # @ui-doc/rollup ChangeLog
 
+## v0.3.0
+
+_2024-09-20_
+
+### Bugfixes
+
+- rollup: watched files with error on startup (0dc8456)
+
+### Features
+
+- rollup: improved asset from input api (63fac07)
+- rollup,vite: more customizable asset definition (344f577)
+
+### Updates
+
+- rollup: changed asset copy message (b5e6d6b)
+
 ## v0.2.1
 
 _2024-09-09_

@@ -1,7 +1,7 @@
 {
   "name": "@ui-doc/rollup",
   "description": "Rollup plugin for UI-Doc generation.",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "license": "MIT",
   "keywords": [
     "ui-doc",
@@ -51,12 +51,12 @@
   },
   "sideEffects": false,
   "peerDependencies": {
-    "@ui-doc/html-renderer": "workspace:>=0.2.0",
+    "@ui-doc/html-renderer": "workspace:>=0.3.0",
     "rollup": "^4.0.0"
   },
   "dependencies": {
-    "@ui-doc/core": "workspace:>=0.2.0",
-    "@ui-doc/node": "workspace:>=0.1.0"
+    "@ui-doc/core": "workspace:>=0.3.0",
+    "@ui-doc/node": "workspace:>=0.2.0"
   },
   "devDependencies": {
     "@ui-doc/core": "workspace:*",
