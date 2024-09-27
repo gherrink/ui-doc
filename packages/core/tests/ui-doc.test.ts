@@ -66,11 +66,11 @@ describe('UI-Doc', () => {
           order: 0,
           sections: [],
           title: 'Foo Bar',
-          titleLevel: 3,
+          titleLevel: 2,
         },
       ],
       title: 'Foo',
-      titleLevel: 2,
+      titleLevel: 1,
     })
     expect(entries.bar).toEqual({
       description: 'Bar description',
@@ -78,14 +78,14 @@ describe('UI-Doc', () => {
       order: 0,
       sections: [],
       title: 'Bar',
-      titleLevel: 2,
+      titleLevel: 1,
     })
     expect(entries['foo.bar']).toEqual({
       id: 'bar',
       order: 0,
       sections: [],
       title: 'Foo Bar',
-      titleLevel: 3,
+      titleLevel: 2,
     })
 
     expect(pageIds.length).toBe(3)
@@ -138,11 +138,11 @@ describe('UI-Doc', () => {
           order: 0,
           sections: [],
           title: 'Foo Bar',
-          titleLevel: 3,
+          titleLevel: 2,
         },
       ],
       title: 'Foo',
-      titleLevel: 2,
+      titleLevel: 1,
     })
     expect(entriesFirst['foo.bar']).toEqual({
       description: 'Foo Bar description',
@@ -150,7 +150,7 @@ describe('UI-Doc', () => {
       order: 0,
       sections: [],
       title: 'Foo Bar',
-      titleLevel: 3,
+      titleLevel: 2,
     })
 
     uidoc.sourceUpdate('file.css', '')
@@ -167,18 +167,18 @@ describe('UI-Doc', () => {
           order: 0,
           sections: [],
           title: 'Foo Bar 2',
-          titleLevel: 3,
+          titleLevel: 2,
         },
       ],
       title: 'Foo',
-      titleLevel: 2,
+      titleLevel: 1,
     })
     expect(entriesSecond['foo.bar']).toEqual({
       id: 'bar',
       order: 0,
       sections: [],
       title: 'Foo Bar 2',
-      titleLevel: 3,
+      titleLevel: 2,
     })
   })
 
@@ -223,11 +223,11 @@ describe('UI-Doc', () => {
           order: 0,
           sections: [],
           title: 'Foo Bar',
-          titleLevel: 3,
+          titleLevel: 2,
         },
       ],
       title: 'Foo',
-      titleLevel: 2,
+      titleLevel: 1,
     })
     expect(entriesFirst['foo.bar']).toEqual({
       description: 'Foo Bar description',
@@ -235,7 +235,7 @@ describe('UI-Doc', () => {
       order: 0,
       sections: [],
       title: 'Foo Bar',
-      titleLevel: 3,
+      titleLevel: 2,
     })
 
     uidoc.sourceUpdate('file.css', '')
@@ -248,7 +248,7 @@ describe('UI-Doc', () => {
       order: 0,
       sections: [],
       title: 'Foo',
-      titleLevel: 2,
+      titleLevel: 1,
     })
   })
 
@@ -290,7 +290,7 @@ describe('UI-Doc', () => {
       order: 0,
       sections: [],
       title: 'Foo',
-      titleLevel: 2,
+      titleLevel: 1,
     })
     expect(entriesFirst.bar).toEqual({
       description: 'Bar description',
@@ -298,7 +298,7 @@ describe('UI-Doc', () => {
       order: 0,
       sections: [],
       title: 'Bar',
-      titleLevel: 2,
+      titleLevel: 1,
     })
     expect(pageIdsFirst.length).toBe(3)
     expect(pageIdsFirst.sort()).toEqual(['bar', 'foo', 'index'])
@@ -314,7 +314,7 @@ describe('UI-Doc', () => {
       order: 0,
       sections: [],
       title: 'Foo',
-      titleLevel: 2,
+      titleLevel: 1,
     })
     expect(pageIdsSecond.length).toBe(2)
     expect(pageIdsSecond.sort()).toEqual(['foo', 'index'])
@@ -370,18 +370,18 @@ describe('UI-Doc', () => {
           order: 0,
           sections: [],
           title: 'Foo Bar',
-          titleLevel: 3,
+          titleLevel: 2,
         },
       ],
       title: 'Foo',
-      titleLevel: 2,
+      titleLevel: 1,
     })
     expect(entriesFirst['foo.bar']).toEqual({
       id: 'bar',
       order: 0,
       sections: [],
       title: 'Foo Bar',
-      titleLevel: 3,
+      titleLevel: 2,
     })
 
     uidoc.sourceUpdate('file.css', '')
@@ -396,18 +396,18 @@ describe('UI-Doc', () => {
           order: 0,
           sections: [],
           title: 'Foo Bar',
-          titleLevel: 3,
+          titleLevel: 2,
         },
       ],
       title: 'foo',
-      titleLevel: 2,
+      titleLevel: 1,
     })
     expect(entriesFirst['foo.bar']).toEqual({
       id: 'bar',
       order: 0,
       sections: [],
       title: 'Foo Bar',
-      titleLevel: 3,
+      titleLevel: 2,
     })
   })
 
@@ -443,11 +443,11 @@ describe('UI-Doc', () => {
           order: 0,
           sections: [],
           title: 'Foo Bar',
-          titleLevel: 3,
+          titleLevel: 2,
         },
       ],
       title: 'Foo',
-      titleLevel: 2,
+      titleLevel: 1,
     })
     expect(entries['foo.bar']).toEqual({
       description: 'Foo Bar description',
@@ -455,7 +455,7 @@ describe('UI-Doc', () => {
       order: 0,
       sections: [],
       title: 'Foo Bar',
-      titleLevel: 3,
+      titleLevel: 2,
     })
 
     uidoc.sourceDelete('file.css')

@@ -297,7 +297,7 @@ export class UIDoc implements EventEmitter<EventMap> {
         order: 0,
         sections: [],
         title: id,
-        titleLevel: 2,
+        titleLevel: 1,
       }
 
       this.contextEntryAppend(key, this.context.entries[key])
