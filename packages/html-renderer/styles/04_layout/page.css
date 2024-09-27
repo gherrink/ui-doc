@@ -1,0 +1,73 @@
+body.page {
+  --main-sidebar-width: 25ch;
+  --main-content-sidebar-space: var(--space-xl);
+}
+
+body.page > .content {
+  --space-py: var(--space-xl);
+
+  .headline + .description {
+    margin-top: calc(var(--page-headline-description-space, var(--space-md)) * var(--space-unit));
+  }
+
+  > main > section + section {
+    margin-top: calc(var(--page-content-section-space, var(--space-xl)) * var(--space-unit));
+  }
+
+  > main * + .example,
+  > main *:not(.example) + .markup {
+    margin-top: 1em;
+  }
+}
+
+body.page > .content > main {
+  container-name: content;
+  container-type: inline-size;
+}
+
+@media screen and (width >= 1000px) {
+  body.page > .content:has(> .sidebar) {
+    display: grid;
+    grid-template-columns: var(--main-sidebar-width) 1fr;
+    grid-template-rows: auto auto;
+    gap: var(
+        --page-header-main-garp,
+        calc(var(--page-header-main-space, var(--space-lg)) * var(--space-unit))
+      )
+      var(
+        --page-content-sidebar-garp,
+        calc(var(--page-content-sidebar-space, var(--space-xl)) * var(--space-unit))
+      );
+
+    > .sidebar {
+      grid-column: 1 / span 1;
+      grid-row: 1 / span 2;
+    }
+
+    > header {
+      grid-column: 2 / span 1;
+      grid-row: 1 / span 1;
+    }
+
+    > main {
+      grid-column: 2 / span 1;
+      grid-row: 2 / span 1;
+    }
+
+    > .sidebar > .scrollbar {
+      position: sticky;
+      top: var(--nav-main-height);
+
+      overflow-y: auto;
+
+      height: 100%;
+      max-height: calc(100vh - var(--nav-main-height));
+    }
+  }
+}
+
+@media screen and (width < 1000px) {
+  body.page > .content > .sidebar {
+    display: none;
+  }
+}

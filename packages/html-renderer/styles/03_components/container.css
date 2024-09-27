@@ -1,0 +1,16 @@
+/**
+  * You can use the container class to wrap your content in a container.
+  *
+  * @location components.container Container
+  * @code
+  * <div class="container"></div>
+  */
+.container {
+  > *:first-child {
+    margin-top: 0;
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+}

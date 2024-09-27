@@ -1,9 +1,20 @@
-<nav class="nav-main width-content" aria-label="Main navigation" role="menu">
-  <div class="bar">
-    <a href="{{var:homeLink}}" class="control logo">{{var:logo}}</a>
-    <a href="{{var:homeLink}}" class="control title">{{var:name}}</a>
+<div class="nav-main" aria-label="Main navigation" role="menu">
+  <div class="bar width-content">
+    <a class="control logo" role="menuitem" href="{{var:homeLink}}" aria-label="To homepage">{{var:logo}}</a>
+
+    <button
+      class="control burger"
+      aria-label="Toggle menu"
+      aria-haspopup="true"
+      aria-expanded="false"
+      aria-controls="nav-main-menu"
+    >
+      <span class="line"></span>
+      <span class="line"></span>
+      <span class="line"></span>
+    </button>
+    <nav class="menu" role="menubar" id="nav-main-menu" data-animate="menu-show" data-inert="body > .content, body > footer">
+      {{for:menu}}<a class="control" role="menuitem" tabindex="0" href="{{var:href}}"{{if:active}} aria-current="page"{{/if}}>{{var:text}}</a>{{/for}}
+    </nav>
   </div>
-  <div class="menu" role="menubar" id="nav-main-menu">
-    {{for:menu}}<a href="{{var:href}}" class="control" role="menuitem" tabindex="0"{{if:active}} aria-current="page"{{/if}}>{{var:text}}</a>{{/for}}
-  </div>
-</nav>
+</div>

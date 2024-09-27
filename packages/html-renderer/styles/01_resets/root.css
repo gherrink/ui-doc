@@ -1,36 +1,74 @@
+@import url("./root/color.css");
+@import url("./root/font.css");
+@import url("./root/space.css");
+@import url("./root/witdh.css");
+
+/**
+  * There are some global veriables that are used in the project. These variables are a base set and can be changed depending on context and requirements. All components are using these variables to define the style or as a fallback if there more specific named variable is not present.
+  *
+  * @location variables.global Globals
+  */
 :root {
-  --font-weight-normal: 400;
-  --font-weight-bold: 700;
-  --font-size-sm: 0.85em;
-  --font-size-normal: 1em;
-  --font-size-md: 1.2em;
-  --font-size-lg: 1.7em;
+  /**
+    * - `--font-space-unit` - The spacing unit when using font related spaces (see the spaces documentation for mor details).
+    * - `--font-size-base` - The base font size.
+    * - `--font-color` - used font color.
+    * - `--font-family` - uded font family.
+    * - `--font-weight` - used font weight.
+    * - `--font-size` - used font size.
+    * - `--font-line-height` - used font line height.
+    *
+    * @location variables.global.font Font
+    */
+  --font-space-unit: 1em;
   --font-size-base: 16px;
-  --font-color: 3 3 3;
+  --font-color: var(--color-black);
   --font-family: system-ui, "Segoe UI", roboto, helvetica, arial, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol";
   --font-weight: var(--font-weight-normal);
   --font-size: var(--font-size-normal);
   --font-line-height: 1.4;
-  --headline-weight: var(--font-weight-bold);
-  --bg-color: 255 255 255;
-  --accent-color: 3 3 200;
-  --border-color: 5 5 5;
+
+  /**
+    * - `--bg-color` - used background color
+    * - `--accent-color` - used accent color
+    * - `--selection-color` - used selection color
+    * - `--selection-bg-color` - used selection background color
+    * - `--animation-time` - used animation time
+    *
+    * @location variables.global.colors Colors
+    */
+  --bg-color: var(--color-white);
+  --accent-color: var(--color-yellow);
   --selection-color: var(--bg-color);
   --selection-bg-color: var(--font-color);
-  --size-base-unit: 1rem;
-  --size-xs: calc(0.5 * var(--size-base-unit));
-  --size-sm: calc(0.8 * var(--size-base-unit));
-  --size-normal: var(--size-base-unit);
-  --size-md: calc(1.2 * var(--size-base-unit));
-  --size-lg: calc(1.6 * var(--size-base-unit));
-  --size-xl: calc(2.4 * var(--size-base-unit));
-  --nav-main-menu-item-px: var(--size-sm);
-  --nav-main-menu-item-py: var(--size-xs);
-  --nav-main-menu-item-font-size: var(--font-size-md);
-  --nav-main-height: calc(
-    var(--nav-main-menu-item-py) * 2 + var(--nav-main-menu-item-font-size) * var(--font-line-height)
+  --space-unit: 1em;
+
+  /**
+    *
+    * - `--animation-time` - used animation time
+    *
+    * @location variables.global.animation Animation
+    */
+  --animation-time: 0.25s;
+
+  /**
+    * @location variables.global.nav-main Main navigation
+    */
+  --nav-main-bar-item-space-x: var(--space-normal);
+  --nav-main-bar-item-space-y: var(--space-sm);
+  --nav-main-bar-item-height: calc(
+    (var(--font-size) * var(--font-line-height)) +
+      (var(--space-unit) * var(--nav-main-bar-item-space-y) * 2)
   );
+  --nav-main-menu-space-t: var(--space-sm);
+  --nav-main-menu-space-b: var(--space-normal);
+  --nav-main-height: var(--nav-main-bar-item-height);
+
+  /**
+    * @location variables.global.nav-main Main navigation
+    */
+  --scroll-padding-top: var(--nav-main-height);
 
   color-scheme: light;
 }

@@ -1,0 +1,22 @@
+html {
+  height: 100%;
+}
+
+html > body:has(.expand-full-height) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+
+  > .expand-full-height {
+    flex: 1 1;
+  }
+}
+
+html > body > footer {
+  --bg-color: var(--footer-bg-color, var(--color-blue));
+  --font-color: var(--footer-font-color, var(--color-white));
+
+  > .text {
+    text-align: right;
+  }
+}

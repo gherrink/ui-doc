@@ -1,3 +1,9 @@
-<h1 class="headline">{{var:title}}</h1>
-
-{{if:description}}<div class="description">{{var:description}}</div>{{/if}}
+<header class="width-content">
+  <h1 class="headline">{{var:title}}</h1>
+  {{if:description}}<div class="container description">{{var:description}}</div>{{/if}}
+</header>
+<main class="width-content expand-full-height">
+  {{for:sections}}
+  {{partial:section}}
+  {{/for}}
+</main>

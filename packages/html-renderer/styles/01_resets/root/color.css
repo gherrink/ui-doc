@@ -1,0 +1,19 @@
+/**
+  * The color variables are used to define the color palette.
+  *
+  * The color variables are defined by RGB value. When you want to use a color you need use the `rgb()` function. For example: `rgb(var(--color-black))`.
+  *
+  * @location variables.colors Colors
+  * @color {0 0 0|255 255 255} --color-black | Black
+  * @color {20 33 61|255 255 255} --color-blue | Blue
+  * @color {252 163 17} --color-yellow | Yellow
+  * @color {229 229 229} --color-gray | Gray
+  * @color {255 255 255} --color-white | White
+  */
+:root {
+  --color-black: 0 0 0;
+  --color-blue: 20 33 61;
+  --color-yellow: 252 163 17;
+  --color-gray: 229 229 229;
+  --color-white: 255 255 255;
+}

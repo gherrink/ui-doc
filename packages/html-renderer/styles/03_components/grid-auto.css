@@ -1,0 +1,49 @@
+/**
+  * Use the auto grid class to define your custom grid layouts. Please note, all columns will have the same width.
+  * We are using css variables to define the grid:
+  * - `--grid-columns` (required): define how many columns your grid should have
+  * - `--grid-item-min-width` (required): define the min width of the containing items, when you use a count of 4 and a item
+  *   width of  200px but there are only 650px availabe only three columns will be used. All items won't get smaller as
+  *   this number.
+  *
+  * Modify the gap of your grid:
+  * - `--gap-x` (optional): column (x-axis) gap - space between items - eg. 3rem
+  * - `--gap-y` (optional): row (y-axis) gap - space between items - eg. 3rem
+  * - `--gap` (optional): Define column (x-axis) and row (y-axis) gap - eg. 3rem
+  * - `--gap-space-x` (optional): Define column (x-axis) gap - use existing space variables - eg. var(--space-xs)
+  * - `--gap-space-y` (optional): Define row (y-axis) gap - use existing space variables - eg. var(--space-xs)
+  * - `--gap-space` (optional): Define column (x-axis) and row (y-axis) gap - use existing space variables - eg. var(--space-xs)
+  *
+  * If you need to redefine the gap in a inner auto grid you can use `unset` or `inital` as vairable value inn the inner grid to fallback to default.
+  *
+  * @location components.grid-auto Auto Grid
+  * @example
+  * <div class="grid-auto" style="--grid-columns: 3; --grid-item-min-width: 300px;">
+  *   <div class="bg bg-black pxy"></div>
+  *   <div class="bg bg-black pxy"></div>
+  *   <div class="bg bg-black pxy"></div>
+  *   <div class="bg bg-black pxy"></div>
+  *   <div class="bg bg-black pxy"></div>
+  * </div>
+  */
+.grid-auto {
+  /* https://css-tricks.com/an-auto-filling-css-grid-with-max-columns/ */
+  --grid-gap-x: var(
+    --gap-x,
+    var(--gap, calc(var(--space-unit) * var(--gap-space-x, var(--gap-space, var(--space-normal)))))
+  );
+  --grid-gap-y: var(
+    --gap-y,
+    var(--gap, calc(var(--space-unit) * var(--gap-space-y, var(--gap-space, var(--space-normal)))))
+  );
+  --grid-gap-count: calc(var(--grid-columns) - 1);
+  --grid-total-gap-width: calc(var(--grid-gap-count) * var(--grid-gap-x));
+  --grid-item-max-width: calc((100% - var(--grid-total-gap-width)) / var(--grid-columns));
+
+  display: grid;
+  grid-gap: var(--grid-gap-y) var(--grid-gap-x);
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(max(var(--grid-item-min-width), var(--grid-item-max-width)), 1fr)
+  );
+}

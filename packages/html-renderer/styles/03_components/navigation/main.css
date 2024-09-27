@@ -1,0 +1,102 @@
+.nav-main {
+  --bg-color: var(--na-main-bg-color, var(--color-blue));
+  --font-color: var(--nav-main-bg-color, var(--color-white));
+  --accent-color: var(--nav-main-accent-color, var(--color-yellow));
+
+  position: sticky;
+  z-index: 100;
+  top: 0;
+}
+
+.nav-main > .bar,
+.nav-main > .bar > .menu {
+  display: flex;
+  gap: var(--nav-main-item-gap, calc(var(--space-unit) * var(--nav-main-item-gap-space, 0)));
+}
+
+.nav-main > .bar {
+  --width-content-offset: var(--nav-main-bar-item-space-x) * var(--space-unit);
+
+  container-name: nav-bar;
+  container-type: inline-size;
+  justify-content: center;
+  background: rgb(var(--bg-color));
+
+  > .logo,
+  > .burger.control,
+  > .menu > .control {
+    --space-px: var(--nav-main-bar-item-space-x);
+    --space-py: var(--nav-main-bar-item-space-y);
+  }
+
+  > .logo {
+    height: var(--nav-main-bar-item-height);
+
+    > svg {
+      width: auto;
+      height: 100%;
+    }
+  }
+
+  > .menu > .control {
+    --font-weight: var(--font-weight-bold);
+
+    display: block;
+
+    &[aria-current="page"] {
+      --font-color: var(--accent-color);
+    }
+  }
+
+  @container nav-bar (width > 1000px) {
+    > .burger.control {
+      display: none;
+    }
+
+    > .menu {
+      margin-left: auto;
+    }
+  }
+
+  @container nav-bar (width <= 1000px) {
+    position: relative;
+
+    > .burger.control {
+      --nav-burger-control-size: var(--nav-main-bar-item-height);
+
+      margin-left: auto;
+    }
+
+    > .menu {
+      position: absolute;
+      top: calc(var(--nav-main-bar-item-height));
+      left: 0;
+
+      overflow-y: auto;
+      flex-direction: column;
+
+      width: 100%;
+      max-height: calc(100vh - var(--nav-main-height));
+      padding: calc(var(--space-unit) * var(--nav-main-menu-space-t)) var(--width-calc)
+        calc(var(--space-unit) * var(--nav-main-menu-space-b));
+
+      opacity: 1;
+      background: rgb(var(--bg-color));
+    }
+
+    > .menu.menu-show-enter-active,
+    > .menu.menu-show-leave-active {
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    > .menu.menu-show-enter-from,
+    > .menu.menu-show-leave-to {
+      opacity: 0;
+    }
+
+    > .menu[hidden],
+    > .burger.control[aria-expanded="false"] ~ .menu {
+      display: none;
+    }
+  }
+}

@@ -7,12 +7,10 @@
 
     {{var:styles}}
   </head>
-  <body class="{{var:page.id}}">
-    <header>{{partial:nav-main}}</header>
-    <main class="width-content">
-      {{page:page.id page}}
-    </main>
-    <footer class="width-content py mt">
+  <body class="page {{var:page.id}}">
+    {{partial:nav-main}}
+    {{page:page.id page}}
+    <footer class="width-content py bg">
       <div class="text">{{var:footerText}}</div>
     </footer>
 

@@ -1,5 +1,0 @@
-.text-flow {
-  > * + * {
-    margin-top: var(--text-flow-space, 1em);
-  }
-}

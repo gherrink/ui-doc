@@ -1,7 +1,7 @@
 .nav-list {
-  --nav-list-item-px: var(--size-sm);
-  --nav-list-item-py: var(--size-xs);
-  --nav-list-item-border-color: var(--border-color);
+  --nav-list-item-space-px: var(--space-sm);
+  --nav-list-item-space-py: var(--space-xs);
+  --nav-list-item-border-color: var(--border-color, var(--font-color));
 
   text-align: left;
 
@@ -15,23 +15,21 @@
     margin-top: var(--nav-list-root-item-space, var(--size-sm));
   }
 
-  .control {
-    &.active {
-      --font-color: var(--accent-color);
-    }
+  .control.active {
+    --font-color: var(--accent-color);
   }
 }
 
 .nav-list > ul > li > .control {
-  --py: var(--nav-list-item-py);
-  --pr: var(--nav-list-item-px);
+  --space-py: var(--nav-list-item-space-py);
+  --space-pr: var(--nav-list-item-space-px);
   --font-weight: var(--font-weight-bold);
   --font-size: var(--font-size-md);
 }
 
 .nav-list > ul > li > ul > li > .control {
-  --py: var(--nav-list-item-py);
-  --px: var(--nav-list-item-px);
+  --space-py: var(--nav-list-item-space-py);
+  --space-px: var(--nav-list-item-space-px);
 
   text-align: left;
   border-left: 1px solid rgba(var(--nav-list-item-border-color) / var(--border-opacity, 0.1));

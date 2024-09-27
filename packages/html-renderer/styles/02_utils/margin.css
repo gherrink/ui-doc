@@ -1,0 +1,150 @@
+/**
+  * Using `margin` to add margins top, right, bottom and left to your element.
+  * Possible variables are:
+  * - **--[space]** - set direclty a spacing unit
+  * - **--space-[space]** - set a predefined space
+  *
+  * Possible <spaces> are:
+  * - **mt** - margin-top
+  * - **mr** - margin-right
+  * - **mb** - margin-bottom
+  * - **ml** - margin-left
+  *
+  * @location utils.margin Margin
+  * @example
+  * <div class="bg bg-black" style="display: flow-root;">
+  *   <div class="margin bg bg-white">text</div>
+  * </div>
+  */
+.margin,
+.mxy {
+  margin: var(--mt, calc(var(--space-unit) * var(--space-mt, var(--space-normal))))
+    var(--mr, calc(var(--space-unit) * var(--space-mr, var(--space-normal))))
+    var(--mb, calc(var(--space-unit) * var(--space-mb, var(--space-normal))))
+    var(--ml, calc(var(--space-unit) * var(--space-ml, var(--space-normal))));
+}
+
+/**
+  * Using `mt` to add margin top to your element.
+  * Possible variables are:
+  * - **--mt** - set direclty a spacing unit
+  * - **--space-mt** - set a predefined space
+  *
+  * @location utils.margin.top Margin top
+  * @example
+  * <div class="bg bg-black" style="display: flow-root;">
+  *   <div class="mt bg bg-white">text</div>
+  * </div>
+  */
+.mt,
+.my {
+  margin-top: var(--mt, calc(var(--space-unit) * var(--space-mt, var(--space-normal))));
+}
+
+/**
+  * Using `mr` to add margin right to your element.
+  * Possible variables are:
+  * - **--mr** - set direclty a spacing unit
+  * - **--space-mr** - set a predefined space
+  *
+  * @location utils.margin.right Margin right
+  * @example
+  * <div class="bg bg-black" style="display: flow-root;">
+  *   <div class="mr bg bg-white">text</div>
+  * </div>
+  */
+.mr,
+.mx {
+  margin-right: var(--mr, calc(var(--space-unit) * var(--space-mr, var(--space-normal))));
+}
+
+/**
+  * Using `mb` to add margin bottom to your element.
+  * Possible variables are:
+  * - **--mb** - set direclty a spacing unit
+  * - **--space-mb** - set a predefined space
+  *
+  * @location utils.margin.bottom Margin bottom
+  * @example
+  * <div class="bg bg-black" style="display: flow-root;">
+  *   <div class="mb bg bg-white">text</div>
+  * </div>
+  */
+.mb,
+.my {
+  margin-bottom: var(--mb, calc(var(--space-unit) * var(--space-mb, var(--space-normal))));
+}
+
+/**
+  * Using `ml` to add margin left to your element.
+  * Possible variables are:
+  * - **--ml** - set direclty a spacing unit
+  * - **--space-ml** - set a predefined space
+  *
+  * @location utils.margin.left Margin left
+  * @example
+  * <div class="bg bg-black" style="display: flow-root;">
+  *   <div class="ml bg bg-white">text</div>
+  * </div>
+  */
+.ml,
+.mx {
+  margin-left: var(--ml, calc(var(--space-unit) * var(--space-ml, var(--space-normal))));
+}
+
+/**
+  * Using `mxy` to add margin for the x and y axies to your element.
+  * Possible variables are:
+  * - **--[space]** - set direclty a spacing unit
+  * - **--space-[space]** - set a predefined space
+  *
+  * Possible <spaces> are:
+  * - **my** - margin-top and margin-bottom
+  * - **mx** - margin-left and margin-right
+
+  * @location utils.margin.xy Margin y-axis and x-axis
+  * @example
+  * <div class="bg bg-black" style="display: flow-root;">
+  *   <div class="mxy bg bg-white">text</div>
+  * </div>
+  */
+.mxy {
+  --mt: var(--my, calc(var(--space-unit) * var(--space-my, var(--space-normal))));
+  --mb: var(--my, calc(var(--space-unit) * var(--space-my, var(--space-normal))));
+  --ml: var(--mx, calc(var(--space-unit) * var(--space-mx, var(--space-normal))));
+  --mr: var(--mx, calc(var(--space-unit) * var(--space-mx, var(--space-normal))));
+}
+
+/**
+  * Using `my` to add margins tob and bottom with same size to your element.
+  * Possible variables are:
+  * - **--my** - set direclty a spacing unit
+  * - **--space-my** - set a predefined space
+  *
+  * @location utils.margin.y Margin y-axis
+  * @example
+  * <div class="bg bg-black" style="display: flow-root;">
+  *   <div class="my bg bg-white">text</div>
+  * </div>
+  */
+.my {
+  --mt: var(--my, calc(var(--space-unit) * var(--space-my, var(--space-normal))));
+  --mb: var(--my, calc(var(--space-unit) * var(--space-my, var(--space-normal))));
+}
+
+/**
+  * Using `mx` to add margins left and right with same size to your element.
+  * Possible variables are:
+  * - **--mx** - set direclty a spacing unit
+  * - **--space-mx** - set a predefined space
+  *
+  * @location utils.margin.x Margin x-axis
+  * @example
+  * <div class="bg bg-black" style="display: flow-root;">
+  *   <div class="mx bg bg-white">text</div>
+  * </div>
+  */
+.mx {
+  --ml: var(--mx, calc(var(--space-unit) * var(--space-mx, var(--space-normal))));
+  --mr: var(--mx, calc(var(--space-unit) * var(--space-mx, var(--space-normal))));
+}

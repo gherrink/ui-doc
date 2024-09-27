@@ -1,0 +1,75 @@
+/**
+  * @location components.navigation.burger-control Navigation Burger Control
+  * @example
+  * <nav class="nav">
+  *   <button class="control burger" aria-label="Toggle Navigation" aria-expanded="false" aria-controls="target" style="--nav-burger-control-size: 3em; --space-px: .4; --space-py: .6">
+  *     <span class="line"></span>
+  *     <span class="line"></span>
+  *     <span class="line"></span>
+  *   </button>
+  *   <div id="target" hidden>Controlled Area</div>
+  * </nav>
+  */
+
+.nav-main .burger.control {
+  /* prettier-ignore */
+  --nav-burger-control-line-height-calc: var(--nav-burger-control-line-height, calc(
+    (
+      var(--nav-burger-control-size) -
+      (var(--py, calc(var(--space-unit) * var(--space-py))) * 2) -
+      (var(--nav-burger-control-line-space, var(--space-unit) / 2) * 2)
+    ) / 3
+  ));
+
+  position: relative;
+  width: calc(var(--nav-burger-control-size) * var(--nav-burger-control-width-multiplier, 1.4));
+  height: var(--nav-burger-control-size);
+}
+
+.nav-main .burger.control > .line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  display: block;
+
+  width: calc(100% - var(--px, calc(var(--space-unit) * var(--space-px))) * 2);
+  height: var(--nav-burger-control-line-height-calc);
+
+  background: rgb(var(--font-color));
+
+  transition: all var(--nav-burger-animation-time, 0.3s) ease;
+
+  &:first-child {
+    transform: translate(
+      -50%,
+      calc(
+        -50% - var(--nav-burger-control-line-space, var(--space-unit) / 2) - var(--nav-burger-control-line-height-calc)
+      )
+    );
+  }
+
+  &:last-child {
+    transform: translate(
+      -50%,
+      calc(
+        -50% + var(--nav-burger-control-line-space, var(--space-unit) / 2) + var(--nav-burger-control-line-height-calc)
+      )
+    );
+  }
+}
+
+.nav-main .burger.control[aria-expanded="true"] > .line {
+  &:first-child {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &:nth-child(2) {
+    display: none;
+  }
+
+  &:last-child {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+}

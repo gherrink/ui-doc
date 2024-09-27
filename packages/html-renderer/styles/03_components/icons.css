@@ -1,32 +1,20 @@
 .icons {
-  display: grid;
-  grid-template-columns: repeat(var(--icons-columns, 1), 1fr);
-  gap: var(--icons-gap, var(--size-normal));
-
-  @container content (width > 300px) {
-    --icons-columns: 2;
-  }
-
-  @container content (width > 620px) {
-    --icons-columns: 3;
-  }
-
-  @container content (width > 940px) {
-    --icons-columns: 4;
-  }
+  --grid-columns: 4;
+  --grid-item-min-width: 200px;
 }
 
 .icons > .item {
+  --space-px: var(--space-md);
+  --space-py: var(--space-xl);
+
   display: flex;
   flex-direction: column;
-  gap: var(--size-xs);
+  gap: calc(var(--space-xs) * var(--space-unit));
   justify-content: center;
-
-  padding: var(--size-xl) var(--size-md);
 
   text-align: center;
 
-  border: 1px solid rgb(var(--border-color));
+  border: 1px solid rgb(var(--border-color, var(--font-color)));
 
   > .show,
   > .show::before,

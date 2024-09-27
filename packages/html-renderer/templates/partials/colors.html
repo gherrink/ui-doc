@@ -1,7 +1,7 @@
-<div class="colors">
+<div class="colors grid-auto">
   {{for:this}}
   <div
-    class="item bg"
+    class="item bg pxy"
     style="--bg-color: {{var:value.output}};{{if:font}} --font-color: {{var:font.output}};{{/if}}"
   >
     {{if:value.hex}}<span class="value">{{var:value.hex}}</span>{{/if}}

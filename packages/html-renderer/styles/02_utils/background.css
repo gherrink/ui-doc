@@ -1,0 +1,14 @@
+/**
+  * The `.bg` class can be used to set backgrounds, depending on the selected
+  * variant css variables will be changed, so all colors used inside will fit to
+  * the background.
+  *
+  * @location utils.background Background
+  */
+.bg {
+  --selection-bg-color: var(--font-color);
+  --selection-color: var(--bg-color);
+
+  color: rgb(var(--font-color));
+  background: rgb(var(--bg-color));
+}

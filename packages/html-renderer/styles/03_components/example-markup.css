@@ -1,11 +1,6 @@
 .example,
 .markup {
-  border: 1px solid rgb(var(--code-border-color, var(--border-color)));
-}
-
-.example,
-.markup > .code > .hljs {
-  padding: 1em;
+  border: 1px solid rgb(var(--code-border-color, var(--border-color, var(--font-color))));
 }
 
 .example {

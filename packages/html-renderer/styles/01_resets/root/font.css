@@ -1,0 +1,28 @@
+/**
+  * Set of predefined font variables.
+  *
+  * @location variables.font Font
+  */
+:root {
+  /**
+    * Font weights are a set of predefined values that can be used to define the weight of a font:
+    * - **--font-weight-normal**
+    * - **--font-weight-bold**
+    *
+    * @location variables.font.weight Font weight
+    */
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+
+  /**
+    * Font sizes are a set of predefined values that can be used to define the size of a font:
+    * - **--font-size-sm**
+    * - **--font-size-normal**
+    * - **--font-size-md**
+    *
+    * @location variables.font.size Font size
+    */
+  --font-size-sm: 0.85em;
+  --font-size-normal: 1em;
+  --font-size-md: 1.2em;
+}

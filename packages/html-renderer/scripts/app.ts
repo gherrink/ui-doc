@@ -1,8 +1,10 @@
-import { initExample } from './src/example'
-import { initSidebar } from './src/sidebar'
-import { ready } from './src/utils'
+import { initExample } from './services/example'
+import { initExpand } from './services/expand'
+import { initSidebar } from './services/sidebar'
+import { ready } from './utils/dom'
 
 ready(() => {
+  initExpand()
   initExample()
   initSidebar()
 })

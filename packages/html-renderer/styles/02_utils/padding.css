@@ -1,0 +1,134 @@
+/**
+  * Using `padding` to add paddings top, right, bottom and left to your element.
+  * Possible variables are:
+  * - **--[space]** - set direclty a spacing unit
+  * - **--space-[space]** - set a predefined space
+  *
+  * Possible <spaces> are:
+  * - **pt** - padding-top
+  * - **pr** - padding-right
+  * - **pb** - padding-bottom
+  * - **pl** - padding-left
+  *
+  * @location utils.padding Padding
+  * @example
+  * <div class="padding bg bg-black"><div class="bg bg-white">text</div></div>
+  */
+.padding,
+.pxy {
+  padding: var(--pt, calc(var(--space-unit) * var(--space-pt, var(--space-normal))))
+    var(--pr, calc(var(--space-unit) * var(--space-pr, var(--space-normal))))
+    var(--pb, calc(var(--space-unit) * var(--space-pb, var(--space-normal))))
+    var(--pl, calc(var(--space-unit) * var(--space-pl, var(--space-normal))));
+}
+
+/**
+  * Using `pt` to add padding top to your element.
+  * Possible variables are:
+  * - **--pt** - set direclty a spacing unit
+  * - **--space-pt** - set a predefined space
+  *
+  * @location utils.padding.top Padding top
+  * @example
+  * <div class="pt bg bg-black"><div class="bg bg-white">text</div></div>
+  */
+.pt,
+.py {
+  padding-top: var(--pt, calc(var(--space-unit) * var(--space-pt, var(--space-normal))));
+}
+
+/**
+  * Using `pr` to add padding right to your element.
+  * Possible variables are:
+  * - **--pr** - set direclty a spacing unit
+  * - **--space-pr** - set a predefined space
+  *
+  * @location utils.padding.right Padding right
+  * @example
+  * <div class="pr bg bg-black"><div class="bg bg-white">text</div></div>
+  */
+.pr,
+.px {
+  padding-right: var(--pr, calc(var(--space-unit) * var(--space-pr, var(--space-normal))));
+}
+
+/**
+  * Using `pb` to add padding bottom to your element.
+  * Possible variables are:
+  * - **--pb** - set direclty a spacing unit
+  * - **--space-pb** - set a predefined space
+  *
+  * @location utils.padding.bottom Padding bottom
+  * @example
+  * <div class="pb bg bg-black"><div class="bg bg-white">text</div></div>
+  */
+.pb,
+.py {
+  padding-bottom: var(--pb, calc(var(--space-unit) * var(--space-pb, var(--space-normal))));
+}
+
+/**
+  * Using `pl` to add padding left to your element.
+  * Possible variables are:
+  * - **--pl** - set direclty a spacing unit
+  * - **--space-pl** - set a predefined space
+  *
+  * @location utils.padding.left Padding left
+  * @example
+  * <div class="pl bg bg-black"><div class="bg bg-white">text</div></div>
+  */
+.pl,
+.px {
+  padding-left: var(--pl, calc(var(--space-unit) * var(--space-pl, var(--space-normal))));
+}
+
+/**
+  * Using `pxy` to add padding for the x and y axies to your element.
+  * Possible variables are:
+  * - **--[space]** - set direclty a spacing unit
+  * - **--space-[space]** - set a predefined space
+  *
+  * Possible <spaces> are:
+  * - **my** - padding-top and padding-bottom
+  * - **mx** - padding-left and padding-right
+
+  * @location utils.padding.xy padding y-axis and x-axis
+  * @example
+  * <div class="pxy bg bg-black"><div class="bg bg-white">text</div></div>
+  */
+.pxy {
+  --pt: var(--py, calc(var(--space-unit) * var(--space-py, var(--space-normal))));
+  --pb: var(--py, calc(var(--space-unit) * var(--space-py, var(--space-normal))));
+  --pl: var(--px, calc(var(--space-unit) * var(--space-px, var(--space-normal))));
+  --pr: var(--px, calc(var(--space-unit) * var(--space-px, var(--space-normal))));
+}
+
+/**
+  * Using `py` to add paddings tob and bottom with same size to your element.
+  * Possible variables are:
+  * - **--py** - set direclty a spacing unit
+  * - **--space-py** - set a predefined space
+  *
+  * @location utils.padding.y Padding y-axis
+  * @example
+  * <div class="py bg bg-black"><div class="bg bg-white">text</div></div>
+  */
+.py {
+  --pt: var(--py, calc(var(--space-unit) * var(--space-py, var(--space-normal))));
+  --pb: var(--py, calc(var(--space-unit) * var(--space-py, var(--space-normal))));
+}
+
+/**
+  * Using `px` to add paddings left and right with same size to your element.
+  * Possible variables are:
+  * - **--px** - set direclty a spacing unit
+  * - **--space-px** - set a predefined space
+  *
+  * @location utils.padding.x Padding x-axis
+  * @example
+  * <div class="px bg bg-black"><div class="bg bg-white">text</div></div>
+  */
+.px {
+  --pl: var(--px, calc(var(--space-unit) * var(--space-px, var(--space-normal))));
+  --pr: var(--px, calc(var(--space-unit) * var(--space-px, var(--space-normal))));
+}

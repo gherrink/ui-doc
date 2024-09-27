@@ -1,14 +1,14 @@
-<div class="content">
-  <h1 class="headline">{{var:title}}</h1>
-
-  {{if:description}}<div class="description">{{var:description}}</div>{{/if}}
-
-  {{for:sections}}
-  {{partial:section}}
-  {{/for}}
+<div class="content width-content expand-full-height py">
+  <header class="container">
+    <h1 class="headline">{{var:title}}</h1>
+    {{if:description}}<div class="container description">{{var:description}}</div>{{/if}}
+  </header>
+  <main class="container">
+    {{for:sections}}
+    {{partial:section}}
+    {{/for}}
+  </main>
+  <aside class="sidebar">
+    <div class="scrollbar">{{partial:nav-sidebar}}</div>
+  </aside>
 </div>
-<aside class="sidebar">
-  <div class="scroll">{{partial:nav-sidebar}}</div>
-</aside>
-
-
