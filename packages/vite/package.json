@@ -37,7 +37,7 @@
     "build": "rollup -c",
     "prebuild": "rm -rf dist dist",
     "prepare": "if [ ! -d 'dist' ]; then pnpm build; fi",
-    "prerelease": "pnpm build",
+    "prepublish": "pnpm build",
     "release": "pnpm --workspace-root package:release $(pwd)",
     "release:dry": "pnpm --workspace-root package:release-dry $(pwd)"
   },
