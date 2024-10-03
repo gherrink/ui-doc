@@ -1,5 +1,18 @@
 # @ui-doc/rollup ChangeLog
 
+## v0.3.1
+
+_2024-10-03_
+
+### Bugfixes
+
+- core,html-renderer,node,rollup,vite: version is always one number behind (852e7d4)
+- html-renderer,rollup: when using option templatePath the resolved path contained undefined (91574a5)
+
+### Updates
+
+- rollup,vite: internal links (2ff349d)
+
 ## v0.3.0
 
 _2024-09-20_
