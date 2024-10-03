@@ -29,7 +29,7 @@ body.page > .content > main {
   body.page > .content:has(> .sidebar) {
     display: grid;
     grid-template-columns: var(--main-sidebar-width) 1fr;
-    grid-template-rows: auto auto;
+    grid-template-rows: auto 1fr;
     gap: var(
         --page-header-main-garp,
         calc(var(--page-header-main-space, var(--space-lg)) * var(--space-unit))
