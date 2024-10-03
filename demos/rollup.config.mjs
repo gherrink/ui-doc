@@ -41,7 +41,7 @@ export default [
         autoModules: true,
         extract: true,
         minimize: true,
-        plugins: [postcssImport(), postcssNested(), postcssExtend(), autoprefixer()],
+        plugins: [postcssImport(), postcssNested(), autoprefixer()],
         sourceMap: true,
       }),
       uidoc({
