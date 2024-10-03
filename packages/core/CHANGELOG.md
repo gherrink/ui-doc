@@ -1,5 +1,19 @@
 # @ui-doc/core ChangeLog
 
+## v0.3.1
+
+_2024-10-03_
+
+### Bugfixes
+
+- core,html-renderer,node,rollup,vite: version is always one number behind (852e7d4)
+- core: titleLevel is starting with 3 instead of 2 (4062276)
+
+### Updates
+
+- core: tag result images (99060a4)
+- core: types closer to into project (01c4411)
+
 ## v0.3.0
 
 _2024-09-20_
