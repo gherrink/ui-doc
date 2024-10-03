@@ -1,5 +1,18 @@
 # @ui-doc/vite ChangeLog
 
+## v0.3.1
+
+_2024-10-03_
+
+### Bugfixes
+
+- vite: missing example stylesheets on build when using import in script (55a011c)
+- core,html-renderer,node,rollup,vite: version is always one number behind (852e7d4)
+
+### Updates
+
+- rollup,vite: internal links (2ff349d)
+
 ## v0.3.0
 
 _2024-09-20_
