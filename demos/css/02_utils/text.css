@@ -1,0 +1,30 @@
+/**
+  * Set text specific styles
+  *
+  * @location utils.text Text
+  */
+
+/**
+  * Use the `.tc` class in combination with a color to set the text color.
+  *
+  * @location utils.text.colors Colors
+  * @example
+  * <div class="tc tc-white">Text color white</div>
+  * <div class="tc tc-black">Text color black</div>
+  * <div class="tc tc-gray">Text color gray</div>
+  */
+.tc {
+  color: rgb(var(--font-color));
+}
+
+.tc-white {
+  --font-color: var(--color-white);
+}
+
+.tc-black {
+  --font-color: var(--color-black);
+}
+
+.tc-gray {
+  --font-color: var(--color-gray);
+}

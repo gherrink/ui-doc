@@ -1,0 +1,41 @@
+/**
+  * The `.control` class is used as base for all controls either by extending or using the class directly.
+  *
+  * @location utils.control Control
+  * @example
+  * <a class="control">Link control</a><br>
+  * <button type="button" class="control">Button control</button><br>
+  * <button type="button" class="control" disabled>Button control disabeled</button><br>
+  * <button type="button" class="control no-hover">Disable hover effect</button><br>
+  */
+.control,
+.btn {
+  --space-px: 0;
+  --space-py: 0;
+
+  cursor: pointer;
+
+  display: inline-block;
+
+  padding: var(--py, calc(var(--space-unit) * var(--space-py)))
+    var(--px, calc(var(--space-unit) * var(--space-px)));
+
+  text-align: center;
+  text-decoration: none;
+  word-break: keep-all;
+
+  appearance: none;
+  background: rgb(var(--control-bg-color, transparent));
+  border: none;
+  border-radius: unset;
+  outline: none;
+
+  &:hover:not([aria-disabled="true"], [disabled], .btn[class*="bg-"], .no-hover) {
+    --font-color: var(--control-hover-color, var(--accent-color));
+  }
+
+  &[aria-disabled="true"],
+  &:disabled {
+    cursor: not-allowed;
+  }
+}

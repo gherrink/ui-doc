@@ -1,1 +1,61 @@
-:root {}
+/**
+ * @location resets.variables Variables
+ */
+
+@import url("./root/colors.css");
+@import url("./root/font.css");
+@import url("./root/space.css");
+@import url("./root/widht.css");
+@import url("./root/icons.css");
+
+/**
+  * There are some global veriables that are used in the project. These variables are a base set and can be changed depending on context and requirements. All components are using these variables to define the style or as a fallback if there more specific named variable is not present.
+  *
+  * @location variables.global Globals
+  */
+:root {
+  /**
+    * - `--font-space-unit` - The spacing unit when using font related spaces (see the spaces documentation for mor details).
+    * - `--font-size-base` - The base font size.
+    * - `--font-color` - used font color.
+    * - `--font-family` - uded font family.
+    * - `--font-weight` - used font weight.
+    * - `--font-size` - used font size.
+    * - `--font-line-height` - used font line height.
+    *
+    * @location variables.global.font Font
+    */
+  --font-space-unit: 1em;
+  --font-size-base: 16px;
+  --font-color: var(--color-black);
+  --font-family: system-ui, "Segoe UI", roboto, helvetica, arial, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-weight: var(--font-weight-normal);
+  --font-size: var(--font-size-normal);
+  --font-line-height: 1.4;
+
+  /**
+    * - `--bg-color` - used background color
+    * - `--accent-color` - used accent color
+    * - `--selection-color` - used selection color
+    * - `--selection-bg-color` - used selection background color
+    * - `--animation-time` - used animation time
+    *
+    * @location variables.global.colors Colors
+    */
+  --bg-color: var(--color-white);
+  --accent-color: var(--color-gray);
+  --selection-color: var(--bg-color);
+  --selection-bg-color: var(--font-color);
+  --space-unit: 1em;
+
+  /**
+    *
+    * - `--animation-time` - used animation time
+    *
+    * @location variables.global.animation Animation
+    */
+  --animation-time: 0.25s;
+
+  color-scheme: light;
+}

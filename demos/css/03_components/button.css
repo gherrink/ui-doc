@@ -1,0 +1,42 @@
+/**
+  * Buttons extend the `.control` class and can be used with different html attributes.
+  *
+  * @location components.button Button
+  * @example
+  * <button class="btn">Button</button>
+  * <button class="btn" disabled>Button disabled</button>
+  * <a href="#" class="btn">Link Button</a>
+  * <input type="submit" class="btn" value="Submit button" />
+  */
+.btn {
+  --space-py: var(--btn-space-py, var(--space-xs));
+  --space-px: var(--btn-space-px, var(--space-sm));
+  --font-size: var(--btn-font-size, var(--font-size-normal));
+  --font-weight: var(--btn-font-weight, var(--font-weight-bold));
+
+  color: rgb(var(--btn-font-color, var(--font-color)));
+  background: rgb(var(--btn-bg-color, var(--bg-color)));
+  transition: all ease var(--btn-animation-time, var(--animation-time));
+}
+
+/**
+  * We are using the bg colors to modify the btn color. In combination with the accent color for hover effects.
+  *
+  * @location components.button.colors Colors
+  * @example
+  * <button class="btn bg-white">Button</button>
+  * <button class="btn bg-black">Button</button>
+  */
+.btn[class*="bg-"]:hover:not([aria-disabled="true"], [disabled], .no-hover) {
+  --btn-bg-color: var(--accent-color);
+}
+
+/**
+  * The hover effect when using bg colors is disabled when using disabled attributes. Or you can manually disable it with `.no-hover`.
+  *
+  * @location components.button.colors.hover Hover effect
+  * @example
+  * <button class="btn bg-black" aria-disabled="true">Disabled by aria</button>
+  * <button class="btn bg-black" disabled>Disabled</button>
+  * <button class="btn bg-black no-hover">No hover</button>
+  */

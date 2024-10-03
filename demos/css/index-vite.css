@@ -1,0 +1,54 @@
+/**
+  * Text for the index page
+  *
+  * @page index UI-Doc
+  */
+
+/**
+  * Variables used in the project.
+  *
+  * @page variables Variables
+  * @order 10
+  */
+
+/**
+  * Resets used to normalize the browser styles.
+  *
+  * @page resets Resets
+  * @order 20
+  */
+@import url("01_resets/font-faces.css");
+@import url("01_resets/root.css");
+@import url("01_resets/initial.css");
+@import url("01_resets/typography.css");
+
+/**
+  * Utility classes are building the base of all styles. They can be applyed everywhere to modify/control one specific thing.
+  *
+  * @page utils Utilities
+  * @order 30
+  */
+@import url("02_utils/background.css");
+@import url("02_utils/text.css");
+@import url("02_utils/padding.css");
+@import url("02_utils/margin.css");
+@import url("02_utils/control.css");
+@import url("02_utils/width.css");
+
+/**
+  * Objects are build out of objects and define style for it's inner children.
+  *
+  * @page components Components
+  * @order 40
+  */
+@import url("03_components/button.css");
+@import url("03_components/image.css");
+@import url("03_components/container.css");
+
+/**
+  * Layouts are the outermost layer of the design. They define the structure of the page.
+  *
+  * @page layout Layout
+  * @order 50
+  */
+@import url("04_layouts/body.css");

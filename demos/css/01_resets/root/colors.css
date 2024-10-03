@@ -1,0 +1,25 @@
+/**
+  * The color variables are used to define the color palette of the application.
+  * The color palette is defined by the following variables:
+  * - **color-black**
+  * - **color-blue**
+  * - **color-yellow**
+  * - **color-gray**
+  * - **color-white**
+  *
+  * The color variables are defined by the RGB values of the color.
+  *
+  * @location variables.colors Colors
+  * @color {--color-black|--color-white} --color-black | black
+  * @color {20 33 61|255 255 255} --color-blue | blue
+  * @color {252 163 17} --color-yellow | yellow
+  * @color {229 229 229} --color-gray | gray
+  * @color {255 255 255} --color-white | white
+  */
+:root {
+  --color-black: 0 0 0;
+  --color-blue: 20 33 61;
+  --color-yellow: 252 163 17;
+  --color-gray: 229 229 229;
+  --color-white: 255 255 255;
+}

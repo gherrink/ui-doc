@@ -1,0 +1,11 @@
+/**
+ * Widths are a set of predefined values that can be used to limit the content width.
+ *
+ * @location variables.width Width (Content)
+ */
+:root {
+  --width-min-space-x: 22px;
+  --width-content: 1024px;
+  --width-lg: 1280px;
+  --width-sm: 640px;
+}

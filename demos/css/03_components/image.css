@@ -1,0 +1,24 @@
+/**
+  * We are using the `<picture>` tag to display images. Using source to give different images sizes for specific image widths. In this example, we have two
+  * different images for 260px and 520px width. If the image is smaller than 260px, the first image will be displayed. If the image is smaller than 260px
+  * the 260x260 preview image will be used.
+  *
+  * You can set the `loading="lazy"` attribute to lazy load the image.
+  *
+  * @location components.image Image
+  * @example
+  * <picture class="image">
+  *   <source media="(max-width: 260px)" srcset="img/preview-260x260.png">
+  *   <source media="(max-width: 520px)" srcset="img/preview-520x520.png">
+  *   <img alt="Image Preview" src="img/preview-520x520.png" width="520" height="520"/>
+  * </picture>
+  */
+.image {
+  position: relative;
+  display: inline-flex;
+
+  > img {
+    max-width: 100%;
+    height: auto;
+  }
+}

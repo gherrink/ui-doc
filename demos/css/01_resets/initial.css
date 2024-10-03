@@ -1,14 +1,23 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 *::after,
 *::before {
-    box-sizing: inherit;
+  box-sizing: inherit;
 }
 
-::selection {}
+::selection {
+  color: rgb(var(--selection-color));
+  background: rgb(var(--selection-bg-color));
+}
 
-* {}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--scroll-padding-top, 0);
+}
 
-body {}
+body {
+  margin: 0;
+  background: rgb(var(--bg-color));
+}

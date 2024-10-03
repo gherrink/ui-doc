@@ -1,0 +1,16 @@
+/**
+  * Please note that icons for specific use cases are grouped by an prefix.
+  *
+  * @location variables.icons Icons
+  * @icon {e900} --icon-chevron-down - chevron-down
+  * @icon {e901} --icon-chevron-left - chevron-left
+  * @icon {--icon-chevron-right} --icon-chevron-right | chevron-right
+  * @icon --icon-chevron-up | chevron-up
+  */
+:root {
+  --icons-font-family: icons;
+  --icon-chevron-down: "\e900";
+  --icon-chevron-left: "\e901";
+  --icon-chevron-right: "\e902";
+  --icon-chevron-up: "\e903";
+}

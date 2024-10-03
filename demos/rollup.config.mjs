@@ -1,6 +1,7 @@
+import path from 'node:path'
+
 import uidoc from '@ui-doc/rollup'
 import autoprefixer from 'autoprefixer'
-import { resolve } from 'path'
 import postcssExtend from 'postcss-extend'
 import postcssImport from 'postcss-import'
 import postcssNested from 'postcss-nested'
@@ -9,7 +10,7 @@ import postcss from 'rollup-plugin-postcss'
 export default [
   {
     input: {
-      app: 'css/index.css',
+      app: 'css/index-rollup.css',
     },
     output: {
       dir: 'dist/rollup',
@@ -28,7 +29,7 @@ export default [
   },
   {
     input: {
-      'ui-doc-custom': resolve('css/ui-doc.css'),
+      'ui-doc-custom': path.resolve('ui-doc/rollup.css'),
     },
     output: {
       dir: 'dist/rollup',
@@ -59,7 +60,7 @@ export default [
         },
         source: ['css/**/*.css'],
         assets: {
-          static: './assets',
+          static: './ui-doc/assets',
           page: [
             {
               name: 'ui-doc-custom.css',

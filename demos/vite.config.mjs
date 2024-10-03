@@ -1,3 +1,5 @@
+import path from 'node:path'
+
 import uidoc from '@ui-doc/vite'
 import { defineConfig } from 'vite'
 
@@ -7,9 +9,17 @@ export default defineConfig(({ command }) => {
       outDir: 'dist/vite',
       rollupOptions: {
         input: {
-          app: 'css/index.css',
-          'ui-doc-custom': 'css/ui-doc.css',
+          app: 'js/app-vite.js',
+          'ui-doc-custom': 'ui-doc/vite.css',
         },
+      },
+    },
+
+    resolve: {
+      alias: {
+        '@assets': path.resolve(__dirname, 'assets'),
+        '@css': path.resolve(__dirname, 'css'),
+        '@js': path.resolve(__dirname, 'js'),
       },
     },
 
@@ -19,8 +29,9 @@ export default defineConfig(({ command }) => {
           baseUri: command === 'serve' ? undefined : '.',
         },
         source: ['css/**/*.css'],
+        templatePath: 'ui-doc/templates',
         assets: {
-          static: './assets',
+          static: './ui-doc/assets',
           page: [
             {
               name: 'ui-doc-custom',
@@ -31,6 +42,9 @@ export default defineConfig(({ command }) => {
             {
               name: 'app',
               fromInput: true,
+              attrs: {
+                type: 'module',
+              },
             },
           ],
         },
