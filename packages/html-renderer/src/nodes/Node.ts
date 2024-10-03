@@ -1,4 +1,4 @@
-import type { RenderContext, Renderer } from '../types'
+import type { RenderContext, Renderer } from '../Renderer.types'
 import type { TagNodeType } from './TagNode'
 
 export const nodeOperators = ['==', '!=', '===', '!==', '<', '<=', '>', '>='] as const

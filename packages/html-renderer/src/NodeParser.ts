@@ -5,7 +5,8 @@ import { CommentNode } from './nodes/CommentNode'
 import { Node } from './nodes/Node'
 import tagParsers from './nodes/tags'
 import { TemplateNode } from './nodes/TemplateNode'
-import type { Parser, Reader, TagNodeParse } from './types'
+import type { Parser, TagNodeParse } from './Parser.types'
+import type { Reader } from './Reader.types'
 
 export class NodeParser implements Parser {
   protected tags: Record<string, TagNodeParse> = {}

@@ -1,4 +1,6 @@
-import type { PositiveInteger, Reader, TokenReturn } from './index'
+import type { PositiveInteger } from './Primitive.types'
+import type { Reader } from './Reader.types'
+import type { TokenReturn } from './Token.types'
 
 export interface Lexer {
   /**

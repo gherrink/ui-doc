@@ -1,4 +1,4 @@
-import type { PositiveInteger } from './base'
+import type { PositiveInteger } from './Primitive.types'
 
 export interface Reader {
   /**

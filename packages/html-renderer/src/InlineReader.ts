@@ -1,4 +1,5 @@
-import type { PositiveInteger, Reader } from './types'
+import type { PositiveInteger } from './Primitive.types'
+import type { Reader } from './Reader.types'
 
 export class InlineReader implements Reader {
   protected input: string

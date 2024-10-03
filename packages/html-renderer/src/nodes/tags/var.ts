@@ -1,5 +1,7 @@
 import { TagNodeError } from '../../errors'
-import type { RenderContext, TagNodeParse, TokenValue } from '../../types'
+import type { TagNodeParse } from '../../Parser.types'
+import type { RenderContext } from '../../Renderer.types'
+import type { TokenValue } from '../../Token.types'
 import { escapeHtml, readNestedValue } from '../../utils'
 import { TagNode } from '../TagNode'
 

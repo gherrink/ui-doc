@@ -1,7 +1,7 @@
+import type { Lexer } from './Lexer.types'
+import type { PositiveInteger } from './Primitive.types'
+import type { Reader } from './Reader.types'
 import type {
-  Lexer,
-  PositiveInteger,
-  Reader,
   Token,
   TokenBoolean,
   TokenComment,
@@ -12,7 +12,7 @@ import type {
   TokenString,
   TokenTemplate,
   TokenTypeIdentifier,
-} from './types'
+} from './Token.types'
 
 const IDENTIFIER_CHARS: Record<TokenTypeIdentifier, string> = {
   identifier: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.',

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, jest, test } from '@jest/globals'
 
 import { TagPageNode } from '../../src/nodes/tags/page'
-import type { Renderer } from '../../src/types'
+import type { Renderer } from '../../src/Renderer.types'
 
 describe('render tag page', () => {
   const pageMock = jest.fn<Renderer['page']>(() => '').mockReturnValue('')

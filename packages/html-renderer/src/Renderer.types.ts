@@ -1,6 +1,6 @@
 import { Renderer as CoreRenderer } from '@ui-doc/core'
 
-import type { Reader } from './reader'
+import type { Reader } from './Reader.types'
 
 export type RenderContext = Record<string, any>
 

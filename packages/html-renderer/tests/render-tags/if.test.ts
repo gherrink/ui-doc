@@ -2,7 +2,7 @@ import { describe, expect, jest, test } from '@jest/globals'
 
 import type { Node, NodeOperator } from '../../src/nodes/Node'
 import { TagIfNode } from '../../src/nodes/tags/if'
-import type { Renderer } from '../../src/types'
+import type { Renderer } from '../../src/Renderer.types'
 
 describe('render tag if', () => {
   const renderer = {} as Renderer

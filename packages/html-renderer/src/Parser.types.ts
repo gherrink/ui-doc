@@ -1,6 +1,6 @@
-import type { Node, TagNode } from '../nodes'
-import type { Reader } from './reader'
-import type { Token } from './token'
+import type { Node, TagNode } from './nodes'
+import type { Reader } from './Reader.types'
+import type { Token } from './Token.types'
 
 export interface TagNodeParse {
   identifier: string

@@ -1,4 +1,4 @@
-import type { TagNodeParse } from '../../types'
+import type { TagNodeParse } from '../../Parser.types'
 import { parseTagDebugNode } from './debug'
 import { parseTagForNode } from './for'
 import { parseTagIfNode } from './if'
