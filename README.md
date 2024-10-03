@@ -25,3 +25,13 @@ Working with the documentation. This means while documenting and giving examples
 - encapsulated testing of components
 
 ## How to use?
+
+You can build the UI-Doc with different tools:
+
+- Node - example `demos/base.ts`
+- [Rollup](./packages/rollup/README.md) - example `demos/rollup.config.mjs`
+- [Vite](./packages/vite/README.md) - example `demos/vite.config.mjs`
+
+## Demo
+
+Want to see a demo? Visit [https://gherrink.github.io/ui-doc/](https://gherrink.github.io/ui-doc/) the code under `./demos` was used with vite to generate this example.
