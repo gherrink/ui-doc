@@ -15,11 +15,17 @@ async function main() {
   const assetLoader = fileSystem.assetLoader()
   const renderer = new HtmlRenderer(NodeParser.init())
   const finder = fileSystem.createFileFinder(['css/**/*.css'])
+  const templatePath = await assetLoader.packagePath(TemplateLoader.TEMPLATES_PACKAGE)
+
+  if (!templatePath) {
+    console.error(`Template path '${TemplateLoader.TEMPLATES_PACKAGE}' not found`)
+  }
 
   try {
     await TemplateLoader.load({
       fileSystem,
       renderer,
+      templatePath: templatePath!,
     })
   } catch (e) {
     if (e instanceof HTMLRendererSyntaxError) {
