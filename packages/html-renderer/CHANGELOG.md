@@ -1,5 +1,24 @@
 # @ui-doc/html-renderer ChangeLog
 
+## v0.4.0
+
+_2024-10-03_
+
+### Bugfixes
+
+- html-renderer: page layout with only one small section has too much space (957c509)
+- core,html-renderer,node,rollup,vite: version is always one number behind (852e7d4)
+- html-renderer,rollup: when using option templatePath the resolved path contained undefined (91574a5)
+
+### Features
+
+- html-renderer: inline code style (44d2cde)
+- html-renderer: new fallback styling (df2fffa)
+
+### Updates
+
+- html-renderer: types closer into project (00ee8a1)
+
 ## v0.3.0
 
 _2024-09-20_
