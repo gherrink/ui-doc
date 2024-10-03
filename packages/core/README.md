@@ -61,7 +61,7 @@ The example code will add an example and code. The example will show the viewer 
 
 ```js
 /**
- * Add an showcase of different typos and the code how to create them.
+ * Will display code and example
  *
  * @example
  * <span>Normal Text</span><br>
@@ -75,6 +75,8 @@ The example code will add an example and code. The example will show the viewer 
 // TODO @example {modifier|js} change code type (default html)
 ```
 
+![Code and it's output](../../doc-assets/core/example.png)
+
 ### @code
 
 The code tag will add readable code.
@@ -86,7 +88,11 @@ The code tag will add readable code.
  * @code
  * <div class="code-example"></div>
  */
+```
 
+![Code tag result](../../doc-assets/core/code.png)
+
+```js
 /**
  * If used in combination with `@example` the code from `@code` will override the example code.
  * Comes in handy if you like to hide some inline styling or additional html-tags that are only for better displaying.
@@ -101,6 +107,8 @@ The code tag will add readable code.
 // TODO @code {js}
 // TODO @code {html} is default
 ```
+
+![Code with example tag result](../../doc-assets/core/code_with_example.png)
 
 ### @hideCode
 
@@ -119,6 +127,8 @@ Can be used to hide code if you only want to add showcase but no code block.
  * @hideCode
  */
 ```
+
+![example with hideCode tag result](../../doc-assets/core/code_with_example.png)
 
 ### @page
 
@@ -223,17 +233,28 @@ Define colors you are using in your layout.
 /**
  * The colors used in this style.
  *
- * @location variables.colors Colors
  * @color {0 0 0|255 255 255} --color-black | black
  * @color {20 33 61|255 255 255} --color-blue | blue
  * @color {252 163 17} --color-yellow | yellow
  * @color {229 229 229} --color-gray | gray
  * @color {255 255 255} --color-white-rgb - white rgb
  * @color {#fff} --color-white-hex white hex
+ * @color {--color-white} --color-white-var white var
+ * @color --color-white white var without value
  */
 ```
 
+![color tag result](../../doc-assets/core/color.png)
+
 You can define multiple colors in on codeblock the colors will then be displayed together. The color tag expects as type the rgb or hex value of the color you are going to use. As a second type you can define the font color that should be used for this color. A variable name and description also need to be given, both can be separated by `|`, `-` or just whitespace.
+
+If you provide a custom style sheet with custom properties for variables you can use these directly.
+
+```css
+:root {
+  --color-white: 255 255 255;
+}
+```
 
 ### @space
 
@@ -241,18 +262,22 @@ Define spacings you are using in your layout.
 
 ```js
 /**
+ * The space definitions.
  *
- * @location variables.spaces Spaces
- * @space {0.5rem} --space-xs | XS
- * @space {0.8rem} --space-sm | SM
- * @space {1rem} --space-normal | Normal
- * @space {1.2rem} --space-md | MD
- * @space {1.6rem} --space-lg - LG
- * @space {2.4rem} --space-xl XL
+ * @space {0.5} --space-xs | XS
+ * @space {0.8} --space-sm | SM
+ * @space {1} --space-normal | Normal
+ * @space {1.2} --space-md | MD
+ * @space {1.6} --space-lg - LG
+ * @space {2.4} --space-xl XL
  */
 ```
 
+![space tag result](../../doc-assets/core/space.png)
+
 You can define multiple spaces in on codeblock the paces will then be displayed together. The space tag expects as type a spacing value, the variable name and description. Like in the color tag you can separate variable name and description by `|`, `-` or just whitespace. The given spacing value will be used when displaying, to make the targeted space visible.
+
+Note: Depending on your renderer the spacing value will be used differently. When using the default renderer the spacing value will be multiplied with the spacing unit.
 
 ### @icon
 
@@ -260,14 +285,16 @@ Define icons you are using in your icon font.
 
 ```js
 /**
+ * Some icons used.
  *
- * @location variables.icons Icons
  * @icon {e900} --icon-chevron-down - chevron-down
  * @icon {e901} --icon-chevron-left - chevron-left
  * @icon {--icon-chevron-right} --icon-chevron-right | chevron-right
  * @icon --icon-chevron-up | chevron-up
  */
 ```
+
+![icon tag result](../../doc-assets/core/icon.png)
 
 You can define multiple icons in on codeblock the icons will then be displayed together. As type a css variable or the char code can be given. Variable name and description can be separated by `|`, `-` or just whitespace.
 
@@ -296,8 +323,8 @@ Please not that you will require a custom style to define the `@font-face` for y
 
 UI-Doc can be used in any context you want it to run. There are already integrations for:
 
-- Rollup
-- Vite
+- [Rollup](../rollup/README.md)
+- [Vite](../vite/README.md)
 
 But you can write your own integration or just write a node script.
 
@@ -454,7 +481,3 @@ commentBlockParser.registerTagTransformer({
   },
 })
 ```
-
-# Upcoming Features
-
-[] Read custom stylesheet to read variable value so in color tag the color variable value can be used
