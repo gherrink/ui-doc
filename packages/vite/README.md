@@ -55,7 +55,7 @@ export default defineConfig({
 
 ## Options
 
-Please see the Options from `@ui-doc/rollup` they are the same.
+Please see the Options from [@ui-doc/rollup](../rollup/README.md#options) they are the same.
 
 # Good to Know
 

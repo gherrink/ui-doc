@@ -60,7 +60,7 @@ export default [
 | Name | Required | Type | Description |
 | --- | --- | --- | --- |
 | blockParser | no | BlockParser | Give a custom BlockParser instance to change the block parsing. |
-| renderer | no | Renderer | Instance of renderer. Per default a instance of `@ui-doc/html-renderer` will be created. |
+| renderer | no | Renderer | Instance of renderer. Per default a instance of [@ui-doc/html-renderer](../html-renderer/README.md) will be created. |
 | source | yes | string[] | List of glob patterns to find source files. Please see [picomatch](https://github.com/micromatch/picomatch) how to define patterns. |
 | outputDir | no | string | Change output directory to create the UI-Doc in a subfolder of your application. |
 | templatePath | no | string | When using the default renderer you can override default templates from the renderer or add custom templates for generation. |
