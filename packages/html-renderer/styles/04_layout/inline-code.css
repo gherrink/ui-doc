@@ -1,0 +1,6 @@
+p > code {
+  display: inline-block;
+  padding: 0.1em 0.2em;
+  color: rgb(var(--inline-code-font-color, var(--font-color)));
+  background: rgb(var(--inline-code-bg-color, var(--color-gray)));
+}

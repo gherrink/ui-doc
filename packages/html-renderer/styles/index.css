@@ -57,4 +57,5 @@
   * @order 50
   */
 @import url("04_layout/body.css");
+@import url("04_layout/inline-code.css");
 @import url("04_layout/page.css");
