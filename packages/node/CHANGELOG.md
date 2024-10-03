@@ -1,5 +1,13 @@
 # @ui-doc/node ChangeLog
 
+## v0.2.1
+
+_2024-10-03_
+
+### Bugfixes
+
+- core,html-renderer,node,rollup,vite: version is always one number behind (852e7d4)
+
 ## v0.2.0
 
 _2024-09-20_
