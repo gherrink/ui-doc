@@ -10,12 +10,25 @@ async function createDefaultRenderer(
 ): Promise<Renderer> {
   const rendererImport = await import('@ui-doc/html-renderer')
   const renderer = new rendererImport.HtmlRenderer(rendererImport.NodeParser.init())
+  const packageTemplatePath = await fileSystem
+    .assetLoader()
+    .packagePath(rendererImport.TemplateLoader.TEMPLATES_PACKAGE)
 
-  await rendererImport.TemplateLoader.load({
-    fileSystem,
-    renderer,
-    templateBasePath: templatePath,
-  })
+  if (packageTemplatePath) {
+    await rendererImport.TemplateLoader.load({
+      fileSystem,
+      renderer,
+      templatePath: packageTemplatePath,
+    })
+  }
+
+  if (templatePath) {
+    await rendererImport.TemplateLoader.load({
+      fileSystem,
+      renderer,
+      templatePath,
+    })
+  }
 
   return renderer
 }

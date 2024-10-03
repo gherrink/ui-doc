@@ -63,7 +63,7 @@ export default [
 | renderer | no | Renderer | Instance of renderer. Per default a instance of `@ui-doc/html-renderer` will be created. |
 | source | yes | string[] | List of glob patterns to find source files. Please see [picomatch](https://github.com/micromatch/picomatch) how to define patterns. |
 | outputDir | no | string | Change output directory to create the UI-Doc in a subfolder of your application. |
-| templatePath | no | string | When using the default renderer you can change the path were to find the templates for generating. |
+| templatePath | no | string | When using the default renderer you can override default templates from the renderer or add custom templates for generation. |
 | output | no | object | Change output settings |
 | output.dir | no | string | path where you wan't to put the ui-doc. Will be relativ to rollup's output dir |
 | output.baseUri | no | string | Change the base URI of you UI-Kit useful if you wan't to place the UI-Doc somewhere else then the output folder. If `output.dir` is given and no `output.baseUri` the dir will be used. You can give '.' so all URLs will be relative. |

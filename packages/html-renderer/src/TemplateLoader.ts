@@ -3,34 +3,41 @@ import type { FileSystem } from '@ui-doc/core'
 import type { HtmlRenderer } from './HtmlRenderer'
 
 export class TemplateLoader {
+  public static readonly TEMPLATES_PACKAGE: string = '@ui-doc/html-renderer/templates'
+
   public static async load({
     renderer,
     fileSystem,
-    templateBasePath = '@ui-doc/html-renderer/templates',
+    templatePath,
   }: {
     renderer: HtmlRenderer
     fileSystem: FileSystem
-    templateBasePath?: string
+    templatePath: string
   }): Promise<void> {
-    const templatePath = await fileSystem.assetLoader().packagePath(templateBasePath)
-    const layoutFinder = fileSystem.createFileFinder([`${templatePath}/layouts/*.html`])
-    const pageFinder = fileSystem.createFileFinder([`${templatePath}/pages/*.html`])
-    const partialFinder = fileSystem.createFileFinder([`${templatePath}/partials/*.html`])
+    const paths: { folderName: string; addFunction: 'addLayout' | 'addPage' | 'addPartial' }[] = [
+      { folderName: 'layouts', addFunction: 'addLayout' },
+      { folderName: 'pages', addFunction: 'addPage' },
+      { folderName: 'partials', addFunction: 'addPartial' },
+    ]
+    const promises = []
 
-    const name = (file: string): string => fileSystem.fileBasename(file)
-    const content = async (file: string): Promise<string> =>
-      (await fileSystem.fileRead(file)).trim()
+    paths.forEach(async ({ folderName, addFunction }) => {
+      const searchPath = `${templatePath}/${folderName}`
 
-    await Promise.all([
-      layoutFinder.search(async file => {
-        renderer.addLayout(name(file), { content: await content(file), source: file })
-      }),
-      pageFinder.search(async file => {
-        renderer.addPage(name(file), { content: await content(file), source: file })
-      }),
-      partialFinder.search(async file => {
-        renderer.addPartial(name(file), { content: await content(file), source: file })
-      }),
-    ])
+      if (!(await fileSystem.isDirectory(searchPath))) {
+        return
+      }
+
+      const finder = fileSystem.createFileFinder([`${searchPath}/*.html`])
+
+      promises.push(
+        finder.search(async file => {
+          renderer[addFunction](fileSystem.fileBasename(file), {
+            content: (await fileSystem.fileRead(file)).trim(),
+            source: file,
+          })
+        }),
+      )
+    })
   }
 }
