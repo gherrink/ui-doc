@@ -2,7 +2,6 @@ import path from 'node:path'
 
 import uidoc from '@ui-doc/rollup'
 import autoprefixer from 'autoprefixer'
-import postcssExtend from 'postcss-extend'
 import postcssImport from 'postcss-import'
 import postcssNested from 'postcss-nested'
 import postcss from 'rollup-plugin-postcss'
@@ -22,7 +21,7 @@ export default [
         autoModules: true,
         extract: true,
         minimize: true,
-        plugins: [postcssImport(), postcssNested(), postcssExtend(), autoprefixer()],
+        plugins: [postcssImport(), postcssNested(), autoprefixer()],
         sourceMap: true,
       }),
     ],

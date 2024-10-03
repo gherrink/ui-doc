@@ -9,7 +9,6 @@ import typescript from '@rollup/plugin-typescript'
 import autoprefixer from 'autoprefixer'
 import cssnano from 'cssnano'
 import { builtinModules } from 'module'
-import postcssExtend from 'postcss-extend'
 import postcssImport from 'postcss-import'
 import postcssNested from 'postcss-nested'
 import postcss from 'rollup-plugin-postcss'
@@ -118,7 +117,7 @@ export function configPostcssWeb({ input }) {
       postcss({
         extract: true,
         sourceMap: true,
-        plugins: [postcssImport(), postcssNested(), postcssExtend(), autoprefixer()],
+        plugins: [postcssImport(), postcssNested(), autoprefixer()],
       }),
       {
         async generateBundle(option, bundle) {

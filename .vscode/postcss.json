@@ -1,15 +1,4 @@
 {
   "version": 1.1,
-  "atDirectives": [
-    {
-      "name": "@extend",
-      "description": "Use the `@extend` directive to extend using postcss-extend plugin.",
-      "references": [
-        {
-          "name": "Documentation",
-          "url": "https://www.npmjs.com/package/postcss-extend"
-        }
-      ]
-    }
-  ]
+  "atDirectives": []
 }
