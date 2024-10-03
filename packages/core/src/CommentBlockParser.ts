@@ -4,18 +4,19 @@ import {
   type Spec as CommentSpec,
 } from 'comment-parser'
 
+import type { Block } from './Block.types'
+import type { BlockParser, BlockParserContext } from './BlockParser.types'
+import type { BlockParserEventMap as EventMap } from './BlockParserEvent.types'
+import type { DescriptionParser } from './DescriptionParser.types'
 import { BlockParseError, TagTransformerError } from './errors'
-import tagTransformers from './tag-transformers'
 import type {
-  Block,
-  BlockParser,
-  BlockParserContext,
-  BlockParserEventMap as EventMap,
-  DescriptionParser,
-  TagTransformer,
-  TagTransformFunction,
-} from './types'
-import type { EventArgs, EventEmitter, EventListener, EventListenersMap } from './types/events'
+  EventArgs,
+  EventEmitter,
+  EventListener,
+  EventListenersMap,
+} from './EventEmitter.types'
+import tagTransformers from './tag-transformers'
+import type { TagTransformer, TagTransformFunction } from './tag-transformers/tag-transformer.types'
 
 type BlockParserErrorCreate = (
   reason: string,

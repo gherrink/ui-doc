@@ -1,6 +1,6 @@
 import { marked } from 'marked'
 
-import type { DescriptionParser } from './types'
+import type { DescriptionParser } from './DescriptionParser.types'
 
 export class MarkdownDescriptionParser implements DescriptionParser {
   parse(description: string): string {

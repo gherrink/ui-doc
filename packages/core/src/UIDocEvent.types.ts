@@ -1,5 +1,5 @@
-import type { ContextEntry, ContextExample } from './context'
-import type { Source } from './ui-doc'
+import type { ContextEntry, ContextExample } from './Context.types'
+import type { Source } from './UIDoc.types'
 
 export type ContextEntryEvent = { entry: ContextEntry; key: string } & (
   | {

@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 
+import { Block } from '../../src/Block.types'
 import space from '../../src/tag-transformers/space'
-import { Block } from '../../src/types'
 
 describe('Space tag transformer', () => {
   test('should transform', () => {

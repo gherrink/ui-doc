@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 
+import { Block } from '../../src/Block.types'
 import icon from '../../src/tag-transformers/icon'
-import { Block } from '../../src/types'
 
 describe('Icon tag transformer', () => {
   test('should transform', () => {

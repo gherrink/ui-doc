@@ -1,23 +1,18 @@
+import type { Block, BlockExample } from './Block.types'
+import type { BlockParser } from './BlockParser.types'
 import { createCommentBlockParser } from './CommentBlockParser'
-import { createMarkdownDescriptionParser } from './MarkdownDescriptionParser'
+import type { Asset, Context, ContextEntry, ContextExample } from './Context.types'
 import type {
-  Asset,
-  Block,
-  BlockExample,
-  BlockParser,
-  Context,
-  ContextEntry,
-  ContextEntryEvent,
-  ContextExample,
-  FilePath,
-  GenerateFunctions,
-  Options,
-  OutputCallback,
-  Renderer,
-  Source,
-  UIDocEventMap as EventMap,
-} from './types'
-import type { EventArgs, EventEmitter, EventListener, EventListenersMap } from './types/events'
+  EventArgs,
+  EventEmitter,
+  EventListener,
+  EventListenersMap,
+} from './EventEmitter.types'
+import type { FilePath } from './FileSystem.types'
+import { createMarkdownDescriptionParser } from './MarkdownDescriptionParser'
+import type { Renderer } from './Renderer.types'
+import type { GenerateFunctions, Options, OutputCallback, Source } from './UIDoc.types'
+import type { ContextEntryEvent, UIDocEventMap as EventMap } from './UIDocEvent.types'
 
 export class UIDoc implements EventEmitter<EventMap> {
   protected sources: Record<FilePath, Source>

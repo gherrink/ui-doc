@@ -1,6 +1,7 @@
 import { describe, expect, jest, test } from '@jest/globals'
 
-import type { BlockParser, Renderer } from '../src/types'
+import type { BlockParser } from '../src/BlockParser.types'
+import type { Renderer } from '../src/Renderer.types'
 import { UIDoc } from '../src/UIDoc'
 
 describe('UI-Doc', () => {

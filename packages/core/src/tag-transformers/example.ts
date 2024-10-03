@@ -1,4 +1,5 @@
-import type { BlockExample, TagTransformer } from '../types'
+import type { BlockExample } from '../Block.types'
+import type { TagTransformer } from './tag-transformer.types'
 import { code, createTagTransformerError, isValidHTML } from './utils'
 
 export const tag: TagTransformer = {

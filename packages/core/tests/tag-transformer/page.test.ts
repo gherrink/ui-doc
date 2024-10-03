@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 
+import { Block } from '../../src/Block.types'
 import page from '../../src/tag-transformers/page'
-import { Block } from '../../src/types'
 
 describe('Page tag transformer', () => {
   test('should transform name', () => {

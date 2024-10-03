@@ -1,4 +1,4 @@
-import type { BlockExample } from './blocks'
+import type { BlockExample } from './Block.types'
 
 export interface ContextEntry {
   [key: string]: any

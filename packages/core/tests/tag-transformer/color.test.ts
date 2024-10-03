@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 
+import { Block } from '../../src/Block.types'
 import color from '../../src/tag-transformers/color'
-import { Block } from '../../src/types'
 
 describe('Color tag transformer', () => {
   test('should transform with hex', () => {

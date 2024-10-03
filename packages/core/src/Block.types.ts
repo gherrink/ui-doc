@@ -1,6 +1,6 @@
-import type { CSSValue } from '../tag-transformers/nodes'
-import type { CSSColor } from '../tag-transformers/nodes/CSSColor'
-import type { CSSVariable } from '../tag-transformers/nodes/CSSVariable'
+import type { CSSValue } from './tag-transformers/nodes'
+import type { CSSColor } from './tag-transformers/nodes/CSSColor'
+import type { CSSVariable } from './tag-transformers/nodes/CSSVariable'
 
 export type BlockEntry = Record<string, any>
 

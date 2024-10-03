@@ -1,7 +1,7 @@
 import { Spec } from 'comment-parser'
 
+import type { BlockCode } from '../../Block.types'
 import { TagTransformerError } from '../../errors'
-import type { BlockCode } from '../../types'
 import { CSSColor } from '../nodes/CSSColor'
 import { CSSVariable } from '../nodes/CSSVariable'
 

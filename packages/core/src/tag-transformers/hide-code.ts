@@ -1,4 +1,4 @@
-import type { TagTransformer } from '../types'
+import type { TagTransformer } from './tag-transformer.types'
 
 export const tag: TagTransformer = {
   name: 'hideCode',

@@ -1,5 +1,5 @@
-import type { Block } from './blocks'
-import type { TagTransformer } from './tag'
+import type { Block } from './Block.types'
+import type { TagTransformer } from './tag-transformers/tag-transformer.types'
 
 export type BlockParserContextIdentifier = string
 

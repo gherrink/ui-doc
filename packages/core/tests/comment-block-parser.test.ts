@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@jest/globals'
 
 import { CommentBlockParser } from '../src/CommentBlockParser'
+import type { DescriptionParser } from '../src/DescriptionParser.types'
 import { BlockParseError } from '../src/errors'
-import type { DescriptionParser } from '../src/types'
 
 class TestDescriptionParser implements DescriptionParser {
   public parse(content: string): string {

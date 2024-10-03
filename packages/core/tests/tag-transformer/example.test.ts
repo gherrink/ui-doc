@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 
+import { Block } from '../../src/Block.types'
 import example from '../../src/tag-transformers/example'
-import { Block } from '../../src/types'
 
 function exampleToCode(data: { content: string; title: string; type: string }) {
   return {

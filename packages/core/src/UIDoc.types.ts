@@ -1,7 +1,7 @@
-import type { BlockParser } from './block-parser'
-import type { Block } from './blocks'
-import type { Context, ContextEntry, ContextExample } from './context'
-import type { Renderer } from './renderer'
+import type { Block } from './Block.types'
+import type { BlockParser } from './BlockParser.types'
+import type { Context, ContextEntry, ContextExample } from './Context.types'
+import type { Renderer } from './Renderer.types'
 
 export interface Options {
   blockParser?: BlockParser

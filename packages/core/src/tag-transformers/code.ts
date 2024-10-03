@@ -1,4 +1,4 @@
-import type { TagTransformer } from '../types'
+import type { TagTransformer } from './tag-transformer.types'
 import { code } from './utils'
 
 export const tag: TagTransformer = {
