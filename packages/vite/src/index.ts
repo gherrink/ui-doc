@@ -1,13 +1,12 @@
-/* eslint-disable sort-keys */
-import path from 'node:path'
+import type { Api as RollupPluginApi, Options as RollupPluginOptions } from '@ui-doc/rollup'
 
+import type { Plugin, ViteDevServer } from 'vite'
+import path from 'node:path'
 import createRollupPlugin, {
-  type Api as RollupPluginApi,
-  type Options as RollupPluginOptions,
   PLUGIN_NAME as ROLLUP_PLUGIN_NAME,
+
 } from '@ui-doc/rollup'
 import pc from 'picocolors'
-import type { Plugin, ViteDevServer } from 'vite'
 
 import { version } from '../package.json'
 
@@ -31,9 +30,8 @@ function prepareServe(plugin: Plugin<Api>) {
     // replace resolveUrl to make sure that all urls (pages and assets) are generated correctly for vite server
     plugin.api?.uidoc.replaceGenerate('resolve', (uri, type) => {
       // don't add prefix if asset is from vite
-      return ['asset', 'asset-example'].includes(type) &&
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        (plugin.api?.isAssetFromInput(uri) || uri.startsWith('@'))
+      return ['asset', 'asset-example'].includes(type)
+        && (plugin.api?.isAssetFromInput(uri) || uri.startsWith('@'))
         ? `/${uri}`
         : `/${plugin.api?.options.prefix.uri}${uri}`
     })
@@ -118,9 +116,9 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         }
 
         if (
-          asset.type === 'style' &&
-          foundBundle?.viteMetadata?.importedCss &&
-          foundBundle.viteMetadata.importedCss.size > 0
+          asset.type === 'style'
+          && foundBundle?.viteMetadata?.importedCss
+          && foundBundle.viteMetadata.importedCss.size > 0
         ) {
           asset.fileName = foundBundle.viteMetadata.importedCss.values().next().value
         }
@@ -237,5 +235,5 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     })
   }
 
-  return plugin as Plugin<Api>
+  return plugin
 }

@@ -10,7 +10,7 @@ export interface Lexer {
    * @param {PositiveInteger} k
    * @returns {Token | undefined} next token or undefined if there are no more tokens.
    */
-  peek<T extends PositiveInteger = 1>(k?: T): TokenReturn<T>
+  peek: <T extends PositiveInteger = 1>(k?: T) => TokenReturn<T>
 
   /**
    * Get the next token /next k-th token, and remove it from the token stream.
@@ -18,11 +18,11 @@ export interface Lexer {
    * @param {PositiveInteger} k
    * @returns {Token | undefined} next token or undefined if there are no more tokens.
    */
-  consume<T extends PositiveInteger = 1>(k?: T): TokenReturn<T>
+  consume: <T extends PositiveInteger = 1>(k?: T) => TokenReturn<T>
 
   /**
    * Get the debug information about the current state of the lexer.
    * @returns {object} debug information
    */
-  debug(): ReturnType<Reader['debug']>
+  debug: () => ReturnType<Reader['debug']>
 }

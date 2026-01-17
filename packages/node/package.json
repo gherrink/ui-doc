@@ -1,8 +1,16 @@
 {
   "name": "@ui-doc/node",
-  "description": "Node implementations for UI-Doc.",
   "version": "0.2.1",
+  "description": "Node implementations for UI-Doc.",
+  "author": "Maurice Busch",
   "license": "MIT",
+  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/node#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gherrink/ui-doc",
+    "directory": "packages/node"
+  },
+  "bugs": "https://github.com/gherrink/ui-doc/issues",
   "keywords": [
     "ui-doc",
     "styleguide",
@@ -11,17 +19,7 @@
     "generation",
     "node"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gherrink/ui-doc",
-    "directory": "packages/node"
-  },
-  "author": "Maurice Busch",
-  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/node#readme",
-  "bugs": "https://github.com/gherrink/ui-doc/issues",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -29,6 +27,14 @@
       "default": "./dist/index.cjs"
     }
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "LICENSE.md",
+    "README.md",
+    "dist"
+  ],
   "engines": {
     "node": ">=16.0.0"
   },
@@ -41,15 +47,9 @@
     "release:dry": "pnpm --workspace-root package:release-dry $(pwd)",
     "test": "jest"
   },
-  "files": [
-    "dist",
-    "LICENSE.md",
-    "README.md"
-  ],
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false,
   "peerDependencies": {
     "@ui-doc/core": "workspace:>=0.3.0",
     "node": "^16.0.0||^18.0.0||^20.0.0||^22.0.0"

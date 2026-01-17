@@ -1,9 +1,8 @@
-/* eslint-disable no-empty-function */
+import type { AssetLoader, FileSystem } from '@ui-doc/core'
 import fs from 'node:fs/promises'
 import { createRequire } from 'node:module'
-import path from 'node:path'
 
-import type { AssetLoader, FileSystem } from '@ui-doc/core'
+import path from 'node:path'
 
 export class NodeAssetLoader implements AssetLoader {
   protected resolvedPackages: Record<string, string | null> = {}

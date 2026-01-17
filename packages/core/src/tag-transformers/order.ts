@@ -3,7 +3,7 @@ import type { TagTransformer } from './tag-transformer.types'
 export const tag: TagTransformer = {
   name: 'order',
   transform: (block, spec) => {
-    block.order = parseInt(spec.name, 10)
+    block.order = Number.parseInt(spec.name, 10)
     if (Number.isNaN(block.order)) {
       block.order = 0
     }

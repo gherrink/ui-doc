@@ -1,19 +1,19 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
+    "target": "es2019",
     "lib": ["es2021", "dom"],
     "module": "ESNext",
     "moduleResolution": "node",
-    "noEmit": true,
-    "noEmitOnError": false,
+    "resolveJsonModule": true,
+    "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noEmit": true,
+    "noEmitOnError": false,
     "pretty": true,
     "sourceMap": true,
-    "strict": true,
-    "target": "es2019",
-    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   },
   "exclude": ["dist", "node_modules"]
 }

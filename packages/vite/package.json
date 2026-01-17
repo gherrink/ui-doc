@@ -1,8 +1,16 @@
 {
   "name": "@ui-doc/vite",
-  "description": "Vite plugin for UI-Doc generation and preview.",
   "version": "0.3.1",
+  "description": "Vite plugin for UI-Doc generation and preview.",
+  "author": "Maurice Busch",
   "license": "MIT",
+  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/vite#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gherrink/ui-doc",
+    "directory": "packages/vite"
+  },
+  "bugs": "https://github.com/gherrink/ui-doc/issues",
   "keywords": [
     "ui-doc",
     "styleguide",
@@ -12,17 +20,7 @@
     "vite",
     "vite-plugin"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gherrink/ui-doc",
-    "directory": "packages/vite"
-  },
-  "author": "Maurice Busch",
-  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/vite#readme",
-  "bugs": "https://github.com/gherrink/ui-doc/issues",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -30,6 +28,14 @@
       "default": "./dist/index.cjs"
     }
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "LICENSE.md",
+    "README.md",
+    "dist"
+  ],
   "engines": {
     "node": ">=16.0.0"
   },
@@ -41,15 +47,9 @@
     "release": "pnpm --workspace-root package:release $(pwd)",
     "release:dry": "pnpm --workspace-root package:release-dry $(pwd)"
   },
-  "files": [
-    "dist",
-    "LICENSE.md",
-    "README.md"
-  ],
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false,
   "peerDependencies": {
     "vite": "^5.0.0"
   },

@@ -1,8 +1,16 @@
 {
   "name": "@ui-doc/rollup",
-  "description": "Rollup plugin for UI-Doc generation.",
   "version": "0.3.1",
+  "description": "Rollup plugin for UI-Doc generation.",
+  "author": "Maurice Busch",
   "license": "MIT",
+  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/rollup#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gherrink/ui-doc",
+    "directory": "packages/rollup"
+  },
+  "bugs": "https://github.com/gherrink/ui-doc/issues",
   "keywords": [
     "ui-doc",
     "styleguide",
@@ -12,17 +20,7 @@
     "rollup",
     "rollup-plugin"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gherrink/ui-doc",
-    "directory": "packages/rollup"
-  },
-  "author": "Maurice Busch",
-  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/rollup#readme",
-  "bugs": "https://github.com/gherrink/ui-doc/issues",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -30,6 +28,14 @@
       "default": "./dist/index.cjs"
     }
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "LICENSE.md",
+    "README.md",
+    "dist"
+  ],
   "engines": {
     "node": ">=16.0.0"
   },
@@ -41,15 +47,9 @@
     "release": "pnpm --workspace-root package:release $(pwd)",
     "release:dry": "pnpm --workspace-root package:release-dry $(pwd)"
   },
-  "files": [
-    "dist",
-    "LICENSE.md",
-    "README.md"
-  ],
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false,
   "peerDependencies": {
     "@ui-doc/html-renderer": "workspace:>=0.3.0",
     "rollup": "^4.0.0"

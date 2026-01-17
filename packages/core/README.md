@@ -417,7 +417,7 @@ UI-Doc provides functionality to register events.
 
 ```ts
 // change the order on every entry to 200
-const onContextEntry = ({ entry }) => {
+function onContextEntry({ entry }) {
   entry.order = 200
 }
 

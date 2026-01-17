@@ -1,4 +1,4 @@
-import { Spec } from 'comment-parser'
+import type { Spec } from 'comment-parser'
 
 import type { BlockCode } from '../../Block.types'
 import { TagTransformerError } from '../../errors'
@@ -11,7 +11,7 @@ export function createTagTransformerError(message: string, spec: Spec): TagTrans
   return new TagTransformerError(message, spec.tag, { line })
 }
 
-export function identifier(data: Spec): { key: string; name: string } {
+export function identifier(data: Spec): { key: string, name: string } {
   if (!data.name) {
     throw createTagTransformerError(
       `Missing key. You should use "@${data.tag} your-${data.tag}-key"`,
@@ -50,7 +50,7 @@ export function isValidHTML(html: string): boolean {
     return false
   }
 
-  const tagRegex = /<([^>]+?)([^>]*?)>(?:(?=([^<]+))\3)*?<\/\1>/gi
+  const tagRegex = /<([^>]+?)([^>]*)>(?:(?=([^<]+))\3)*<\/\1>/g
   let remaining = html
     // remove comments
     .replace(/<!--[\s\S]*?-->/g, '')

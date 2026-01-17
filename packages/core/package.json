@@ -1,8 +1,16 @@
 {
   "name": "@ui-doc/core",
-  "description": "Core to generate a ui documentation out of comments.",
   "version": "0.3.1",
+  "description": "Core to generate a ui documentation out of comments.",
+  "author": "Maurice Busch",
   "license": "MIT",
+  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/core#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gherrink/ui-doc",
+    "directory": "packages/core"
+  },
+  "bugs": "https://github.com/gherrink/ui-doc/issues",
   "keywords": [
     "ui-doc",
     "styleguide",
@@ -10,17 +18,7 @@
     "documentation",
     "generation"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gherrink/ui-doc",
-    "directory": "packages/core"
-  },
-  "author": "Maurice Busch",
-  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/core#readme",
-  "bugs": "https://github.com/gherrink/ui-doc/issues",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -28,6 +26,14 @@
       "default": "./dist/index.cjs"
     }
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "LICENSE.md",
+    "README.md",
+    "dist"
+  ],
   "engines": {
     "node": ">=16.0.0"
   },
@@ -40,15 +46,9 @@
     "release:dry": "pnpm --workspace-root package:release-dry $(pwd)",
     "test": "jest"
   },
-  "files": [
-    "dist",
-    "LICENSE.md",
-    "README.md"
-  ],
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false,
   "dependencies": {
     "comment-parser": "^1.4.1",
     "marked": "^12.0.2"

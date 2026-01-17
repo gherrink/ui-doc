@@ -1,7 +1,7 @@
-import { beforeEach, describe, expect, jest, test } from '@jest/globals'
-
-import { TagPartialNode } from '../../src/nodes/tags/partial'
 import type { Renderer } from '../../src/Renderer.types'
+
+import { beforeEach, describe, expect, jest, test } from '@jest/globals'
+import { TagPartialNode } from '../../src/nodes/tags/partial'
 
 describe('render tag partial', () => {
   const partialMock = jest.fn<Renderer['partial']>(() => '').mockReturnValue('')

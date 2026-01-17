@@ -9,6 +9,6 @@ export interface BlockParserContext {
 }
 
 export interface BlockParser {
-  registerTagTransformer(transformer: TagTransformer): BlockParser
-  parse(context: BlockParserContext): Block[]
+  registerTagTransformer: (transformer: TagTransformer) => BlockParser
+  parse: (context: BlockParserContext) => Block[]
 }

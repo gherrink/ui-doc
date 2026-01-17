@@ -5,7 +5,7 @@ import http from 'node:http'
 import path from 'node:path'
 
 const basePath = process.argv[2] || undefined
-const port = process.argv[3] ? parseInt(process.argv[3], 10) : 8080
+const port = process.argv[3] ? Number.parseInt(process.argv[3], 10) : 8080
 
 if (!basePath) {
   console.error('Usage: node serve.js <base_path> [port]')

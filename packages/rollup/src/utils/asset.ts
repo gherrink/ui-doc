@@ -71,15 +71,15 @@ export async function resolveAssets(
     }
 
     if (
-      assetOption.fromInput &&
-      (typeof assetOption.fromInput === 'function'
+      assetOption.fromInput
+      && (typeof assetOption.fromInput === 'function'
         ? assetOption.fromInput(asset)
         : assetOption.fromInput)
     ) {
       asset.fromInput = true
     } else if (assetOption.source) {
-      asset.source =
-        typeof assetOption.source === 'function' ? assetOption.source() : assetOption.source
+      asset.source
+        = typeof assetOption.source === 'function' ? assetOption.source() : assetOption.source
     } else if (asset.originalFileName) {
       asset.source = await fileSystem.fileRead(asset.originalFileName)
     }
@@ -113,8 +113,8 @@ export async function resolveAssets(
           source: await assetLoader.read(resolvedFile),
         } as AssetResolved
       }),
-      ...(options.assets?.page ?? []).map(asset => resolveAssetOption(asset, 'page')),
-      ...(options.assets?.example ?? []).map(asset => resolveAssetOption(asset, 'example')),
+      ...(options.assets?.page ?? []).map(async asset => resolveAssetOption(asset, 'page')),
+      ...(options.assets?.example ?? []).map(async asset => resolveAssetOption(asset, 'example')),
     ])
   ).filter(asset => !!asset && (!!asset?.source || !!asset?.fromInput)) as ResolvedOptions['assets']
 }

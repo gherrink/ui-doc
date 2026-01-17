@@ -1,5 +1,4 @@
-/* eslint-disable sort-keys */
-
+import { builtinModules } from 'node:module'
 import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
@@ -8,7 +7,6 @@ import terser from '@rollup/plugin-terser'
 import typescript from '@rollup/plugin-typescript'
 import autoprefixer from 'autoprefixer'
 import cssnano from 'cssnano'
-import { builtinModules } from 'module'
 import postcssImport from 'postcss-import'
 import postcssNested from 'postcss-nested'
 import postcss from 'rollup-plugin-postcss'

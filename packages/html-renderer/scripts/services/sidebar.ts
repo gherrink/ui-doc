@@ -18,7 +18,8 @@ function createSidebar(sidebar: HTMLElement) {
       if (activeLink?.parentElement?.parentElement?.parentElement instanceof HTMLLIElement) {
         activeLink.parentElement.parentElement.parentElement
           .querySelector('a')
-          ?.classList.add('active')
+          ?.classList
+          .add('active')
       }
     },
     {

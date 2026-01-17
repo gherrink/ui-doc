@@ -51,12 +51,14 @@ feat(rollup,vite): add source map support
 Two ways to indicate breaking changes:
 
 1. **Add `!` before the colon:**
+
    ```
    feat(core)!: redesign parser API
    refactor(node)!: change file finder signature
    ```
 
 2. **Use BREAKING CHANGE footer:**
+
    ```
    feat(core): redesign parser API
 
@@ -82,6 +84,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 Additional footers can include:
+
 - `Fixes #123` - Links to issue
 - `Refs #456` - References related issue
 - `BREAKING CHANGE: description` - Breaking change details

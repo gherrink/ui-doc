@@ -1,6 +1,6 @@
-import { describe, expect, test } from '@jest/globals'
+import type { Block } from '../../src/Block.types'
 
-import { Block } from '../../src/Block.types'
+import { describe, expect, test } from '@jest/globals'
 import color from '../../src/tag-transformers/color'
 
 describe('Color tag transformer', () => {

@@ -1,5 +1,5 @@
-import { CSSParseError } from '../../errors/CSSParseError'
 import type { RenderValue } from './RenderValue'
+import { CSSParseError } from '../../errors/CSSParseError'
 
 export class CSSVariable implements RenderValue {
   public readonly output: string
@@ -17,7 +17,7 @@ export class CSSVariable implements RenderValue {
   }
 
   public static isVariableString(value: string): boolean {
-    return /^--\w+[\w-]+$/.test(value)
+    return /^--\w[\w-]+$/.test(value)
   }
 
   public toString(): string {

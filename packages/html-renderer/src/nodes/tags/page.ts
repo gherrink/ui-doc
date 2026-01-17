@@ -1,7 +1,7 @@
-import { TagNodeError } from '../../errors'
 import type { TagNodeParse } from '../../Parser.types'
 import type { RenderContext, Renderer } from '../../Renderer.types'
 import type { TokenValue } from '../../Token.types'
+import { TagNodeError } from '../../errors'
 import { readNestedValue } from '../../utils'
 import { TagNode } from '../TagNode'
 
@@ -23,8 +23,8 @@ export class TagPageNode extends TagNode {
 
   public render(context: RenderContext, renderer: Renderer): string {
     let pageName: string = this.name
-    const newContext =
-      this.contextKey === 'this' ? context : readNestedValue(this.contextKey, context)
+    const newContext
+      = this.contextKey === 'this' ? context : readNestedValue(this.contextKey, context)
 
     if (pageName.includes('.')) {
       const foundName = readNestedValue(pageName, context)

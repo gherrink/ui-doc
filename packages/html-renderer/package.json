@@ -1,8 +1,16 @@
 {
   "name": "@ui-doc/html-renderer",
-  "description": "HTML renderer for UI-Doc.",
   "version": "0.4.0",
+  "description": "HTML renderer for UI-Doc.",
+  "author": "Maurice Busch",
   "license": "MIT",
+  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/html-renderer#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gherrink/ui-doc",
+    "directory": "packages/html-renderer"
+  },
+  "bugs": "https://github.com/gherrink/ui-doc/issues",
   "keywords": [
     "ui-doc",
     "styleguide",
@@ -12,17 +20,7 @@
     "renderer",
     "html"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gherrink/ui-doc",
-    "directory": "packages/html-renderer"
-  },
-  "author": "Maurice Busch",
-  "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/html-renderer#readme",
-  "bugs": "https://github.com/gherrink/ui-doc/issues",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -39,6 +37,17 @@
     },
     "./ui-doc.min.js": "./dist/assets/ui-doc.min.js"
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "LICENSE.md",
+    "README.md",
+    "dist",
+    "scripts",
+    "styles",
+    "templates"
+  ],
   "engines": {
     "node": ">=16.0.0"
   },
@@ -51,18 +60,9 @@
     "release:dry": "pnpm --workspace-root package:release-dry $(pwd)",
     "test": "jest"
   },
-  "files": [
-    "dist",
-    "LICENSE.md",
-    "scripts",
-    "styles",
-    "templates",
-    "README.md"
-  ],
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": false,
   "peerDependencies": {
     "@ui-doc/core": "workspace:^"
   },

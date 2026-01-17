@@ -14,7 +14,7 @@ export class TemplateLoader {
     fileSystem: FileSystem
     templatePath: string
   }): Promise<void> {
-    const paths: { folderName: string; addFunction: 'addLayout' | 'addPage' | 'addPartial' }[] = [
+    const paths: { folderName: string, addFunction: 'addLayout' | 'addPage' | 'addPartial' }[] = [
       { folderName: 'layouts', addFunction: 'addLayout' },
       { folderName: 'pages', addFunction: 'addPage' },
       { folderName: 'partials', addFunction: 'addPartial' },

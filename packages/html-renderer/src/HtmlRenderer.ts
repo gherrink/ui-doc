@@ -1,18 +1,18 @@
 import type { Asset, GenerateContext } from '@ui-doc/core'
 
-import { HTMLRendererError, HTMLRendererSyntaxError, ParserError } from './errors'
-import { InlineReader } from './InlineReader'
 import type { Node } from './nodes'
 import type { Parser } from './Parser.types'
 import type { Reader } from './Reader.types'
 import type { RenderContext, Renderer, SourceInput } from './Renderer.types'
+import { HTMLRendererError, HTMLRendererSyntaxError, ParserError } from './errors'
+import { InlineReader } from './InlineReader'
 
 function instanceofReader(object: any): object is Reader {
   return (
-    typeof object.peak === 'function' &&
-    typeof object.consume === 'function' &&
-    typeof object.isEof === 'function' &&
-    typeof object.debug === 'function'
+    typeof object.peak === 'function'
+    && typeof object.consume === 'function'
+    && typeof object.isEof === 'function'
+    && typeof object.debug === 'function'
   )
 }
 

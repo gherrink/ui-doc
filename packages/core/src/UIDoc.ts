@@ -1,6 +1,5 @@
 import type { Block, BlockExample } from './Block.types'
 import type { BlockParser } from './BlockParser.types'
-import { createCommentBlockParser } from './CommentBlockParser'
 import type { Asset, Context, ContextEntry, ContextExample } from './Context.types'
 import type {
   EventArgs,
@@ -9,10 +8,11 @@ import type {
   EventListenersMap,
 } from './EventEmitter.types'
 import type { FilePath } from './FileSystem.types'
-import { createMarkdownDescriptionParser } from './MarkdownDescriptionParser'
 import type { Renderer } from './Renderer.types'
 import type { GenerateFunctions, Options, OutputCallback, Source } from './UIDoc.types'
 import type { ContextEntryEvent, UIDocEventMap as EventMap } from './UIDocEvent.types'
+import { createCommentBlockParser } from './CommentBlockParser'
+import { createMarkdownDescriptionParser } from './MarkdownDescriptionParser'
 
 export class UIDoc implements EventEmitter<EventMap> {
   protected sources: Record<FilePath, Source>
@@ -176,7 +176,7 @@ export class UIDoc implements EventEmitter<EventMap> {
 
     this.on('output', ({ promises, write }) => {
       promises.push(
-        ...Object.values(this.context.examples).map(example =>
+        ...Object.values(this.context.examples).map(async example =>
           write(example.file, this.exampleContent(example)),
         ),
       )
@@ -259,8 +259,8 @@ export class UIDoc implements EventEmitter<EventMap> {
     }
 
     if (
-      (typeof block.title === 'string' && block.title) ||
-      (entry.title === entry.id && block.title)
+      (typeof block.title === 'string' && block.title)
+      || (entry.title === entry.id && block.title)
     ) {
       event.changes.updated.title = { from: entry.title, to: block.title }
       entry.title = block.title
@@ -384,7 +384,7 @@ export class UIDoc implements EventEmitter<EventMap> {
     }
 
     const pages = Object.values(this.pages())
-    const promises = pages.map(page =>
+    const promises = pages.map(async page =>
       write(`${page.id}.html`, this.pageContent(page, page.layout)),
     )
 

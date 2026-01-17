@@ -1,8 +1,8 @@
-import { describe, expect, jest, test } from '@jest/globals'
+import type { Node } from '../../src/nodes'
 
-import { Node } from '../../src/nodes'
-import { TagForNode } from '../../src/nodes/tags/for'
 import type { Renderer } from '../../src/Renderer.types'
+import { describe, expect, jest, test } from '@jest/globals'
+import { TagForNode } from '../../src/nodes/tags/for'
 
 describe('render tag for', () => {
   const renderer = {} as Renderer
@@ -87,7 +87,6 @@ describe('render tag for', () => {
   })
 
   test('using object context expect call content node multiple times', () => {
-    // eslint-disable-next-line sort-keys
     const context = { foo: 1, bar: 2, baz: 3 }
     const contentNodeRenderMock = jest.fn<Node['render']>().mockReturnValue('content ')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
@@ -124,7 +123,6 @@ describe('render tag for', () => {
   })
 
   test('using object context with objects should make the object content available in for context', () => {
-    // eslint-disable-next-line sort-keys
     const context = { foo: { test: 1 }, bar: { test: 2 }, baz: { test: 3 } }
     const contentNodeRenderMock = jest.fn<Node['render']>().mockReturnValue('content ')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
@@ -182,7 +180,6 @@ describe('render tag for', () => {
   })
 
   test('should change to array context with context key', () => {
-    // eslint-disable-next-line sort-keys
     const context = { foo: [1], baz: 2 }
     const contentNodeRenderMock = jest.fn<Node['render']>().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
@@ -199,7 +196,6 @@ describe('render tag for', () => {
   })
 
   test('should change to object context with context key', () => {
-    // eslint-disable-next-line sort-keys
     const context = { foo: { bar: 1 }, baz: 2 }
     const contentNodeRenderMock = jest.fn<Node['render']>().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node

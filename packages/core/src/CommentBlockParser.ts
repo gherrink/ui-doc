@@ -1,22 +1,25 @@
-import {
+import type {
   Block as CommentBlock,
-  parse as parseComments,
-  type Spec as CommentSpec,
+  Spec as CommentSpec,
 } from 'comment-parser'
-
 import type { Block } from './Block.types'
+
 import type { BlockParser, BlockParserContext } from './BlockParser.types'
 import type { BlockParserEventMap as EventMap } from './BlockParserEvent.types'
 import type { DescriptionParser } from './DescriptionParser.types'
-import { BlockParseError, TagTransformerError } from './errors'
 import type {
   EventArgs,
   EventEmitter,
   EventListener,
   EventListenersMap,
 } from './EventEmitter.types'
-import tagTransformers from './tag-transformers'
 import type { TagTransformer, TagTransformFunction } from './tag-transformers/tag-transformer.types'
+import {
+
+  parse as parseComments,
+} from 'comment-parser'
+import { BlockParseError, TagTransformerError } from './errors'
+import tagTransformers from './tag-transformers'
 
 type BlockParserErrorCreate = (
   reason: string,
@@ -137,7 +140,7 @@ export class CommentBlockParser implements EventEmitter<EventMap>, BlockParser {
 
   protected validateBlock(block: Partial<Block>): string | undefined {
     if (!(!!block.page || (!!block.page && !!block.section) || !!block.location)) {
-      return "Missing block location. Don't know where to place this block, please use @location, @page or @section + @page."
+      return 'Missing block location. Don\'t know where to place this block, please use @location, @page or @section + @page.'
     }
 
     return undefined

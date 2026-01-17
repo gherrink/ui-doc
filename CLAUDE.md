@@ -9,6 +9,7 @@ UI-Doc is a TypeScript monorepo that generates interactive UI documentation from
 ## Commands
 
 ### Build & Test
+
 ```bash
 pnpm workspace:build          # Build all packages
 pnpm workspace:test           # Run all package tests
@@ -16,6 +17,7 @@ pnpm --filter @ui-doc/core test  # Run tests for a specific package
 ```
 
 ### Linting & Formatting
+
 ```bash
 pnpm lint                     # Run all linters (docs, json, package, js, css)
 pnpm fix:js                   # Fix JS/TS lint issues
@@ -24,6 +26,7 @@ pnpm prettier                 # Format all files
 ```
 
 ### Release
+
 ```bash
 pnpm release:dry              # Dry-run release (lint, test, version check)
 pnpm release                  # Full release with publishing
@@ -32,6 +35,7 @@ pnpm release                  # Full release with publishing
 ## Architecture
 
 ### Package Dependency Flow
+
 ```
 @ui-doc/core                    # Parse doc blocks → context objects
     ↓
@@ -45,6 +49,7 @@ pnpm release                  # Full release with publishing
 ```
 
 ### Processing Pipeline
+
 1. **Core** parses JSDoc comment blocks from source text using `CommentBlockParser`
 2. Blocks are transformed into UI-Doc context objects via tag transformers
 3. **Node** handles file discovery and reading via glob patterns
@@ -52,6 +57,7 @@ pnpm release                  # Full release with publishing
 5. Build plugins (**Rollup/Vite**) integrate the pipeline and output documentation
 
 ### Key Abstractions
+
 - `UIDoc` (core): Main class orchestrating parsing and output
 - `CommentBlockParser` (core): Extracts and parses comment blocks, supports custom tag transformers
 - `Renderer` interface (core): Contract for output rendering
@@ -60,6 +66,7 @@ pnpm release                  # Full release with publishing
 ## Commit Convention
 
 Uses conventional commits with required scopes:
+
 - `release`, `core`, `html-renderer`, `node`, `rollup`, `vite`, `demos`
 
 Example: `feat(core): add new tag transformer`

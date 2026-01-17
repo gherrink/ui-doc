@@ -32,7 +32,7 @@ docs(vite): update configuration examples
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
-## Breaking Change with !
+## Breaking Change with
 
 ```
 refactor(node)!: change file finder API

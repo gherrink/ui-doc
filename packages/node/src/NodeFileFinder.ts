@@ -1,7 +1,7 @@
-import fs from 'node:fs/promises'
-import path from 'node:path'
-
 import type { FileFinder, FileFinderOnFoundCallback } from '@ui-doc/core'
+import fs from 'node:fs/promises'
+
+import path from 'node:path'
 import picomatch from 'picomatch'
 
 export class NodeFileFinder implements FileFinder {
@@ -12,10 +12,10 @@ export class NodeFileFinder implements FileFinder {
   }
 
   public async search(fileFound: FileFinderOnFoundCallback): Promise<void> {
-    await Promise.all(await Promise.all(this.globs.map(glob => this.searchGlob(glob, fileFound))))
+    await Promise.all(await Promise.all(this.globs.map(async glob => this.searchGlob(glob, fileFound))))
   }
 
-  protected searchGlob(
+  protected async searchGlob(
     glob: string,
     fileFound: FileFinderOnFoundCallback,
   ): Promise<Promise<void>[]> {

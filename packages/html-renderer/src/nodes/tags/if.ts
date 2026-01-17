@@ -1,9 +1,10 @@
-import { TagNodeError } from '../../errors'
 import type { TagNodeParse } from '../../Parser.types'
 import type { RenderContext, Renderer } from '../../Renderer.types'
 import type { TokenValue } from '../../Token.types'
+import type { NodeOperator } from '../Node'
+import { TagNodeError } from '../../errors'
 import { readNestedValue } from '../../utils'
-import { type NodeOperator, nodeOperators } from '../Node'
+import { nodeOperators } from '../Node'
 import { TagNode } from '../TagNode'
 
 export interface TagIfNodeOptions {
@@ -144,9 +145,9 @@ export const parseTagIfNode: TagNodeParse = {
         }
 
         if (
-          options.operator !== undefined &&
-          options.secondContextKey === undefined &&
-          options.secondValue === undefined
+          options.operator !== undefined
+          && options.secondContextKey === undefined
+          && options.secondValue === undefined
         ) {
           throw new TagNodeError('Expected second context key or value when operator is given')
         }

@@ -2,9 +2,9 @@ import type {
   BlockParser,
   FileFinder,
   FileSystem,
-  Options as UIDocOptions,
   Renderer,
   UIDoc,
+  Options as UIDocOptions,
 } from '@ui-doc/core'
 
 import type { Api } from '../index'

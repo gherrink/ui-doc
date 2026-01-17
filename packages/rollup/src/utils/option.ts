@@ -1,8 +1,9 @@
-import { type FileSystem, type Renderer, UIDoc } from '@ui-doc/core'
-import { NodeFileSystem } from '@ui-doc/node'
-
-import { resolveAssets, resolveAssetType } from './asset'
+import type { FileSystem, Renderer } from '@ui-doc/core'
 import type { Options, ResolvedOptions } from './option.types'
+import { UIDoc } from '@ui-doc/core'
+
+import { NodeFileSystem } from '@ui-doc/node'
+import { resolveAssets, resolveAssetType } from './asset'
 
 async function createDefaultRenderer(
   templatePath: string | undefined,

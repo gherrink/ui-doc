@@ -1,12 +1,12 @@
+import type { TagNode } from './nodes'
+import type { Parser, TagNodeParse } from './Parser.types'
+import type { Reader } from './Reader.types'
 import { ParserError, TagNodeError } from './errors'
 import { HtmlCurlyBraceLexer } from './HtmlCurlyBraceLexer'
-import type { TagNode } from './nodes'
 import { CommentNode } from './nodes/CommentNode'
 import { Node } from './nodes/Node'
 import tagParsers from './nodes/tags'
 import { TemplateNode } from './nodes/TemplateNode'
-import type { Parser, TagNodeParse } from './Parser.types'
-import type { Reader } from './Reader.types'
 
 export class NodeParser implements Parser {
   protected tags: Record<string, TagNodeParse> = {}
@@ -102,11 +102,11 @@ export class NodeParser implements Parser {
     const closeTokens = lexer.consume(3)
 
     if (
-      !closeTokens ||
-      closeTokens[0]?.type !== 'tag-end' ||
-      closeTokens[1]?.type !== 'tag-identifier' ||
-      closeTokens[1].name !== tagIdentifier.name ||
-      closeTokens[2]?.type !== 'tag-close'
+      !closeTokens
+      || closeTokens[0]?.type !== 'tag-end'
+      || closeTokens[1]?.type !== 'tag-identifier'
+      || closeTokens[1].name !== tagIdentifier.name
+      || closeTokens[2]?.type !== 'tag-close'
     ) {
       throw new ParserError('Expected closing tag')
     }

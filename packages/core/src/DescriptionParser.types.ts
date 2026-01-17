@@ -1,3 +1,3 @@
 export interface DescriptionParser {
-  parse(description: string): string
+  parse: (description: string) => string
 }

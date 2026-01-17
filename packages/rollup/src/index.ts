@@ -1,13 +1,13 @@
+import type { AssetType, FileFinder, FileSystem, UIDoc } from '@ui-doc/core'
+
+import type { Plugin, PluginContext } from 'rollup'
+import type { Options, ResolvedOptions } from './utils/option.types'
 import path from 'node:path'
 
-import type { AssetType, FileFinder, FileSystem } from '@ui-doc/core'
-import { BlockParseError, UIDoc } from '@ui-doc/core'
-import type { Plugin, PluginContext } from 'rollup'
-
+import { BlockParseError } from '@ui-doc/core'
 import { version } from '../package.json'
 import { resolveAssetType } from './utils/asset'
 import { resolveOptions } from './utils/option'
-import type { Options, ResolvedOptions } from './utils/option.types'
 
 export const PLUGIN_NAME = 'ui-doc'
 
@@ -18,13 +18,13 @@ export interface Api {
   get fileSystem(): FileSystem
   get options(): ResolvedOptions
   get uidoc(): UIDoc
-  uidocAsset(
+  uidocAsset: (
     src: string,
     context: 'example' | 'page',
-    options?: { fromInput?: boolean; type?: AssetType; attrs?: Record<string, string> },
-  ): void
-  isAssetFromInput(src: string): boolean
-  addAssetFromInput(src: string): void
+    options?: { fromInput?: boolean, type?: AssetType, attrs?: Record<string, string> },
+  ) => void
+  isAssetFromInput: (src: string) => boolean
+  addAssetFromInput: (src: string) => void
 }
 
 function handleBlockParseError(this: PluginContext, error: any) {
@@ -58,7 +58,6 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     name: PLUGIN_NAME,
     version,
 
-    // eslint-disable-next-line sort-keys
     api: {
       version,
       get fileFinder() {
@@ -169,7 +168,6 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       await Promise.all(promises)
     },
 
-    // eslint-disable-next-line sort-keys
     async watchChange(id, change) {
       try {
         if (uidoc.sourceExists(id)) {

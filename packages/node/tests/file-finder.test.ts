@@ -22,7 +22,7 @@ describe('NodeFileFinder', () => {
         { isDirectory: () => false, isFile: () => true, name: 'baz.not' } as Dirent,
       ])
 
-    const onFoundMock = jest.fn(() => Promise.resolve())
+    const onFoundMock = jest.fn(async () => Promise.resolve())
 
     const fileFinder = new NodeFileFinder(['/test/**/*.test'])
 

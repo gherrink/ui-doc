@@ -9,7 +9,7 @@ export default defineConfig(({ command }) => {
       outDir: 'dist/vite',
       rollupOptions: {
         input: {
-          app: 'js/app-vite.js',
+          'app': 'js/app-vite.js',
           'ui-doc-custom': 'ui-doc/vite.css',
         },
       },

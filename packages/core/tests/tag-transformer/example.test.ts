@@ -1,9 +1,9 @@
-import { describe, expect, test } from '@jest/globals'
+import type { Block } from '../../src/Block.types'
 
-import { Block } from '../../src/Block.types'
+import { describe, expect, test } from '@jest/globals'
 import example from '../../src/tag-transformers/example'
 
-function exampleToCode(data: { content: string; title: string; type: string }) {
+function exampleToCode(data: { content: string, title: string, type: string }) {
   return {
     content: data.content,
     title: data.title,

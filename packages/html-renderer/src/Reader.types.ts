@@ -9,7 +9,7 @@ export interface Reader {
    * @param {PositiveInteger} k number
    * @returns {string} next character
    */
-  peak(k?: PositiveInteger): string
+  peak: (k?: PositiveInteger) => string
 
   /**
    * Get the next character /next k-th token from the input, and remove it from the input.
@@ -18,19 +18,19 @@ export interface Reader {
    * @param {PositiveInteger} k
    * @returns {string} next character
    */
-  consume(k?: PositiveInteger): string
+  consume: (k?: PositiveInteger) => string
 
   /**
    * Check if the input stream is empty.
    * @returns {boolean} true if the input stream is empty, false otherwise.
    */
-  isEof(): boolean
+  isEof: () => boolean
 
   /**
    * Get the debug information about the current state of the reader.
    * @returns {object} debug information
    */
-  debug(): {
+  debug: () => {
     source: string
     line: PositiveInteger
     pos: PositiveInteger

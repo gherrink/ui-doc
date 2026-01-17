@@ -73,7 +73,7 @@ export default defineConfig(({ command }) => {
       outDir: 'dist/vite',
       rollupOptions: {
         input: {
-          app: 'css/index.css',
+          'app': 'css/index.css',
           'ui-doc-custom': 'css/ui-doc.css',
         },
       },
@@ -84,12 +84,12 @@ export default defineConfig(({ command }) => {
         assets: {
           output: {
             baseUri: command === 'serve' ? undefined : '.',
-          }
+          },
           staticAssets: './assets',
           page: {
-            name: 'ui-doc-custom'
-            input: true
-          }
+            name: 'ui-doc-custom',
+            input: true,
+          },
           example: {
             name: 'app',
             input: true,

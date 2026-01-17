@@ -1,6 +1,5 @@
 import { readFileSync } from 'node:fs'
 
-// eslint-disable-next-line import/no-relative-packages
 import { configPostcssWeb, configTs, configTsWeb } from '../../shared/rollup.config.mjs'
 
 export default [

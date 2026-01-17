@@ -1,17 +1,17 @@
 import type { ContextEntry, ContextExample } from './Context.types'
 import type { Source } from './UIDoc.types'
 
-export type ContextEntryEvent = { entry: ContextEntry; key: string } & (
+export type ContextEntryEvent = { entry: ContextEntry, key: string } & (
   | {
-      type: 'create' | 'update'
-      changes: {
-        deleted: string[]
-        updated: Record<string, { from: any; to: any }>
-      }
+    type: 'create' | 'update'
+    changes: {
+      deleted: string[]
+      updated: Record<string, { from: any, to: any }>
     }
+  }
   | {
-      type: 'delete'
-    }
+    type: 'delete'
+  }
 )
 
 export interface SourceEvent {
@@ -37,8 +37,8 @@ export interface ExampleEvent {
 
 export interface UIDocEventMap {
   'context-entry': [ContextEntryEvent]
-  example: [ExampleEvent]
-  output: [OutputEvent]
-  page: [PageEvent]
-  source: [SourceEvent]
+  'example': [ExampleEvent]
+  'output': [OutputEvent]
+  'page': [PageEvent]
+  'source': [SourceEvent]
 }

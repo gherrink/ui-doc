@@ -1,4 +1,3 @@
-/* eslint-disable sort-keys */
 import { describe, expect, test } from '@jest/globals'
 
 import { isValidHTML } from '../../src/tag-transformers/utils'

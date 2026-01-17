@@ -1,5 +1,5 @@
-import { ColorParseError } from '../../errors/ColorParseError'
 import type { RenderValue } from './RenderValue'
+import { ColorParseError } from '../../errors/ColorParseError'
 
 interface CSSColorValue {
   r: number
@@ -17,16 +17,16 @@ function unifyHex(hex: string): string {
 
 function isValidColorValue(value: any): boolean {
   return (
-    typeof value === 'object' &&
-    value.r !== undefined &&
-    value.g !== undefined &&
-    value.b !== undefined &&
-    value.r >= 0 &&
-    value.r <= 255 &&
-    value.g >= 0 &&
-    value.g <= 255 &&
-    value.b >= 0 &&
-    value.b <= 255
+    typeof value === 'object'
+    && value.r !== undefined
+    && value.g !== undefined
+    && value.b !== undefined
+    && value.r >= 0
+    && value.r <= 255
+    && value.g >= 0
+    && value.g <= 255
+    && value.b >= 0
+    && value.b <= 255
   )
 }
 
@@ -72,14 +72,14 @@ export class CSSColor implements RenderValue {
   }
 
   public static rgbToValue(color: string): CSSColorValue {
-    const values = color.split(' ').map(x => parseInt(x, 10))
+    const values = color.split(' ').map(x => Number.parseInt(x, 10))
 
     if (values.length !== 3) {
       throw new ColorParseError(color)
     }
 
     const [r, g, b] = values
-    // eslint-disable-next-line sort-keys
+
     const value = { r, g, b }
 
     if (!isValidColorValue(value)) {
@@ -90,8 +90,8 @@ export class CSSColor implements RenderValue {
   }
 
   public static hexToValue(color: string): CSSColorValue {
-    const [r, g, b] = (unifyHex(color).substring(1).match(/.{2}/g) ?? []).map(x => parseInt(x, 16))
-    // eslint-disable-next-line sort-keys
+    const [r, g, b] = (unifyHex(color).substring(1).match(/.{2}/g) ?? []).map(x => Number.parseInt(x, 16))
+
     const value = { r, g, b }
 
     if (!isValidColorValue(value)) {

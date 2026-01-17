@@ -1,4 +1,18 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["packages", "demos", "shared"]
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": [
+    "packages/*/src/**/*.ts",
+    "packages/*/tests/**/*.ts",
+    "packages/*/scripts/**/*.ts",
+    "packages/*/*.ts",
+    "packages/*/*.mjs",
+    "demos/**/*.ts",
+    "shared/**/*.ts",
+    "*.ts",
+    "*.mjs"
+  ],
+  "exclude": ["node_modules", "**/dist/**"]
 }

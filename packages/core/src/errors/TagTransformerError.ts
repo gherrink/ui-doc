@@ -8,7 +8,7 @@ export class TagTransformerError extends Error {
   constructor(
     message: string,
     tag: string,
-    { column, line }: { column?: number; line?: number } = {},
+    { column, line }: { column?: number, line?: number } = {},
   ) {
     super(`Problem with '@${tag}' - ${message}`)
     this.name = 'TagTransformerError'

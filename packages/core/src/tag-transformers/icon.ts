@@ -1,6 +1,6 @@
+import type { TagTransformer } from './tag-transformer.types'
 import { CSSParseError } from '../errors/CSSParseError'
 import { CSSValue, CSSVariable } from './nodes'
-import type { TagTransformer } from './tag-transformer.types'
 import { createTagTransformerError, trimDescription } from './utils'
 
 export const tag: TagTransformer = {

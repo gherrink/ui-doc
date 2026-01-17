@@ -1,7 +1,7 @@
-import { describe, expect, test } from '@jest/globals'
-
-import { CommentBlockParser } from '../src/CommentBlockParser'
 import type { DescriptionParser } from '../src/DescriptionParser.types'
+
+import { describe, expect, test } from '@jest/globals'
+import { CommentBlockParser } from '../src/CommentBlockParser'
 import { BlockParseError } from '../src/errors'
 
 class TestDescriptionParser implements DescriptionParser {
@@ -11,8 +11,8 @@ class TestDescriptionParser implements DescriptionParser {
 }
 
 const parser = new CommentBlockParser(new TestDescriptionParser())
-const prepareForBlockParserException = (content: string): string => {
-  return content.replace(/^\n+|[\n\s]+$/g, '')
+function prepareForBlockParserException(content: string): string {
+  return content.replace(/^\n+|\s+$/g, '')
 }
 
 describe('CommentBlockParser', () => {
@@ -69,7 +69,7 @@ describe('CommentBlockParser', () => {
         code: prepareForBlockParserException(content),
         column: 0,
         line: 1,
-        message: "Undefined tag type 'fooo'.",
+        message: 'Undefined tag type \'fooo\'.',
         source: 'inline:test',
       }),
     )
@@ -129,7 +129,7 @@ describe('CommentBlockParser', () => {
         column: 0,
         line: 1,
         message:
-          "Missing block location. Don't know where to place this block, please use @location, @page or @section + @page.",
+          'Missing block location. Don\'t know where to place this block, please use @location, @page or @section + @page.',
         source: 'inline:test',
       }),
     )

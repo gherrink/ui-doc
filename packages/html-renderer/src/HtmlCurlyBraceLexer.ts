@@ -15,7 +15,7 @@ import type {
 } from './Token.types'
 
 const IDENTIFIER_CHARS: Record<TokenTypeIdentifier, string> = {
-  identifier: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.',
+  'identifier': 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.',
   'tag-identifier': 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
 }
 
@@ -179,21 +179,21 @@ export class HtmlCurlyBraceLexer implements Lexer {
       return this.consumeTagSeparator()
     }
 
-    if (char === '"' || char === "'") {
+    if (char === '"' || char === '\'') {
       return this.consumeString()
     }
 
     if (
-      char === '1' ||
-      char === '2' ||
-      char === '3' ||
-      char === '4' ||
-      char === '5' ||
-      char === '6' ||
-      char === '7' ||
-      char === '8' ||
-      char === '9' ||
-      char === '0'
+      char === '1'
+      || char === '2'
+      || char === '3'
+      || char === '4'
+      || char === '5'
+      || char === '6'
+      || char === '7'
+      || char === '8'
+      || char === '9'
+      || char === '0'
     ) {
       return this.consumeNumber()
     }
@@ -249,17 +249,17 @@ export class HtmlCurlyBraceLexer implements Lexer {
       const char = this.reader.peak()
 
       if (
-        char === '1' ||
-        char === '2' ||
-        char === '3' ||
-        char === '4' ||
-        char === '5' ||
-        char === '6' ||
-        char === '7' ||
-        char === '8' ||
-        char === '9' ||
-        char === '0' ||
-        char === '.'
+        char === '1'
+        || char === '2'
+        || char === '3'
+        || char === '4'
+        || char === '5'
+        || char === '6'
+        || char === '7'
+        || char === '8'
+        || char === '9'
+        || char === '0'
+        || char === '.'
       ) {
         value += this.reader.consume()
       } else {
@@ -269,7 +269,7 @@ export class HtmlCurlyBraceLexer implements Lexer {
 
     return {
       type: 'number',
-      value: parseFloat(value),
+      value: Number.parseFloat(value),
     }
   }
 
