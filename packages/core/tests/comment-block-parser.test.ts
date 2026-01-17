@@ -1,6 +1,6 @@
 import type { DescriptionParser } from '../src/DescriptionParser.types'
 
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 import { CommentBlockParser } from '../src/CommentBlockParser'
 import { BlockParseError } from '../src/errors'
 
@@ -15,8 +15,8 @@ function prepareForBlockParserException(content: string): string {
   return content.replace(/^\n+|\s+$/g, '')
 }
 
-describe('CommentBlockParser', () => {
-  test('should parse comment', () => {
+describe('commentBlockParser', () => {
+  it('should parse comment', () => {
     const content = `
     /**
      * @page foo
@@ -31,7 +31,7 @@ describe('CommentBlockParser', () => {
     expect(blocks[0].key).toBe('foo.headline')
   })
 
-  test('should parse comments', () => {
+  it('should parse comments', () => {
     const content = `
     /**
      * @page foo
@@ -55,7 +55,7 @@ describe('CommentBlockParser', () => {
     expect(blocks[1].key).toBe('bar.headline')
   })
 
-  test('should report non existing tags', () => {
+  it('should report non existing tags', () => {
     const content = `
     /**
      * @page foo
@@ -75,7 +75,7 @@ describe('CommentBlockParser', () => {
     )
   })
 
-  test('should run custom tag transformer', () => {
+  it('should run custom tag transformer', () => {
     const content = `
     /**
      * @page foo
@@ -99,7 +99,7 @@ describe('CommentBlockParser', () => {
     expect(blocks[0]).toMatchObject({ fooo: 'customname' })
   })
 
-  test('should report empty block', () => {
+  it('should report empty block', () => {
     const content = `
     /**
      */
@@ -116,7 +116,7 @@ describe('CommentBlockParser', () => {
     )
   })
 
-  test('should report invalid location', () => {
+  it('should report invalid location', () => {
     const content = `
     /**
      * @section headline Headline

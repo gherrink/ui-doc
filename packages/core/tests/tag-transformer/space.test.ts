@@ -1,10 +1,10 @@
 import type { Block } from '../../src/Block.types'
 
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 import space from '../../src/tag-transformers/space'
 
-describe('Space tag transformer', () => {
-  test('should transform', () => {
+describe('space tag transformer', () => {
+  it('should transform', () => {
     const comment = {
       description: 'XS',
       name: '--space-xs',
@@ -30,7 +30,7 @@ describe('Space tag transformer', () => {
     })
   })
 
-  test('should transform with variable', () => {
+  it('should transform with variable', () => {
     const comment = {
       description: 'XS',
       name: 'name',
@@ -56,7 +56,7 @@ describe('Space tag transformer', () => {
     })
   })
 
-  test('should transform with name as vairable', () => {
+  it('should transform with name as vairable', () => {
     const comment = {
       description: 'XS',
       name: '--space-xs',

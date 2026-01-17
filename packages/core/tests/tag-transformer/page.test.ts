@@ -1,10 +1,10 @@
 import type { Block } from '../../src/Block.types'
 
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 import page from '../../src/tag-transformers/page'
 
-describe('Page tag transformer', () => {
-  test('should transform name', () => {
+describe('page tag transformer', () => {
+  it('should transform name', () => {
     const comment = {
       description: '',
       name: 'test',
@@ -25,7 +25,7 @@ describe('Page tag transformer', () => {
     })
   })
 
-  test('should transform name upper', () => {
+  it('should transform name upper', () => {
     const comment = {
       description: '',
       name: 'Test',
@@ -46,7 +46,7 @@ describe('Page tag transformer', () => {
     })
   })
 
-  test('should transform name and description', () => {
+  it('should transform name and description', () => {
     const comment = {
       description: 'Test Page',
       name: 'test',
@@ -67,7 +67,7 @@ describe('Page tag transformer', () => {
     })
   })
 
-  test('should throw error', () => {
+  it('should throw error', () => {
     const comment = {
       description: '',
       name: '',

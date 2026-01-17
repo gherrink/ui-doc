@@ -1,10 +1,10 @@
 import type { Block } from '../../src/Block.types'
 
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 import location from '../../src/tag-transformers/location'
 
-describe('Location tag transformer', () => {
-  test('should transform name', () => {
+describe('location tag transformer', () => {
+  it('should transform name', () => {
     const comment = {
       description: '',
       name: 'test',
@@ -22,7 +22,7 @@ describe('Location tag transformer', () => {
     expect(block.location).toEqual('test')
   })
 
-  test('should transform name upper', () => {
+  it('should transform name upper', () => {
     const comment = {
       description: '',
       name: 'Test',
@@ -40,7 +40,7 @@ describe('Location tag transformer', () => {
     expect(block.location).toEqual('test')
   })
 
-  test('should transform name and description level 2', () => {
+  it('should transform name and description level 2', () => {
     const comment = {
       description: '',
       name: 'test.test',
@@ -58,7 +58,7 @@ describe('Location tag transformer', () => {
     expect(block.location).toEqual('test.test')
   })
 
-  test('should throw error', () => {
+  it('should throw error', () => {
     const comment = {
       description: '',
       name: '',

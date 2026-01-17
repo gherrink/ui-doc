@@ -1,14 +1,14 @@
 import type { BlockParser } from '../src/BlockParser.types'
 
 import type { Renderer } from '../src/Renderer.types'
-import { describe, expect, jest, test } from '@jest/globals'
+import { describe, expect, it, vi } from 'vitest'
 import { UIDoc } from '../src/UIDoc'
 
-describe('UI-Doc', () => {
+describe('uI-Doc', () => {
   const uidocMock = ({
-    rendererGenerate = jest.fn<Renderer['generate']>(),
-    blockParserParse = jest.fn<BlockParser['parse']>().mockReturnValue([]),
-    blockParserRegisterTagTransformer = jest.fn<BlockParser['registerTagTransformer']>(),
+    rendererGenerate = vi.fn<Renderer['generate']>(),
+    blockParserParse = vi.fn<BlockParser['parse']>().mockReturnValue([]),
+    blockParserRegisterTagTransformer = vi.fn<BlockParser['registerTagTransformer']>(),
   }) => {
     const renderer = {
       generate: rendererGenerate,
@@ -31,9 +31,9 @@ describe('UI-Doc', () => {
     }
   }
 
-  test('should register', () => {
+  it('should register', () => {
     const { uidoc } = uidocMock({
-      blockParserParse: jest.fn<BlockParser['parse']>().mockReturnValue([
+      blockParserParse: vi.fn<BlockParser['parse']>().mockReturnValue([
         {
           key: 'foo',
           order: 0,
@@ -93,9 +93,9 @@ describe('UI-Doc', () => {
     expect(pageIds.sort()).toEqual(['bar', 'foo', 'index'])
   })
 
-  test('changes should be applied', () => {
+  it('changes should be applied', () => {
     const { uidoc } = uidocMock({
-      blockParserParse: jest
+      blockParserParse: vi
         .fn<BlockParser['parse']>()
         .mockReturnValueOnce([
           {
@@ -183,9 +183,9 @@ describe('UI-Doc', () => {
     })
   })
 
-  test('when blocks get removed they should be removed from context', () => {
+  it('when blocks get removed they should be removed from context', () => {
     const { uidoc } = uidocMock({
-      blockParserParse: jest
+      blockParserParse: vi
         .fn<BlockParser['parse']>()
         .mockReturnValueOnce([
           {
@@ -253,9 +253,9 @@ describe('UI-Doc', () => {
     })
   })
 
-  test('when top level blocks get removed they should be removed from context', () => {
+  it('when top level blocks get removed they should be removed from context', () => {
     const { uidoc } = uidocMock({
-      blockParserParse: jest
+      blockParserParse: vi
         .fn<BlockParser['parse']>()
         .mockReturnValueOnce([
           {
@@ -330,9 +330,9 @@ describe('UI-Doc', () => {
     expect(pageIdsThird.sort()).toEqual(['index'])
   })
 
-  test('when blocks get witch has children they should only reset', () => {
+  it('when blocks get witch has children they should only reset', () => {
     const { uidoc } = uidocMock({
-      blockParserParse: jest
+      blockParserParse: vi
         .fn<BlockParser['parse']>()
         .mockReturnValueOnce([
           {
@@ -412,9 +412,9 @@ describe('UI-Doc', () => {
     })
   })
 
-  test('when blocks get removed they should be removed from context', () => {
+  it('should remove blocks when source is deleted', () => {
     const { uidoc } = uidocMock({
-      blockParserParse: jest.fn<BlockParser['parse']>().mockReturnValue([
+      blockParserParse: vi.fn<BlockParser['parse']>().mockReturnValue([
         {
           key: 'foo',
           order: 0,

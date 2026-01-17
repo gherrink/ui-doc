@@ -1,15 +1,15 @@
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 
 import { InlineReader } from '../../src/InlineReader'
 import { NodeParser } from '../../src/NodeParser'
 import { parseTagPartialNode, TagPartialNode } from '../../src/nodes/tags/partial'
 
-describe('Parser tag partial', () => {
+describe('parser tag partial', () => {
   const parser = new NodeParser()
 
   parser.registerTagParser(parseTagPartialNode)
 
-  test('simple tag', () => {
+  it('simple tag', () => {
     const reader = new InlineReader('{{ partial:foo-bar }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagPartialNode
@@ -21,7 +21,7 @@ describe('Parser tag partial', () => {
     expect(tag.contextKey).toEqual('this')
   })
 
-  test('with context', () => {
+  it('with context', () => {
     const reader = new InlineReader('{{ partial:foo-bar baz }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagPartialNode
@@ -33,7 +33,7 @@ describe('Parser tag partial', () => {
     expect(tag.contextKey).toEqual('baz')
   })
 
-  test('throws when name missing', () => {
+  it('throws when name missing', () => {
     const reader = new InlineReader('{{ partial }}')
 
     expect(() => {
@@ -41,7 +41,7 @@ describe('Parser tag partial', () => {
     }).toThrow(/Expected partial name/)
   })
 
-  test('throws when separator is missing', () => {
+  it('throws when separator is missing', () => {
     const reader = new InlineReader('{{ partial foo }}')
 
     expect(() => {
@@ -49,7 +49,7 @@ describe('Parser tag partial', () => {
     }).toThrow(/Expected separator/)
   })
 
-  test('throws when invalid name is given', () => {
+  it('throws when invalid name is given', () => {
     const reader = new InlineReader('{{ partial:=== }}')
 
     expect(() => {

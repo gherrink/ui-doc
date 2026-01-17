@@ -1,15 +1,15 @@
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 
 import { InlineReader } from '../../src/InlineReader'
 import { NodeParser } from '../../src/NodeParser'
 import { parseTagPageNode, TagPageNode } from '../../src/nodes/tags/page'
 
-describe('Parser tag page', () => {
+describe('parser tag page', () => {
   const parser = new NodeParser()
 
   parser.registerTagParser(parseTagPageNode)
 
-  test('simple tag', () => {
+  it('simple tag', () => {
     const reader = new InlineReader('{{ page }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagPageNode
@@ -21,7 +21,7 @@ describe('Parser tag page', () => {
     expect(tag.contextKey).toEqual('this')
   })
 
-  test('with name', () => {
+  it('with name', () => {
     const reader = new InlineReader('{{ page:foo-bar }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagPageNode
@@ -33,7 +33,7 @@ describe('Parser tag page', () => {
     expect(tag.contextKey).toEqual('this')
   })
 
-  test('with context', () => {
+  it('with context', () => {
     const reader = new InlineReader('{{ page:foo-bar baz }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagPageNode
@@ -45,7 +45,7 @@ describe('Parser tag page', () => {
     expect(tag.contextKey).toEqual('baz')
   })
 
-  test('throws when separator is missing', () => {
+  it('throws when separator is missing', () => {
     const reader = new InlineReader('{{ page foo }}')
 
     expect(() => {
@@ -53,7 +53,7 @@ describe('Parser tag page', () => {
     }).toThrow(/Expected separator/)
   })
 
-  test('throws when invalid name is given', () => {
+  it('throws when invalid name is given', () => {
     const reader = new InlineReader('{{ page:=== }}')
 
     expect(() => {

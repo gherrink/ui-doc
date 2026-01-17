@@ -1,10 +1,10 @@
 import type { Block } from '../../src/Block.types'
 
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 import color from '../../src/tag-transformers/color'
 
-describe('Color tag transformer', () => {
-  test('should transform with hex', () => {
+describe('color tag transformer', () => {
+  it('should transform with hex', () => {
     const comment = {
       description: 'White',
       name: '@color-white',
@@ -31,7 +31,7 @@ describe('Color tag transformer', () => {
     })
   })
 
-  test('should transform font color with hex', () => {
+  it('should transform font color with hex', () => {
     const comment = {
       description: 'White',
       name: '@color-white',
@@ -58,7 +58,7 @@ describe('Color tag transformer', () => {
     })
   })
 
-  test('should transform with rgb', () => {
+  it('should transform with rgb', () => {
     const comment = {
       description: 'White',
       name: '@color-white',
@@ -85,7 +85,7 @@ describe('Color tag transformer', () => {
     })
   })
 
-  test('should transform font color with rgb', () => {
+  it('should transform font color with rgb', () => {
     const comment = {
       description: 'White',
       name: '@color-white',
@@ -112,7 +112,7 @@ describe('Color tag transformer', () => {
     })
   })
 
-  test('should transform hex and rgb fixed', () => {
+  it('should transform hex and rgb fixed', () => {
     const comment = {
       description: 'White',
       name: '@color-white',
@@ -139,7 +139,7 @@ describe('Color tag transformer', () => {
     })
   })
 
-  test('should transform multiple colors', () => {
+  it('should transform multiple colors', () => {
     const block: Partial<Block> = {}
 
     color.transform(block, {
@@ -181,7 +181,7 @@ describe('Color tag transformer', () => {
     })
   })
 
-  test('should transform with variable', () => {
+  it('should transform with variable', () => {
     const comment = {
       description: 'White',
       name: '--color-white',
@@ -208,7 +208,7 @@ describe('Color tag transformer', () => {
     })
   })
 
-  test('should transform with name as variable', () => {
+  it('should transform with name as variable', () => {
     const comment = {
       description: 'White',
       name: '--color-white',
@@ -235,7 +235,7 @@ describe('Color tag transformer', () => {
     })
   })
 
-  test('should not transform without background color', () => {
+  it('should not transform without background color', () => {
     const comment = {
       description: 'White',
       name: '@color-white',
@@ -252,7 +252,7 @@ describe('Color tag transformer', () => {
     expect(block).not.toHaveProperty('colors')
   })
 
-  test('should not transform without name', () => {
+  it('should not transform without name', () => {
     const comment = {
       description: 'White',
       name: '',
@@ -269,7 +269,7 @@ describe('Color tag transformer', () => {
     expect(block).not.toHaveProperty('colors')
   })
 
-  test('should not transform without description', () => {
+  it('should not transform without description', () => {
     const comment = {
       description: '',
       name: '@color-white',
@@ -286,7 +286,7 @@ describe('Color tag transformer', () => {
     expect(block).not.toHaveProperty('colors')
   })
 
-  test('should throw error on invalid color', () => {
+  it('should throw error on invalid color', () => {
     const comment = {
       description: 'White',
       name: '@color-white',

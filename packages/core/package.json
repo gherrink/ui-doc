@@ -44,7 +44,7 @@
     "prepublish": "pnpm build",
     "release": "pnpm --workspace-root package:release $(pwd)",
     "release:dry": "pnpm --workspace-root package:release-dry $(pwd)",
-    "test": "jest"
+    "test": "vitest run"
   },
   "publishConfig": {
     "access": "public"

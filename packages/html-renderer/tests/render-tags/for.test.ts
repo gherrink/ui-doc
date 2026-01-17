@@ -1,15 +1,15 @@
 import type { Node } from '../../src/nodes'
 
 import type { Renderer } from '../../src/Renderer.types'
-import { describe, expect, jest, test } from '@jest/globals'
+import { describe, expect, it, vi } from 'vitest'
 import { TagForNode } from '../../src/nodes/tags/for'
 
 describe('render tag for', () => {
   const renderer = {} as Renderer
 
-  test('using array context expect call content node', () => {
+  it('using array context expect call content node', () => {
     const context = [1]
-    const contentNodeRenderMock = jest.fn<Node['render']>().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagForNode({})
 
@@ -23,9 +23,9 @@ describe('render tag for', () => {
     )
   })
 
-  test('using array context expect call content node multiple times', () => {
+  it('using array context expect call content node multiple times', () => {
     const context = [1, 2, 3]
-    const contentNodeRenderMock = jest.fn<Node['render']>().mockReturnValue('content ')
+    const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content ')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagForNode({})
 
@@ -47,9 +47,9 @@ describe('render tag for', () => {
     )
   })
 
-  test('using array context with objects should make the object content available in for context', () => {
+  it('using array context with objects should make the object content available in for context', () => {
     const context = [{ foo: 1 }, { foo: 2 }, { foo: 3 }]
-    const contentNodeRenderMock = jest.fn<Node['render']>().mockReturnValue('content ')
+    const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content ')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagForNode({})
 
@@ -86,9 +86,9 @@ describe('render tag for', () => {
     )
   })
 
-  test('using object context expect call content node multiple times', () => {
+  it('using object context expect call content node multiple times', () => {
     const context = { foo: 1, bar: 2, baz: 3 }
-    const contentNodeRenderMock = jest.fn<Node['render']>().mockReturnValue('content ')
+    const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content ')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagForNode({})
 
@@ -122,9 +122,9 @@ describe('render tag for', () => {
     )
   })
 
-  test('using object context with objects should make the object content available in for context', () => {
+  it('using object context with objects should make the object content available in for context', () => {
     const context = { foo: { test: 1 }, bar: { test: 2 }, baz: { test: 3 } }
-    const contentNodeRenderMock = jest.fn<Node['render']>().mockReturnValue('content ')
+    const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content ')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagForNode({})
 
@@ -161,10 +161,10 @@ describe('render tag for', () => {
     )
   })
 
-  test('should render empty if context is empty', () => {
+  it('should render empty if context is empty', () => {
     const contextArray: any[] = []
     const contextObject = {}
-    const contentNodeRenderMock = jest.fn<Node['render']>().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagForNode({})
 
@@ -179,9 +179,9 @@ describe('render tag for', () => {
     expect(contentNodeRenderMock).not.toHaveBeenCalled()
   })
 
-  test('should change to array context with context key', () => {
+  it('should change to array context with context key', () => {
     const context = { foo: [1], baz: 2 }
-    const contentNodeRenderMock = jest.fn<Node['render']>().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagForNode({ contextKey: 'foo' })
 
@@ -195,9 +195,9 @@ describe('render tag for', () => {
     )
   })
 
-  test('should change to object context with context key', () => {
+  it('should change to object context with context key', () => {
     const context = { foo: { bar: 1 }, baz: 2 }
-    const contentNodeRenderMock = jest.fn<Node['render']>().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagForNode({ contextKey: 'foo' })
 
@@ -211,7 +211,7 @@ describe('render tag for', () => {
     )
   })
 
-  test.each([
+  it.each([
     new TagForNode({ contextKey: 'foo' }),
     new TagForNode({ contextKey: 'bar' }),
     new TagForNode({ contextKey: 'baz' }),
@@ -226,7 +226,7 @@ describe('render tag for', () => {
       foo: 'Hello World',
       fooBar: true,
     }
-    const contentNodeRenderMock = jest.fn<Node['render']>().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
 
     node.append(contentNode)

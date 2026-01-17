@@ -1,10 +1,10 @@
 import type { Block } from '../../src/Block.types'
 
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 import order from '../../src/tag-transformers/order'
 
-describe('Order tag transformer', () => {
-  test('should transform', () => {
+describe('order tag transformer', () => {
+  it('should transform', () => {
     const comment = {
       description: '',
       name: '1',
@@ -22,7 +22,7 @@ describe('Order tag transformer', () => {
     expect(block.order).toEqual(1)
   })
 
-  test('should transform to 0', () => {
+  it('should transform to 0', () => {
     const comment = {
       description: '',
       name: 'asdf',

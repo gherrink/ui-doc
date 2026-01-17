@@ -1,15 +1,15 @@
 import type { Node, NodeOperator } from '../../src/nodes/Node'
 
 import type { Renderer } from '../../src/Renderer.types'
-import { describe, expect, jest, test } from '@jest/globals'
+import { describe, expect, it, vi } from 'vitest'
 import { TagIfNode } from '../../src/nodes/tags/if'
 
 describe('render tag if', () => {
   const renderer = {} as Renderer
 
-  test('using value true condition expect call content node', () => {
+  it('using value true condition expect call content node', () => {
     const context = {}
-    const contentNodeRenderMock = jest.fn().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagIfNode({ firstValue: true })
 
@@ -20,9 +20,9 @@ describe('render tag if', () => {
     expect(contentNodeRenderMock).toHaveBeenCalledWith(context, renderer)
   })
 
-  test('using value false condition expect not call content node', () => {
+  it('using value false condition expect not call content node', () => {
     const context = {}
-    const contentNodeRenderMock = jest.fn().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagIfNode({ firstValue: false })
 
@@ -32,9 +32,9 @@ describe('render tag if', () => {
     expect(contentNodeRenderMock).not.toHaveBeenCalled()
   })
 
-  test('using context true condition expect call content node', () => {
+  it('using context true condition expect call content node', () => {
     const context = { foo: true }
-    const contentNodeRenderMock = jest.fn().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagIfNode({ firstContextKey: 'foo' })
 
@@ -45,9 +45,9 @@ describe('render tag if', () => {
     expect(contentNodeRenderMock).toHaveBeenCalledWith(context, renderer)
   })
 
-  test('using context false condition expect not call content node', () => {
+  it('using context false condition expect not call content node', () => {
     const context = { foo: false }
-    const contentNodeRenderMock = jest.fn().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagIfNode({ firstContextKey: 'foo' })
 
@@ -57,9 +57,9 @@ describe('render tag if', () => {
     expect(contentNodeRenderMock).not.toHaveBeenCalled()
   })
 
-  test('using non existent context key expect not call content node', () => {
+  it('using non existent context key expect not call content node', () => {
     const context = {}
-    const contentNodeRenderMock = jest.fn().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagIfNode({ firstContextKey: 'foo' })
 
@@ -69,11 +69,11 @@ describe('render tag if', () => {
     expect(contentNodeRenderMock).not.toHaveBeenCalled()
   })
 
-  test.each([true, 1, '1', 'a string'])(
+  it.each([true, 1, '1', 'a string'])(
     'using values that result in true condition expect call content node',
     firstValue => {
       const context = {}
-      const contentNodeRenderMock = jest.fn().mockReturnValue('content')
+      const contentNodeRenderMock = vi.fn().mockReturnValue('content')
       const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
       const node = new TagIfNode({ firstValue })
 
@@ -85,11 +85,11 @@ describe('render tag if', () => {
     },
   )
 
-  test.each([false, undefined, 0, ''])(
+  it.each([false, undefined, 0, ''])(
     'using values that result in false condition expect not call content node',
     firstValue => {
       const context = {}
-      const contentNodeRenderMock = jest.fn().mockReturnValue('content')
+      const contentNodeRenderMock = vi.fn().mockReturnValue('content')
       const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
       const node = new TagIfNode({ firstValue })
 
@@ -100,7 +100,7 @@ describe('render tag if', () => {
     },
   )
 
-  test.each([
+  it.each([
     [true, '===', true],
     [true, '==', true],
     [1, '===', 1],
@@ -137,7 +137,7 @@ describe('render tag if', () => {
     'using values that result in true condition with operator %s %s %s expect call content node',
     (firstValue, operator, secondValue) => {
       const context = {}
-      const contentNodeRenderMock = jest.fn().mockReturnValue('content')
+      const contentNodeRenderMock = vi.fn().mockReturnValue('content')
       const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
       const node = new TagIfNode({ firstValue, operator: operator as NodeOperator, secondValue })
 
@@ -149,7 +149,7 @@ describe('render tag if', () => {
     },
   )
 
-  test.each([
+  it.each([
     [true, '===', false],
     [true, '==', false],
     [1, '===', 2],
@@ -186,7 +186,7 @@ describe('render tag if', () => {
     'using values that result in false condition with operator %s %s %s expect not call content node',
     (firstValue, operator, secondValue) => {
       const context = {}
-      const contentNodeRenderMock = jest.fn().mockReturnValue('content')
+      const contentNodeRenderMock = vi.fn().mockReturnValue('content')
       const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
       const node = new TagIfNode({ firstValue, operator: operator as NodeOperator, secondValue })
 

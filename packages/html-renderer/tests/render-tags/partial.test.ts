@@ -1,10 +1,10 @@
 import type { Renderer } from '../../src/Renderer.types'
 
-import { beforeEach, describe, expect, jest, test } from '@jest/globals'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TagPartialNode } from '../../src/nodes/tags/partial'
 
 describe('render tag partial', () => {
-  const partialMock = jest.fn<Renderer['partial']>(() => '').mockReturnValue('')
+  const partialMock = vi.fn<Renderer['partial']>(() => '').mockReturnValue('')
   const renderer = {
     partial: partialMock as Renderer['partial'],
   } as Renderer
@@ -14,7 +14,7 @@ describe('render tag partial', () => {
     partialMock.mockClear()
   })
 
-  test('expect call partial function', () => {
+  it('expect call partial function', () => {
     const node = new TagPartialNode({ name: 'foo' })
 
     node.render({}, renderer)
@@ -23,7 +23,7 @@ describe('render tag partial', () => {
     expect(partialMock).toHaveBeenCalledWith('foo', {})
   })
 
-  test('expect call partial function with context', () => {
+  it('expect call partial function with context', () => {
     const node = new TagPartialNode({ name: 'foo-bar' })
 
     node.render(context, renderer)
@@ -32,7 +32,7 @@ describe('render tag partial', () => {
     expect(partialMock).toHaveBeenCalledWith('foo-bar', context)
   })
 
-  test('expect call partial function with changed context', () => {
+  it('expect call partial function with changed context', () => {
     const node = new TagPartialNode({ contextKey: 'page', name: 'foo-bar' })
 
     node.render(context, renderer)

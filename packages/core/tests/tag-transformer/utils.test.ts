@@ -1,9 +1,9 @@
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 
 import { isValidHTML } from '../../src/tag-transformers/utils'
 
 describe('tag transformer utilities', () => {
-  test.each([
+  it.each([
     '<div>test</div>',
     '<div>test</div><div>test</div>',
     '<div>test</div><div>test</div><div>test</div>',
@@ -25,7 +25,7 @@ describe('tag transformer utilities', () => {
     expect(isValidHTML(html)).toBe(true)
   })
 
-  test.each(['<>', '<><>', '<div>foo<p>bar</p>', '<div>\n', '<div>foo</p>', '<div>foo</p></div>'])(
+  it.each(['<>', '<><>', '<div>foo<p>bar</p>', '<div>\n', '<div>foo</p>', '<div>foo</p></div>'])(
     'should be invalid html:\n%s',
     html => {
       expect(isValidHTML(html)).toBe(false)

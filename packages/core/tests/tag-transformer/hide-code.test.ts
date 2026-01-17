@@ -1,10 +1,10 @@
 import type { Block } from '../../src/Block.types'
 
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 import hideCode from '../../src/tag-transformers/hide-code'
 
 describe('hide code tag transformer', () => {
-  test('should transform', () => {
+  it('should transform', () => {
     const comment = {
       description: '',
       name: '',
@@ -23,7 +23,7 @@ describe('hide code tag transformer', () => {
     expect(block.code).toBeUndefined()
   })
 
-  test('should remove code', () => {
+  it('should remove code', () => {
     const comment = {
       description: '',
       name: '',

@@ -1,15 +1,15 @@
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 
 import { InlineReader } from '../../src/InlineReader'
 import { NodeParser } from '../../src/NodeParser'
 import { parseTagVarNode, TagVarNode } from '../../src/nodes/tags/var'
 
-describe('Parser tag var', () => {
+describe('parser tag var', () => {
   const parser = new NodeParser()
 
   parser.registerTagParser(parseTagVarNode)
 
-  test('should set simple context key', () => {
+  it('should set simple context key', () => {
     const reader = new InlineReader('{{ var:test }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagVarNode
@@ -21,7 +21,7 @@ describe('Parser tag var', () => {
     expect(tag.escape).toBeFalsy()
   })
 
-  test('should set nested context key', () => {
+  it('should set nested context key', () => {
     const reader = new InlineReader('{{ var:foo.bar }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagVarNode
@@ -33,7 +33,7 @@ describe('Parser tag var', () => {
     expect(tag.escape).toBeFalsy()
   })
 
-  test('should set escaped', () => {
+  it('should set escaped', () => {
     const reader = new InlineReader('{{ var:test escape }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagVarNode
@@ -45,7 +45,7 @@ describe('Parser tag var', () => {
     expect(tag.escape).toBeTruthy()
   })
 
-  test('should set escaped with nested context key', () => {
+  it('should set escaped with nested context key', () => {
     const reader = new InlineReader('{{ var:foo.bar escape }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagVarNode
@@ -57,7 +57,7 @@ describe('Parser tag var', () => {
     expect(tag.escape).toBeTruthy()
   })
 
-  test('throws when context missing', () => {
+  it('throws when context missing', () => {
     const reader = new InlineReader('{{ var }}')
 
     expect(() => {
@@ -65,7 +65,7 @@ describe('Parser tag var', () => {
     }).toThrow(/Expected context key/)
   })
 
-  test('throws when separator is missing', () => {
+  it('throws when separator is missing', () => {
     const reader = new InlineReader('{{ var foo }}')
 
     expect(() => {
@@ -73,7 +73,7 @@ describe('Parser tag var', () => {
     }).toThrow(/Expected separator/)
   })
 
-  test('throws when invalid identifier is given', () => {
+  it('throws when invalid identifier is given', () => {
     const reader = new InlineReader('{{ var:=== }}')
 
     expect(() => {
@@ -81,7 +81,7 @@ describe('Parser tag var', () => {
     }).toThrow(/Expected tag identifier/)
   })
 
-  test('throws when context key is given but invalid escape', () => {
+  it('throws when context key is given but invalid escape', () => {
     const reader = new InlineReader('{{ var:foo.bar baz }}')
 
     expect(() => {
@@ -89,7 +89,7 @@ describe('Parser tag var', () => {
     }).toThrow(/Expected escape/)
   })
 
-  test('throws when context key and escape are given and more is added', () => {
+  it('throws when context key and escape are given and more is added', () => {
     const reader = new InlineReader('{{ var:foo.bar escape baz }}')
 
     expect(() => {

@@ -1,6 +1,6 @@
 import type { Block } from '../../src/Block.types'
 
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 import example from '../../src/tag-transformers/example'
 
 function exampleToCode(data: { content: string, title: string, type: string }) {
@@ -11,8 +11,8 @@ function exampleToCode(data: { content: string, title: string, type: string }) {
   }
 }
 
-describe('Example tag transformer', () => {
-  test('should transform simple', () => {
+describe('example tag transformer', () => {
+  it('should transform simple', () => {
     const comment = {
       description: '<div>test</div>',
       name: '',
@@ -38,7 +38,7 @@ describe('Example tag transformer', () => {
     expect(block.example).toMatchObject(expected)
   })
 
-  test('should transform type with modifier', () => {
+  it('should transform type with modifier', () => {
     const comment = {
       description: '<div>test</div>',
       name: '',
@@ -64,7 +64,7 @@ describe('Example tag transformer', () => {
     expect(block.example).toMatchObject(expected)
   })
 
-  test('should transform type with modifier and type', () => {
+  it('should transform type with modifier and type', () => {
     const comment = {
       description: '<div>test</div>',
       name: '',
@@ -90,7 +90,7 @@ describe('Example tag transformer', () => {
     expect(block.example).toMatchObject(expected)
   })
 
-  test('should not transform code when hideCode', () => {
+  it('should not transform code when hideCode', () => {
     const comment = {
       description: '<div>test</div>',
       name: '',
@@ -116,7 +116,7 @@ describe('Example tag transformer', () => {
     expect(block.example).toMatchObject(expected)
   })
 
-  test('should not be undefined on empty content', () => {
+  it('should not be undefined on empty content', () => {
     const comment = {
       description: '',
       name: '',
@@ -134,7 +134,7 @@ describe('Example tag transformer', () => {
     expect(block.example).toBeUndefined()
   })
 
-  test('should not override existing code', () => {
+  it('should not override existing code', () => {
     const comment = {
       description: '<div>example test</div>',
       name: '',
@@ -168,7 +168,7 @@ describe('Example tag transformer', () => {
     })
   })
 
-  test('should throw error when invalid html is given', () => {
+  it('should throw error when invalid html is given', () => {
     const comment = {
       description: '<div>example test',
       name: '',

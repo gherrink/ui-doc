@@ -1,10 +1,10 @@
 import type { Block } from '../../src/Block.types'
 
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 import section from '../../src/tag-transformers/section'
 
-describe('Section tag transformer', () => {
-  test('should transform name', () => {
+describe('section tag transformer', () => {
+  it('should transform name', () => {
     const comment = {
       description: '',
       name: 'test',
@@ -25,7 +25,7 @@ describe('Section tag transformer', () => {
     })
   })
 
-  test('should transform name upper', () => {
+  it('should transform name upper', () => {
     const comment = {
       description: '',
       name: 'Test',
@@ -46,7 +46,7 @@ describe('Section tag transformer', () => {
     })
   })
 
-  test('should transform name and description', () => {
+  it('should transform name and description', () => {
     const comment = {
       description: 'Test Section',
       name: 'test',
@@ -67,7 +67,7 @@ describe('Section tag transformer', () => {
     })
   })
 
-  test('should transform name and description level 2', () => {
+  it('should transform name and description level 2', () => {
     const comment = {
       description: 'Test Section',
       name: 'test.test',
@@ -88,7 +88,7 @@ describe('Section tag transformer', () => {
     })
   })
 
-  test('should not override location title', () => {
+  it('should not override location title', () => {
     const comment = {
       description: 'Test Section',
       name: 'test.test',
@@ -112,7 +112,7 @@ describe('Section tag transformer', () => {
     })
   })
 
-  test('should throw error', () => {
+  it('should throw error', () => {
     const comment = {
       description: '',
       name: '',

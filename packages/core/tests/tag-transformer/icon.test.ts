@@ -1,10 +1,10 @@
 import type { Block } from '../../src/Block.types'
 
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 import icon from '../../src/tag-transformers/icon'
 
-describe('Icon tag transformer', () => {
-  test('should transform', () => {
+describe('icon tag transformer', () => {
+  it('should transform', () => {
     const comment = {
       description: 'chevron-right',
       name: '--icon-chevron-right',
@@ -30,7 +30,7 @@ describe('Icon tag transformer', () => {
     })
   })
 
-  test('should transform with variable', () => {
+  it('should transform with variable', () => {
     const comment = {
       description: 'chevron-right',
       name: '--icon-chevron-right',
@@ -56,7 +56,7 @@ describe('Icon tag transformer', () => {
     })
   })
 
-  test('should transform with name as variable', () => {
+  it('should transform with name as variable', () => {
     const comment = {
       description: 'chevron-right',
       name: '--icon-chevron-right',

@@ -1,15 +1,15 @@
 import type { Dirent } from 'node:fs'
 import fs from 'node:fs/promises'
 
-import { describe, expect, jest, test } from '@jest/globals'
+import { describe, expect, it, vi } from 'vitest'
 
 import { NodeFileFinder } from '../src'
 
-jest.mock('node:fs/promises')
+vi.mock('node:fs/promises')
 
-describe('NodeFileFinder', () => {
-  test('foo', async () => {
-    const fsReaddirMock = jest
+describe('nodeFileFinder', () => {
+  it('foo', async () => {
+    const fsReaddirMock = vi
       .spyOn(fs, 'readdir')
       .mockResolvedValueOnce([
         { isDirectory: () => true, isFile: () => false, name: 'sub-dir' } as Dirent,
@@ -22,7 +22,7 @@ describe('NodeFileFinder', () => {
         { isDirectory: () => false, isFile: () => true, name: 'baz.not' } as Dirent,
       ])
 
-    const onFoundMock = jest.fn(async () => Promise.resolve())
+    const onFoundMock = vi.fn(async () => Promise.resolve())
 
     const fileFinder = new NodeFileFinder(['/test/**/*.test'])
 

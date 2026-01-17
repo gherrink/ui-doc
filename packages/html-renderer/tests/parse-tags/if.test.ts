@@ -1,16 +1,16 @@
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 
 import { InlineReader } from '../../src/InlineReader'
 import { NodeParser } from '../../src/NodeParser'
 import { parseTagIfNode, TagIfNode } from '../../src/nodes/tags/if'
 import { TemplateNode } from '../../src/nodes/TemplateNode'
 
-describe('Parser tag if', () => {
+describe('parser tag if', () => {
   const parser = new NodeParser()
 
   parser.registerTagParser(parseTagIfNode)
 
-  test('only context key', () => {
+  it('only context key', () => {
     const reader = new InlineReader('{{ if:bar }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
@@ -26,7 +26,7 @@ describe('Parser tag if', () => {
     expect(tag.options.secondValue).toBeUndefined()
   })
 
-  test('context key === context key', () => {
+  it('context key === context key', () => {
     const reader = new InlineReader('{{ if:bar === baz }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
@@ -42,7 +42,7 @@ describe('Parser tag if', () => {
     expect(tag.options.secondValue).toBeUndefined()
   })
 
-  test('context key === string', () => {
+  it('context key === string', () => {
     const reader = new InlineReader('{{ if:bar === "baz" }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
@@ -58,7 +58,7 @@ describe('Parser tag if', () => {
     expect(tag.options.secondValue).toEqual('baz')
   })
 
-  test('string === context key', () => {
+  it('string === context key', () => {
     const reader = new InlineReader('{{ if:"baz" === bar }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
@@ -74,7 +74,7 @@ describe('Parser tag if', () => {
     expect(tag.options.secondValue).toBeUndefined()
   })
 
-  test('context key === number', () => {
+  it('context key === number', () => {
     const reader = new InlineReader('{{ if:bar === 123.456 }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
@@ -90,7 +90,7 @@ describe('Parser tag if', () => {
     expect(tag.options.secondValue).toEqual(123.456)
   })
 
-  test('number === context key', () => {
+  it('number === context key', () => {
     const reader = new InlineReader('{{ if:123.456 === bar }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
@@ -106,7 +106,7 @@ describe('Parser tag if', () => {
     expect(tag.options.secondValue).toBeUndefined()
   })
 
-  test('context key === true', () => {
+  it('context key === true', () => {
     const reader = new InlineReader('{{ if:bar === true }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
@@ -122,7 +122,7 @@ describe('Parser tag if', () => {
     expect(tag.options.secondValue).toEqual(true)
   })
 
-  test('true === context key', () => {
+  it('true === context key', () => {
     const reader = new InlineReader('{{ if:true === bar }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
@@ -138,7 +138,7 @@ describe('Parser tag if', () => {
     expect(tag.options.secondValue).toBeUndefined()
   })
 
-  test('context key === false', () => {
+  it('context key === false', () => {
     const reader = new InlineReader('{{ if:bar === false }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
@@ -154,7 +154,7 @@ describe('Parser tag if', () => {
     expect(tag.options.secondValue).toEqual(false)
   })
 
-  test('false === context key', () => {
+  it('false === context key', () => {
     const reader = new InlineReader('{{ if:false === bar }}foo{{ /if }}')
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
@@ -170,7 +170,7 @@ describe('Parser tag if', () => {
     expect(tag.options.secondValue).toBeUndefined()
   })
 
-  test.each(['==', '===', '!=', '!==', '>', '>=', '<', '<='])('operator %s', operator => {
+  it.each(['==', '===', '!=', '!==', '>', '>=', '<', '<='])('operator %s', operator => {
     const reader = new InlineReader(`{{ if:bar ${operator} baz }}foo{{ /if }}`)
     const res = parser.parse(reader)
     const tag = res.children[0] as TagIfNode
@@ -186,7 +186,7 @@ describe('Parser tag if', () => {
     expect(tag.options.secondValue).toBeUndefined()
   })
 
-  test('throws when first missing', () => {
+  it('throws when first missing', () => {
     const reader = new InlineReader('{{ if: }}')
 
     expect(() => {
@@ -194,7 +194,7 @@ describe('Parser tag if', () => {
     }).toThrow(/Expected first context key or value/)
   })
 
-  test('throws when separator is missing', () => {
+  it('throws when separator is missing', () => {
     const reader = new InlineReader('{{ if foo }}')
 
     expect(() => {
@@ -202,7 +202,7 @@ describe('Parser tag if', () => {
     }).toThrow(/Expected separator/)
   })
 
-  test('throws when invalid identifier is given', () => {
+  it('throws when invalid identifier is given', () => {
     const reader = new InlineReader('{{ if:=== }}')
 
     expect(() => {
@@ -210,7 +210,7 @@ describe('Parser tag if', () => {
     }).toThrow(/Expected identifier or value/)
   })
 
-  test('throws when first is not context key', () => {
+  it('throws when first is not context key', () => {
     const reader = new InlineReader('{{ if:123 }}')
 
     expect(() => {
@@ -218,7 +218,7 @@ describe('Parser tag if', () => {
     }).toThrow(/Expected context key when no operator is given/)
   })
 
-  test('throws when missing second', () => {
+  it('throws when missing second', () => {
     const reader = new InlineReader('{{ if:foo === }}')
 
     expect(() => {
@@ -226,7 +226,7 @@ describe('Parser tag if', () => {
     }).toThrow(/Expected second context key or value when operator is given/)
   })
 
-  test('throws when invalid operator', () => {
+  it('throws when invalid operator', () => {
     const reader = new InlineReader('{{ if:foo <== bar }}')
 
     expect(() => {

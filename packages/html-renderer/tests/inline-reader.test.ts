@@ -1,9 +1,9 @@
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 
 import { InlineReader } from '../src/InlineReader'
 
-describe('Reader', () => {
-  test('peek', () => {
+describe('reader', () => {
+  it('peek', () => {
     const reader = new InlineReader('Hello World')
 
     expect(reader.peak()).toBe('H')
@@ -19,7 +19,7 @@ describe('Reader', () => {
     expect(reader.peak(11)).toBe('Hello World')
   })
 
-  test('peek over input length', () => {
+  it('peek over input length', () => {
     const reader = new InlineReader('Hello')
 
     expect(reader.peak()).toBe('H')
@@ -31,7 +31,7 @@ describe('Reader', () => {
     expect(reader.peak(7)).toBe('Hello')
   })
 
-  test('peek with eof reached', () => {
+  it('peek with eof reached', () => {
     const reader = new InlineReader('')
 
     expect(reader.peak()).toBe('')
@@ -39,7 +39,7 @@ describe('Reader', () => {
     expect(reader.peak(3)).toBe('')
   })
 
-  test('consume', () => {
+  it('consume', () => {
     const reader = new InlineReader('Hello World')
 
     expect(reader.consume()).toBe('H')
@@ -55,7 +55,7 @@ describe('Reader', () => {
     expect(reader.consume()).toBe('d')
   })
 
-  test('consume with given k', () => {
+  it('consume with given k', () => {
     const reader = new InlineReader('Hello World!')
 
     expect(reader.consume(5)).toBe('Hello')
@@ -64,7 +64,7 @@ describe('Reader', () => {
     expect(reader.consume()).toBe('')
   })
 
-  test('consume with eof reached', () => {
+  it('consume with eof reached', () => {
     const reader = new InlineReader('Hello')
 
     expect(reader.consume()).toBe('H')
@@ -77,7 +77,7 @@ describe('Reader', () => {
     expect(reader.consume()).toBe('')
   })
 
-  test('isEof', () => {
+  it('isEof', () => {
     const reader = new InlineReader('Hello World')
 
     expect(reader.isEof()).toBe(false)

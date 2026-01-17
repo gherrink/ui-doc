@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 
 import { TagDebugNode } from '../../src/nodes/tags/debug'
 
@@ -7,31 +7,31 @@ describe('render tag debug', () => {
 
   const debugOutput = (debug: any) => `<pre>${JSON.stringify(debug, null, 2)}</pre>`
 
-  test('output this context', () => {
+  it('output this context', () => {
     const node = new TagDebugNode({})
 
     expect(node.render(context)).toBe(debugOutput(context))
   })
 
-  test('output simple', () => {
+  it('output simple', () => {
     const node = new TagDebugNode({ contextKey: 'title' })
 
     expect(node.render(context)).toBe(debugOutput(context.title))
   })
 
-  test('output object', () => {
+  it('output object', () => {
     const node = new TagDebugNode({ contextKey: 'page' })
 
     expect(node.render(context)).toBe(debugOutput(context.page))
   })
 
-  test('output nested', () => {
+  it('output nested', () => {
     const node = new TagDebugNode({ contextKey: 'page.title' })
 
     expect(node.render(context)).toBe(debugOutput(context.page.title))
   })
 
-  test('output nested', () => {
+  it('output empty message for non-existent key', () => {
     const node = new TagDebugNode({ contextKey: 'foo' })
 
     expect(node.render(context)).toBe('<pre>Current context for "foo" is empty</pre>')

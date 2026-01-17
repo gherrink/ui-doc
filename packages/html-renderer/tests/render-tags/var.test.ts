@@ -1,23 +1,23 @@
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 
 import { TagVarNode } from '../../src/nodes/tags/var'
 
 describe('render tag var', () => {
   const context = { page: { title: 'World' }, title: 'Hello' }
 
-  test('output', () => {
+  it('output', () => {
     const node = new TagVarNode({ contextKey: 'title' })
 
     expect(node.render(context)).toBe('Hello')
   })
 
-  test('output deep', () => {
+  it('output deep', () => {
     const node = new TagVarNode({ contextKey: 'page.title' })
 
     expect(node.render(context)).toBe('World')
   })
 
-  test('output nothing when not exist', () => {
+  it('output nothing when not exist', () => {
     const node = new TagVarNode({ contextKey: 'foo' })
 
     expect(node.render(context)).toBe('')

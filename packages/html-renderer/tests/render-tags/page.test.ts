@@ -1,10 +1,10 @@
 import type { Renderer } from '../../src/Renderer.types'
 
-import { beforeEach, describe, expect, jest, test } from '@jest/globals'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TagPageNode } from '../../src/nodes/tags/page'
 
 describe('render tag page', () => {
-  const pageMock = jest.fn<Renderer['page']>(() => '').mockReturnValue('')
+  const pageMock = vi.fn<Renderer['page']>(() => '').mockReturnValue('')
   const renderer = { page: pageMock as Renderer['page'] } as Renderer
   const context = { page: { foo: { bar: 'foo-bar' }, title: 'World' }, title: 'Hello' }
 
@@ -12,7 +12,7 @@ describe('render tag page', () => {
     pageMock.mockClear()
   })
 
-  test('expect call page function', () => {
+  it('expect call page function', () => {
     const node = new TagPageNode({})
 
     node.render({}, renderer)
@@ -21,7 +21,7 @@ describe('render tag page', () => {
     expect(pageMock).toHaveBeenCalledWith('default', {})
   })
 
-  test('expect call page function with name', () => {
+  it('expect call page function with name', () => {
     const node = new TagPageNode({ name: 'foo' })
 
     node.render({}, renderer)
@@ -30,7 +30,7 @@ describe('render tag page', () => {
     expect(pageMock).toHaveBeenCalledWith('foo', {})
   })
 
-  test('expect call page function with context', () => {
+  it('expect call page function with context', () => {
     const node = new TagPageNode({ name: 'foo-bar' })
 
     node.render(context, renderer)
@@ -39,7 +39,7 @@ describe('render tag page', () => {
     expect(pageMock).toHaveBeenCalledWith('foo-bar', context)
   })
 
-  test('expect call page function with changed context', () => {
+  it('expect call page function with changed context', () => {
     const node = new TagPageNode({ contextKey: 'page', name: 'foo-bar' })
 
     node.render(context, renderer)
@@ -48,7 +48,7 @@ describe('render tag page', () => {
     expect(pageMock).toHaveBeenCalledWith('foo-bar', context.page)
   })
 
-  test('expect call page function with changed context deep', () => {
+  it('expect call page function with changed context deep', () => {
     const node = new TagPageNode({ contextKey: 'page.foo', name: 'foo-bar' })
 
     node.render(context, renderer)

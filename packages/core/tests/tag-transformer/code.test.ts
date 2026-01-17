@@ -1,10 +1,10 @@
 import type { Block } from '../../src/Block.types'
 
-import { describe, expect, test } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 import code from '../../src/tag-transformers/code'
 
-describe('Code tag transformer', () => {
-  test('should transform simple', () => {
+describe('code tag transformer', () => {
+  it('should transform simple', () => {
     const comment = {
       description: '<div>test</div>',
       name: '',
@@ -22,7 +22,7 @@ describe('Code tag transformer', () => {
     expect(block.code).toMatchObject({ content: '<div>test</div>', title: '', type: 'html' })
   })
 
-  test('should transform type', () => {
+  it('should transform type', () => {
     const comment = {
       description: '<div>test</div>',
       name: '',
@@ -40,7 +40,7 @@ describe('Code tag transformer', () => {
     expect(block.code).toMatchObject({ content: '<div>test</div>', title: '', type: 'xhtml' })
   })
 
-  test('should transform name', () => {
+  it('should transform name', () => {
     const comment = {
       description: '<div>test</div>',
       name: 'Test name',
@@ -62,7 +62,7 @@ describe('Code tag transformer', () => {
     })
   })
 
-  test('should ignore empty', () => {
+  it('should ignore empty', () => {
     const comment = {
       description: '',
       name: 'Test name',
@@ -79,7 +79,7 @@ describe('Code tag transformer', () => {
     expect(block.code).toBeUndefined()
   })
 
-  test('should override existing code', () => {
+  it('should override existing code', () => {
     const comment = {
       description: '<div>new code</div>',
       name: 'Test name',
@@ -106,7 +106,7 @@ describe('Code tag transformer', () => {
     })
   })
 
-  test('should not transform when hideCode', () => {
+  it('should not transform when hideCode', () => {
     const comment = {
       description: '<div>test</div>',
       name: '',

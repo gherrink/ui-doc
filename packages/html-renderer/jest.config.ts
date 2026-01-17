@@ -1,1 +1,0 @@
-../../shared/jest.config.ts
