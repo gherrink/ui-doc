@@ -2,7 +2,7 @@ import type { CSSValue } from './tag-transformers/nodes'
 import type { CSSColor } from './tag-transformers/nodes/CSSColor'
 import type { CSSVariable } from './tag-transformers/nodes/CSSVariable'
 
-export type BlockEntry = Record<string, any>
+export type BlockEntry = object
 
 export type BlockCode = BlockEntry & {
   content: string
@@ -13,6 +13,9 @@ export type BlockCode = BlockEntry & {
 export type BlockExample = BlockCode & {
   modifier?: string
   code?: string
+  id?: string
+  file?: string
+  src?: string
 }
 
 export type BlockColor = BlockEntry & {
@@ -35,7 +38,6 @@ export type BlockIcon = BlockEntry & {
 }
 
 export interface Block {
-  [key: string]: any
   key: string
   order: number
   location?: string
@@ -48,4 +50,5 @@ export interface Block {
   example?: BlockExample
   spaces?: BlockSpace[]
   icons?: BlockIcon[]
+  hideCode?: boolean
 }

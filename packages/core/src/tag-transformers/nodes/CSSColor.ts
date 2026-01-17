@@ -10,8 +10,7 @@ interface CSSColorValue {
 function unifyHex(hex: string): string {
   return hex.replace(
     /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
-    // @ts-ignore
-    (m, r, g, b) => `#${r}${r}${g}${g}${b}${b}`,
+    (_m: string, r: string, g: string, b: string) => `#${r}${r}${g}${g}${b}${b}`,
   )
 }
 

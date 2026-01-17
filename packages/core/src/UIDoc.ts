@@ -1,20 +1,15 @@
 import type { Block, BlockExample } from './Block.types'
 import type { BlockParser } from './BlockParser.types'
 import type { Asset, Context, ContextEntry, ContextExample } from './Context.types'
-import type {
-  EventArgs,
-  EventEmitter,
-  EventListener,
-  EventListenersMap,
-} from './EventEmitter.types'
 import type { FilePath } from './FileSystem.types'
 import type { Renderer } from './Renderer.types'
 import type { GenerateFunctions, Options, OutputCallback, Source } from './UIDoc.types'
 import type { ContextEntryEvent, UIDocEventMap as EventMap } from './UIDocEvent.types'
 import { createCommentBlockParser } from './CommentBlockParser'
+import { EventEmitterBase } from './EventEmitterBase'
 import { createMarkdownDescriptionParser } from './MarkdownDescriptionParser'
 
-export class UIDoc implements EventEmitter<EventMap> {
+export class UIDoc extends EventEmitterBase<EventMap> {
   protected sources: Record<FilePath, Source>
 
   protected context: Context
@@ -22,8 +17,6 @@ export class UIDoc implements EventEmitter<EventMap> {
   public blockParser: BlockParser
 
   public renderer: Renderer
-
-  protected listeners: EventListenersMap<EventMap> = new Map()
 
   protected texts = {
     copyright: 'UI-Doc',
@@ -75,6 +68,7 @@ export class UIDoc implements EventEmitter<EventMap> {
   }
 
   constructor(options: Options) {
+    super()
     this.sources = {}
     this.blockParser = options.blockParser ?? this.createParser()
     this.renderer = options.renderer
@@ -101,32 +95,6 @@ export class UIDoc implements EventEmitter<EventMap> {
 
   protected createParser(): BlockParser {
     return createCommentBlockParser(createMarkdownDescriptionParser())
-  }
-
-  public on<K extends keyof EventMap>(eventName: K, listener: EventListener<EventMap, K>): this {
-    const listeners = this.listeners.get(eventName) ?? []
-
-    listeners.push(listener)
-    this.listeners.set(eventName, listeners)
-
-    return this
-  }
-
-  public off<K extends keyof EventMap>(eventName: K, listener: EventListener<EventMap, K>): this {
-    const listeners = this.listeners.get(eventName) ?? []
-    const index = listeners.indexOf(listener)
-
-    if (index >= 0) {
-      listeners.splice(index, 1)
-    }
-
-    return this
-  }
-
-  protected emit<K extends keyof EventMap>(eventName: K, ...args: EventArgs<EventMap, K>): void {
-    const listeners = this.listeners.get(eventName) ?? []
-
-    listeners.forEach(listener => listener(...args))
   }
 
   public replaceGenerate<K extends keyof GenerateFunctions>(
@@ -248,9 +216,10 @@ export class UIDoc implements EventEmitter<EventMap> {
 
   protected blockToContext(block: Block) {
     const entry = this.contextEntry(block.key)
-    const blockIgnoredKeys = ['key', 'title', 'page', 'section', 'location']
-    const entryIgnoredKeys = ['id', 'title', 'titleLevel', 'order', 'sections']
-    const blockKeys = Object.keys(block)
+    // Explicit list of properties that can be transferred from Block to ContextEntry
+    const transferableProps = ['order', 'description', 'code', 'example', 'colors', 'spaces', 'icons', 'hideCode'] as const
+    type TransferableProp = typeof transferableProps[number]
+
     const event: ContextEntryEvent = {
       changes: { deleted: [], updated: {} },
       entry,
@@ -258,6 +227,7 @@ export class UIDoc implements EventEmitter<EventMap> {
       type: entry.id === entry.title ? 'create' : 'update',
     }
 
+    // Handle title specially (has different source/target logic)
     if (
       (typeof block.title === 'string' && block.title)
       || (entry.title === entry.id && block.title)
@@ -266,17 +236,19 @@ export class UIDoc implements EventEmitter<EventMap> {
       entry.title = block.title
     }
 
-    blockKeys.forEach(blockType => {
-      if (!blockIgnoredKeys.includes(blockType)) {
-        event.changes.updated[blockType] = { from: entry[blockType], to: block[blockType] }
-        entry[blockType] = block[blockType]
-      }
-    })
+    // Transfer properties from block to entry
+    transferableProps.forEach((prop: TransferableProp) => {
+      const blockValue = block[prop]
+      const entryValue = entry[prop]
 
-    Object.keys(entry).forEach(key => {
-      if (!entryIgnoredKeys.includes(key) && !blockKeys.includes(key)) {
-        event.changes.deleted.push(key)
-        delete entry[key]
+      if (blockValue !== undefined) {
+        event.changes.updated[prop] = { from: entryValue, to: blockValue }
+        // Safe assignment: both Block and ContextEntry have identical types for these props
+        ;(entry[prop] as typeof blockValue) = blockValue
+      } else if (entryValue !== undefined) {
+        // Property existed in entry but not in new block - delete it
+        event.changes.deleted.push(prop)
+        delete entry[prop]
       }
     })
 
@@ -311,15 +283,17 @@ export class UIDoc implements EventEmitter<EventMap> {
 
     // if entry has sections it can not be deleted. Reset it instead.
     if (entry.sections.length > 0) {
-      const ignore = ['id', 'title', 'order', 'titleLevel', 'sections']
-
       entry.title = entry.id
       entry.order = 0
-      Object.keys(entry).forEach(entryKey => {
-        if (!ignore.includes(entryKey)) {
-          delete entry[entryKey]
-        }
-      })
+      // Reset all transferable properties
+      delete entry.description
+      delete entry.layout
+      delete entry.code
+      delete entry.example
+      delete entry.colors
+      delete entry.spaces
+      delete entry.icons
+      delete entry.hideCode
 
       return
     }
@@ -363,7 +337,7 @@ export class UIDoc implements EventEmitter<EventMap> {
     } else {
       const parent = this.contextEntry(parts.slice(0, -1).join('.'))
 
-      entry.titleLevel = parent.titleLevel + 1
+      entry.titleLevel = (parent.titleLevel ?? 1) + 1
       parent.sections.push(entry)
     }
   }

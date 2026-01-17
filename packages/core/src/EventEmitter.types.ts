@@ -1,4 +1,4 @@
-type EventMap<M> = Record<keyof M, any[]>
+export type EventMap<M> = Record<keyof M, unknown[]>
 export type EventListener<M extends EventMap<M>, K extends keyof M> = K extends keyof M
   ? M[K] extends never
     ? () => void
@@ -16,7 +16,7 @@ export type EventArgs<M extends EventMap<M>, K extends keyof M> = K extends keyo
 
 export type EventListenersMap<M extends EventMap<M>, K extends keyof M = keyof M> = Map<
   K,
-  Function[]
+  EventListener<M, K>[]
 >
 
 export interface EventEmitter<M extends EventMap<M>> {
