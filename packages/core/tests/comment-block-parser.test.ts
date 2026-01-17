@@ -68,7 +68,7 @@ describe('commentBlockParser', () => {
       new BlockParseError({
         code: prepareForBlockParserException(content),
         column: 0,
-        line: 1,
+        line: 5,
         message: 'Undefined tag type \'fooo\'.',
         source: 'inline:test',
       }),
@@ -109,7 +109,7 @@ describe('commentBlockParser', () => {
       new BlockParseError({
         code: prepareForBlockParserException(content),
         column: 0,
-        line: 1,
+        line: 2,
         message: 'Empty block.',
         source: 'inline:test',
       }),
@@ -127,7 +127,7 @@ describe('commentBlockParser', () => {
       new BlockParseError({
         code: prepareForBlockParserException(content),
         column: 0,
-        line: 1,
+        line: 2,
         message:
           'Missing block location. Don\'t know where to place this block, please use @location, @page or @section + @page.',
         source: 'inline:test',
