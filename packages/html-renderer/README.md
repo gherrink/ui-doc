@@ -10,7 +10,7 @@ Tags are used to get a bit of functionality into the html generation process.
 
 Output value of a variable.
 
-```
+```html
 <h1>{{var:title}}</h1>
 ```
 
@@ -20,7 +20,7 @@ To escape the variable use `{{var:title escape}}`.
 
 Use a if condition to decide when our when not to render something. Please not that currently there is no `else` or `ifelse`
 
-```
+```html
 {{if:show}}
 <p>Show this if show inside the context is a true statement</p>
 {{/if}}
@@ -30,7 +30,7 @@ Use a if condition to decide when our when not to render something. Please not t
 
 You can use conditions
 
-```
+```html
 {{if:title === "foo"}}
 {{if:show === true}}
 {{if:page.number === 3}}
@@ -53,7 +53,7 @@ Use for to loop over objects and arrays. Please not that a loop will change the 
 
 #### array loop
 
-```
+```html
 <!-- context: {"list": ["foo", "bar", "baz"]} -->
 <ul>
   {{for:list}}
@@ -71,7 +71,7 @@ Use for to loop over objects and arrays. Please not that a loop will change the 
 
 #### object loop
 
-```
+```html
 <!-- context: {"list": {"foo": "FOO", "bar": "BAR", "baz": "BAZ"}} -->
 <ul>
   {{for:list}}
@@ -91,7 +91,7 @@ Use for to loop over objects and arrays. Please not that a loop will change the 
 
 You can loop over an array or object of objects. The object items will directly be accessible inside the for context.
 
-```
+```html
 <!-- context: {"sections": [{"title": "Section 1", content: "<p>Section 1 content</p>"}, {"title": "Section 2", content: "<p>Section 2 content</p>"}]} -->
 
 {{for:sections}}
@@ -116,7 +116,7 @@ You can loop over an array or object of objects. The object items will directly 
 
 Use page to output registered page templates (see Templates > Page). `{{page:foo}}` this will try to render the `foo` page. If no page with this name is registered the system will fallback to the `default` page. If you want to use the default page you can also just use `{{page}}`. As second parameter you can give a context if you like to change the context `{{page:layout newContext}}`.
 
-```
+```html
 <!-- context: {"title": "Document Title", "page": {"title": "Page title", "content": "Page content"}} -->
 
 <html>
@@ -155,13 +155,13 @@ Use page to output registered page templates (see Templates > Page). `{{page:foo
 
 Use partial to render registered partial templates (see Templates > Partial). If the given partial name was not found nothing will be generated
 
-```
+```html
 {{partial:foo}} > output foo partial
 ```
 
 As second parameter you can give a context definition to change the context
 
-```
+```html
 {{partial:foo bar}} > output foo partial using bar of the current context as new context
 ```
 
@@ -169,7 +169,7 @@ As second parameter you can give a context definition to change the context
 
 Use debug to output the current context or parts of the context. The context will be outputted as JSON.
 
-```
+```html
 <!-- context: {"title": "Document Title", "page": {"title": "Page title", "content": "Page content"}} -->
 
 {{debug}}
@@ -179,7 +179,6 @@ Use debug to output the current context or parts of the context. The context wil
 {{debug:page}}
 <!-- Output: -->
 {"title": "Page title", "content": "Page content"}
-
 ```
 
 ## Templates
@@ -200,7 +199,7 @@ Define a partial that can be reused, to get the same output inside layouts, page
 
 ## Usage
 
-```
+```ts
 import { HtmlRenderer } from '@ui-doc/html-renderer'
 
 const layout = `
@@ -242,10 +241,9 @@ renderer.generate({
   page: {
     title: 'Example Page Title',
     sections: [
-      {; content: "<p>Section 1 content</p>" },
-      {; title: "Section 2"; content: "<p>Section 2 content</p>" },
+      { title: 'Section 1', content: '<p>Section 1 content</p>' },
+      { title: 'Section 2', content: '<p>Section 2 content</p>' },
     ],
   },
 })
-
 ```

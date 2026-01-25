@@ -36,7 +36,7 @@ pnpm release                  # Full release with publishing
 
 ### Package Dependency Flow
 
-```
+```text
 @ui-doc/core                    # Parse doc blocks → context objects
     ↓
 @ui-doc/node                    # File system operations (depends on core)

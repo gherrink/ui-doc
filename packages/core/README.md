@@ -432,7 +432,7 @@ uidoc.off('context-entry', onContextEntry)
 
 The default CommentBlockParser extracts comment blocks from the source using comment tags to create the context.
 
-```
+```text
 /**
  * Will be interpreted as a page.
  *
