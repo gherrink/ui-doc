@@ -121,7 +121,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
 
       // TODO detect template updates when templates in workspace
 
-      await finder.search(async file => {
+      await finder.search(async (file: string) => {
         if (!watchedFiles.includes(file)) {
           this.addWatchFile(file)
         }
@@ -156,7 +156,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         },
       )
 
-      await uidoc.output((file, content) => {
+      await uidoc.output((file: string, content: string) => {
         const fileName = `${prefix.path}${file}`
 
         this.emitFile({

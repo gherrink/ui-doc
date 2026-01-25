@@ -63,12 +63,12 @@ function createOutputPrefix(options: Options): OutputPrefixResult {
   prefix.uri = options?.output?.baseUri ?? prefix.path
   prefix.uri = prefix.uri.endsWith('/') ? prefix.uri : `${prefix.uri}/`
 
-  const prevResolve = options.settings?.generate?.resolve ?? (uri => uri)
-  const settingsOverride: Options['settings'] = {
+  const prevResolve = options.settings?.generate?.resolve ?? ((uri: string) => uri)
+  const settingsOverride: Partial<NonNullable<Options['settings']>> = {
     ...options.settings,
     generate: {
       ...options.settings?.generate,
-      resolve: (uri, type) => prevResolve(`/${prefix.uri}${uri}`, type),
+      resolve: (uri: string, type: string) => prevResolve(`/${prefix.uri}${uri}`, type),
     },
   }
 

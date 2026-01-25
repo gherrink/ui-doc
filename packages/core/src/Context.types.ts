@@ -47,6 +47,7 @@ export interface Context {
 }
 
 export interface GenerateContext {
+  [key: string]: unknown
   assets: Asset[]
   title: string
   footerText: string
@@ -55,4 +56,10 @@ export interface GenerateContext {
   homeLink: string
   page: ContextEntry
   menu: MenuItem[]
+}
+
+export interface GenerateExampleContext extends ContextExample {
+  [key: string]: unknown
+  title: string
+  assets: Asset[]
 }

@@ -15,17 +15,22 @@ function unifyHex(hex: string): string {
 }
 
 function isValidColorValue(value: unknown): value is CSSColorValue {
+  if (typeof value !== 'object' || value === null) {
+    return false
+  }
+
+  const obj = value as Record<string, unknown>
+
   return (
-    typeof value === 'object'
-    && value.r !== undefined
-    && value.g !== undefined
-    && value.b !== undefined
-    && value.r >= 0
-    && value.r <= 255
-    && value.g >= 0
-    && value.g <= 255
-    && value.b >= 0
-    && value.b <= 255
+    typeof obj.r === 'number'
+    && typeof obj.g === 'number'
+    && typeof obj.b === 'number'
+    && obj.r >= 0
+    && obj.r <= 255
+    && obj.g >= 0
+    && obj.g <= 255
+    && obj.b >= 0
+    && obj.b <= 255
   )
 }
 

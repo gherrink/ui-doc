@@ -75,7 +75,7 @@ function prepareServe(api: Api): void {
   if (api.options.prefix.uri) {
     // replace resolveUrl to make sure that all urls (pages and assets) are generated correctly
     // for vite server
-    api.uidoc.replaceGenerate('resolve', (uri, type) => {
+    api.uidoc.replaceGenerate('resolve', (uri: string, type: string) => {
       // don't add prefix if asset is from vite
       return ['asset', 'asset-example'].includes(type) && (api.isAssetFromInput(uri) || uri.startsWith('@'))
         ? `/${uri}`
@@ -272,13 +272,13 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
 
       fileSystem
         .fileExists(assetFile)
-        .then(exists => {
+        .then((exists: boolean) => {
           if (exists) {
             req.url = `/@fs${path.resolve(assetFile)}`
           }
         })
-        .catch(error => {
-          server.config.logger.error(`UI-Doc: Error checking asset file: ${error}`)
+        .catch((error: unknown) => {
+          server.config.logger.error(`UI-Doc: Error checking asset file: ${String(error)}`)
         })
         .finally(() => {
           next()

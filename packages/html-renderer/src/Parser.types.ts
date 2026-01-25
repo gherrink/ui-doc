@@ -1,13 +1,13 @@
 import type { Node, TagNode } from './nodes'
 import type { Reader } from './Reader.types'
-import type { Token } from './Token.types'
+import type { TokenValue } from './Token.types'
 
 export interface TagNodeParse {
   identifier: string
   example: string
   hasContent: boolean
   parse: () => {
-    addToken: (token: Token) => void
+    addToken: (token: TokenValue) => void
     create: () => TagNode
   }
 }

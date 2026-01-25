@@ -1,4 +1,4 @@
-import type { Asset, GenerateContext } from '@ui-doc/core'
+import type { Asset, GenerateContext, GenerateExampleContext } from '@ui-doc/core'
 
 import type { Node } from './nodes'
 import type { Parser } from './Parser.types'
@@ -71,7 +71,7 @@ export class HtmlRenderer implements Renderer {
     }
   }
 
-  public generate(context: GenerateContext, layout?: string): string {
+  public generate(context: GenerateContext | GenerateExampleContext, layout?: string): string {
     layout = layout ?? 'default'
     const content = this.layouts[layout]
 
@@ -112,7 +112,7 @@ export class HtmlRenderer implements Renderer {
     return rootNode.render(context, this)
   }
 
-  protected generateContext(context: GenerateContext): RenderContext {
+  protected generateContext(context: GenerateContext | GenerateExampleContext): RenderContext {
     const renderContext = context as RenderContext
 
     renderContext.styles = context.assets

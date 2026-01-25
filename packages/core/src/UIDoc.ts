@@ -1,6 +1,6 @@
 import type { Block, BlockExample } from './Block.types'
 import type { BlockParser } from './BlockParser.types'
-import type { Asset, Context, ContextEntry, ContextExample } from './Context.types'
+import type { Asset, Context, ContextEntry, ContextExample, GenerateExampleContext } from './Context.types'
 import type { FilePath } from './FileSystem.types'
 import type { Renderer } from './Renderer.types'
 import type { GenerateFunctions, Options, OutputCallback, Source } from './UIDoc.types'
@@ -402,7 +402,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   }
 
   public exampleContent(example: ContextExample, layout = 'example'): string {
-    const context: ContextExample & { title: string, assets: Asset[] } = {
+    const context: GenerateExampleContext = {
       ...JSON.parse(JSON.stringify(example)) as ContextExample,
       title: this.generate.exampleTitle(example),
       assets: this.context.exampleAssets,

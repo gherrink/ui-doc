@@ -30,7 +30,7 @@ export class TemplateLoader {
 
         const finder = fileSystem.createFileFinder([`${searchPath}/*.html`])
 
-        await finder.search(async file => {
+        await finder.search(async (file: string) => {
           renderer[addFunction](fileSystem.fileBasename(file), {
             content: (await fileSystem.fileRead(file)).trim(),
             source: file,
