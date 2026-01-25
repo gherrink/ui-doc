@@ -56,7 +56,7 @@ Write Vitest tests based on this specification:
 
 Write the tests to the file path specified in the spec.
 If tests already exist, preserve them and add new scenarios.
-Follow all UI-Doc testing conventions from your test-patterns skill.
+Follow all UI-Doc testing conventions from your vitest-guide skill.
 ```
 
 The writer agent will:

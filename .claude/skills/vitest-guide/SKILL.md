@@ -1,9 +1,9 @@
 ---
-name: test-patterns
-description: Vitest testing patterns and UI-Doc conventions for writing comprehensive, type-safe tests. Use when writing or reviewing tests.
+name: vitest-guide
+description: Write comprehensive Vitest tests following UI-Doc conventions. Provides type-safe mocking patterns, test organization, and project-specific testing guidance. Use when implementing or reviewing tests.
 ---
 
-# Test Patterns Skill
+# Vitest Guide Skill
 
 Write comprehensive Vitest tests following UI-Doc project conventions. This skill provides patterns for mocking, assertions, and test organization.
 

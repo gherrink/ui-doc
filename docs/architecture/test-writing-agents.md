@@ -32,7 +32,7 @@ The test writing system uses a **pipeline architecture** that separates concerns
 │                                                                  │
 │  Input:  Test specification (Markdown)                           │
 │  Tools:  Read, Write, Edit                                       │
-│  Skills: test-patterns                                           │
+│  Skills: vitest-guide                                           │
 │  Output: Vitest test file                                        │
 │                                                                  │
 │  • Transforms spec into test code                                │
@@ -121,7 +121,7 @@ Transforms specifications into Vitest test files.
 |----------|-------|
 | Model | Sonnet |
 | Tools | Read, Write, Edit |
-| Skills | test-patterns |
+| Skills | vitest-guide |
 | Input | Test specification |
 | Output | `.test.ts` file |
 
@@ -133,15 +133,15 @@ Transforms specifications into Vitest test files.
 
 ### 4. Test Patterns Skill
 
-**Location:** `.claude/skills/test-patterns/`
+**Location:** `.claude/skills/vitest-guide/`
 
 A knowledge base providing Vitest patterns and UI-Doc conventions.
 
 ```text
-test-patterns/
+vitest-guide/
 ├── SKILL.md                    # Quick reference and core patterns
 └── references/
-    ├── vitest-patterns.md      # Comprehensive Vitest documentation
+    ├── vivitest-guide.md      # Comprehensive Vitest documentation
     └── ui-doc-conventions.md   # Project-specific conventions
 ```
 
@@ -166,7 +166,7 @@ The specification acts as the **contract** between the spec agent and writer age
 │                 │         │                 │
 │  Reads:         │         │  Reads:         │
 │  - Source code  │    →    │  - Spec only    │
-│  - Existing     │  Spec   │  - test-patterns│
+│  - Existing     │  Spec   │  - vitest-guide│
 │    tests        │         │    skill        │
 │                 │         │                 │
 │  Produces:      │         │  Produces:      │
@@ -237,10 +237,10 @@ The specification acts as the **contract** between the spec agent and writer age
 ├── commands/
 │   └── write-tests.md              # /write-tests entry point
 ├── skills/
-│   └── test-patterns/
+│   └── vitest-guide/
 │       ├── SKILL.md                # Core patterns
 │       └── references/
-│           ├── vitest-patterns.md  # Vitest reference
+│           ├── vivitest-guide.md  # Vitest reference
 │           └── ui-doc-conventions.md # Project conventions
 └── agents/
     ├── test-spec.md                # Source → Specification
@@ -321,4 +321,4 @@ Options:
 
 - [Vitest Documentation](https://vitest.dev/)
 - [Claude Code Agent Framework](https://docs.anthropic.com/claude-code)
-- [UI-Doc Testing Conventions](../../.claude/skills/test-patterns/references/ui-doc-conventions.md)
+- [UI-Doc Testing Conventions](../../.claude/skills/vitest-guide/references/ui-doc-conventions.md)
