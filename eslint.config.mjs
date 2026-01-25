@@ -132,6 +132,7 @@ export default antfu({
     '.*.cjs',
     '.*.js',
     '.*.mjs',
+    '.claude/**/*.{js,mjs,cjs}',
     '**/*.config.cjs',
     '**/*.config.js',
     '**/*.config.mjs',
