@@ -47,6 +47,7 @@
     "prepublish": "pnpm build",
     "release": "pnpm --workspace-root package:release $(pwd)",
     "release:dry": "pnpm --workspace-root package:release-dry $(pwd)",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "publishConfig": {
