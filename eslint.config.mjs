@@ -1,5 +1,34 @@
 import antfu from '@antfu/eslint-config'
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Reusable Rule Sets
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Type-aware rules that require TypeScript project configuration.
+ * These are disabled for config files, demos, and markdown code blocks
+ * where type information is not available.
+ */
+const typeAwareRulesOff = {
+  'ts/await-thenable': 'off',
+  'ts/explicit-function-return-type': 'off',
+  'ts/no-floating-promises': 'off',
+  'ts/no-misused-promises': 'off',
+  'ts/no-unsafe-argument': 'off',
+  'ts/no-unsafe-assignment': 'off',
+  'ts/no-unsafe-call': 'off',
+  'ts/no-unsafe-member-access': 'off',
+  'ts/no-unsafe-return': 'off',
+  'ts/restrict-template-expressions': 'off',
+  'ts/strict-boolean-expressions': 'off',
+  'ts/switch-exhaustiveness-check': 'off',
+  'ts/unbound-method': 'off',
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Main Configuration
+// ─────────────────────────────────────────────────────────────────────────────
+
 export default antfu({
   type: 'lib',
   typescript: {
@@ -18,73 +47,114 @@ export default antfu({
   yaml: true,
   markdown: true,
   ignores: [
-    '**/dist/**',
-    '**/node_modules/**',
-    '**/coverage/**',
-    '**/perf/**',
-    '**/tmp/**',
     '**/_tmp/**',
     '**/cache/**',
+    '**/coverage/**',
+    '**/dist/**',
+    '**/node_modules/**',
+    '**/perf/**',
+    '**/tmp/**',
   ],
 },
-// JS/TS rules (max line 100 per .editorconfig)
+
+// ─────────────────────────────────────────────────────────────────────────────
+// JS/TS Rules
+// ─────────────────────────────────────────────────────────────────────────────
 {
   files: ['**/*.{js,ts,mjs,cjs,jsx,tsx}'],
   rules: {
+    // ── Code Style ───────────────────────────────────────────────────────────
+    'curly': ['error', 'all'],
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
     'style/arrow-parens': ['error', 'as-needed'],
     'style/brace-style': ['error', '1tbs'],
     'style/comma-dangle': ['error', 'always-multiline'],
-    'style/max-len': 'off',
-    'curly': ['error', 'all'],
-    'no-console': ['warn', { allow: ['warn', 'error'] }],
+    'style/max-len': ['error', {
+      code: 100,
+      ignoreComments: true,
+      ignoreStrings: true,
+      ignoreUrls: true,
+    }],
 
-    // Disable stricter TypeScript rules to match previous config
-    'ts/no-explicit-any': 'off',
-    'ts/explicit-function-return-type': 'off',
-    'ts/strict-boolean-expressions': 'off',
-    'ts/no-unsafe-argument': 'off',
-    'ts/no-unsafe-assignment': 'off',
-    'ts/no-unsafe-call': 'off',
-    'ts/no-unsafe-member-access': 'off',
-    'ts/no-unsafe-return': 'off',
-    'ts/no-unsafe-function-type': 'off',
-    'ts/method-signature-style': 'off',
-    'ts/ban-ts-comment': 'off',
-    'ts/switch-exhaustiveness-check': 'off',
-    'ts/unbound-method': 'off',
-    'ts/no-misused-promises': 'off',
-    'ts/restrict-template-expressions': 'off',
-    'ts/no-floating-promises': 'off',
-    'ts/await-thenable': 'off',
+    // ── TypeScript Strict Safety ─────────────────────────────────────────────
+    'ts/no-explicit-any': 'error',
+    'ts/no-unsafe-argument': 'error',
+    'ts/no-unsafe-assignment': 'error',
+    'ts/no-unsafe-call': 'error',
+    'ts/no-unsafe-function-type': 'error',
+    'ts/no-unsafe-member-access': 'error',
+    'ts/no-unsafe-return': 'error',
+    'ts/restrict-template-expressions': ['error', { allowNumber: true }],
+    'ts/strict-boolean-expressions': 'error',
 
-    // Disable node rules
-    'node/prefer-global/process': 'off',
+    // ── TypeScript Best Practices ────────────────────────────────────────────
+    'ts/ban-ts-comment': ['error', {
+      'minimumDescriptionLength': 10,
+      'ts-expect-error': 'allow-with-description',
+      'ts-ignore': true,
+    }],
+    'ts/explicit-function-return-type': ['error', { allowExpressions: true }],
+    'ts/method-signature-style': ['error', 'property'],
+    'ts/switch-exhaustiveness-check': 'error',
+    'ts/unbound-method': ['error', { ignoreStatic: true }],
 
-    // Disable import rules not available
-    'import/no-relative-packages': 'off',
+    // ── Async/Promise Rules ──────────────────────────────────────────────────
+    'ts/await-thenable': 'error',
+    'ts/no-floating-promises': ['error', { ignoreIIFE: true, ignoreVoid: true }],
+    'ts/no-misused-promises': ['error', { checksConditionals: true }],
 
-    // Disable stricter regexp rules
-    'regexp/no-unused-capturing-group': 'off',
-    'regexp/no-super-linear-backtracking': 'off',
-
-    // Disable jsdoc rules
-    'jsdoc/check-param-names': 'off',
-    'jsdoc/require-returns-description': 'off',
-
-    // Disable unicorn rules
-    'unicorn/error-message': 'off',
-
-    // Allow unused catch block variables
+    // ── Plugin Rules ─────────────────────────────────────────────────────────
+    'jsdoc/check-param-names': 'error',
+    'jsdoc/require-returns-description': 'error',
+    'node/prefer-global/process': 'error',
+    'regexp/no-super-linear-backtracking': 'error',
+    'regexp/no-unused-capturing-group': 'error',
+    'unicorn/error-message': 'error',
     'unused-imports/no-unused-vars': ['error', {
-      vars: 'all',
-      varsIgnorePattern: '^_',
       args: 'after-used',
       argsIgnorePattern: '^_',
-      caughtErrors: 'none',
+      caughtErrors: 'all',
+      caughtErrorsIgnorePattern: '^_',
+      vars: 'all',
+      varsIgnorePattern: '^_',
     }],
   },
 },
-// Markdown code blocks - disable type-aware parsing
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Config Files - Disable Type-Aware Rules
+// ─────────────────────────────────────────────────────────────────────────────
+{
+  files: [
+    '*.cjs',
+    '*.js',
+    '*.mjs',
+    '.*.cjs',
+    '.*.js',
+    '.*.mjs',
+    '**/*.config.cjs',
+    '**/*.config.js',
+    '**/*.config.mjs',
+    'demos/**/*.{js,mjs,cjs,ts}',
+    'shared/**/*.mjs',
+  ],
+  rules: typeAwareRulesOff,
+},
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Test Files - Relax Unsafe Rules
+// ─────────────────────────────────────────────────────────────────────────────
+{
+  files: ['**/*.test.ts', '**/*.spec.ts'],
+  rules: {
+    // Allow unsafe assignment for test matchers (expect.objectContaining returns any)
+    'ts/no-unsafe-assignment': 'off',
+  },
+},
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Markdown Code Blocks - Disable Type-Aware Parsing
+// ─────────────────────────────────────────────────────────────────────────────
 {
   files: ['**/*.md/**/*.{js,ts,jsx,tsx}'],
   languageOptions: {
@@ -94,30 +164,27 @@ export default antfu({
     },
   },
   rules: {
-    'ts/await-thenable': 'off',
-    'ts/no-floating-promises': 'off',
-    'ts/no-misused-promises': 'off',
-    'ts/no-unnecessary-type-assertion': 'off',
-    'ts/no-unsafe-argument': 'off',
-    'ts/no-unsafe-assignment': 'off',
-    'ts/no-unsafe-call': 'off',
-    'ts/no-unsafe-member-access': 'off',
-    'ts/no-unsafe-return': 'off',
-    'ts/restrict-plus-operands': 'off',
-    'ts/restrict-template-expressions': 'off',
-    'ts/unbound-method': 'off',
-    'ts/prefer-nullish-coalescing': 'off',
+    ...typeAwareRulesOff,
     'style/max-len': 'off',
+    'ts/no-unnecessary-type-assertion': 'off',
+    'ts/prefer-nullish-coalescing': 'off',
+    'ts/restrict-plus-operands': 'off',
   },
 },
-// Markdown rules (max line 170 per .editorconfig)
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Markdown Files
+// ─────────────────────────────────────────────────────────────────────────────
 {
   files: ['**/*.md'],
   rules: {
     'style/max-len': 'off', // Handled by markdownlint
   },
 },
-// YAML rules (max line 500 per .editorconfig)
+
+// ─────────────────────────────────────────────────────────────────────────────
+// YAML Files
+// ─────────────────────────────────────────────────────────────────────────────
 {
   files: ['**/*.{yml,yaml}'],
   rules: {
