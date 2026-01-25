@@ -22,11 +22,8 @@ export class TagVarNode extends TagNode {
   }
 
   public render(context: RenderContext): string {
-    let value = readNestedValue(this.contextKey, context) || ''
-
-    if (typeof value !== 'string') {
-      value = String(value)
-    }
+    const rawValue = readNestedValue(this.contextKey, context)
+    const value = rawValue === undefined || rawValue === null ? '' : String(rawValue)
 
     return this.escape ? escapeHtml(value) : value
   }

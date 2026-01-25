@@ -41,13 +41,13 @@ export class TagIfNode extends TagNode {
     context: RenderContext,
     valueKey: 'firstValue' | 'secondValue',
     contextKey: 'firstContextKey' | 'secondContextKey',
-  ): any {
+  ): unknown {
     return this.options[contextKey] !== undefined
       ? readNestedValue(this.options[contextKey]!, context)
       : this.options[valueKey]
   }
 
-  protected compare(value: any, compareValue: any, operator: NodeOperator): boolean {
+  protected compare(value: unknown, compareValue: unknown, operator: NodeOperator): boolean {
     switch (operator) {
       case '==':
         // eslint-disable-next-line eqeqeq
@@ -60,13 +60,13 @@ export class TagIfNode extends TagNode {
       case '!==':
         return value !== compareValue
       case '<':
-        return value < compareValue
+        return (value as number) < (compareValue as number)
       case '<=':
-        return value <= compareValue
+        return (value as number) <= (compareValue as number)
       case '>':
-        return value > compareValue
+        return (value as number) > (compareValue as number)
       case '>=':
-        return value >= compareValue
+        return (value as number) >= (compareValue as number)
       default:
         return false
     }

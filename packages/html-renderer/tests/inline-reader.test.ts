@@ -6,37 +6,37 @@ describe('reader', () => {
   it('peek', () => {
     const reader = new InlineReader('Hello World')
 
-    expect(reader.peak()).toBe('H')
-    expect(reader.peak(2)).toBe('He')
-    expect(reader.peak(3)).toBe('Hel')
-    expect(reader.peak(4)).toBe('Hell')
-    expect(reader.peak(5)).toBe('Hello')
-    expect(reader.peak(6)).toBe('Hello ')
-    expect(reader.peak(7)).toBe('Hello W')
-    expect(reader.peak(8)).toBe('Hello Wo')
-    expect(reader.peak(9)).toBe('Hello Wor')
-    expect(reader.peak(10)).toBe('Hello Worl')
-    expect(reader.peak(11)).toBe('Hello World')
+    expect(reader.peek()).toBe('H')
+    expect(reader.peek(2)).toBe('He')
+    expect(reader.peek(3)).toBe('Hel')
+    expect(reader.peek(4)).toBe('Hell')
+    expect(reader.peek(5)).toBe('Hello')
+    expect(reader.peek(6)).toBe('Hello ')
+    expect(reader.peek(7)).toBe('Hello W')
+    expect(reader.peek(8)).toBe('Hello Wo')
+    expect(reader.peek(9)).toBe('Hello Wor')
+    expect(reader.peek(10)).toBe('Hello Worl')
+    expect(reader.peek(11)).toBe('Hello World')
   })
 
   it('peek over input length', () => {
     const reader = new InlineReader('Hello')
 
-    expect(reader.peak()).toBe('H')
-    expect(reader.peak(2)).toBe('He')
-    expect(reader.peak(3)).toBe('Hel')
-    expect(reader.peak(4)).toBe('Hell')
-    expect(reader.peak(5)).toBe('Hello')
-    expect(reader.peak(6)).toBe('Hello')
-    expect(reader.peak(7)).toBe('Hello')
+    expect(reader.peek()).toBe('H')
+    expect(reader.peek(2)).toBe('He')
+    expect(reader.peek(3)).toBe('Hel')
+    expect(reader.peek(4)).toBe('Hell')
+    expect(reader.peek(5)).toBe('Hello')
+    expect(reader.peek(6)).toBe('Hello')
+    expect(reader.peek(7)).toBe('Hello')
   })
 
   it('peek with eof reached', () => {
     const reader = new InlineReader('')
 
-    expect(reader.peak()).toBe('')
-    expect(reader.peak(2)).toBe('')
-    expect(reader.peak(3)).toBe('')
+    expect(reader.peek()).toBe('')
+    expect(reader.peek(2)).toBe('')
+    expect(reader.peek(3)).toBe('')
   })
 
   it('consume', () => {

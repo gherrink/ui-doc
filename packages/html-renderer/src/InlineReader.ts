@@ -17,7 +17,7 @@ export class InlineReader implements Reader {
     this.source = source
   }
 
-  public peak(k: PositiveInteger = 1): string {
+  public peek(k: PositiveInteger = 1): string {
     return this.input.slice(0, k)
   }
 

@@ -19,25 +19,24 @@ export class TemplateLoader {
       { folderName: 'pages', addFunction: 'addPage' },
       { folderName: 'partials', addFunction: 'addPartial' },
     ]
-    const promises = []
 
-    paths.forEach(async ({ folderName, addFunction }) => {
-      const searchPath = `${templatePath}/${folderName}`
+    await Promise.all(
+      paths.map(async ({ folderName, addFunction }) => {
+        const searchPath = `${templatePath}/${folderName}`
 
-      if (!(await fileSystem.isDirectory(searchPath))) {
-        return
-      }
+        if (!(await fileSystem.isDirectory(searchPath))) {
+          return
+        }
 
-      const finder = fileSystem.createFileFinder([`${searchPath}/*.html`])
+        const finder = fileSystem.createFileFinder([`${searchPath}/*.html`])
 
-      promises.push(
-        finder.search(async file => {
+        await finder.search(async file => {
           renderer[addFunction](fileSystem.fileBasename(file), {
             content: (await fileSystem.fileRead(file)).trim(),
             source: file,
           })
-        }),
-      )
-    })
+        })
+      }),
+    )
   }
 }

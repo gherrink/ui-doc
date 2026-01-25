@@ -25,19 +25,19 @@ export class TagForNode extends TagNode {
       return this.renderArray(contextNew, context, renderer)
     }
 
-    if (typeof contextNew === 'object') {
-      return this.renderObject(contextNew, context, renderer)
+    if (contextNew !== null && typeof contextNew === 'object') {
+      return this.renderObject(contextNew as Record<string, unknown>, context, renderer)
     }
 
     return ''
   }
 
-  protected renderArray(context: any[], parentContext: RenderContext, renderer: Renderer): string {
+  protected renderArray(context: unknown[], parentContext: RenderContext, renderer: Renderer): string {
     return context
       .map((item, index) => {
         return this.renderChildNodes(
           {
-            ...(typeof item === 'object' ? item : {}),
+            ...(item !== null && typeof item === 'object' ? item : {}),
             _contextKey: this.contextKey,
             _loop: { index, value: item },
             _parent: parentContext,
@@ -49,17 +49,18 @@ export class TagForNode extends TagNode {
   }
 
   protected renderObject(
-    context: Record<string, any>,
+    context: Record<string, unknown>,
     parentContext: RenderContext,
     renderer: Renderer,
   ): string {
     return Object.keys(context)
       .map((key, index) => {
+        const value = context[key]
         return this.renderChildNodes(
           {
-            ...(typeof context[key] === 'object' ? context[key] : {}),
+            ...(value !== null && typeof value === 'object' ? value : {}),
             _contextKey: this.contextKey,
-            _loop: { index, key, value: context[key] },
+            _loop: { index, key, value },
             _parent: parentContext,
           },
           renderer,

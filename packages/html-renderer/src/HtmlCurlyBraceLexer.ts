@@ -67,13 +67,13 @@ export class HtmlCurlyBraceLexer implements Lexer {
       return this.progressTag()
     }
 
-    const char = this.reader.peak()
+    const char = this.reader.peek()
 
-    if (char === '{' && this.reader.peak(2) === '{{') {
+    if (char === '{' && this.reader.peek(2) === '{{') {
       return this.consumeTagOpen()
     }
 
-    if (char === '<' && this.reader.peak(4) === '<!--') {
+    if (char === '<' && this.reader.peek(4) === '<!--') {
       return this.consumeComment()
     }
 
@@ -115,7 +115,7 @@ export class HtmlCurlyBraceLexer implements Lexer {
     let content = ''
 
     while (!this.reader.isEof()) {
-      if (this.reader.peak(3) === '-->') {
+      if (this.reader.peek(3) === '-->') {
         this.reader.consume(3)
         break
       }
@@ -133,13 +133,13 @@ export class HtmlCurlyBraceLexer implements Lexer {
     let content = ''
 
     while (!this.reader.isEof()) {
-      const peek = this.reader.peak()
+      const peek = this.reader.peek()
 
-      if (peek === '{' && this.reader.peak(2) === '{{') {
+      if (peek === '{' && this.reader.peek(2) === '{{') {
         break
       }
 
-      if (peek === '<' && this.reader.peak(4) === '<!--') {
+      if (peek === '<' && this.reader.peek(4) === '<!--') {
         break
       }
 
@@ -153,7 +153,7 @@ export class HtmlCurlyBraceLexer implements Lexer {
   }
 
   protected progressTag(): Token | undefined {
-    const char = this.reader.peak()
+    const char = this.reader.peek()
 
     if (char === ' ' || char === '\n' || char === '\r' || char === '\t') {
       this.reader.consume()
@@ -161,7 +161,7 @@ export class HtmlCurlyBraceLexer implements Lexer {
       return this.progressTag()
     }
 
-    if (char === '}' && this.reader.peak(2) === '}}') {
+    if (char === '}' && this.reader.peek(2) === '}}') {
       return this.consumeTagClose()
     }
 
@@ -198,11 +198,11 @@ export class HtmlCurlyBraceLexer implements Lexer {
       return this.consumeNumber()
     }
 
-    if (char === 't' && this.reader.peak(4) === 'true') {
+    if (char === 't' && this.reader.peek(4) === 'true') {
       return this.consumeBoolean(true)
     }
 
-    if (char === 'f' && this.reader.peak(5) === 'false') {
+    if (char === 'f' && this.reader.peek(5) === 'false') {
       return this.consumeBoolean(false)
     }
 
@@ -246,7 +246,7 @@ export class HtmlCurlyBraceLexer implements Lexer {
     let value = ''
 
     while (!this.reader.isEof()) {
-      const char = this.reader.peak()
+      const char = this.reader.peek()
 
       if (
         char === '1'
@@ -286,7 +286,7 @@ export class HtmlCurlyBraceLexer implements Lexer {
     let operator = ''
 
     while (!this.reader.isEof()) {
-      const char = this.reader.peak()
+      const char = this.reader.peek()
 
       if (char === '=' || char === '!' || char === '<' || char === '>') {
         operator += this.reader.consume()
@@ -306,7 +306,7 @@ export class HtmlCurlyBraceLexer implements Lexer {
     let name = ''
 
     while (!this.reader.isEof()) {
-      const char = this.reader.peak()
+      const char = this.reader.peek()
 
       if (!chars.includes(char)) {
         break

@@ -9,7 +9,7 @@ export interface Reader {
    * @param {PositiveInteger} k number
    * @returns {string} next character
    */
-  peak: (k?: PositiveInteger) => string
+  peek: (k?: PositiveInteger) => string
 
   /**
    * Get the next character /next k-th token from the input, and remove it from the input.

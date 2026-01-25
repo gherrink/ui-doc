@@ -7,12 +7,14 @@ import type { RenderContext, Renderer, SourceInput } from './Renderer.types'
 import { HTMLRendererError, HTMLRendererSyntaxError, ParserError } from './errors'
 import { InlineReader } from './InlineReader'
 
-function instanceofReader(object: any): object is Reader {
+function instanceofReader(object: unknown): object is Reader {
   return (
-    typeof object.peak === 'function'
-    && typeof object.consume === 'function'
-    && typeof object.isEof === 'function'
-    && typeof object.debug === 'function'
+    object !== null
+    && typeof object === 'object'
+    && typeof (object as Reader).peek === 'function'
+    && typeof (object as Reader).consume === 'function'
+    && typeof (object as Reader).isEof === 'function'
+    && typeof (object as Reader).debug === 'function'
   )
 }
 
@@ -71,7 +73,7 @@ export class HtmlRenderer implements Renderer {
 
   public generate(context: GenerateContext, layout?: string): string {
     layout = layout ?? 'default'
-    const content = this.layouts[layout] || undefined
+    const content = this.layouts[layout]
 
     if (!content) {
       throw new HTMLRendererError(
@@ -83,7 +85,7 @@ export class HtmlRenderer implements Renderer {
   }
 
   public page(name: string, context: RenderContext): string {
-    const content = this.pages[name] || this.pages.default || undefined
+    const content = this.pages[name] || this.pages.default
 
     if (!content) {
       throw new HTMLRendererError(
@@ -95,7 +97,7 @@ export class HtmlRenderer implements Renderer {
   }
 
   public partial(name: string, context?: RenderContext): string {
-    const content = this.partials[name] || this.partials.default || undefined
+    const content = this.partials[name] || this.partials.default
 
     if (!content) {
       throw new HTMLRendererError(

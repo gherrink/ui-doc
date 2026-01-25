@@ -24,7 +24,9 @@ export class TagPageNode extends TagNode {
   public render(context: RenderContext, renderer: Renderer): string {
     let pageName: string = this.name
     const newContext
-      = this.contextKey === 'this' ? context : readNestedValue(this.contextKey, context)
+      = this.contextKey === 'this'
+        ? context
+        : (readNestedValue(this.contextKey, context) as RenderContext)
 
     if (pageName.includes('.')) {
       const foundName = readNestedValue(pageName, context)

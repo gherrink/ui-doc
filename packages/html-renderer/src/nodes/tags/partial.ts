@@ -23,7 +23,9 @@ export class TagPartialNode extends TagNode {
 
   public render(context: RenderContext, renderer: Renderer): string {
     const newContext
-      = this.contextKey === 'this' ? context : readNestedValue(this.contextKey, context)
+      = this.contextKey === 'this'
+        ? context
+        : (readNestedValue(this.contextKey, context) as RenderContext)
 
     return renderer.partial(this.name, newContext)
   }
