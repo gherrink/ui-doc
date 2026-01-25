@@ -13,7 +13,7 @@ Generate git commit messages following the [Conventional Commits v1.0.0](https:/
 ## Format
 
 ```
-<type>(<scope>): <description>
+<type>(<scope>[,<scope>...]): <description>
 
 [optional body]
 
@@ -26,6 +26,8 @@ Generate git commit messages following the [Conventional Commits v1.0.0](https:/
 
 **Project Scopes:** `core`, `node`, `html-renderer`, `rollup`, `vite`, `demos`, `release`
 
+**Multi-scope:** When changes span multiple packages, combine scopes with commas: `feat(core,node): add shared utility`
+
 See [reference.md](./reference.md) for full specification and guidelines.
 See [examples.md](./examples.md) for practical examples.
 
@@ -34,7 +36,7 @@ See [examples.md](./examples.md) for practical examples.
 1. Run `git status` to get an overview of modified files
 2. Run `git diff --cached` only if more details are needed to understand the changes
 3. Determine appropriate type based on the nature of changes
-4. Identify scope from affected package(s) or directory
+4. Identify scope from affected package(s) — if changes span multiple packages, combine scopes (e.g., `core,node`)
 5. Write concise description in imperative mood
 6. Add body if explanation of what/why is needed
 7. Always include `Co-Authored-By: Claude <noreply@anthropic.com>` footer
