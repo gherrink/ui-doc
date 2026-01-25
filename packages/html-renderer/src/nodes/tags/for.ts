@@ -32,7 +32,11 @@ export class TagForNode extends TagNode {
     return ''
   }
 
-  protected renderArray(context: unknown[], parentContext: RenderContext, renderer: Renderer): string {
+  protected renderArray(
+    context: unknown[],
+    parentContext: RenderContext,
+    renderer: Renderer,
+  ): string {
     return context
       .map((item, index) => {
         return this.renderChildNodes(

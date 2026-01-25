@@ -6,9 +6,9 @@ export interface TagNodeParse {
   identifier: string
   example: string
   hasContent: boolean
-  parse(): {
-    addToken(token: Token): void
-    create(): TagNode
+  parse: () => {
+    addToken: (token: Token) => void
+    create: () => TagNode
   }
 }
 
@@ -18,11 +18,11 @@ export interface Parser {
    * @param {Reader} reader
    * @returns {Node} AST
    */
-  parse(reader: Reader): Node
+  parse: (reader: Reader) => Node
 
   /**
    * Register a tag parser.
    * @param {TagNodeParse} tag
    */
-  registerTagParser(tag: TagNodeParse): this
+  registerTagParser: (tag: TagNodeParse) => this
 }

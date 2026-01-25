@@ -162,7 +162,7 @@ describe('render tag for', () => {
   })
 
   it('should render empty if context is empty', () => {
-    const contextArray: any[] = []
+    const contextArray: unknown[] = []
     const contextObject = {}
     const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node

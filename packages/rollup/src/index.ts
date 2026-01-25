@@ -40,7 +40,7 @@ export interface Api {
   addAssetFromInput: (src: string) => void
 }
 
-function handleBlockParseError(this: PluginContext, error: unknown) {
+function handleBlockParseError(this: PluginContext, error: unknown): void {
   if (!(error instanceof BlockParseError)) {
     throw error
   }
@@ -138,7 +138,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     async generateBundle() {
       options.assets.forEach(
         ({ name, fileName, source, originalFileName, context, attrs, type, fromInput = false }) => {
-          if (source) {
+          if (source !== undefined) {
             this.emitFile({
               name,
               fileName: `${prefix.path}${fileName}`,
@@ -169,14 +169,15 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     },
 
     async writeBundle(outputOptions) {
-      if (!outputOptions.dir) {
+      if (outputOptions.dir === undefined || outputOptions.dir === '') {
         return
       }
 
       const promises: Promise<void | boolean>[] = []
 
-      // if ui-doc is created into subfolder we need to copy assets referenced in examples and are generated through other plugins
-      if (prefix.path) {
+      // if ui-doc is created into subfolder we need to copy assets referenced in examples and are
+      // generated through other plugins
+      if (prefix.path !== '') {
         // TODO may copy map file if exists
         promises.push(
           ...[...assetsFromInput].map(async asset => {
@@ -189,7 +190,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         )
       }
 
-      if (staticAssets) {
+      if (staticAssets !== undefined && staticAssets !== '') {
         promises.push(fileSystem.directoryCopy(staticAssets, `${outputOptions.dir}/${prefix.path}`))
         this.info({
           code: 'OUTPUT',

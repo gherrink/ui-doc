@@ -1,4 +1,4 @@
-export function initExample() {
+export function initExample(): void {
   document.querySelectorAll<HTMLIFrameElement>('[data-example] > iframe').forEach(iframe => {
     const document = iframe.contentDocument ?? iframe.contentWindow?.document
 
@@ -6,9 +6,9 @@ export function initExample() {
       return
     }
 
-    const initHeightChange = () => {
+    const initHeightChange = (): void => {
       let currentHeight = 0
-      const changeHeight = () => {
+      const changeHeight = (): void => {
         if (document.body.scrollHeight === currentHeight) {
           return
         }

@@ -2,8 +2,10 @@ import { animate } from '../utils/dom'
 import { queryParentSelector } from '../utils/select'
 
 /**
- * Sometimes you need to prevent the user from interacting with other elements while an element is expanded. Then you need the [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert) attribute.
- * You can set the `data-inert` attribute with selectors (comma separated) to control the `inert` attribute of elements matching your selectors.
+ * Sometimes you need to prevent the user from interacting with other elements while an element
+ * is expanded. Then you need the [inert](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert) attribute.
+ * You can set the `data-inert` attribute with selectors (comma separated) to control the
+ * `inert` attribute of elements matching your selectors.
  * @location functions.expand.with-inerts Expand controlling inert
  * @order 30
  * @example
@@ -25,7 +27,7 @@ import { queryParentSelector } from '../utils/select'
 function toggleInert(target: HTMLElement, show: boolean): void {
   const inertSelector = target.getAttribute('data-inert')
 
-  if (!inertSelector) {
+  if (inertSelector === null || inertSelector === '') {
     return
   }
 
@@ -34,7 +36,10 @@ function toggleInert(target: HTMLElement, show: boolean): void {
     const activeParentWithSameSelector = !show
       ? queryParentSelector(
           target.parentElement,
-          `[data-inert="${selector}"],[data-inert^="${selector},"],[data-inert$=",${selector}"],[data-inert*=",${selector},"]`,
+          `[data-inert="${selector}"],`
+          + `[data-inert^="${selector},"],`
+          + `[data-inert$=",${selector}"],`
+          + `[data-inert*=",${selector},"]`,
         )
       : null
 
@@ -108,7 +113,7 @@ function toggleControlTarget(selector: string, show: boolean, callback: () => vo
   }
 
   const animationName = target.getAttribute('data-animate')
-  const toggleHide = () => {
+  const toggleHide = (): void => {
     if (target.hasAttribute('aria-hidden')) {
       target.setAttribute('aria-hidden', show ? 'false' : 'true')
     } else if (show) {
@@ -138,7 +143,7 @@ function toggleControlTarget(selector: string, show: boolean, callback: () => vo
 
   toggleInert(target, show)
 
-  if (animationName) {
+  if (animationName !== null && animationName !== '') {
     if (show) {
       toggleHide()
       animate(target, animationName, show)
@@ -151,9 +156,11 @@ function toggleControlTarget(selector: string, show: boolean, callback: () => vo
 }
 
 /**
- * Initialize expandable/collapsable elements by using the [aria-expanded](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-expanded) attribute.
+ * Initialize expandable/collapsable elements by using the
+ * [aria-expanded](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-expanded) attribute.
  *
- * When an element with the `aria-expanded` attribute is clicked, the value of the attribute will be toggled between `true` and `false`.
+ * When an element with the `aria-expanded` attribute is clicked, the value of the attribute will
+ * be toggled between `true` and `false`.
  *
  * @location functions.expand Expand
  * @example
@@ -169,9 +176,9 @@ function toggleControlTarget(selector: string, show: boolean, callback: () => vo
 export function initExpand(): void {
   document.querySelectorAll<HTMLElement>('[aria-expanded]').forEach(expander => {
     const controlTarget = expander.getAttribute('aria-controls')
-    const toggle = (e: MouseEvent) => {
+    const toggle = (e: MouseEvent): void => {
       const expanded = expander.getAttribute('aria-expanded') === 'true'
-      const toggleExpanded = () => {
+      const toggleExpanded = (): void => {
         expander.setAttribute('aria-expanded', expanded ? 'false' : 'true') // when expanded we need to set false
       }
 
@@ -186,7 +193,7 @@ export function initExpand(): void {
           })
       }
 
-      if (controlTarget) {
+      if (controlTarget !== null && controlTarget !== '') {
         toggleControlTarget(`#${controlTarget}`, !expanded, toggleExpanded)
       } else {
         toggleExpanded()
@@ -195,7 +202,7 @@ export function initExpand(): void {
 
     expander.addEventListener('click', toggle)
 
-    if (controlTarget) {
+    if (controlTarget !== null && controlTarget !== '') {
       // select all controls inside the controlled area that have the same aria-controls attribute
       document
         .querySelectorAll<HTMLElement>(`#${controlTarget} [aria-controls="${controlTarget}"]`)

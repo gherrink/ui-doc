@@ -5,7 +5,7 @@ import { TagDebugNode } from '../../src/nodes/tags/debug'
 describe('render tag debug', () => {
   const context = { page: { title: 'World' }, title: 'Hello' }
 
-  const debugOutput = (debug: any) => `<pre>${JSON.stringify(debug, null, 2)}</pre>`
+  const debugOutput = (debug: unknown): string => `<pre>${JSON.stringify(debug, null, 2)}</pre>`
 
   it('output this context', () => {
     const node = new TagDebugNode({})

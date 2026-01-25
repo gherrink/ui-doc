@@ -18,7 +18,7 @@ export function readNestedValue(name: string, target: unknown): unknown {
   const currentName = name.substring(0, index)
   const nextName = name.substring(index + 1)
 
-  if (!obj[currentName]) {
+  if (obj[currentName] === undefined || obj[currentName] === null) {
     return undefined
   }
 

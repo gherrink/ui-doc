@@ -3,7 +3,8 @@ import type { PositiveInteger } from './Primitive.types'
 export interface Reader {
   /**
    * Get the next character / next k-th character from the input.
-   * This is used to look ahead the characters without consuming/removing them from the input stream.
+   * This is used to look ahead the characters without consuming/removing them from the input
+   * stream.
    * Calling the peek() method more than once will return the same character.
    *
    * @param {PositiveInteger} k number
@@ -13,7 +14,8 @@ export interface Reader {
 
   /**
    * Get the next character /next k-th token from the input, and remove it from the input.
-   * This means, calling the consume() method multiple times will return a new character at each invocation.
+   * This means, calling the consume() method multiple times will return a new character at each
+   * invocation.
    *
    * @param {PositiveInteger} k
    * @returns {string} next character

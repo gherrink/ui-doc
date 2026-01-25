@@ -65,7 +65,7 @@ export class CommentBlockParser extends EventEmitterBase<EventMap> implements Bl
     }
 
     comment.tags.forEach(tag => {
-      if (!this.tagTransformers[tag.tag]) {
+      if (this.tagTransformers[tag.tag] === undefined) {
         throw createError(`Undefined tag type '${tag.tag}'.`, comment, { tag })
       }
 
@@ -89,12 +89,12 @@ export class CommentBlockParser extends EventEmitterBase<EventMap> implements Bl
 
     const validationError = this.validateBlock(block)
 
-    if (validationError) {
+    if (validationError !== undefined) {
       throw createError(validationError, comment)
     }
 
     block.key = this.blockKey(block as Block)
-    if (!block.key) {
+    if (block.key === '') {
       return undefined
     }
 
@@ -104,7 +104,7 @@ export class CommentBlockParser extends EventEmitterBase<EventMap> implements Bl
   }
 
   protected validateBlock(block: Partial<Block>): string | undefined {
-    if (!block.page && !block.location) {
+    if ((block.page === undefined || block.page === '') && (block.location === undefined || block.location === '')) {
       return 'Missing block location. Don\'t know where to place this block, please use @location, @page or @section + @page.'
     }
 
@@ -112,11 +112,11 @@ export class CommentBlockParser extends EventEmitterBase<EventMap> implements Bl
   }
 
   protected blockKey(block: Block): string {
-    if (block.location) {
+    if (block.location !== undefined && block.location !== '') {
       return block.location
     }
 
-    return (block.page ?? '') + (block.section ? `.${block.section}` : '')
+    return (block.page ?? '') + (block.section !== undefined && block.section !== '' ? `.${block.section}` : '')
   }
 }
 

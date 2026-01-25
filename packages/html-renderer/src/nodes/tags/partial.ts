@@ -53,18 +53,18 @@ export const parseTagPartialNode: TagNodeParse = {
           throw new TagNodeError('Expected tag identifier')
         }
 
-        if (options.name && options.contextKey) {
+        if ((options.name !== undefined && options.name !== '') && (options.contextKey !== undefined && options.contextKey !== '')) {
           throw new TagNodeError('Expected only one name and context key')
         }
 
-        if (options.name) {
+        if (options.name !== undefined && options.name !== '') {
           options.contextKey = token.name
         } else {
           options.name = token.name
         }
       },
       create() {
-        if (!options.name) {
+        if (options.name === undefined || options.name === '') {
           throw new TagNodeError('Expected partial name')
         }
 

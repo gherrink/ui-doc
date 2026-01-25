@@ -71,9 +71,10 @@ function resolveOptions(options: Options): Options {
   }
 }
 
-function prepareServe(api: Api) {
+function prepareServe(api: Api): void {
   if (api.options.prefix.uri) {
-    // replace resolveUrl to make sure that all urls (pages and assets) are generated correctly for vite server
+    // replace resolveUrl to make sure that all urls (pages and assets) are generated correctly
+    // for vite server
     api.uidoc.replaceGenerate('resolve', (uri, type) => {
       // don't add prefix if asset is from vite
       return ['asset', 'asset-example'].includes(type) && (api.isAssetFromInput(uri) || uri.startsWith('@'))
@@ -165,7 +166,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         }
 
         if (asset.type === 'script') {
-          if (foundBundle.fileName) {
+          if (foundBundle.fileName !== undefined && foundBundle.fileName !== '') {
             asset.fileName = foundBundle.fileName
           }
 
@@ -185,7 +186,8 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
           && foundBundle.viteMetadata?.importedCss
           && foundBundle.viteMetadata.importedCss.size > 0
         ) {
-          asset.fileName = foundBundle.viteMetadata.importedCss.values().next().value
+          const firstCss = foundBundle.viteMetadata.importedCss.values().next().value as string
+          asset.fileName = firstCss
         }
       })
 
@@ -219,8 +221,8 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         return next()
       }
 
-      const writeContent = (content: string | null) => {
-        if (content) {
+      const writeContent = (content: string | null): void => {
+        if (content !== null) {
           res.setHeader('Content-Type', 'text/html; charset=utf-8')
           res.write(content)
         } else {
@@ -261,7 +263,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
 
       const fileSystem = api.fileSystem
 
-      if (!staticAssets || !fileSystem) {
+      if (staticAssets === undefined || fileSystem === undefined) {
         return next()
       }
 

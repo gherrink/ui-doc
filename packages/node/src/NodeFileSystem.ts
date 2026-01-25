@@ -14,7 +14,7 @@ export class NodeFileSystem implements FileSystem {
   private constructor() {}
 
   public static init(): NodeFileSystem {
-    if (!this.instance) {
+    if (this.instance === undefined) {
       this.instance = new NodeFileSystem()
     }
 
@@ -98,7 +98,7 @@ export class NodeFileSystem implements FileSystem {
         const fromPath = path.join(fromDir, dirent.name)
         const toPath = path.join(toDir, dirent.name)
 
-        return (await dirent.isDirectory())
+        return dirent.isDirectory()
           ? this.directoryCopy(fromPath, toPath)
           : this.fileCopy(fromPath, toPath)
       }),

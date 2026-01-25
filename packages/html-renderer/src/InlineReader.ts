@@ -44,7 +44,7 @@ export class InlineReader implements Reader {
     return this.input.length === 0
   }
 
-  public debug() {
+  public debug(): { content: string, line: number, pos: number, source: string } {
     const lines = this.input.split('\n', 1)
 
     return {

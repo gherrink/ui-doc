@@ -1,4 +1,4 @@
-function createSidebar(sidebar: HTMLElement) {
+function createSidebar(sidebar: HTMLElement): void {
   const links: Record<string, HTMLLinkElement> = {}
   const observer = new IntersectionObserver(
     entries => {
@@ -40,7 +40,7 @@ function createSidebar(sidebar: HTMLElement) {
   })
 }
 
-export function initSidebar() {
+export function initSidebar(): void {
   document.querySelectorAll('[data-sidebar]').forEach(sidebar => {
     createSidebar(sidebar as HTMLElement)
   })

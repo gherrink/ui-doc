@@ -12,7 +12,8 @@ export function ready(callback: (this: Document) => void): void {
 }
 
 /**
- * Animate an element using css animations/transitions. This function will add the necessary classes to the element to trigger the animation.
+ * Animate an element using css animations/transitions. This function will add the necessary
+ * classes to the element to trigger the animation.
  * When doing an entering animation following classes will be added:
  * - `[animation-name]-enter-active`
  * - `[animation-name]-enter-from`
@@ -22,9 +23,11 @@ export function ready(callback: (this: Document) => void): void {
  * - `[animation-name]-leave-from`
  * - `[animation-name]-leave-to`
  *
- * The animation classes will be removed after the animation is done. If a callback is provided it will be called after the animation is done.
+ * The animation classes will be removed after the animation is done. If a callback is provided
+ * it will be called after the animation is done.
  *
- * The `-active` class will stay on the element until the animation is done. The `-from` class will be removed after the first frame and the `-to`
+ * The `-active` class will stay on the element until the animation is done. The `-from` class will
+ * be removed after the first frame and the `-to`
  * class will be added after the first frame.
  *
  * @param target html element to animate
@@ -42,7 +45,7 @@ export function animate(
   const animateClassActive = `${animationName}-${animationState}-active`
   const animateClassTo = `${animationName}-${animationState}-to`
   const animateClassFrom = `${animationName}-${animationState}-from`
-  const afterAnimation = () => {
+  const afterAnimation = (): void => {
     target.classList.remove(animateClassTo, animateClassActive)
     target.removeEventListener('animationend', afterAnimation)
     target.removeEventListener('transitionend', afterAnimation)
@@ -62,7 +65,8 @@ export function animate(
   requestAnimationFrame(() => {
     const styles = window.getComputedStyle(target)
 
-    // if the element has no transition or animation we can call the afterAnimation function in the next frame
+    // if the element has no transition or animation we can call the afterAnimation function in the
+    // next frame
     if (['all', 'none'].includes(styles.transition) && styles.animationName === 'none') {
       requestAnimationFrame(afterAnimation)
     }

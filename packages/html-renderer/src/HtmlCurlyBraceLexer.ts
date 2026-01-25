@@ -52,7 +52,7 @@ export class HtmlCurlyBraceLexer implements Lexer {
       : (this.currentTokens.splice(0, k) as TokenReturn<T>)
   }
 
-  protected consumeNextTokens(k: PositiveInteger = 1) {
+  protected consumeNextTokens(k: PositiveInteger = 1): void {
     while (this.currentTokens.length < k) {
       this.currentTokens.push(this.consumeNextToken())
     }

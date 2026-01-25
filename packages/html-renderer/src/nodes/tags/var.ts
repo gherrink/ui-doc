@@ -68,7 +68,7 @@ export const parseTagVarNode: TagNodeParse = {
         options.escape = true
       },
       create() {
-        if (!options.contextKey) {
+        if (options.contextKey === undefined || options.contextKey === '') {
           throw new TagNodeError('Expected context key')
         }
 

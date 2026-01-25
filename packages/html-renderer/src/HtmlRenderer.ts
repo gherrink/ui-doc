@@ -75,7 +75,7 @@ export class HtmlRenderer implements Renderer {
     layout = layout ?? 'default'
     const content = this.layouts[layout]
 
-    if (!content) {
+    if (content === undefined) {
       throw new HTMLRendererError(
         `Layout "${layout}" not found. Please register it using "addLayout" method.`,
       )
@@ -85,9 +85,9 @@ export class HtmlRenderer implements Renderer {
   }
 
   public page(name: string, context: RenderContext): string {
-    const content = this.pages[name] || this.pages.default
+    const content = this.pages[name] ?? this.pages.default
 
-    if (!content) {
+    if (content === undefined) {
       throw new HTMLRendererError(
         `Page "${name}" not found. Please register it using "addPage" method.`,
       )
@@ -97,9 +97,9 @@ export class HtmlRenderer implements Renderer {
   }
 
   public partial(name: string, context?: RenderContext): string {
-    const content = this.partials[name] || this.partials.default
+    const content = this.partials[name] ?? this.partials.default
 
-    if (!content) {
+    if (content === undefined) {
       throw new HTMLRendererError(
         `Partial "${name}" not found. Please register it using "addPartial" method.`,
       )

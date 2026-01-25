@@ -24,7 +24,7 @@ export class TagIfNode extends TagNode {
   }
 
   public render(context: RenderContext, renderer: Renderer): string {
-    let value = this.getValue(context, 'firstValue', 'firstContextKey')
+    let value: unknown = this.getValue(context, 'firstValue', 'firstContextKey')
 
     if (this.options.operator) {
       value = this.compare(
@@ -34,7 +34,9 @@ export class TagIfNode extends TagNode {
       )
     }
 
-    return value ? this.renderChildNodes(context, renderer) : ''
+    const isTruthy = value !== undefined && value !== null && value !== false && value !== 0 && value !== ''
+
+    return isTruthy ? this.renderChildNodes(context, renderer) : ''
   }
 
   protected getValue(
@@ -84,7 +86,7 @@ export const parseTagIfNode: TagNodeParse = {
       token: TokenValue,
       keyName: 'firstContextKey' | 'secondContextKey',
       valueName: 'firstValue' | 'secondValue',
-    ) => {
+    ): void => {
       if (token.type === 'identifier') {
         options[keyName] = token.name
         return

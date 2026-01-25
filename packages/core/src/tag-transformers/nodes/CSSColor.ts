@@ -14,7 +14,7 @@ function unifyHex(hex: string): string {
   )
 }
 
-function isValidColorValue(value: any): boolean {
+function isValidColorValue(value: unknown): value is CSSColorValue {
   return (
     typeof value === 'object'
     && value.r !== undefined
@@ -89,7 +89,9 @@ export class CSSColor implements RenderValue {
   }
 
   public static hexToValue(color: string): CSSColorValue {
-    const [r, g, b] = (unifyHex(color).substring(1).match(/.{2}/g) ?? []).map(x => Number.parseInt(x, 16))
+    const [r, g, b]
+      = (unifyHex(color).substring(1).match(/.{2}/g) ?? [])
+        .map(x => Number.parseInt(x, 16))
 
     const value = { r, g, b }
 

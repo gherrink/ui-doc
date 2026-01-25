@@ -7,7 +7,7 @@ export const tag: TagTransformer = {
     const { key, name } = identifier(spec)
 
     block.page = key
-    if (!block.title) {
+    if (block.title === undefined || block.title === '') {
       block.title = name
     }
 

@@ -20,7 +20,7 @@ export type EventListenersMap<M extends EventMap<M>, K extends keyof M = keyof M
 >
 
 export interface EventEmitter<M extends EventMap<M>> {
-  on<K extends keyof M>(eventName: K, listener: EventListener<M, K>): this
-  off<K extends keyof M>(eventName: K, listener: EventListener<M, K>): this
+  on: <K extends keyof M>(eventName: K, listener: EventListener<M, K>) => this
+  off: <K extends keyof M>(eventName: K, listener: EventListener<M, K>) => this
   // emit<K extends keyof M>(eventName: K, ...args: EventArgs<M, K>): void
 }

@@ -21,7 +21,7 @@ export const tag: TagTransformer = {
       data.type = 'html'
     }
 
-    if (!data.title && block.title) {
+    if ((data.title === undefined || data.title === '') && block.title !== undefined && block.title !== '') {
       data.title = block.title
     }
 

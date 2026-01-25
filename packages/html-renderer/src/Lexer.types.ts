@@ -14,7 +14,8 @@ export interface Lexer {
 
   /**
    * Get the next token /next k-th token, and remove it from the token stream.
-   * This means, calling the consume() method multiple times will return a new token at each invocation.
+   * This means, calling the consume() method multiple times will return a new token at each
+   * invocation.
    * @param {PositiveInteger} k
    * @returns {Token | undefined} next token or undefined if there are no more tokens.
    */

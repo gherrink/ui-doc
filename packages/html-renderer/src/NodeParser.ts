@@ -52,7 +52,15 @@ export class NodeParser implements Parser {
           }
           parent.append(this.parseTag(lexer))
           break
-        default:
+        case 'string':
+        case 'number':
+        case 'boolean':
+        case 'tag-identifier':
+        case 'identifier':
+        case 'operator':
+        case 'tag-close':
+        case 'tag-end':
+        case 'tag-separator':
           throw new ParserError(`Unexpected token type "${token.type}"`)
       }
       token = lexer.consume()
@@ -70,7 +78,7 @@ export class NodeParser implements Parser {
 
     const tagDefinition = this.tags[tagIdentifier.name]
 
-    if (!tagDefinition) {
+    if (tagDefinition === undefined) {
       throw new ParserError(`Unknown tag "${tagIdentifier.name}"`)
     }
 
@@ -87,7 +95,8 @@ export class NodeParser implements Parser {
     } catch (error) {
       if (error instanceof TagNodeError) {
         throw new ParserError(
-          `Error parsing tag ${tagIdentifier.name} - ${error.message}\nShould be something like: ${tagDefinition.example}`,
+          `Error parsing tag ${tagIdentifier.name} - ${error.message}\n`
+          + `Should be something like: ${tagDefinition.example}`,
         )
       }
 
@@ -102,7 +111,7 @@ export class NodeParser implements Parser {
     const closeTokens = lexer.consume(3)
 
     if (
-      !closeTokens
+      closeTokens === undefined
       || closeTokens[0]?.type !== 'tag-end'
       || closeTokens[1]?.type !== 'tag-identifier'
       || closeTokens[1].name !== tagIdentifier.name

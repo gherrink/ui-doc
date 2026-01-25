@@ -6,7 +6,7 @@ export type ContextEntryEvent = { entry: ContextEntry, key: string } & (
     type: 'create' | 'update'
     changes: {
       deleted: string[]
-      updated: Record<string, { from: any, to: any }>
+      updated: Record<string, { from: unknown, to: unknown }>
     }
   }
   | {

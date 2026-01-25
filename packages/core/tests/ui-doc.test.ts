@@ -4,12 +4,18 @@ import type { Renderer } from '../src/Renderer.types'
 import { describe, expect, it, vi } from 'vitest'
 import { UIDoc } from '../src/UIDoc'
 
+interface UidocMockResult {
+  blockParser: BlockParser
+  renderer: { generate: ReturnType<typeof vi.fn<Renderer['generate']>> }
+  uidoc: UIDoc
+}
+
 describe('uI-Doc', () => {
   const uidocMock = ({
     rendererGenerate = vi.fn<Renderer['generate']>(),
     blockParserParse = vi.fn<BlockParser['parse']>().mockReturnValue([]),
     blockParserRegisterTagTransformer = vi.fn<BlockParser['registerTagTransformer']>(),
-  }) => {
+  }): UidocMockResult => {
     const renderer = {
       generate: rendererGenerate,
     }

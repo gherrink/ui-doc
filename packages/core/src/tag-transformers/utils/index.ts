@@ -6,7 +6,7 @@ import { CSSColor } from '../nodes/CSSColor'
 import { CSSVariable } from '../nodes/CSSVariable'
 
 export function createTagTransformerError(message: string, spec: Spec): TagTransformerError {
-  const line = spec.source && spec.source.length > 0 ? spec.source[0].number + 1 : 0
+  const line = spec.source !== undefined && spec.source.length > 0 ? spec.source[0].number + 1 : 0
 
   return new TagTransformerError(message, spec.tag, { line })
 }
@@ -50,7 +50,7 @@ export function isValidHTML(html: string): boolean {
     return false
   }
 
-  const tagRegex = /<([^>]+?)([^>]*)>(?:(?=([^<]+))\3)*<\/\1>/g
+  const tagRegex = /<(\w+)(?:\s[^>]*)?>(?:(?=([^<]+))\2)*<\/\1>/g
   let remaining = html
     // remove comments
     .replace(/<!--[\s\S]*?-->/g, '')
@@ -58,7 +58,7 @@ export function isValidHTML(html: string): boolean {
     .replace(/\n/g, '')
     // remove self closing tags - https://developer.mozilla.org/en-US/docs/Glossary/Void_element
     .replace(
-      /<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)([^>]*?)\/?>/gi,
+      /<(?:area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)[^>]*?\/?>/gi,
       '',
     )
 

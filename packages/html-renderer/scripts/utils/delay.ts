@@ -1,7 +1,7 @@
-export function throttle(callback: (...args: any[]) => void, delay: number) {
+export function throttle<T extends unknown[]>(callback: (...args: T) => void, delay: number) {
   let timerFlag: number | null = null
 
-  return (...args: any[]) => {
+  return (...args: T) => {
     if (timerFlag === null) {
       callback(...args)
       timerFlag = window.setTimeout(() => {

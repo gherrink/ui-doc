@@ -410,7 +410,10 @@ describe('uidocPlugin', () => {
   describe('onLog', () => {
     it('should hide rollup OUTPUT logs', async () => {
       const plugin = await uidocPlugin({ source: 'src/**/*.css' })
-      const onLog = plugin.onLog as (level: string, log: { plugin: string, pluginCode: string }) => boolean | void
+      const onLog = plugin.onLog as (
+        level: string,
+        log: { plugin: string, pluginCode: string },
+      ) => boolean | void
 
       const result = onLog('info', { plugin: 'ui-doc', pluginCode: 'OUTPUT' })
 
@@ -419,7 +422,10 @@ describe('uidocPlugin', () => {
 
     it('should allow other logs through', async () => {
       const plugin = await uidocPlugin({ source: 'src/**/*.css' })
-      const onLog = plugin.onLog as (level: string, log: { plugin: string, pluginCode: string }) => boolean | void
+      const onLog = plugin.onLog as (
+        level: string,
+        log: { plugin: string, pluginCode: string },
+      ) => boolean | void
 
       const result = onLog('info', { plugin: 'ui-doc', pluginCode: 'OTHER' })
 

@@ -100,22 +100,22 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   public replaceGenerate<K extends keyof GenerateFunctions>(
     generate: K,
     callback: GenerateFunctions[K],
-  ) {
+  ): void {
     this.generate[generate] = callback
   }
 
-  public addAsset(asset: Asset) {
+  public addAsset(asset: Asset): void {
     asset.src = this.generate.resolve(asset.src, 'asset')
     this.context.pageAssets.push(asset)
   }
 
-  public addExampleAsset(asset: Asset) {
+  public addExampleAsset(asset: Asset): void {
     asset.src = this.generate.resolve(asset.src, 'asset-example')
     this.context.exampleAssets.push(asset)
   }
 
-  protected registerExampleListeners() {
-    const exampleKeyToId = (key: string) => key.replaceAll('.', '-')
+  protected registerExampleListeners(): void {
+    const exampleKeyToId = (key: string): string => key.replaceAll('.', '-')
 
     this.on('context-entry', ({ entry, key, type }) => {
       if (type === 'delete' || !entry.example || entry.example.type !== 'html') {
@@ -124,11 +124,11 @@ export class UIDoc extends EventEmitterBase<EventMap> {
 
       const example: BlockExample = entry.example
 
-      if (!example.id) {
+      if (example.id === undefined || example.id === '') {
         example.id = exampleKeyToId(key)
       }
 
-      if (!example.src || !example.file) {
+      if ((example.src === undefined || example.src === '') || (example.file === undefined || example.file === '')) {
         example.file = `examples/${example.id}.html`
         example.src = this.generate.resolve(example.file, 'example')
       }
@@ -152,10 +152,10 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   }
 
   public sourceExists(file: string): boolean {
-    return !!this.sources[file]
+    return this.sources[file] !== undefined
   }
 
-  public sourceCreate(file: string, content: string) {
+  public sourceCreate(file: string, content: string): void {
     const source: Source = {
       blocks: this.blockParser.parse({ content, identifier: file }),
     }
@@ -166,7 +166,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     this.clearMenu()
   }
 
-  public sourceUpdate(file: string, content: string) {
+  public sourceUpdate(file: string, content: string): void {
     if (!this.sourceExists(file)) {
       this.sourceCreate(file, content)
 
@@ -193,7 +193,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     this.clearMenu()
   }
 
-  public sourceDelete(file: string) {
+  public sourceDelete(file: string): void {
     if (!this.sourceExists(file)) {
       return
     }
@@ -208,13 +208,13 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     this.clearMenu()
   }
 
-  protected sourceToContext(source: Source) {
+  protected sourceToContext(source: Source): void {
     source.blocks.forEach(block => {
       this.blockToContext(block)
     })
   }
 
-  protected blockToContext(block: Block) {
+  protected blockToContext(block: Block): void {
     const entry = this.contextEntry(block.key)
     // Explicit list of properties that can be transferred from Block to ContextEntry
     const transferableProps = ['order', 'description', 'code', 'example', 'colors', 'spaces', 'icons', 'hideCode'] as const
@@ -229,8 +229,8 @@ export class UIDoc extends EventEmitterBase<EventMap> {
 
     // Handle title specially (has different source/target logic)
     if (
-      (typeof block.title === 'string' && block.title)
-      || (entry.title === entry.id && block.title)
+      (typeof block.title === 'string' && block.title !== '')
+      || (entry.title === entry.id && block.title !== undefined && block.title !== '')
     ) {
       event.changes.updated.title = { from: entry.title, to: block.title }
       entry.title = block.title
@@ -256,7 +256,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   }
 
   protected contextEntry(key: string): ContextEntry {
-    if (!this.context.entries[key]) {
+    if (this.context.entries[key] === undefined) {
       const id = this.contextEntryKeyToId(key)
 
       this.context.entries[key] = {
@@ -273,11 +273,11 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     return this.context.entries[key]
   }
 
-  protected contextEntryDelete(key: string) {
+  protected contextEntryDelete(key: string): void {
     const parts = key.split('.')
     const entry = this.context.entries[key]
 
-    if (!entry) {
+    if (entry === undefined) {
       return
     }
 
@@ -310,7 +310,8 @@ export class UIDoc extends EventEmitterBase<EventMap> {
 
       parent.sections.splice(index, 1)
 
-      // if parent has no more sections and title equal id (means it dose only exist as placeholder and was not defined in source), we can delete it
+      // if parent has no more sections and title equal id (means it dose only exist as placeholder
+      // and was not defined in source), we can delete it
       if (parent.sections.length === 0 && parent.title === parent.id) {
         this.contextEntryDelete(parts.slice(0, -1).join('.'))
       }
@@ -321,7 +322,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     this.emit('context-entry', { entry, key, type: 'delete' })
   }
 
-  protected contextEntryKeyToId(key: string) {
+  protected contextEntryKeyToId(key: string): string {
     if (!key.includes('.')) {
       return key
     }
@@ -329,7 +330,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     return key.split('.').slice(1).join('-')
   }
 
-  protected contextEntryAppend(key: string, entry: ContextEntry) {
+  protected contextEntryAppend(key: string, entry: ContextEntry): void {
     const parts = key.split('.')
 
     if (parts.length === 1) {
@@ -351,7 +352,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   }
 
   public async output(output: OutputCallback): Promise<void> {
-    const write = async (file: string, content: string) => {
+    const write = async (file: string, content: string): Promise<void> => {
       const result = output(file, content)
 
       return result instanceof Promise ? result : Promise.resolve(result)
@@ -370,7 +371,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   public page(pageId: string): string | null {
     const page = this.context.pages[pageId]
 
-    return page ? this.pageContent(page, page.layout) : null
+    return page !== undefined ? this.pageContent(page, page.layout) : null
   }
 
   public pageContent(page: ContextEntry, layout?: string): string {
@@ -385,7 +386,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
         return item
       }),
       name: this.generate.name(),
-      page: JSON.parse(JSON.stringify(page)),
+      page: JSON.parse(JSON.stringify(page)) as ContextEntry,
       title: this.generate.pageTitle(page),
     }
 
@@ -397,14 +398,16 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   public example(exampleId: string): string | null {
     const example = this.context.examples[exampleId]
 
-    return example ? this.exampleContent(example) : null
+    return example !== undefined ? this.exampleContent(example) : null
   }
 
   public exampleContent(example: ContextExample, layout = 'example'): string {
-    const context = JSON.parse(JSON.stringify(example))
+    const context: ContextExample & { title: string, assets: Asset[] } = {
+      ...JSON.parse(JSON.stringify(example)) as ContextExample,
+      title: this.generate.exampleTitle(example),
+      assets: this.context.exampleAssets,
+    }
 
-    context.title = this.generate.exampleTitle(example)
-    context.assets = this.context.exampleAssets
     this.emit('example', { example, layout })
 
     return this.renderer.generate(context, layout)
@@ -418,7 +421,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     return this.context.menu
   }
 
-  protected clearMenu() {
+  protected clearMenu(): void {
     this.context.menu = []
   }
 }

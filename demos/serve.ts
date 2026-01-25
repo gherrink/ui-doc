@@ -3,11 +3,12 @@
 import fs from 'node:fs'
 import http from 'node:http'
 import path from 'node:path'
+import process from 'node:process'
 
-const basePath = process.argv[2] || undefined
-const port = process.argv[3] ? Number.parseInt(process.argv[3], 10) : 8080
+const basePath = process.argv[2] ?? undefined
+const port = process.argv[3] !== undefined ? Number.parseInt(process.argv[3], 10) : 8080
 
-if (!basePath) {
+if (basePath === undefined) {
   console.error('Usage: node serve.js <base_path> [port]')
   process.exit(1)
 }
@@ -49,7 +50,7 @@ http
     // Avoid https://en.wikipedia.org/wiki/Directory_traversal_attack
     // e.g curl --path-as-is http://localhost:9000/../fileInDanger.txt
     // by limiting the path to current directory only
-    const sanitizePath = path.normalize(parsedUrl.pathname).replace(/^(\.\.[/\\])+/, '')
+    const sanitizePath = path.normalize(parsedUrl.pathname).replace(/^(?:\.\.[/\\])+/, '')
     let pathname = path.join(__dirname, basePath, sanitizePath)
 
     // file dose not exist exit with 404

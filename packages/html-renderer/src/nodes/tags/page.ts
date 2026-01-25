@@ -63,11 +63,11 @@ export const parseTagPageNode: TagNodeParse = {
           throw new TagNodeError('Expected tag identifier')
         }
 
-        if (options.name && options.contextKey) {
+        if ((options.name !== undefined && options.name !== '') && (options.contextKey !== undefined && options.contextKey !== '')) {
           throw new TagNodeError('Expected only one name and context key')
         }
 
-        if (options.name) {
+        if (options.name !== undefined && options.name !== '') {
           options.contextKey = token.name
         } else {
           options.name = token.name

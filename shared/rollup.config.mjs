@@ -13,9 +13,10 @@ import postcss from 'rollup-plugin-postcss'
 
 /**
  * Create a base rollup config
- * @param {Record<string,any>} pkg Imported package.json
- * @param {string[]} external Imported package.json
- * @returns {import('rollup').RollupOptions}
+ * @param {object} options Configuration options
+ * @param {Record<string,any>} options.pkg Imported package.json
+ * @param {string[]} [options.external] External dependencies
+ * @returns {import('rollup').RollupOptions} Rollup configuration
  */
 export function configTs({ pkg, external = [] }) {
   return {
@@ -25,7 +26,7 @@ export function configTs({ pkg, external = [] }) {
       .concat(builtinModules)
       .concat(external),
     onwarn: warning => {
-      throw Object.assign(new Error(), warning)
+      throw Object.assign(new Error(warning.message), warning)
     },
     strictDeprecations: true,
     output: [
@@ -53,9 +54,10 @@ export function configTs({ pkg, external = [] }) {
 
 /**
  * Create a base rollup config for web scripts
- * @param {Record<string,string>} input input files
- * @param {string[]} external Imported package.json
- * @returns {import('rollup').RollupOptions}
+ * @param {object} options Configuration options
+ * @param {Record<string,string>} options.input Input files
+ * @param {string[]} [options.external] External dependencies
+ * @returns {import('rollup').RollupOptions} Rollup configuration
  */
 export function configTsWeb({ external, input }) {
   return {
@@ -99,8 +101,9 @@ export function configTsWeb({ external, input }) {
 
 /**
  * Create a base rollup config for web styles
- * @param {Record<string,string>} input input files
- * @returns {import('rollup').RollupOptions}
+ * @param {object} options Configuration options
+ * @param {Record<string,string>} options.input Input files
+ * @returns {import('rollup').RollupOptions} Rollup configuration
  */
 export function configPostcssWeb({ input }) {
   return {

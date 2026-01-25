@@ -22,7 +22,7 @@ async function createDefaultRenderer(
     .assetLoader()
     .packagePath(rendererImport.TemplateLoader.TEMPLATES_PACKAGE)
 
-  if (packageTemplatePath) {
+  if (packageTemplatePath !== undefined && packageTemplatePath !== '') {
     await rendererImport.TemplateLoader.load({
       fileSystem,
       renderer,
@@ -30,7 +30,7 @@ async function createDefaultRenderer(
     })
   }
 
-  if (templatePath) {
+  if (templatePath !== undefined && templatePath !== '') {
     await rendererImport.TemplateLoader.load({
       fileSystem,
       renderer,
@@ -50,7 +50,7 @@ function createOutputPrefix(options: Options): OutputPrefixResult {
   const prefix: ResolvedOptions['prefix'] = { path: '', uri: '' }
   const path = options?.output?.dir
 
-  if (!path) {
+  if (path === undefined || path === '') {
     return { prefix }
   }
 

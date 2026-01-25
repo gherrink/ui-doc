@@ -3,8 +3,8 @@ import type { AssetType, FileSystem } from '@ui-doc/core'
 import type { AssetOption, AssetResolved } from './asset.types'
 import type { Options, ResolvedOptions } from './option.types'
 
-const STYLE_EXTENSIONS = /\.(css|less|sass|scss)$/
-const SCRIPT_EXTENSIONS = /\.(js|ts)$/
+const STYLE_EXTENSIONS = /\.(?:css|less|sass|scss)$/
+const SCRIPT_EXTENSIONS = /\.(?:js|ts)$/
 
 const ASSETS: {
   name: (options: Options) => string | false
@@ -49,7 +49,7 @@ export async function resolveAssets(
   const resolveAssetOption = async (
     assetOption: AssetOption,
     context: AssetResolved['context'],
-  ) => {
+  ): Promise<AssetResolved> => {
     const name = typeof assetOption.name === 'function' ? assetOption.name() : assetOption.name
     const type = resolveAssetType(name)
 
@@ -61,29 +61,29 @@ export async function resolveAssets(
       attrs: assetOption.attrs,
     }
 
-    if (assetOption.dependency) {
+    if (assetOption.dependency !== undefined) {
       asset.originalFileName = await assetLoader.resolve(
         typeof assetOption.dependency === 'function'
           ? assetOption.dependency()
           : assetOption.dependency,
       )
-    } else if (assetOption.file) {
+    } else if (assetOption.file !== undefined) {
       asset.originalFileName = fileSystem.resolve(
         typeof assetOption.file === 'function' ? assetOption.file() : assetOption.file,
       )
     }
 
     if (
-      assetOption.fromInput
+      assetOption.fromInput !== undefined
       && (typeof assetOption.fromInput === 'function'
         ? assetOption.fromInput(asset)
         : assetOption.fromInput)
     ) {
       asset.fromInput = true
-    } else if (assetOption.source) {
+    } else if (assetOption.source !== undefined) {
       asset.source
         = typeof assetOption.source === 'function' ? assetOption.source() : assetOption.source
-    } else if (asset.originalFileName) {
+    } else if (asset.originalFileName !== undefined && asset.originalFileName !== '') {
       asset.source = await fileSystem.fileRead(asset.originalFileName)
     }
 
@@ -103,7 +103,7 @@ export async function resolveAssets(
         const type = resolveAssetType(assetName)
         const resolvedFile = await assetLoader.resolve(dependencyName)
 
-        if (!type || !resolvedFile) {
+        if (type === null || resolvedFile === undefined || resolvedFile === '') {
           return null
         }
 

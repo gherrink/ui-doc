@@ -20,7 +20,7 @@ export class TagDebugNode extends TagNode {
   public render(context: RenderContext): string {
     const debugContext
       = this.contextKey !== 'this' ? readNestedValue(this.contextKey, context) : context
-    const debugContent = debugContext
+    const debugContent = debugContext !== undefined && debugContext !== null
       ? JSON.stringify(debugContext, null, 2)
       : `Current context for "${this.contextKey}" is empty`
 

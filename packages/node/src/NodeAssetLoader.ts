@@ -65,7 +65,7 @@ export class NodeAssetLoader implements AssetLoader {
   public async copy(from: FilePath, to: FilePath): Promise<void> {
     const fromPath = await this.resolve(from)
 
-    if (!fromPath) {
+    if (fromPath === undefined || fromPath === '') {
       throw new Error(`Could not resolve source asset "${from}"`)
     }
 
@@ -75,7 +75,7 @@ export class NodeAssetLoader implements AssetLoader {
   public async read(file: FilePath): Promise<string> {
     const fromPath = await this.resolve(file)
 
-    if (!fromPath) {
+    if (fromPath === undefined || fromPath === '') {
       throw new Error(`Could not resolve asset "${file}"`)
     }
 
