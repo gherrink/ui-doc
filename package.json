@@ -1,5 +1,6 @@
 {
   "name": "ui-doc",
+  "type": "module",
   "private": true,
   "workspaces": [
     "packages/*",
