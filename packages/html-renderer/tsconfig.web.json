@@ -1,1 +1,14 @@
-../../shared/tsconfig.web.json
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "rootDir": "./scripts",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "noEmitOnError": true,
+    "esModuleInterop": false
+  },
+  "include": ["scripts/**/*"],
+  "exclude": ["node_modules", "dist"]
+}
