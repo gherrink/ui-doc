@@ -34,11 +34,12 @@ See [examples.md](./examples.md) for practical examples.
 ## Workflow
 
 1. Run `git status` to get an overview of modified files
-2. Run `git diff --cached` only if more details are needed to understand the changes
-3. Determine appropriate type based on the nature of changes
-4. Identify scope from affected package(s) — if changes span multiple packages, combine scopes (e.g., `core,node`)
-5. Write concise description in imperative mood
-6. Add body if explanation of what/why is needed
-7. Always include `Co-Authored-By: Claude <noreply@anthropic.com>` footer
-8. Validate message with `echo '<subject line>' | npx commitlint` before committing
-9. Stage files and commit — if commitlint fails, fix the message and re-validate
+2. Run `git log --oneline -5` to see recent commit style
+3. Run `git diff --cached` only if more details are needed to understand the changes
+4. Determine appropriate type based on the nature of changes
+5. Identify scope from affected package(s) — if changes span multiple packages, combine scopes (e.g., `core,node`)
+6. Write concise description in imperative mood
+7. Add body if explanation of what/why is needed
+8. Always include `Co-Authored-By: Claude <noreply@anthropic.com>` footer
+9. Validate message with `echo '<subject line>' | npx commitlint` before committing
+10. Stage files and commit — if commitlint fails, fix the message and re-validate
