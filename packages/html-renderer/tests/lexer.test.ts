@@ -262,4 +262,94 @@ describe('lexer', () => {
     expect(lexer.consume()).toStrictEqual({ name: 'if', type: 'tag-identifier' })
     expect(lexer.consume()).toStrictEqual({ type: 'tag-close' })
   })
+
+  describe('edge cases', () => {
+    it('consume empty input', () => {
+      const reader = new InlineReader('')
+      const lexer = new HtmlCurlyBraceLexer(reader)
+
+      expect(lexer.consume()).toStrictEqual(undefined)
+    })
+
+    it('consume whitespace only', () => {
+      const reader = new InlineReader('   \n\t  ')
+      const lexer = new HtmlCurlyBraceLexer(reader)
+
+      expect(lexer.consume()).toStrictEqual({ content: '   \n\t  ', type: 'template' })
+    })
+
+    it('consume single curly brace not as tag', () => {
+      const reader = new InlineReader('{ single brace }')
+      const lexer = new HtmlCurlyBraceLexer(reader)
+
+      expect(lexer.consume()).toStrictEqual({ content: '{ single brace }', type: 'template' })
+    })
+
+    it('consume escaped-like content in template', () => {
+      const reader = new InlineReader('Price: $100 & more')
+      const lexer = new HtmlCurlyBraceLexer(reader)
+
+      expect(lexer.consume()).toStrictEqual({ content: 'Price: $100 & more', type: 'template' })
+    })
+
+    it('consume negative number as identifier (lexer limitation)', () => {
+      // Note: The lexer treats negative numbers as identifiers
+      // This is a known limitation - negative numbers must be handled at parser/runtime level
+      const reader = new InlineReader('{{ if foo === -5 }}')
+      const lexer = new HtmlCurlyBraceLexer(reader)
+
+      expect(lexer.consume()).toStrictEqual({ type: 'tag-open' })
+      expect(lexer.consume()).toStrictEqual({ name: 'if', type: 'tag-identifier' })
+      expect(lexer.consume()).toStrictEqual({ name: 'foo', type: 'identifier' })
+      expect(lexer.consume()).toStrictEqual({ operator: '===', type: 'operator' })
+      expect(lexer.consume()).toStrictEqual({ name: '-5', type: 'identifier' })
+      expect(lexer.consume()).toStrictEqual({ type: 'tag-close' })
+    })
+
+    it('consume string with special characters', () => {
+      const reader = new InlineReader('{{ if foo === "hello world!" }}')
+      const lexer = new HtmlCurlyBraceLexer(reader)
+
+      expect(lexer.consume()).toStrictEqual({ type: 'tag-open' })
+      expect(lexer.consume()).toStrictEqual({ name: 'if', type: 'tag-identifier' })
+      expect(lexer.consume()).toStrictEqual({ name: 'foo', type: 'identifier' })
+      expect(lexer.consume()).toStrictEqual({ operator: '===', type: 'operator' })
+      expect(lexer.consume()).toStrictEqual({ type: 'string', value: 'hello world!' })
+      expect(lexer.consume()).toStrictEqual({ type: 'tag-close' })
+    })
+
+    it('consume comment with dashes inside', () => {
+      const reader = new InlineReader('<!-- foo -- bar -->')
+      const lexer = new HtmlCurlyBraceLexer(reader)
+
+      expect(lexer.consume()).toStrictEqual({ content: 'foo -- bar', type: 'comment' })
+    })
+
+    it('consume adjacent tags without space', () => {
+      const reader = new InlineReader('{{ var:foo }}{{ var:bar }}')
+      const lexer = new HtmlCurlyBraceLexer(reader)
+
+      expect(lexer.consume()).toStrictEqual({ type: 'tag-open' })
+      expect(lexer.consume()).toStrictEqual({ name: 'var', type: 'tag-identifier' })
+      expect(lexer.consume()).toStrictEqual({ type: 'tag-separator' })
+      expect(lexer.consume()).toStrictEqual({ name: 'foo', type: 'identifier' })
+      expect(lexer.consume()).toStrictEqual({ type: 'tag-close' })
+      expect(lexer.consume()).toStrictEqual({ type: 'tag-open' })
+      expect(lexer.consume()).toStrictEqual({ name: 'var', type: 'tag-identifier' })
+      expect(lexer.consume()).toStrictEqual({ type: 'tag-separator' })
+      expect(lexer.consume()).toStrictEqual({ name: 'bar', type: 'identifier' })
+      expect(lexer.consume()).toStrictEqual({ type: 'tag-close' })
+    })
+
+    it('consume deeply nested context key', () => {
+      const reader = new InlineReader('{{ var:a.b.c.d.e }}')
+      const lexer = new HtmlCurlyBraceLexer(reader)
+
+      expect(lexer.consume()).toStrictEqual({ type: 'tag-open' })
+      expect(lexer.consume()).toStrictEqual({ name: 'var', type: 'tag-identifier' })
+      expect(lexer.consume()).toStrictEqual({ type: 'tag-separator' })
+      expect(lexer.consume()).toStrictEqual({ name: 'a.b.c.d.e', type: 'identifier' })
+      expect(lexer.consume()).toStrictEqual({ type: 'tag-close' })
+    })
+  })
 })

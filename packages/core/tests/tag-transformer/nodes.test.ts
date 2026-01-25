@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest'
 
 import { ColorParseError } from '../../src/errors/ColorParseError'
 import { CSSParseError } from '../../src/errors/CSSParseError'
-import { CSSColor } from '../../src/tag-transformers/nodes/CSSColor'
+import { CSSColor, valueToHex, valueToRgb } from '../../src/tag-transformers/nodes/CSSColor'
+import { CSSValue } from '../../src/tag-transformers/nodes/CSSValue'
 import { CSSVariable } from '../../src/tag-transformers/nodes/CSSVariable'
 
 describe('variable node', () => {
@@ -81,5 +82,113 @@ describe('color node', () => {
     expect(() => CSSColor.fromString('255 255 255 255')).toThrow(ColorParseError)
     expect(() => CSSColor.fromString('255 255 255 255 255')).toThrow(ColorParseError)
     expect(() => CSSColor.fromString('255 255 256')).toThrow(ColorParseError)
+  })
+
+  it('should detect hex string correctly', () => {
+    expect(CSSColor.isHexString('#fff')).toBe(true)
+    expect(CSSColor.isHexString('#ffffff')).toBe(true)
+    expect(CSSColor.isHexString('fff')).toBe(false)
+    expect(CSSColor.isHexString('255 255 255')).toBe(false)
+  })
+
+  it('should detect rgb string correctly', () => {
+    expect(CSSColor.isRgbString('255 255 255')).toBe(true)
+    expect(CSSColor.isRgbString('0 0 0')).toBe(true)
+    expect(CSSColor.isRgbString('#fff')).toBe(false)
+    expect(CSSColor.isRgbString('ffffff')).toBe(false)
+  })
+
+  it('should have correct output property', () => {
+    const color = CSSColor.fromString('#ff0000')
+
+    expect(color.output).toBe('255 0 0')
+  })
+
+  it('should return rgb string from toString', () => {
+    const color = CSSColor.fromString('#00ff00')
+
+    expect(color.toString()).toBe('0 255 0')
+  })
+
+  it('should throw ColorParseError for negative rgb values', () => {
+    expect(() => CSSColor.fromString('-1 0 0')).toThrow(ColorParseError)
+  })
+})
+
+describe('valueToHex', () => {
+  it('should convert rgb value to hex string', () => {
+    expect(valueToHex({ r: 255, g: 0, b: 0 })).toBe('#ff0000')
+    expect(valueToHex({ r: 0, g: 255, b: 0 })).toBe('#00ff00')
+    expect(valueToHex({ r: 0, g: 0, b: 255 })).toBe('#0000ff')
+    expect(valueToHex({ r: 0, g: 0, b: 0 })).toBe('#000000')
+    expect(valueToHex({ r: 255, g: 255, b: 255 })).toBe('#ffffff')
+  })
+
+  it('should pad single digit hex values', () => {
+    expect(valueToHex({ r: 1, g: 2, b: 3 })).toBe('#010203')
+  })
+})
+
+describe('valueToRgb', () => {
+  it('should convert rgb value to rgb string', () => {
+    expect(valueToRgb({ r: 255, g: 0, b: 0 })).toBe('255 0 0')
+    expect(valueToRgb({ r: 0, g: 255, b: 0 })).toBe('0 255 0')
+    expect(valueToRgb({ r: 0, g: 0, b: 255 })).toBe('0 0 255')
+  })
+})
+
+describe('cSSValue node', () => {
+  it('should create value from string', () => {
+    const value = CSSValue.fromString('10px')
+
+    expect(value.value).toBe('10px')
+  })
+
+  it('should return value from toString', () => {
+    const value = CSSValue.fromString('1rem')
+
+    expect(value.toString()).toBe('1rem')
+  })
+
+  it('should have output equal to value', () => {
+    const value = CSSValue.fromString('2em')
+
+    expect(value.output).toBe('2em')
+  })
+
+  it('should handle complex CSS values', () => {
+    const value = CSSValue.fromString('calc(100% - 20px)')
+
+    expect(value.value).toBe('calc(100% - 20px)')
+    expect(value.output).toBe('calc(100% - 20px)')
+  })
+})
+
+describe('cSSVariable node additional tests', () => {
+  it('should detect variable string correctly', () => {
+    expect(CSSVariable.isVariableString('--my-var')).toBe(true)
+    // Note: regex requires at least 2 chars after '--' so '--a' is false
+    expect(CSSVariable.isVariableString('--ab')).toBe(true)
+    expect(CSSVariable.isVariableString('--foo-bar-baz')).toBe(true)
+    expect(CSSVariable.isVariableString('-my-var')).toBe(false)
+    expect(CSSVariable.isVariableString('my-var')).toBe(false)
+    expect(CSSVariable.isVariableString('--')).toBe(false)
+    expect(CSSVariable.isVariableString('--a')).toBe(false)
+  })
+
+  it('should return var() wrapped name from toString', () => {
+    const variable = CSSVariable.fromString('--my-color')
+
+    expect(variable.toString()).toBe('var(--my-color)')
+  })
+
+  it('should have output equal to var() wrapped name', () => {
+    const variable = CSSVariable.fromString('--spacing')
+
+    expect(variable.output).toBe('var(--spacing)')
+  })
+
+  it('should throw CSSParseError with descriptive message', () => {
+    expect(() => CSSVariable.fromString('invalid')).toThrow('Invalid CSS variable: invalid')
   })
 })

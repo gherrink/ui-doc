@@ -145,4 +145,66 @@ describe('parser', () => {
     expect(res.children[2]).toBeInstanceOf(TemplateNode)
     expect((res.children[2] as TemplateNode).content).toEqual('\nbaz')
   })
+
+  describe('edge cases', () => {
+    it('empty input', () => {
+      const parser = NodeParser.init()
+      const reader = new InlineReader('')
+      const res = parser.parse(reader)
+
+      expect(res.children.length).toBe(0)
+      expect(res.type).toBe('root')
+    })
+
+    it('nested tags', () => {
+      const parser = NodeParser.init()
+      const reader = new InlineReader('{{ for }}{{ if:foo }}bar{{ /if }}{{ /for }}')
+      const res = parser.parse(reader)
+
+      expect(res.children.length).toBe(1)
+      expect(res.children[0]).toBeInstanceOf(TagForNode)
+      expect(res.children[0].children.length).toBe(1)
+    })
+
+    it('multiple root level tags', () => {
+      const parser = NodeParser.init()
+      const reader = new InlineReader('{{ debug }}{{ debug }}{{ debug }}')
+      const res = parser.parse(reader)
+
+      expect(res.children.length).toBe(3)
+      expect(res.children[0]).toBeInstanceOf(TagDebugNode)
+      expect(res.children[1]).toBeInstanceOf(TagDebugNode)
+      expect(res.children[2]).toBeInstanceOf(TagDebugNode)
+    })
+
+    it('whitespace only', () => {
+      const parser = NodeParser.init()
+      const reader = new InlineReader('   \n\t   ')
+      const res = parser.parse(reader)
+
+      expect(res.children.length).toBe(1)
+      expect(res.children[0]).toBeInstanceOf(TemplateNode)
+      expect((res.children[0] as TemplateNode).content).toEqual('   \n\t   ')
+    })
+
+    it('comment inside tag content', () => {
+      const parser = NodeParser.init()
+      const reader = new InlineReader('{{ for }}<!-- comment -->content{{ /for }}')
+      const res = parser.parse(reader)
+
+      expect(res.children.length).toBe(1)
+      expect(res.children[0]).toBeInstanceOf(TagForNode)
+      expect(res.children[0].children.length).toBe(2)
+      expect(res.children[0].children[0]).toBeInstanceOf(CommentNode)
+      expect(res.children[0].children[1]).toBeInstanceOf(TemplateNode)
+    })
+
+    it('root node has type root', () => {
+      const parser = NodeParser.init()
+      const reader = new InlineReader('hello')
+      const res = parser.parse(reader)
+
+      expect(res.type).toBe('root')
+    })
+  })
 })

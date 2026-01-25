@@ -76,4 +76,40 @@ describe('location tag transformer', () => {
 
     expect(block.location).toBeUndefined()
   })
+
+  it('should set title from description', () => {
+    const comment = {
+      description: 'My Custom Title',
+      name: 'test.section',
+      optional: false,
+      problems: [],
+      source: [],
+      tag: 'location',
+      type: '',
+    }
+    let block: Partial<Block> = {}
+
+    block = location.transform(block, comment)
+
+    expect(block.location).toBe('test.section')
+    expect(block.title).toBe('My Custom Title')
+  })
+
+  it('should set title from name when no description', () => {
+    const comment = {
+      description: '',
+      name: 'MySection',
+      optional: false,
+      problems: [],
+      source: [],
+      tag: 'location',
+      type: '',
+    }
+    let block: Partial<Block> = {}
+
+    block = location.transform(block, comment)
+
+    expect(block.location).toBe('mysection')
+    expect(block.title).toBe('MySection')
+  })
 })

@@ -1,8 +1,8 @@
 import type { DescriptionParser } from '../src/DescriptionParser.types'
 
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { CommentBlockParser } from '../src/CommentBlockParser'
-import { BlockParseError } from '../src/errors'
+import { BlockParseError, TagTransformerError } from '../src/errors'
 
 class TestDescriptionParser implements DescriptionParser {
   public parse(content: string): string {
@@ -133,5 +133,133 @@ describe('commentBlockParser', () => {
         source: 'inline:test',
       }),
     )
+  })
+
+  it('should parse block with @location tag', () => {
+    const content = `
+    /**
+     * @location page.section
+     */
+    `
+    const blocks = parser.parse({ content, identifier: 'inline:test' })
+
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0].key).toBe('page.section')
+  })
+
+  it('should parse block with only @page tag', () => {
+    const content = `
+    /**
+     * @page mypage
+     */
+    `
+    const blocks = parser.parse({ content, identifier: 'inline:test' })
+
+    expect(blocks).toHaveLength(1)
+    expect(blocks[0].key).toBe('mypage')
+  })
+
+  it('should wrap TagTransformerError as BlockParseError', () => {
+    const errorParser = new CommentBlockParser(new TestDescriptionParser())
+
+    errorParser.registerTagTransformer({
+      name: 'throwingTag',
+      transform: () => {
+        throw new TagTransformerError('Custom error message', 'throwingTag')
+      },
+    })
+
+    const content = `
+    /**
+     * @page foo
+     * @throwingTag
+     */
+    `
+
+    expect(() => errorParser.parse({ content, identifier: 'inline:test' })).toThrowError(
+      BlockParseError,
+    )
+    expect(() => errorParser.parse({ content, identifier: 'inline:test' })).toThrowError(
+      /Custom error message/,
+    )
+  })
+
+  it('should propagate non-TagTransformerError exceptions', () => {
+    const errorParser = new CommentBlockParser(new TestDescriptionParser())
+
+    errorParser.registerTagTransformer({
+      name: 'genericError',
+      transform: () => {
+        throw new Error('Generic error')
+      },
+    })
+
+    const content = `
+    /**
+     * @page foo
+     * @genericError
+     */
+    `
+
+    expect(() => errorParser.parse({ content, identifier: 'inline:test' })).toThrow('Generic error')
+  })
+
+  it('should emit parsed event for each block', () => {
+    const listener = vi.fn()
+
+    parser.on('parsed', listener)
+
+    const content = `
+    /**
+     * @page foo
+     */
+    /**
+     * @page bar
+     */
+    `
+    parser.parse({ content, identifier: 'inline:test' })
+
+    expect(listener).toHaveBeenCalledTimes(2)
+    expect(listener).toHaveBeenNthCalledWith(1, expect.objectContaining({ key: 'foo' }))
+    expect(listener).toHaveBeenNthCalledWith(2, expect.objectContaining({ key: 'bar' }))
+  })
+
+  it('should parse description using description parser', () => {
+    const mockDescriptionParser: DescriptionParser = {
+      parse: vi.fn().mockReturnValue('<p>Parsed description</p>'),
+    }
+    const parserWithMock = new CommentBlockParser(mockDescriptionParser)
+
+    const content = `
+    /**
+     * This is a description
+     * @page foo
+     */
+    `
+    const blocks = parserWithMock.parse({ content, identifier: 'inline:test' })
+
+    expect(mockDescriptionParser.parse).toHaveBeenCalledWith('This is a description')
+    expect(blocks[0].description).toBe('<p>Parsed description</p>')
+  })
+
+  it('should trim whitespace from tag properties', () => {
+    const content = `
+    /**
+     * @page   foo   Title with spaces
+     */
+    `
+    const blocks = parser.parse({ content, identifier: 'inline:test' })
+
+    expect(blocks[0].key).toBe('foo')
+  })
+
+  it('should support method chaining for registerTagTransformer', () => {
+    const newParser = new CommentBlockParser(new TestDescriptionParser())
+
+    const result = newParser
+      .registerTagTransformer({ name: 'custom1', transform: block => block })
+      .registerTagTransformer({ name: 'custom2', transform: block => block })
+
+    expect(result).toBe(newParser)
   })
 })
