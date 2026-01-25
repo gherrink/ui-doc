@@ -30,6 +30,7 @@
     "security": "pnpm audit --audit-level=high",
     "test": "pnpm -r --filter './packages/*' run test",
     "typecheck": "pnpm -r --filter './packages/*' run typecheck",
+    "typecheck:all": "tsc --noEmit -p tsconfig.eslint.json",
     "workspace:build": "pnpm -r --filter './packages/*' run build",
     "workspace:test": "pnpm -r --filter './packages/*' run test"
   },
