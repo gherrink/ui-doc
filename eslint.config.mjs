@@ -165,10 +165,13 @@ export default antfu({
   },
   rules: {
     ...typeAwareRulesOff,
+    'no-console': 'off',
+    'no-new': 'off',
     'style/max-len': 'off',
     'ts/no-unnecessary-type-assertion': 'off',
     'ts/prefer-nullish-coalescing': 'off',
     'ts/restrict-plus-operands': 'off',
+    'unused-imports/no-unused-vars': 'off',
   },
 },
 

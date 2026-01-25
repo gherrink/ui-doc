@@ -1,13 +1,49 @@
-# UI-Doc Core
+# @ui-doc/core
 
-This is the heart of UI-Doc. The following steps will be performed:
+The core parsing and rendering engine for UI-Doc. This package extracts documentation from JSDoc-style comment blocks in your source files and transforms them into structured context for rendering.
 
-- Take source text
-- identify blocks and parse them
-- transform the blocks into a UI-Doc context
-- use a renderer to output the context
+## Overview
 
-This is how your dock blocks can look like. The syntax is similar to JS-Documentation blocks.
+UI-Doc Core performs the following steps:
+
+1. **Parse** - Extract comment blocks from source text (CSS, JS, TS)
+2. **Transform** - Convert blocks into structured UI-Doc context using tag transformers
+3. **Render** - Output the context using a renderer implementation
+
+## Quick Start
+
+```js
+import fs from 'node:fs/promises'
+import path from 'node:path'
+import { UIDoc } from '@ui-doc/core'
+
+// Create a renderer instance (depends on your chosen renderer)
+// const renderer = ...
+
+const outputDir = './dist'
+const filePath = path.resolve('./my-css-file-to-source.css')
+
+// Create a UI-Doc instance
+const uidoc = new UIDoc({
+  renderer,
+  // ... other options
+})
+
+// Read the file content
+const content = await fs.readFile(filePath, 'utf8')
+
+// Create a new source
+uidoc.sourceCreate(filePath, content)
+
+// Output all files
+await uidoc.output(async (fileName, content) => {
+  await fs.writeFile(`${outputDir}/${fileName}`, content, 'utf8')
+})
+```
+
+## Documentation Syntax
+
+Documentation blocks use JSDoc-style syntax with special tags for UI-Doc:
 
 ```js
 /**
@@ -17,7 +53,8 @@ This is how your dock blocks can look like. The syntax is similar to JS-Document
  */
 
 /**
- * Will be interpreted as a section on the page `typography`. Giving an example of default typography formats.
+ * Will be interpreted as a section on the page `typography`.
+ * Gives an example of default typography formats.
  *
  * @location typography.format Format
  * @example
@@ -29,35 +66,35 @@ This is how your dock blocks can look like. The syntax is similar to JS-Document
  */
 ```
 
-You will use different tags to define how and where your block will be displayed in the documentation. Tags look like the following `@tag-name[ {your-type}][ name][ description]`.
+Tags follow this syntax: `@tag-name[ {type}][ name][ description]`
 
 ## Available Tags
 
-Here is a list of all pre existing tags. If you like you can add your custom tags.
+Tags are separated into two roles:
 
-The tags are separated into two different roles:
+- **Placement** - Where in the documentation your block appears (at least one required)
+- **Display** - What content is shown and how it's displayed
 
-- **placement**: where in the documentation should your block be displayed (one kind of placement is always required)
-- **display**: what/how should your block be displayed
+| Tag       | Role      | Description                                                      |
+| --------- | --------- | ---------------------------------------------------------------- |
+| @code     | display   | Specify code that will be displayed                              |
+| @example  | display   | Add example with live preview and code                           |
+| @hideCode | display   | Remove code from block (show only preview)                       |
+| @location | placement | Combine `@page` and `@section` in one tag                        |
+| @order    | placement | Define sorting order for pages/sections                          |
+| @page     | placement | Create or reference a page                                       |
+| @section  | placement | Create or reference a section                                    |
+| @color    | display   | Define a color variable used in your styles                      |
+| @space    | display   | Define a spacing variable used in your styles                    |
+| @icon     | display   | Define an icon from your icon font                               |
 
-| Tag       | Role      | Description                                                       |
-| --------- | --------- | ----------------------------------------------------------------- |
-| @code     | display   | specify the code that will be displayed                           |
-| @example  | display   | add example and code to block. The example will show how it looks |
-| @hideCode | display   | remove code from block                                            |
-| @location | placement | combine tag page and section                                      |
-| @order    | placement | define sorting between pages/sections                             |
-| @page     | placement | create page or give page where your block should be shown         |
-| @section  | placement | define give section where your block should be shown              |
-| @color    | display   | define a color that is used in your style                         |
-| @space    | display   | define a space variable used in your style                        |
-| @icon     | display   | define a icon used in your style                                  |
+You can combine tags to achieve different outcomes. See individual tag documentation for details.
 
-Please note that you can combine tags to get an different outcome. Please see the documentation of the different tags for more details.
+## Tag Reference
 
 ### @example
 
-The example code will add an example and code. The example will show the viewer how your component looks like. The code will be displayed as copyable and readable code, so the viewer can see what to do to get the example outcome.
+Displays both a live preview and the code. The preview shows how your component looks, while the code is displayed as a copyable block.
 
 ```js
 /**
@@ -70,16 +107,13 @@ The example code will add an example and code. The example will show the viewer 
  * <em>Emphasis Text</em><br>
  * <i>Italic Text</i>
  */
-
-// TODO @example {modifier} change modifier class
-// TODO @example {modifier|js} change code type (default html)
 ```
 
-![Code and it's output](../../doc-assets/core/example.png)
+![Code and its output](../../doc-assets/core/example.png)
 
 ### @code
 
-The code tag will add readable code.
+Displays only the code block without a live preview.
 
 ```js
 /**
@@ -92,10 +126,12 @@ The code tag will add readable code.
 
 ![Code tag result](../../doc-assets/core/code.png)
 
+When used with `@example`, the code from `@code` overrides the example code. This is useful for hiding inline styling or extra HTML needed for display:
+
 ```js
 /**
- * If used in combination with `@example` the code from `@code` will override the example code.
- * Comes in handy if you like to hide some inline styling or additional html-tags that are only for better displaying.
+ * The example includes inline styles for better display,
+ * but the code shows the clean version.
  *
  * @example
  * <div class="code-example" style="max-width: 200px"></div>
@@ -103,20 +139,17 @@ The code tag will add readable code.
  * @code
  * <div class="code-example"></div>
  */
-
-// TODO @code {js}
-// TODO @code {html} is default
 ```
 
 ![Code with example tag result](../../doc-assets/core/code_with_example.png)
 
 ### @hideCode
 
-Can be used to hide code if you only want to add showcase but no code block.
+Hides the code block when you only want to show a visual example.
 
 ```js
 /**
- * Only add showcase of different typos.
+ * Only show visual examples of different typography.
  *
  * @example
  * <span>Normal Text</span><br>
@@ -128,28 +161,29 @@ Can be used to hide code if you only want to add showcase but no code block.
  */
 ```
 
-![example with hideCode tag result](../../doc-assets/core/code_with_example.png)
+![Example with hideCode tag result](../../doc-assets/core/hide_code.png)
 
 ### @page
 
-Create a page or give the pace on witch your block should be shown on.
+Creates a page or references the page where your block should appear.
 
 ```js
 /**
- * Will create a `Typography` page with the key `typo`. The key can be used in other placements for reference.
+ * Creates a `Typography` page with the key `typo`.
+ * The key can be used for reference in other blocks.
  *
  * @page typo Typography
  */
 
 /**
- * Will display the section `sizes` on the page with the key `typo`.
+ * Displays the section `sizes` on the page with key `typo`.
  *
  * @page typo
  * @section sizes Different Font Sizes
  */
 
 /**
- * Same as above. Will display the section `sizes` on the page with the key `typo`.
+ * Same as above using @location shorthand.
  *
  * @location typo.sizes Different Font Sizes
  */
@@ -157,47 +191,47 @@ Create a page or give the pace on witch your block should be shown on.
 
 ### @section
 
-Create a documentation section.
+Creates a documentation section within a page.
 
 ```js
 /**
- * Will display the section `sizes` on the page with the key `typo`.
+ * Display the section `sizes` on the page with key `typo`.
  *
  * @page typo
  * @section sizes Different Font Sizes
  */
 
 /**
- * You can nest sections in sections by using points and section keys.
- * Will display the section `small` inside the section `sizes` on the page `typo`.
+ * You can nest sections using dot notation.
+ * This displays section `small` inside section `sizes` on page `typo`.
  *
  * @page typo
- * @section sizes.small A small typo variation
+ * @section sizes.small A small typography variation
  */
 ```
 
 ### @location
 
-A combination of `@page` and `@section`.
+A shorthand combining `@page` and `@section` in one tag.
 
 ```js
 /**
- * Will display the section `sizes` on the page with the key `typo`.
+ * Display the section `sizes` on the page with key `typo`.
  *
  * @location typo.sizes Different Font Sizes
  */
 
 /**
- * You can nest sections in sections by using points and section keys.
- * Will display the section `small` inside the section `sizes` on the page `typo`.
+ * You can nest sections using dot notation.
+ * This displays section `small` inside section `sizes` on page `typo`.
  *
- * @location typo.sizes.small A small typo variation
+ * @location typo.sizes.small A small typography variation
  */
 ```
 
 ### @order
 
-Define the order who pages or sections should be ordered by giving a number. If the order is equal an alphabetic order will be used.
+Defines the display order for pages or sections using a number. When order values are equal, alphabetical sorting is used.
 
 ```js
 /**
@@ -210,7 +244,7 @@ Define the order who pages or sections should be ordered by giving a number. If 
  * @order 1
  */
 
-// order will be Foo | Bar
+// Display order will be: Foo | Bar
 
 /**
  * @location test.bar Bar
@@ -222,12 +256,12 @@ Define the order who pages or sections should be ordered by giving a number. If 
  * @order 1
  */
 
-// order will be Foo | Bar. Equal to the example above
+// Display order will be: Foo | Bar (same as above)
 ```
 
 ### @color
 
-Define colors you are using in your layout.
+Defines colors used in your styles. Multiple colors can be defined in one block and will be displayed together.
 
 ```js
 /**
@@ -244,11 +278,16 @@ Define colors you are using in your layout.
  */
 ```
 
-![color tag result](../../doc-assets/core/color.png)
+![Color tag result](../../doc-assets/core/color.png)
 
-You can define multiple colors in on codeblock the colors will then be displayed together. The color tag expects as type the rgb or hex value of the color you are going to use. As a second type you can define the font color that should be used for this color. A variable name and description also need to be given, both can be separated by `|`, `-` or just whitespace.
+**Syntax:**
 
-If you provide a custom style sheet with custom properties for variables you can use these directly.
+- **Type** (in braces): RGB value (e.g., `0 0 0`) or hex value (e.g., `#fff`)
+  - Optional: Include a second RGB value separated by `|` to specify the text color
+- **Name**: Variable name (e.g., `--color-black`)
+- **Description**: Human-readable name, separated by `|`, `-`, or whitespace
+
+If you provide a custom stylesheet with CSS custom properties, you can reference them directly:
 
 ```css
 :root {
@@ -258,7 +297,7 @@ If you provide a custom style sheet with custom properties for variables you can
 
 ### @space
 
-Define spacings you are using in your layout.
+Defines spacing values used in your layout. Multiple spaces can be defined in one block.
 
 ```js
 /**
@@ -273,15 +312,19 @@ Define spacings you are using in your layout.
  */
 ```
 
-![space tag result](../../doc-assets/core/space.png)
+![Space tag result](../../doc-assets/core/space.png)
 
-You can define multiple spaces in on codeblock the paces will then be displayed together. The space tag expects as type a spacing value, the variable name and description. Like in the color tag you can separate variable name and description by `|`, `-` or just whitespace. The given spacing value will be used when displaying, to make the targeted space visible.
+**Syntax:**
 
-Note: Depending on your renderer the spacing value will be used differently. When using the default renderer the spacing value will be multiplied with the spacing unit.
+- **Type** (in braces): Spacing value (e.g., `0.5`, `1.2`)
+- **Name**: Variable name (e.g., `--space-xs`)
+- **Description**: Human-readable name, separated by `|`, `-`, or whitespace
+
+The spacing value is used when rendering the visualization. With the default renderer, this value is multiplied by the spacing unit.
 
 ### @icon
 
-Define icons you are using in your icon font.
+Defines icons from your icon font. Multiple icons can be defined in one block.
 
 ```js
 /**
@@ -294,11 +337,17 @@ Define icons you are using in your icon font.
  */
 ```
 
-![icon tag result](../../doc-assets/core/icon.png)
+![Icon tag result](../../doc-assets/core/icon.png)
 
-You can define multiple icons in on codeblock the icons will then be displayed together. As type a css variable or the char code can be given. Variable name and description can be separated by `|`, `-` or just whitespace.
+**Syntax:**
 
-Please not that you will require a custom style to define the `@font-face` for your icon font and set the `--icons-font-family` variable to your icon font name.
+- **Type** (in braces): Character code (e.g., `e900`) or CSS variable reference
+- **Name**: Variable name (e.g., `--icon-chevron-down`)
+- **Description**: Human-readable name, separated by `|`, `-`, or whitespace
+
+**Requirements:**
+
+You must provide a custom stylesheet defining the `@font-face` for your icon font and set the `--icons-font-family` variable:
 
 ```css
 @font-face {
@@ -321,118 +370,93 @@ Please not that you will require a custom style to define the `@font-face` for y
 
 ## Integration
 
-UI-Doc can be used in any context you want it to run. There are already integrations for:
+UI-Doc can be integrated into any build process. Official integrations are available for:
 
 - [Rollup](../rollup/README.md)
 - [Vite](../vite/README.md)
 
-But you can write your own integration or just write a node script.
+You can also write a custom integration or use it in a Node.js script (see Quick Start above).
 
-### Short example
+## API Reference
 
-To use UI-Doc in a node script your code need something like this
+### UIDoc Options
 
-```js
-import fs from 'node:fs/promises'
-import path from 'node:path'
-import { UIDoc } from '@ui-doc/core'
+| Name        | Required | Type                  | Description                                                        |
+| ----------- | -------- | --------------------- | ------------------------------------------------------------------ |
+| renderer    | yes      | Renderer              | The renderer that generates output from the context                |
+| blockParser | no       | BlockParser           | Custom parser implementation for extracting and parsing blocks     |
+| generate    | no       | object of functions   | Functions that generate content for the renderer                   |
+| texts       | no       | object of texts       | Text strings used by the default generate functions                |
 
-// const renderer = ... // create a renderer instance, this depends on the renderer you want to use
-const outputDir = './dist'
-const filePath = path.resolve('./my-css-file-to-source.css')
-
-// create a UI-Doc instance
-const uidoc = new UIDoc({
-  renderer,
-  // ... other options
-})
-
-// read the file content
-const content = await fs.readFile(path.resolve(filePath), 'utf8')
-
-// create a new source, by giving the filename and the file content
-uidoc.sourceCreate(filePath, content)
-
-// use the output function to get all files that should be created
-await uidoc.output(async (fileName, content) => {
-  await fs.writeFile(`${outputDir}/${fileName}`, content, 'utf8')
-})
-```
-
-## Options
-
-| Name | Required | Type | Description |
-| --- | --- | --- | --- |
-| blockParser | no | BlockParser | Change implementation of the parses that interprets the source and creates blocks for the UI-Doc. |
-| generate | no | object of functions | Functions that will generate content for the renderer. |
-| renderer | yes | Renderer | The renderer that should be used to generate the output. |
-| texts | no | object of texts | Texts used by the default generate functions |
-
-### Texts
+### Texts Options
 
 | Name      | Description                                           |
 | --------- | ----------------------------------------------------- |
-| copyright | Used in footer text to display copyright information. |
-| title     | Title of your UI-Doc                                  |
+| copyright | Used in footer text to display copyright information |
+| title     | Title of your UI-Doc site                             |
 
-### Generate functions
+### Generate Functions
 
-| Name | Return Type | Params | Description |
-| --- | --- | --- | --- |
-| exampleTitle | string | ExampleContext | Create page title for examples |
-| footerText | string |  | Text for the footer |
-| homeLink | string |  | Link to the homepage (frontpage) |
-| logo | string |  | Logo you want to display, give text, html or an svg |
-| menu | {active: boolean, href: string, order: number, text: string}[] | menu array, pages array | Create/manipulate the menu |
-| name | string |  | Name of your UI-Doc |
-| pageLink | string | page context | Link to a page |
-| pageTitle | string | page context | Title of a page |
-| resolve | string | uri: string, context: string | Change/manipulate a uri |
+Functions that control how various parts of the documentation are generated:
 
-You can change generate functions in two ways:
+| Name         | Return Type                                                                    | Parameters                      | Description                                    |
+| ------------ | ------------------------------------------------------------------------------ | ------------------------------- | ---------------------------------------------- |
+| exampleTitle | string                                                                         | ExampleContext                  | Create page title for examples                 |
+| footerText   | string                                                                         | -                               | Text for the footer                            |
+| homeLink     | string                                                                         | -                               | Link to the homepage (front page)              |
+| logo         | string                                                                         | -                               | Logo to display (text, HTML, or SVG)           |
+| menu         | {active: boolean, href: string, order: number, text: string}[]                 | menu array, pages array         | Create or manipulate the navigation menu       |
+| name         | string                                                                         | -                               | Name of your UI-Doc site                       |
+| pageLink     | string                                                                         | page context                    | Link to a page                                 |
+| pageTitle    | string                                                                         | page context                    | Title of a page                                |
+| resolve      | string                                                                         | uri: string, context: string    | Transform or manipulate a URI                  |
+
+You can customize generate functions in two ways:
 
 ```ts
-// set over options
+// Set via options
 const uidoc = new UIDoc({
   generate: {
     footerText: () => 'Custom Footer Text',
   },
 })
 
-// using a function
+// Using the replaceGenerate method
 uidoc.replaceGenerate('name', () => 'MyUIDoc')
 ```
 
 ## Events
 
-UI-Doc provides functionality to register events.
+UI-Doc provides an event system for customization.
 
-| Name          | Params            | When                                                   |
-| ------------- | ----------------- | ------------------------------------------------------ |
-| context-entry | ContextEntryEvent | Before context entry gets created, updated or deleted. |
-| example       | ExampleEvent      | Before an example gets outputted.                      |
-| output        | OutputEvent       | Before the complete documentation gets outputted.      |
-| page          | PageEvent         | Before a page gets outputted.                          |
-| source        | SourceEvent       | Before a source gets created, updated or deleted.      |
+| Name          | Parameters        | When                                                  |
+| ------------- | ----------------- | ----------------------------------------------------- |
+| context-entry | ContextEntryEvent | Before a context entry is created, updated, or deleted |
+| example       | ExampleEvent      | Before an example is output                           |
+| output        | OutputEvent       | Before the complete documentation is output           |
+| page          | PageEvent         | Before a page is output                               |
+| source        | SourceEvent       | Before a source is created, updated, or deleted       |
+
+**Example:**
 
 ```ts
-// change the order on every entry to 200
+// Change the order on every entry to 200
 function onContextEntry({ entry }) {
   entry.order = 200
 }
 
-// register your listener
+// Register your listener
 uidoc.on('context-entry', onContextEntry)
 
-// unregister your listener
+// Unregister your listener
 uidoc.off('context-entry', onContextEntry)
 ```
 
 ## CommentBlockParser
 
-The default CommentBlockParser extracts comment blocks from the source using comment tags to create the context.
+The default `CommentBlockParser` extracts comment blocks from source code using JSDoc-style comments.
 
-```text
+```js
 /**
  * Will be interpreted as a page.
  *
@@ -440,7 +464,8 @@ The default CommentBlockParser extracts comment blocks from the source using com
  */
 
 /**
- * Will be interpreted as a section on the page `typography`. Giving an example of default typography formats.
+ * Will be interpreted as a section on the page `typography`.
+ * Gives an example of default typography formats.
  *
  * @location typography.format Format
  * @example
@@ -452,28 +477,30 @@ The default CommentBlockParser extracts comment blocks from the source using com
  */
 ```
 
-Per default the `CommentBlockParser` will use the `MarkdownDescriptionParser` to parse descriptions from markdown into HTML.
+By default, `CommentBlockParser` uses `MarkdownDescriptionParser` to parse markdown in descriptions to HTML.
 
-### Events
+### CommentBlockParser Events
 
-| Name   | Params | When                      |
-| ------ | ------ | ------------------------- |
-| parsed | Block  | After a block got parsed. |
+| Name   | Parameters | When                     |
+| ------ | ---------- | ------------------------ |
+| parsed | Block      | After a block is parsed  |
 
 ### Custom Tags
 
-You can add your custom tags to transform the block to your needs. Let's say you want to create a `author` tag that defines an author.
+You can register custom tag transformers to extend UI-Doc's functionality. Here's an example of creating an `@author` tag:
 
 ```ts
-// @author author-key Author Name
+// Usage: @author author-key Author Name
 
-const commentBlockParser = new CommentBlockParser(new MarkdownDescriptionParser())
+import { CommentBlockParser, createMarkdownDescriptionParser } from '@ui-doc/core'
+
+const commentBlockParser = new CommentBlockParser(createMarkdownDescriptionParser())
 
 commentBlockParser.registerTagTransformer({
   name: 'author', // name of your tag
   transform(block, spec) {
-    // we will add the author to the block (the block get's currently transformed by the parser)
-    // inside the spec we will find the parsed information of your tag
+    // Add the author to the block being transformed
+    // spec contains the parsed information from your tag
     block.author = {
       key: spec.name, // author-key
       name: spec.description, // Author Name
@@ -481,3 +508,15 @@ commentBlockParser.registerTagTransformer({
   },
 })
 ```
+
+The `transform` function receives:
+
+- `block` - The block object being transformed
+- `spec` - The parsed tag specification containing:
+  - `name` - The name portion of the tag
+  - `description` - The description portion of the tag
+  - `type` - The type portion (in braces)
+
+## License
+
+See [LICENSE.md](../../LICENSE.md) for license information.
