@@ -1,4 +1,4 @@
-import type { FileSystem } from '@ui-doc/core'
+import type { FilePath, FileSystem } from '@ui-doc/core'
 import fs from 'node:fs/promises'
 
 import path from 'node:path'
@@ -10,6 +10,8 @@ export class NodeFileSystem implements FileSystem {
   private static instance: NodeFileSystem
 
   private assetLoaderInstance?: NodeAssetLoader
+
+  private constructor() {}
 
   public static init(): NodeFileSystem {
     if (!this.instance) {
@@ -31,69 +33,57 @@ export class NodeFileSystem implements FileSystem {
     return this.assetLoaderInstance
   }
 
-  public resolve(file: string): string {
+  public resolve(file: FilePath): FilePath {
     return path.resolve(file)
   }
 
-  public async fileRead(file: string): Promise<string> {
+  public async fileRead(file: FilePath): Promise<string> {
     return fs.readFile(this.resolve(file), 'utf8')
   }
 
-  public async fileWrite(file: string, content: string): Promise<boolean> {
-    try {
-      await fs.writeFile(this.resolve(file), content, 'utf8')
-
-      return true
-    } catch (e) {
-      return false
-    }
+  public async fileWrite(file: FilePath, content: string): Promise<boolean> {
+    return fs
+      .writeFile(this.resolve(file), content, 'utf8')
+      .then(() => true)
+      .catch(() => false)
   }
 
-  public async fileCopy(from: string, to: string): Promise<boolean> {
-    const fromFile = this.resolve(from)
-    const toFile = this.resolve(to)
-
-    try {
-      await fs.copyFile(fromFile, toFile)
-
-      return true
-    } catch (e) {
-      return false
-    }
+  public async fileCopy(from: FilePath, to: FilePath): Promise<boolean> {
+    return fs
+      .copyFile(this.resolve(from), this.resolve(to))
+      .then(() => true)
+      .catch(() => false)
   }
 
-  public async fileExists(file: string): Promise<boolean> {
+  public async fileExists(file: FilePath): Promise<boolean> {
     return fs
       .access(this.resolve(file), fs.constants.F_OK)
       .then(() => true)
       .catch(() => false)
   }
 
-  public fileBasename(file: string): string {
+  public fileBasename(file: FilePath): string {
     return path.basename(file, path.extname(file))
   }
 
-  public fileDirname(file: string): string {
+  public fileDirname(file: FilePath): string {
     return path.dirname(file)
   }
 
-  public async ensureDirectoryExists(dir: string): Promise<boolean> {
+  public async ensureDirectoryExists(dir: FilePath): Promise<boolean> {
     await fs.mkdir(this.resolve(dir), { recursive: true })
 
     return true
   }
 
-  public async isDirectory(dir: string): Promise<boolean> {
-    try {
-      const stats = await fs.stat(this.resolve(dir))
-
-      return stats.isDirectory()
-    } catch (e) {
-      return false
-    }
+  public async isDirectory(dir: FilePath): Promise<boolean> {
+    return fs
+      .stat(this.resolve(dir))
+      .then(stats => stats.isDirectory())
+      .catch(() => false)
   }
 
-  public async directoryCopy(from: string, to: string): Promise<boolean> {
+  public async directoryCopy(from: FilePath, to: FilePath): Promise<boolean> {
     const fromDir = this.resolve(from)
     const toDir = this.resolve(to)
 
@@ -114,10 +104,13 @@ export class NodeFileSystem implements FileSystem {
       }),
     )
 
-    return Promise.resolve(res.every(value => value === true))
+    return res.every(value => value === true)
   }
 }
 
-export function cerateNodeFileSystem(): NodeFileSystem {
+export function createNodeFileSystem(): NodeFileSystem {
   return NodeFileSystem.init()
 }
+
+/** @deprecated Use createNodeFileSystem instead */
+export const cerateNodeFileSystem = createNodeFileSystem

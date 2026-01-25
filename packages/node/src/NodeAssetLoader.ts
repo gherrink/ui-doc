@@ -1,15 +1,15 @@
-import type { AssetLoader, FileSystem } from '@ui-doc/core'
+import type { AssetLoader, FilePath, FileSystem } from '@ui-doc/core'
 import fs from 'node:fs/promises'
 import { createRequire } from 'node:module'
 
 import path from 'node:path'
 
 export class NodeAssetLoader implements AssetLoader {
-  protected resolvedPackages: Record<string, string | null> = {}
+  private resolvedPackages: Record<string, string | null> = {}
 
-  protected fileSystem: FileSystem
+  private readonly fileSystem: FileSystem
 
-  protected require: NodeRequire
+  private readonly require: NodeRequire
 
   public constructor(fileSystem: FileSystem) {
     this.fileSystem = fileSystem
@@ -24,7 +24,7 @@ export class NodeAssetLoader implements AssetLoader {
     if (this.resolvedPackages[packageName] !== undefined) {
       return this.resolvedPackages[packageName] === null
         ? undefined
-        : this.resolvedPackages[packageName]!
+        : this.resolvedPackages[packageName] ?? undefined
     }
 
     const paths = this.require.resolve.paths(packageName)
@@ -33,33 +33,36 @@ export class NodeAssetLoader implements AssetLoader {
       throw new Error('Could not resolve require paths')
     }
 
-    this.resolvedPackages[packageName] = await paths.reduce(async (acc, nodePath) => {
-      if ((await acc) !== null) {
-        return acc
-      }
-
+    for (const nodePath of paths) {
       const dir = path.join(nodePath, packageName)
-
-      return (await fs
+      const exists = await fs
         .access(dir, fs.constants.R_OK)
         .then(() => true)
-        .catch(() => false))
-        ? dir
-        : acc
-    }, Promise.resolve<string | null>(null))
+        .catch(() => false)
 
-    return this.resolvedPackages[packageName] !== null
-      ? this.resolvedPackages[packageName]!
-      : undefined
+      if (exists) {
+        this.resolvedPackages[packageName] = dir
+        return dir
+      }
+    }
+
+    this.resolvedPackages[packageName] = null
+    return undefined
   }
 
-  public async resolve(file: string): Promise<string | undefined> {
+  public async resolve(file: FilePath): Promise<string | undefined> {
     const resolvedFile = this.require.resolve(file)
 
     return (await this.fileSystem.fileExists(resolvedFile)) ? resolvedFile : undefined
   }
 
-  public async copy(from: string, to: string): Promise<void> {
+  /**
+   * Copies an asset from a resolved package path to a destination.
+   * @param from - Source path relative to node_modules
+   * @param to - Destination path
+   * @throws Error if the source asset cannot be resolved
+   */
+  public async copy(from: FilePath, to: FilePath): Promise<void> {
     const fromPath = await this.resolve(from)
 
     if (!fromPath) {
@@ -69,7 +72,7 @@ export class NodeAssetLoader implements AssetLoader {
     await this.fileSystem.fileCopy(fromPath, to)
   }
 
-  public async read(file: string): Promise<string> {
+  public async read(file: FilePath): Promise<string> {
     const fromPath = await this.resolve(file)
 
     if (!fromPath) {

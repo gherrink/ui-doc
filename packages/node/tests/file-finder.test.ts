@@ -8,7 +8,7 @@ import { NodeFileFinder } from '../src'
 vi.mock('node:fs/promises')
 
 describe('nodeFileFinder', () => {
-  it('foo', async () => {
+  it('should find all matching files recursively', async () => {
     const fsReaddirMock = vi
       .spyOn(fs, 'readdir')
       .mockResolvedValueOnce([
@@ -36,7 +36,5 @@ describe('nodeFileFinder', () => {
     expect(onFoundMock).toHaveBeenCalledWith('/test/bar.test')
     expect(onFoundMock).toHaveBeenCalledWith('/test/foo.test')
     expect(onFoundMock).toHaveBeenCalledWith('/test/sub-dir/foo-bar.test')
-
-    expect(true).toBe(true)
   })
 })

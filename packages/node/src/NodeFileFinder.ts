@@ -5,14 +5,17 @@ import path from 'node:path'
 import picomatch from 'picomatch'
 
 export class NodeFileFinder implements FileFinder {
-  public globs: string[] = []
+  public readonly globs: readonly string[]
 
   constructor(globs: string[] = []) {
     this.globs = globs.map(glob => path.resolve(glob))
   }
 
   public async search(fileFound: FileFinderOnFoundCallback): Promise<void> {
-    await Promise.all(await Promise.all(this.globs.map(async glob => this.searchGlob(glob, fileFound))))
+    const searchResults = await Promise.all(
+      this.globs.map(async glob => this.searchGlob(glob, fileFound)),
+    )
+    await Promise.all(searchResults.flat())
   }
 
   protected async searchGlob(
