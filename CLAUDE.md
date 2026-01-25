@@ -6,23 +6,37 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 UI-Doc is a TypeScript monorepo that generates interactive UI documentation from JSDoc-style comment blocks. It parses doc blocks from source files (CSS, JS, TS) and renders them as live component documentation with examples.
 
+## Folder Structure
+
+```text
+packages/           # Publishable npm packages (@ui-doc/*)
+  ├── core/         # Parsing engine and context generation
+  ├── node/         # File system operations for Node.js
+  ├── html-renderer/# HTML template rendering
+  ├── rollup/       # Rollup plugin integration
+  └── vite/         # Vite plugin (wraps rollup)
+demos/              # Example configurations (Vite, Rollup, Node scripts)
+docs/               # Consumer documentation
+```
+
 ## Commands
 
 ### Build & Test
 
 ```bash
-pnpm workspace:build          # Build all packages
-pnpm workspace:test           # Run all package tests
-pnpm --filter @ui-doc/core test  # Run tests for a specific package
+pnpm workspace:build              # Build all packages
+pnpm workspace:test               # Run all package tests
+pnpm --filter @ui-doc/core test   # Run tests for a specific package
+pnpm typecheck                    # Type check all packages
 ```
 
 ### Linting & Formatting
 
 ```bash
-pnpm lint                     # Run all linters (docs, json, package, js, css)
-pnpm fix:js                   # Fix JS/TS lint issues
-pnpm fix:css                  # Fix CSS lint issues
-pnpm prettier                 # Format all files
+pnpm lint                     # Run all linters (docs, js, css)
+pnpm fix                      # Run all auto-fixes (docs, js, css)
+pnpm fix:js                   # Fix JS/TS lint issues only
+pnpm fix:css                  # Fix CSS lint issues only
 ```
 
 ### Release
@@ -63,14 +77,30 @@ pnpm release                  # Full release with publishing
 - `Renderer` interface (core): Contract for output rendering
 - `HTMLRenderer` (html-renderer): Default renderer implementation
 
-## Commit Convention
-
-Uses conventional commits with required scopes:
-
-- `release`, `core`, `html-renderer`, `node`, `rollup`, `vite`, `demos`
-
-Example: `feat(core): add new tag transformer`
-
 ## Testing
 
-Tests are in `packages/*/tests/` directories using Jest with ts-jest. Test files match pattern `*.test.ts` or `*.spec.ts`.
+Tests are in `packages/*/tests/` directories using Vitest. Test files match pattern `*.test.ts` or `*.spec.ts`.
+
+## Commit Convention
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/). Use the `/commit` skill for generating properly formatted commit messages.
+
+## Claude Code Tools
+
+This project includes custom Claude Code configurations in `.claude/`:
+
+### Reference Skills
+
+Loaded automatically when relevant:
+
+- `vitest-guide` - Vitest patterns and UI-Doc testing conventions
+- `documentation-guide` - Consumer documentation templates and style
+
+### Subagents
+
+Specialized agents for complex tasks:
+
+- `test-spec` - Analyzes source code and generates structured test specifications
+- `test-writer` - Writes Vitest tests from specifications (uses `vitest-guide` skill)
+- `document-writer` - Creates consumer documentation from templates (uses `documentation-guide` skill)
+- `js-review-expert` - Reviews JS/TS code for best practices, readability, and maintainability
