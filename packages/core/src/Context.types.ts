@@ -50,12 +50,12 @@ export interface GenerateContext {
   [key: string]: unknown
   assets: Asset[]
   title: string
-  footerText: string
-  logo: string
   name: string
-  homeLink: string
-  page: ContextEntry
   menu: MenuItem[]
+  footerText?: string
+  logo?: string
+  homeLink?: string
+  page?: ContextEntry
 }
 
 export interface GenerateExampleContext extends ContextExample {

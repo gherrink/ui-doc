@@ -1,3 +1,4 @@
+import type { RenderContext, Renderer } from '../Renderer.types'
 import { Node } from './Node'
 
 export class TemplateNode extends Node<'template'> {
@@ -8,7 +9,7 @@ export class TemplateNode extends Node<'template'> {
     this.content = content
   }
 
-  public render(): string {
+  public render(_context?: RenderContext, _renderer?: Renderer): string {
     return this.content
   }
 }

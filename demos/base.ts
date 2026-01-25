@@ -5,13 +5,13 @@ import {
   NodeParser,
   TemplateLoader,
 } from '@ui-doc/html-renderer'
-import { NodeFileSystem } from '@ui-doc/node'
+import { createNodeFileSystem } from '@ui-doc/node'
 
 // TODO clean up output directory
 // TODO make it run parallel
 async function main() {
   const outputDir = './dist/base'
-  const fileSystem = new NodeFileSystem()
+  const fileSystem = createNodeFileSystem()
   const assetLoader = fileSystem.assetLoader()
   const renderer = new HtmlRenderer(NodeParser.init())
   const finder = fileSystem.createFileFinder(['css/**/*.css'])

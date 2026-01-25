@@ -1,8 +1,11 @@
 import type { Node } from '../../src/nodes'
 
-import type { Renderer } from '../../src/Renderer.types'
+import type { RenderContext, Renderer } from '../../src/Renderer.types'
 import { describe, expect, it, vi } from 'vitest'
 import { TagForNode } from '../../src/nodes/tags/for'
+
+// Helper to cast arrays/objects to RenderContext for testing for-loop iteration
+const asContext = <T>(value: T): RenderContext => value as unknown as RenderContext
 
 describe('render tag for', () => {
   const renderer = {} as Renderer
@@ -15,7 +18,7 @@ describe('render tag for', () => {
 
     node.append(contentNode)
 
-    expect(node.render(context, renderer)).toBe('content')
+    expect(node.render(asContext(context), renderer)).toBe('content')
     expect(contentNodeRenderMock).toHaveBeenCalledTimes(1)
     expect(contentNodeRenderMock).toHaveBeenCalledWith(
       { _contextKey: 'this', _loop: { index: 0, value: 1 }, _parent: context },
@@ -31,7 +34,7 @@ describe('render tag for', () => {
 
     node.append(contentNode)
 
-    expect(node.render(context, renderer)).toBe('content content content ')
+    expect(node.render(asContext(context), renderer)).toBe('content content content ')
     expect(contentNodeRenderMock).toHaveBeenCalledTimes(context.length)
     expect(contentNodeRenderMock).toHaveBeenCalledWith(
       { _contextKey: 'this', _loop: { index: 0, value: context[0] }, _parent: context },
@@ -55,7 +58,7 @@ describe('render tag for', () => {
 
     node.append(contentNode)
 
-    expect(node.render(context, renderer)).toBe('content content content ')
+    expect(node.render(asContext(context), renderer)).toBe('content content content ')
     expect(contentNodeRenderMock).toHaveBeenCalledTimes(context.length)
     expect(contentNodeRenderMock).toHaveBeenCalledWith(
       {
@@ -170,12 +173,12 @@ describe('render tag for', () => {
 
     node.append(contentNode)
 
-    expect(node.render(contextArray, renderer)).toBe('')
+    expect(node.render(asContext(contextArray), renderer)).toBe('')
     expect(contentNodeRenderMock).not.toHaveBeenCalled()
 
     contentNodeRenderMock.mockClear()
 
-    expect(node.render(contextObject, renderer)).toBe('')
+    expect(node.render(asContext(contextObject), renderer)).toBe('')
     expect(contentNodeRenderMock).not.toHaveBeenCalled()
   })
 

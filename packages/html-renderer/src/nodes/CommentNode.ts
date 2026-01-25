@@ -1,3 +1,4 @@
+import type { RenderContext, Renderer } from '../Renderer.types'
 import { Node } from './Node'
 
 export class CommentNode extends Node {
@@ -8,7 +9,7 @@ export class CommentNode extends Node {
     this.content = content
   }
 
-  public render(): string {
+  public render(_context?: RenderContext, _renderer?: Renderer): string {
     return `<!-- ${this.content} -->`
   }
 }

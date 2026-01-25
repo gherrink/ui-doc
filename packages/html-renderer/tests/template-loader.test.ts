@@ -16,7 +16,7 @@ describe('templateLoader', () => {
   let mockAddPartial: ReturnType<typeof vi.fn<HtmlRenderer['addPartial']>>
 
   let mockFileSystem: FileSystem
-  let mockFinder: { search: ReturnType<typeof vi.fn> }
+  let mockFinder: { search: ReturnType<typeof vi.fn>, matches: ReturnType<typeof vi.fn> }
   let mockRenderer: HtmlRenderer
 
   beforeEach(() => {
@@ -32,6 +32,7 @@ describe('templateLoader', () => {
 
     mockFinder = {
       search: mockFinderSearch,
+      matches: vi.fn(() => true),
     }
 
     mockCreateFileFinder = vi
@@ -43,7 +44,7 @@ describe('templateLoader', () => {
       createFileFinder: mockCreateFileFinder,
       fileBasename: mockFileBasename,
       fileRead: mockFileRead,
-    } as FileSystem
+    } as unknown as FileSystem
 
     mockRenderer = {
       addLayout: mockAddLayout,

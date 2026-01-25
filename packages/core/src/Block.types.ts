@@ -38,6 +38,7 @@ export type BlockIcon = BlockEntry & {
 }
 
 export interface Block {
+  [key: string]: unknown
   key: string
   order: number
   location?: string

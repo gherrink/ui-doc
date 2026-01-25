@@ -827,7 +827,7 @@ describe('asset', () => {
           name: 'with-attrs.js',
           source: 'console.log("test");',
           attrs: {
-            defer: true,
+            defer: 'true',
             type: 'module',
           },
         }
@@ -844,7 +844,7 @@ describe('asset', () => {
         expect(assets[4]).toMatchObject({
           name: 'with-attrs.js',
           attrs: {
-            defer: true,
+            defer: 'true',
             type: 'module',
           },
         })

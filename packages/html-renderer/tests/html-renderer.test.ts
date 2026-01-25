@@ -59,7 +59,7 @@ describe('htmlRenderer', () => {
 
     it('should start with no layouts registered', () => {
       // Verify by checking that generate throws for missing layout
-      const context = { assets: [], entries: {}, menu: [], name: 'Test', pages: {}, title: 'Test' }
+      const context = { assets: [], menu: [], name: 'Test', title: 'Test' } as unknown as GenerateContext
       expect(() => renderer.generate(context)).toThrow(HTMLRendererError)
     })
 
@@ -80,7 +80,7 @@ describe('htmlRenderer', () => {
 
       expect(mockParseFn).toHaveBeenCalledTimes(1)
       // Verify the layout was stored by successfully generating with it
-      const context = { assets: [], entries: {}, menu: [], name: 'Test', pages: {}, title: 'Test' }
+      const context = { assets: [], menu: [], name: 'Test', title: 'Test' } as unknown as GenerateContext
       expect(() => renderer.generate(context, 'main')).not.toThrow()
       expect(result).toBe(renderer)
     })
@@ -163,7 +163,7 @@ describe('htmlRenderer', () => {
       expect(result).toBe(renderer)
       expect(mockParseFn).toHaveBeenCalledTimes(3)
       // Verify all templates were stored
-      const context = { assets: [], entries: {}, menu: [], name: 'Test', pages: {}, title: 'Test' }
+      const context = { assets: [], menu: [], name: 'Test', title: 'Test' } as unknown as GenerateContext
       expect(() => renderer.generate(context, 'main')).not.toThrow()
       expect(() => renderer.partial('header')).not.toThrow()
       expect(() => renderer.page('index', {})).not.toThrow()
@@ -171,14 +171,13 @@ describe('htmlRenderer', () => {
   })
 
   describe('generate', () => {
-    const createContext = (assets: Asset[] = []): GenerateContext => ({
-      assets,
-      entries: {},
-      menu: [],
-      name: 'Test',
-      pages: {},
-      title: 'Test Page',
-    })
+    const createContext = (assets: Asset[] = []): GenerateContext =>
+      ({
+        assets,
+        menu: [],
+        name: 'Test',
+        title: 'Test Page',
+      }) as unknown as GenerateContext
 
     beforeEach(() => {
       renderer.addLayout('default', { content: '<html></html>', source: 'default.html' })
@@ -278,14 +277,12 @@ describe('htmlRenderer', () => {
     })
 
     it('should handle assets without attrs property', () => {
-      const context: GenerateContext = {
+      const context = {
         assets: [{ src: 'main.css', type: 'style' } as Asset],
-        entries: {},
         menu: [],
         name: 'Test',
-        pages: {},
         title: 'Test Page',
-      }
+      } as unknown as GenerateContext
 
       renderer.generate(context)
 

@@ -1,10 +1,11 @@
-import type { EventMap } from '../src/EventEmitter.types'
+import type { EventArgs, EventMap } from '../src/EventEmitter.types'
 
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { EventEmitterBase } from '../src/EventEmitterBase'
 
 // Define test event map
-interface TestEvents extends EventMap<TestEvents> {
+interface TestEvents extends EventMap {
+  [key: string]: unknown[]
   noArgs: []
   oneArg: [value: string]
   multipleArgs: [id: number, name: string, active: boolean]
@@ -16,7 +17,7 @@ class TestEmitter extends EventEmitterBase<TestEvents> {
   // Expose emit as public for testing
   public emitPublic<K extends keyof TestEvents>(
     eventName: K,
-    ...args: TestEvents[K]
+    ...args: EventArgs<TestEvents, K>
   ): void {
     this.emit(eventName, ...args)
   }

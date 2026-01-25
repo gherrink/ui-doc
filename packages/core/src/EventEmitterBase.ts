@@ -5,7 +5,7 @@ import type {
   EventMap,
 } from './EventEmitter.types'
 
-export abstract class EventEmitterBase<M extends EventMap<M>> implements EventEmitter<M> {
+export abstract class EventEmitterBase<M extends EventMap> implements EventEmitter<M> {
   // Use a simpler map type with type assertions in methods for proper variance handling
   protected listeners: Map<keyof M, ((...args: unknown[]) => void)[]> = new Map()
 

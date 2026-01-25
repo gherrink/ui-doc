@@ -578,7 +578,7 @@ describe('uI-Doc', () => {
         ]),
       })
 
-      uidoc.addAsset({ src: 'styles.css', type: 'css' })
+      uidoc.addAsset({ src: 'styles.css', type: 'style' })
       uidoc.sourceCreate('file.css', '')
 
       uidoc.page('foo')
@@ -586,7 +586,7 @@ describe('uI-Doc', () => {
       expect(renderer.generate).toHaveBeenCalledWith(
         expect.objectContaining({
           assets: expect.arrayContaining([
-            expect.objectContaining({ src: 'styles.css', type: 'css' }),
+            expect.objectContaining({ src: 'styles.css', type: 'style' }),
           ]),
         }),
         undefined,
@@ -608,7 +608,7 @@ describe('uI-Doc', () => {
         ]),
       })
 
-      uidoc.addExampleAsset({ src: 'example-styles.css', type: 'css' })
+      uidoc.addExampleAsset({ src: 'example-styles.css', type: 'style' })
       uidoc.sourceCreate('file.css', '')
 
       uidoc.example('foo')
@@ -616,7 +616,7 @@ describe('uI-Doc', () => {
       expect(renderer.generate).toHaveBeenCalledWith(
         expect.objectContaining({
           assets: expect.arrayContaining([
-            expect.objectContaining({ src: 'example-styles.css', type: 'css' }),
+            expect.objectContaining({ src: 'example-styles.css', type: 'style' }),
           ]),
         }),
         'example',

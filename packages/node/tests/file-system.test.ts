@@ -1,7 +1,7 @@
 import type { Stats } from 'node:fs'
 import fs from 'node:fs/promises'
 
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { cerateNodeFileSystem, createNodeFileSystem, NodeFileSystem } from '../src'
 
@@ -210,38 +210,26 @@ describe('nodeFileSystem', () => {
   })
 
   describe('directoryCopy', () => {
-    let mockStat: ReturnType<typeof vi.spyOn>
-    let mockMkdir: ReturnType<typeof vi.spyOn>
-    let mockReaddir: ReturnType<typeof vi.spyOn>
-    let mockCopyFile: ReturnType<typeof vi.spyOn>
-
-    beforeEach(() => {
-      mockStat = vi.spyOn(fs, 'stat')
-      mockMkdir = vi.spyOn(fs, 'mkdir')
-      mockReaddir = vi.spyOn(fs, 'readdir')
-      mockCopyFile = vi.spyOn(fs, 'copyFile')
-    })
-
     it('should copy directory contents recursively', async () => {
-      mockStat
+      vi.spyOn(fs, 'stat')
         .mockResolvedValueOnce({ isDirectory: () => true } as Stats)
         .mockResolvedValueOnce({ isDirectory: () => true } as Stats)
-      mockMkdir.mockResolvedValue(undefined)
-      mockReaddir.mockResolvedValue([
+      vi.spyOn(fs, 'mkdir').mockResolvedValue(undefined)
+      vi.spyOn(fs, 'readdir').mockResolvedValue([
         { isDirectory: () => false, name: 'file1.txt' },
         { isDirectory: () => false, name: 'file2.txt' },
       ] as never)
-      mockCopyFile.mockResolvedValue(undefined)
+      const copyFileSpy = vi.spyOn(fs, 'copyFile').mockResolvedValue(undefined)
 
       const fileSystem = createNodeFileSystem()
       const result = await fileSystem.directoryCopy('/from', '/to')
 
       expect(result).toBe(true)
-      expect(mockCopyFile).toHaveBeenCalledTimes(2)
+      expect(copyFileSpy).toHaveBeenCalledTimes(2)
     })
 
     it('should return false if source is not a directory', async () => {
-      mockStat.mockResolvedValue({ isDirectory: () => false } as Stats)
+      vi.spyOn(fs, 'stat').mockResolvedValue({ isDirectory: () => false } as Stats)
 
       const fileSystem = createNodeFileSystem()
       const result = await fileSystem.directoryCopy('/from/file.txt', '/to')
@@ -250,25 +238,27 @@ describe('nodeFileSystem', () => {
     })
 
     it('should copy nested directories', async () => {
-      mockStat.mockResolvedValue({ isDirectory: () => true } as Stats)
-      mockMkdir.mockResolvedValue(undefined)
-      mockReaddir
+      vi.spyOn(fs, 'stat').mockResolvedValue({ isDirectory: () => true } as Stats)
+      const mkdirSpy = vi.spyOn(fs, 'mkdir').mockResolvedValue(undefined)
+      vi.spyOn(fs, 'readdir')
         .mockResolvedValueOnce([{ isDirectory: () => true, name: 'subdir' }] as never)
         .mockResolvedValueOnce([{ isDirectory: () => false, name: 'nested.txt' }] as never)
-      mockCopyFile.mockResolvedValue(undefined)
+      vi.spyOn(fs, 'copyFile').mockResolvedValue(undefined)
 
       const fileSystem = createNodeFileSystem()
       const result = await fileSystem.directoryCopy('/from', '/to')
 
       expect(result).toBe(true)
-      expect(mockMkdir).toHaveBeenCalledTimes(2)
+      expect(mkdirSpy).toHaveBeenCalledTimes(2)
     })
 
     it('should return false if any file copy fails', async () => {
-      mockStat.mockResolvedValue({ isDirectory: () => true } as Stats)
-      mockMkdir.mockResolvedValue(undefined)
-      mockReaddir.mockResolvedValue([{ isDirectory: () => false, name: 'file.txt' }] as never)
-      mockCopyFile.mockRejectedValue(new Error('Copy failed'))
+      vi.spyOn(fs, 'stat').mockResolvedValue({ isDirectory: () => true } as Stats)
+      vi.spyOn(fs, 'mkdir').mockResolvedValue(undefined)
+      vi.spyOn(fs, 'readdir').mockResolvedValue([
+        { isDirectory: () => false, name: 'file.txt' },
+      ] as never)
+      vi.spyOn(fs, 'copyFile').mockRejectedValue(new Error('Copy failed'))
 
       const fileSystem = createNodeFileSystem()
       const result = await fileSystem.directoryCopy('/from', '/to')
@@ -277,15 +267,16 @@ describe('nodeFileSystem', () => {
     })
 
     it('should handle empty directories', async () => {
-      mockStat.mockResolvedValue({ isDirectory: () => true } as Stats)
-      mockMkdir.mockResolvedValue(undefined)
-      mockReaddir.mockResolvedValue([])
+      vi.spyOn(fs, 'stat').mockResolvedValue({ isDirectory: () => true } as Stats)
+      vi.spyOn(fs, 'mkdir').mockResolvedValue(undefined)
+      vi.spyOn(fs, 'readdir').mockResolvedValue([])
+      const copyFileSpy = vi.spyOn(fs, 'copyFile')
 
       const fileSystem = createNodeFileSystem()
       const result = await fileSystem.directoryCopy('/from', '/to')
 
       expect(result).toBe(true)
-      expect(mockCopyFile).not.toHaveBeenCalled()
+      expect(copyFileSpy).not.toHaveBeenCalled()
     })
   })
 })

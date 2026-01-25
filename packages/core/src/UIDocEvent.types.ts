@@ -36,6 +36,7 @@ export interface ExampleEvent {
 }
 
 export interface UIDocEventMap {
+  [key: string]: unknown[]
   'context-entry': [ContextEntryEvent]
   'example': [ExampleEvent]
   'output': [OutputEvent]

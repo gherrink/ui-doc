@@ -47,12 +47,13 @@ describe('resolveOptions', () => {
       packagePath: vi.fn<AssetLoader['packagePath']>().mockResolvedValue('/path/to/templates'),
       resolve: vi.fn<AssetLoader['resolve']>().mockResolvedValue('/resolved/asset.css'),
       read: vi.fn<AssetLoader['read']>().mockResolvedValue('asset content'),
+      copy: vi.fn<AssetLoader['copy']>().mockResolvedValue(undefined),
+      packageExists: vi.fn<AssetLoader['packageExists']>().mockResolvedValue(true),
     }
 
     mockFileFinder = {
       search: vi.fn(async () => Promise.resolve()),
       matches: vi.fn(() => true),
-      globs: ['/src/**/*.ts'],
     }
 
     mockFileSystem = {
@@ -60,13 +61,15 @@ describe('resolveOptions', () => {
       createFileFinder: vi.fn<FileSystem['createFileFinder']>().mockReturnValue(mockFileFinder),
       resolve: vi.fn<FileSystem['resolve']>((path: string) => `/resolved/${path}`),
       fileRead: vi.fn<FileSystem['fileRead']>().mockResolvedValue('file content'),
-      fileWrite: vi.fn<FileSystem['fileWrite']>().mockResolvedValue(),
+      fileWrite: vi.fn<FileSystem['fileWrite']>().mockResolvedValue(true),
       fileDirname: vi
         .fn<FileSystem['fileDirname']>((path: string) => path.split('/').slice(0, -1).join('/')),
-      fileCopy: vi.fn<FileSystem['fileCopy']>().mockResolvedValue(),
-      directoryCopy: vi.fn<FileSystem['directoryCopy']>().mockResolvedValue(),
-      ensureDirectoryExists: vi.fn<FileSystem['ensureDirectoryExists']>().mockResolvedValue(),
+      fileCopy: vi.fn<FileSystem['fileCopy']>().mockResolvedValue(true),
+      directoryCopy: vi.fn<FileSystem['directoryCopy']>().mockResolvedValue(true),
+      ensureDirectoryExists: vi.fn<FileSystem['ensureDirectoryExists']>().mockResolvedValue(true),
       isDirectory: vi.fn<FileSystem['isDirectory']>().mockResolvedValue(true),
+      fileExists: vi.fn<FileSystem['fileExists']>().mockResolvedValue(true),
+      fileBasename: vi.fn<FileSystem['fileBasename']>((path: string) => path.split('/').pop() ?? ''),
     }
 
     mockRenderer = {
@@ -93,7 +96,8 @@ describe('resolveOptions', () => {
       on: vi.fn(),
     } as unknown as UIDoc
 
-    vi.mocked(NodeFileSystem.init).mockReturnValue(mockFileSystem)
+    type NodeFS = ReturnType<typeof NodeFileSystem.init>
+    vi.mocked(NodeFileSystem.init).mockReturnValue(mockFileSystem as unknown as NodeFS)
     vi.mocked(UIDoc).mockReturnValue(mockUIDocInstance)
     vi.mocked(resolveAssets).mockResolvedValue([])
   })

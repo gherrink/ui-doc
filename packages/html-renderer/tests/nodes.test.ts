@@ -12,16 +12,16 @@ describe('node', () => {
   describe('node', () => {
     describe('constructor', () => {
       it('should set type property correctly', () => {
-        const node = new Node('element')
-        expect(node.type).toBe('element')
+        const node = new Node('root')
+        expect(node.type).toBe('root')
       })
     })
 
     describe('append', () => {
       it('should add nodes to childNodes', () => {
-        const parent = new Node('parent')
-        const child1 = new Node('child1')
-        const child2 = new Node('child2')
+        const parent = new Node('root')
+        const child1 = new Node('template')
+        const child2 = new Node('template')
 
         parent.append(child1)
         parent.append(child2)
@@ -32,8 +32,8 @@ describe('node', () => {
 
     describe('children', () => {
       it('should return childNodes array', () => {
-        const parent = new Node('parent')
-        const child = new Node('child')
+        const parent = new Node('root')
+        const child = new Node('template')
 
         parent.append(child)
 
@@ -43,7 +43,7 @@ describe('node', () => {
 
     describe('render', () => {
       it('should concatenate all child node renders', () => {
-        const parent = new Node('parent')
+        const parent = new Node('root')
         const child1 = new TemplateNode('content1')
         const child2 = new TemplateNode('content2')
 
@@ -59,7 +59,7 @@ describe('node', () => {
       })
 
       it('should return empty string with no children', () => {
-        const node = new Node('empty')
+        const node = new Node('root')
         const context = {}
         const renderer = {} as Renderer
 
@@ -69,8 +69,8 @@ describe('node', () => {
       })
 
       it('should pass context and renderer to child nodes', () => {
-        const parent = new Node('parent')
-        const child = new Node('child')
+        const parent = new Node('root')
+        const child = new Node('template')
         const renderSpy = vi.spyOn(child, 'render')
 
         parent.append(child)
