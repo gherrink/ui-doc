@@ -41,12 +41,14 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "prebuild": "rm -rf dist dist",
+    "clean": "rm -rf dist",
+    "prebuild": "pnpm clean",
     "prepare": "if [ ! -d 'dist' ]; then pnpm build; fi",
     "prepublish": "pnpm build",
     "release": "pnpm --workspace-root package:release $(pwd)",
     "release:dry": "pnpm --workspace-root package:release-dry $(pwd)",
-    "test": "vitest run"
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
   },
   "publishConfig": {
     "access": "public"
