@@ -40,3 +40,5 @@ See [examples.md](./examples.md) for practical examples.
 5. Write concise description in imperative mood
 6. Add body if explanation of what/why is needed
 7. Always include `Co-Authored-By: Claude <noreply@anthropic.com>` footer
+8. Validate message with `echo '<subject line>' | npx commitlint` before committing
+9. Stage files and commit — if commitlint fails, fix the message and re-validate
