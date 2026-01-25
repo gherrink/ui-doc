@@ -9,7 +9,14 @@ async function createDefaultRenderer(
   templatePath: string | undefined,
   fileSystem: FileSystem,
 ): Promise<Renderer> {
-  const rendererImport = await import('@ui-doc/html-renderer')
+  let rendererImport
+  try {
+    rendererImport = await import('@ui-doc/html-renderer')
+  } catch {
+    throw new Error(
+      '@ui-doc/html-renderer is required but not installed. Please install it as a dependency.',
+    )
+  }
   const renderer = new rendererImport.HtmlRenderer(rendererImport.NodeParser.init())
   const packageTemplatePath = await fileSystem
     .assetLoader()
@@ -34,47 +41,54 @@ async function createDefaultRenderer(
   return renderer
 }
 
-function createOutputPrefix(options: Options): ResolvedOptions['prefix'] {
+interface OutputPrefixResult {
+  prefix: ResolvedOptions['prefix']
+  settingsOverride?: Options['settings']
+}
+
+function createOutputPrefix(options: Options): OutputPrefixResult {
   const prefix: ResolvedOptions['prefix'] = { path: '', uri: '' }
   const path = options?.output?.dir
 
   if (!path) {
-    return prefix
+    return { prefix }
   }
 
   prefix.path = path.endsWith('/') ? path : `${path}/`
 
   if (options?.output?.baseUri === '.') {
-    return prefix
+    return { prefix }
   }
 
   prefix.uri = options?.output?.baseUri ?? prefix.path
   prefix.uri = prefix.uri.endsWith('/') ? prefix.uri : `${prefix.uri}/`
 
   const prevResolve = options.settings?.generate?.resolve ?? (uri => uri)
+  const settingsOverride: Options['settings'] = {
+    ...options.settings,
+    generate: {
+      ...options.settings?.generate,
+      resolve: (uri, type) => prevResolve(`/${prefix.uri}${uri}`, type),
+    },
+  }
 
-  options.settings = options.settings ?? {}
-  options.settings.generate = options.settings.generate ?? {}
-  options.settings.generate.resolve = (uri, type) => prevResolve(`/${prefix.uri}${uri}`, type)
-
-  return prefix
+  return { prefix, settingsOverride }
 }
 
 export async function resolveOptions(options: Options): Promise<ResolvedOptions> {
-  const prefix = createOutputPrefix(options)
+  const { prefix, settingsOverride } = createOutputPrefix(options)
+  const resolvedSettings = settingsOverride ?? options.settings
   const fileSystem = NodeFileSystem.init()
   const finder = fileSystem.createFileFinder(options.source)
   const uidoc = new UIDoc({
     blockParser: options.blockParser,
     renderer: options.renderer ?? (await createDefaultRenderer(options.templatePath, fileSystem)),
-    ...(options.settings ?? {}),
+    ...(resolvedSettings ?? {}),
   })
-  const assetsFromInput: ResolvedOptions['assetsFromInput'] = []
-  const isAssetFromInput: ResolvedOptions['isAssetFromInput'] = src => assetsFromInput.includes(src)
+  const assetsFromInput = new Set<string>()
+  const isAssetFromInput: ResolvedOptions['isAssetFromInput'] = src => assetsFromInput.has(src)
   const addAssetFromInput: ResolvedOptions['addAssetFromInput'] = src => {
-    if (!assetsFromInput.includes(src)) {
-      assetsFromInput.push(src)
-    }
+    assetsFromInput.add(src)
   }
   const uidocAsset: ResolvedOptions['uidocAsset'] = (
     src,
@@ -87,8 +101,8 @@ export async function resolveOptions(options: Options): Promise<ResolvedOptions>
       return
     }
 
-    if (fromInput && !assetsFromInput.includes(src)) {
-      assetsFromInput.push(src)
+    if (fromInput) {
+      assetsFromInput.add(src)
     }
 
     const method = context === 'example' ? 'addExampleAsset' : 'addAsset'

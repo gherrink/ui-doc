@@ -3,6 +3,9 @@ import type { AssetType, FileSystem } from '@ui-doc/core'
 import type { AssetOption, AssetResolved } from './asset.types'
 import type { Options, ResolvedOptions } from './option.types'
 
+const STYLE_EXTENSIONS = /\.(css|less|sass|scss)$/
+const SCRIPT_EXTENSIONS = /\.(js|ts)$/
+
 const ASSETS: {
   name: (options: Options) => string | false
   dependency: (options: Options) => string | false
@@ -27,11 +30,11 @@ const ASSETS: {
 ]
 
 export function resolveAssetType(fileName: string): AssetType | null {
-  if (fileName.match(/\.(css|less|sass|scss)$/)) {
+  if (STYLE_EXTENSIONS.test(fileName)) {
     return 'style'
   }
 
-  if (fileName.match(/\.(js|ts)$/)) {
+  if (SCRIPT_EXTENSIONS.test(fileName)) {
     return 'script'
   }
 
@@ -116,5 +119,7 @@ export async function resolveAssets(
       ...(options.assets?.page ?? []).map(async asset => resolveAssetOption(asset, 'page')),
       ...(options.assets?.example ?? []).map(async asset => resolveAssetOption(asset, 'example')),
     ])
-  ).filter(asset => !!asset && (!!asset?.source || !!asset?.fromInput)) as ResolvedOptions['assets']
+  ).filter((asset): asset is AssetResolved =>
+    asset !== null && (asset.source !== undefined || asset.fromInput === true),
+  )
 }

@@ -12,22 +12,35 @@ import { resolveOptions } from './utils/option'
 export const PLUGIN_NAME = 'ui-doc'
 
 export { Options }
+
+/**
+ * Public API exposed by the UI-Doc Rollup plugin.
+ * Access via `this.meta.plugins.find(p => p.name === 'ui-doc')?.api`
+ */
 export interface Api {
+  /** Plugin version */
   version: string
+  /** File finder instance for searching source files */
   get fileFinder(): FileFinder
+  /** File system abstraction for file operations */
   get fileSystem(): FileSystem
+  /** Resolved plugin options */
   get options(): ResolvedOptions
+  /** UI-Doc instance for documentation generation */
   get uidoc(): UIDoc
+  /** Register an asset for inclusion in documentation pages or examples */
   uidocAsset: (
     src: string,
     context: 'example' | 'page',
     options?: { fromInput?: boolean, type?: AssetType, attrs?: Record<string, string> },
   ) => void
+  /** Check if an asset was marked as coming from input */
   isAssetFromInput: (src: string) => boolean
+  /** Mark an asset as coming from input */
   addAssetFromInput: (src: string) => void
 }
 
-function handleBlockParseError(this: PluginContext, error: any) {
+function handleBlockParseError(this: PluginContext, error: unknown) {
   if (!(error instanceof BlockParseError)) {
     throw error
   }
@@ -40,6 +53,11 @@ function handleBlockParseError(this: PluginContext, error: any) {
   })
 }
 
+/**
+ * Creates a UI-Doc Rollup plugin instance.
+ * @param rawOptions - Configuration options for the plugin
+ * @returns A Rollup plugin that generates UI documentation
+ */
 export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<Api>> {
   const options = await resolveOptions(rawOptions)
   const {
@@ -80,15 +98,25 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     async buildStart(inputOptions) {
       const watchedFiles = this.getWatchFiles()
 
-      options.assets.forEach(({ name, fromInput = false }, index) => {
-        // if input is true, try to use inputOptions.input[name] as fileName
-        if (fromInput && !Array.isArray(inputOptions.input) && inputOptions.input[name]) {
-          options.assets[index].fileName = inputOptions.input[name]
-            .replace(path.resolve('.'), '')
-            .replace(/^\//g, '')
-          options.assets[index].originalFileName = inputOptions.input[name]
-          options.assets[index].type = resolveAssetType(inputOptions.input[name]) ?? undefined
+      // if fromInput is true, try to use inputOptions.input[name] as fileName
+      options.assets = options.assets.map(asset => {
+        const { name, fromInput = false } = asset
+        if (
+          fromInput
+          && typeof inputOptions.input === 'object'
+          && inputOptions.input !== null
+          && !Array.isArray(inputOptions.input)
+          && inputOptions.input[name]
+        ) {
+          const inputPath = inputOptions.input[name]
+          return {
+            ...asset,
+            fileName: inputPath.replace(path.resolve('.'), '').replace(/^\//g, ''),
+            originalFileName: inputPath,
+            type: resolveAssetType(inputPath) ?? undefined,
+          }
         }
+        return asset
       })
 
       // TODO detect template updates when templates in workspace
@@ -141,13 +169,17 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     },
 
     async writeBundle(outputOptions) {
+      if (!outputOptions.dir) {
+        return
+      }
+
       const promises: Promise<void | boolean>[] = []
 
       // if ui-doc is created into subfolder we need to copy assets referenced in examples and are generated through other plugins
       if (prefix.path) {
         // TODO may copy map file if exists
         promises.push(
-          ...assetsFromInput.map(async asset => {
+          ...[...assetsFromInput].map(async asset => {
             const destFile = `${outputOptions.dir}/${prefix.path}${asset}`
             const destDir = fileSystem.fileDirname(destFile)
 

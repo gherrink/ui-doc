@@ -33,7 +33,7 @@ export interface Options {
 
 export interface ResolvedOptions {
   assets: AssetResolved[]
-  assetsFromInput: string[]
+  assetsFromInput: Set<string>
   staticAssets?: string
   fileSystem: FileSystem
   finder: FileFinder
