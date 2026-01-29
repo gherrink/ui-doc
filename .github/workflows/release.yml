@@ -1,0 +1,66 @@
+name: Release Packages
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    # Skip release commits to prevent infinite loops
+    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release):') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Push release commits/tags
+      id-token: write # npm provenance (OIDC)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for versioner
+          fetch-tags: true
+
+      - name: Setup Git Identity
+        run: |
+          git config user.name "Release Workflow"
+          git config user.email "release-workflow@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm workspace:build
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm workspace:test
+
+      - name: Verify OIDC Environment
+        run: |
+          if [ -z "$ACTIONS_ID_TOKEN_REQUEST_URL" ] || [ -z "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ]; then
+            echo "Error: GitHub Actions OIDC environment variables not set"
+            exit 1
+          fi
+
+      - name: Release packages
+        run: pnpm -r --filter './packages/*' --workspace-concurrency=1 run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
