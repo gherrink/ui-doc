@@ -34,7 +34,7 @@ export function configTs({ pkg, external = [] }) {
         format: 'cjs',
         file: pkg.main,
         exports: 'named',
-        // footer: 'module.exports = Object.assign(exports.default, exports);',
+        footer: 'if (exports.default) { module.exports = Object.assign(exports.default, exports); }',
         sourcemap: true,
       },
       {
