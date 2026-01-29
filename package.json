@@ -10,7 +10,7 @@
     "defaults",
     "not IE 11"
   ],
-  "packageManager": "pnpm@9.1.0",
+  "packageManager": "pnpm@10.4.1",
   "scripts": {
     "clean": "pnpm -r --filter './packages/*' run clean",
     "fix": "pnpm run /^fix:/",
