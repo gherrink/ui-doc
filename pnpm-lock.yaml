@@ -147,7 +147,7 @@ importers:
   packages/html-renderer:
     dependencies:
       '@ui-doc/core':
-        specifier: workspace:^
+        specifier: workspace:^0.4.0
         version: link:../core
     optionalDependencies:
       '@highlightjs/cdn-assets':
@@ -173,10 +173,10 @@ importers:
   packages/rollup:
     dependencies:
       '@ui-doc/core':
-        specifier: workspace:>=0.3.0
+        specifier: workspace:^0.4.0
         version: link:../core
       '@ui-doc/node':
-        specifier: workspace:>=0.2.0
+        specifier: workspace:^0.3.0
         version: link:../node
       rollup:
         specifier: ^4.0.0
@@ -189,7 +189,7 @@ importers:
   packages/vite:
     dependencies:
       '@ui-doc/rollup':
-        specifier: workspace:>=0.3.0
+        specifier: workspace:^0.4.0
         version: link:../rollup
     devDependencies:
       picocolors:

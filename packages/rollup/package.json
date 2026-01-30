@@ -54,12 +54,12 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@ui-doc/html-renderer": "workspace:>=0.3.0",
+    "@ui-doc/html-renderer": "workspace:^1.1.0",
     "rollup": "^4.0.0"
   },
   "dependencies": {
-    "@ui-doc/core": "workspace:>=0.3.0",
-    "@ui-doc/node": "workspace:>=0.2.0"
+    "@ui-doc/core": "workspace:^0.4.0",
+    "@ui-doc/node": "workspace:^0.3.0"
   },
   "devDependencies": {
     "@ui-doc/core": "workspace:*",
