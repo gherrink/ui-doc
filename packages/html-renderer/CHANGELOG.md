@@ -1,5 +1,26 @@
 # @ui-doc/html-renderer ChangeLog
 
+## v1.0.0
+
+_2026-01-30_
+
+### Breaking Changes
+
+- html-renderer!: improve type safety and fix async bug (1b84c48)
+
+### Bugfixes
+
+- core,html-renderer,node,rollup,vite,demos: resolve TypeScript type errors in test files (f6fb947)
+- core,html-renderer,rollup,vite: resolve type errors across all packages (94eea25)
+- core,html-renderer,node,rollup,vite: replace tsconfig symlinks with real files (52b7031)
+
+### Updates
+
+- core,html-renderer,node,rollup,vite: expand test coverage across all packages (a19bdc5)
+- core,html-renderer,node,rollup,vite: improve README documentation across all packages (0bd44bb)
+- core,node,html-renderer,rollup,vite: improve package scripts (ae91411)
+- core,html-renderer: re-enable markdownlint rules and fix violations (d2a63cd)
+
 ## v0.4.0
 
 _2024-10-03_
