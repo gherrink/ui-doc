@@ -7,7 +7,7 @@
   "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/node#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gherrink/ui-doc",
+    "url": "git+https://github.com/gherrink/ui-doc.git",
     "directory": "packages/node"
   },
   "bugs": "https://github.com/gherrink/ui-doc/issues",
