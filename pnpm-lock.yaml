@@ -24,8 +24,8 @@ importers:
         specifier: ^19.2.2
         version: 19.2.2
       '@dot/versioner':
-        specifier: ^0.3.4
-        version: 0.3.4
+        specifier: ^0.4.3
+        version: 0.4.3
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.24.6)(@types/babel__core@7.20.5)(rollup@4.18.0)
@@ -958,12 +958,12 @@ packages:
     peerDependencies:
       postcss-selector-parser: ^6.0.13
 
-  '@dot/log@0.1.5':
-    resolution: {integrity: sha512-ECraEVJWv2f2mWK93lYiefUkphStVlKD6yKDzisuoEmxuLKrxO9iGetHK2DoEAkj7sxjE886n0OUVVCUx0YPNg==}
+  '@dot/log@0.2.1':
+    resolution: {integrity: sha512-mR/UL2GsolK5kIiCR3t+QmfuDfsY+WHy3hcw3VmAL8T51Aqg2S1bCSmW4SpWZRRpoVFT7Hingw3GVlEfukaCdg==}
     engines: {node: '>=18'}
 
-  '@dot/versioner@0.3.4':
-    resolution: {integrity: sha512-BVejaRMZ+KK10LlSd+mtGuiy0nS6NjWD2vR1VYa7vkANq+L6WOkGwVFUEwDz50UwnqWJLBw4uh/AqSGGBn5z0A==}
+  '@dot/versioner@0.4.3':
+    resolution: {integrity: sha512-FYEuujMNyFVTiIrx9VBOH72OpSrn1EoL8xFH4+wEQuF/MEPDEYX4lMQUkEk6rWFw79xkGBS54vFLghYjnMcbyA==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -5496,7 +5496,7 @@ snapshots:
   '@commitlint/is-ignored@19.2.2':
     dependencies:
       '@commitlint/types': 19.0.3
-      semver: 7.6.2
+      semver: 7.7.3
 
   '@commitlint/lint@19.2.2':
     dependencies:
@@ -5584,19 +5584,19 @@ snapshots:
     dependencies:
       postcss-selector-parser: 6.1.0
 
-  '@dot/log@0.1.5':
+  '@dot/log@0.2.1':
     dependencies:
       chalk: 4.1.2
       loglevelnext: 6.0.0
       p-defer: 3.0.0
 
-  '@dot/versioner@0.3.4':
+  '@dot/versioner@0.4.3':
     dependencies:
-      '@dot/log': 0.1.5
+      '@dot/log': 0.2.1
       chalk: 4.1.2
       conventional-commits-parser: 3.2.4
       execa: 5.1.1
-      semver: 7.6.2
+      semver: 7.7.3
       source-map-support: 0.5.21
       write-pkg: 4.0.0
       yargs-parser: 21.1.1
@@ -7122,7 +7122,7 @@ snapshots:
 
   execa@5.1.1:
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.6
       get-stream: 6.0.1
       human-signals: 2.1.0
       is-stream: 2.0.1
@@ -8175,7 +8175,7 @@ snapshots:
     dependencies:
       hosted-git-info: 4.1.0
       is-core-module: 2.13.1
-      semver: 7.6.2
+      semver: 7.7.3
       validate-npm-package-license: 3.0.4
 
   normalize-path@3.0.0: {}
