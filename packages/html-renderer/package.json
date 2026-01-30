@@ -1,6 +1,6 @@
 {
   "name": "@ui-doc/html-renderer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "HTML renderer for UI-Doc.",
   "author": "Maurice Busch",
   "license": "MIT",
