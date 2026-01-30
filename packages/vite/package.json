@@ -1,6 +1,6 @@
 {
   "name": "@ui-doc/vite",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Vite plugin for UI-Doc generation and preview.",
   "author": "Maurice Busch",
   "license": "MIT",
