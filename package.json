@@ -21,7 +21,7 @@
     "lint:css": "stylelint 'packages/**/*.css' 'demos/**/*.css' --cache",
     "lint:docs": "markdownlint-cli2 '**/*.md'",
     "lint:js": "eslint --cache",
-    "package:release": "versioner --stripShortName='^@.+/' --publish=false --target",
+    "package:release": "versioner --stripShortName='^@.+/' --no-publish --target",
     "package:release-dry": "versioner --dry --stripShortName='^@.+/' --target",
     "package:publish": "npm publish --provenance --access public",
     "preinstall": "npx only-allow pnpm",
