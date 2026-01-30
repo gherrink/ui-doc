@@ -52,12 +52,33 @@ jobs:
       - name: Test
         run: pnpm workspace:test
 
-      - name: Configure npm authentication
-        run: npm config set //registry.npmjs.org/:_authToken $NPM_TOKEN
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: OIDC Preflight
+        run: |
+          if [ -z "$ACTIONS_ID_TOKEN_REQUEST_URL" ] || [ -z "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ]; then
+            echo "Error: GitHub Actions OIDC environment variables not set"
+            echo "Ensure job has 'id-token: write' permission"
+            exit 1
+          fi
+          echo "OIDC environment verified"
 
-      - name: Release packages
+      - name: Version packages
         run: pnpm -r --filter './packages/*' --workspace-concurrency=1 run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish packages to npm (OIDC)
+        run: |
+          for pkg in packages/*; do
+            if [ -f "$pkg/package.json" ]; then
+              name=$(node -p "require('./$pkg/package.json').name")
+              local_version=$(node -p "require('./$pkg/package.json').version")
+              remote_version=$(npm view "$name" version 2>/dev/null || echo "0.0.0")
+
+              if [ "$local_version" != "$remote_version" ]; then
+                echo "Publishing $name@$local_version (was $remote_version)"
+                (cd "$pkg" && npm publish --provenance --access public)
+              else
+                echo "Skipping $name@$local_version (already published)"
+              fi
+            fi
+          done
