@@ -1,5 +1,23 @@
 # @ui-doc/vite ChangeLog
 
+## v0.3.2
+
+_2026-01-30_
+
+### Bugfixes
+
+- rollup,vite: enable CJS/ESM interop for dynamic imports (1cdf4de)
+- core,html-renderer,node,rollup,vite,demos: resolve TypeScript type errors in test files (f6fb947)
+- core,html-renderer,rollup,vite: resolve type errors across all packages (94eea25)
+- core,html-renderer,node,rollup,vite: replace tsconfig symlinks with real files (52b7031)
+
+### Updates
+
+- core,html-renderer,node,rollup,vite: expand test coverage across all packages (a19bdc5)
+- core,html-renderer,node,rollup,vite: improve README documentation across all packages (0bd44bb)
+- core,node,html-renderer,rollup,vite: improve package scripts (ae91411)
+- vite: improve type safety and code quality (78d8b9a)
+
 ## v0.3.1
 
 _2024-10-03_
