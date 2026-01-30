@@ -10,76 +10,66 @@ permissions:
 
 jobs:
   publish:
-    # Skip release commits to prevent infinite loops
-    if: ${{ !startsWith(github.event.head_commit.message, 'chore(release):') }}
+    if: |
+      !startsWith(github.event.head_commit.message, 'chore(release):') &&
+      !startsWith(github.event.head_commit.message, 'chore(repo):')
+
     runs-on: ubuntu-latest
+    name: release
+
     permissions:
-      contents: write # Push release commits/tags
-      id-token: write # npm provenance (OIDC)
+      contents: write
+      id-token: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Full history for versioner
+          fetch-depth: 0
           fetch-tags: true
 
-      - name: Setup Git Identity
-        run: |
-          git config user.name "Release Workflow"
-          git config user.email "release-workflow@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-
-      - name: Install Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: 'https://registry.npmjs.org'
-          cache: pnpm
 
-      - name: Install dependencies
+      - name: Install PNPM
+        uses: pnpm/action-setup@v4
+
+      - name: Sanity Check
+        run: |
+          echo branch `git branch --show-current`;
+          echo node `node -v`;
+          echo pnpm `pnpm -v`
+
+      - name: Set Git Config
+        run: |
+          git config pull.rebase false
+          git config --global user.email "release-workflow@users.noreply.github.com"
+          git config --global user.name "Release Workflow"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+      - name: pnpm install
         run: pnpm install --frozen-lockfile
 
-      - name: Build packages
+      - name: Build All Packages
         run: pnpm workspace:build
 
-      - name: Lint
+      - name: Lint Repo
         run: pnpm lint
 
-      - name: Test
+      - name: Run Tests
         run: pnpm workspace:test
 
       - name: OIDC Preflight
+        shell: bash
         run: |
-          if [ -z "$ACTIONS_ID_TOKEN_REQUEST_URL" ] || [ -z "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ]; then
-            echo "Error: GitHub Actions OIDC environment variables not set"
-            echo "Ensure job has 'id-token: write' permission"
+          if [ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ] || [ -z "${ACTIONS_ID_TOKEN_REQUEST_TOKEN:-}" ]; then
+            echo "Missing GitHub Actions OIDC env vars (ACTIONS_ID_TOKEN_REQUEST_URL/TOKEN)." >&2
+            echo "Ensure the job requests permissions: id-token: write." >&2
             exit 1
           fi
-          echo "OIDC environment verified"
+          echo "OIDC env vars detected."
 
-      - name: Version packages
-        run: pnpm -r --filter './packages/*' --workspace-concurrency=1 run release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Publish packages to npm (OIDC)
-        run: |
-          for pkg in packages/*; do
-            if [ -f "$pkg/package.json" ]; then
-              name=$(node -p "require('./$pkg/package.json').name")
-              local_version=$(node -p "require('./$pkg/package.json').version")
-              remote_version=$(npm view "$name" version 2>/dev/null || echo "0.0.0")
-
-              if [ "$local_version" != "$remote_version" ]; then
-                echo "Publishing $name@$local_version (was $remote_version)"
-                (cd "$pkg" && npm publish --provenance --access public)
-              else
-                echo "Skipping $name@$local_version (already published)"
-              fi
-            fi
-          done
+      - name: Release and Publish Changed Packages
+        run: pnpm -r --filter './packages/*' --workspace-concurrency=1 release
