@@ -1,4 +1,4 @@
-import type { BlockCode, BlockColor, BlockExample, BlockIcon, BlockSpace } from './Block.types'
+import type { BlockCode, BlockColor, BlockExample, BlockIcon, BlockSpace, BlockVariation } from './Block.types'
 
 export interface ContextEntry {
   id: string
@@ -14,6 +14,8 @@ export interface ContextEntry {
   spaces?: BlockSpace[]
   icons?: BlockIcon[]
   hideCode?: boolean
+  showcase?: ContextShowcase
+  variationdemo?: ContextVariationdemo
 }
 
 export interface ContextExample extends BlockExample {
@@ -21,6 +23,35 @@ export interface ContextExample extends BlockExample {
   type: 'html'
   src: string
   file: string
+}
+
+export interface ContextVariation extends BlockVariation {
+  id: string
+}
+
+export interface ContextShowcaseItem {
+  variation: ContextVariation
+  src: string
+  file: string
+}
+
+export interface ContextShowcase {
+  sourceKey: string
+  sourceExample: BlockExample
+  items: ContextShowcaseItem[]
+}
+
+export interface ContextVariationdemoItem {
+  componentKey: string
+  componentTitle: string
+  src: string
+  file: string
+}
+
+export interface ContextVariationdemo {
+  variationKey: string
+  variation: ContextVariation
+  items: ContextVariationdemoItem[]
 }
 
 export interface MenuItem {
@@ -37,6 +68,11 @@ export interface Asset {
   attrs?: Record<string, string>
 }
 
+export interface ContextShowcaseExample extends ContextExample {
+  variationKey: string
+  variationName: string
+}
+
 export interface Context {
   entries: Record<string, ContextEntry>
   exampleAssets: Asset[]
@@ -44,6 +80,8 @@ export interface Context {
   menu: MenuItem[]
   pageAssets: Asset[]
   pages: Record<string, ContextEntry>
+  showcases: Record<string, ContextShowcaseExample>
+  variations: Record<string, ContextVariation>
 }
 
 export interface GenerateContext {

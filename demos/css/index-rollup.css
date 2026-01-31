@@ -47,7 +47,7 @@
 /**
   * Layouts are the outermost layer of the design. They define the structure of the page.
   *
-  * @page layout Layout
+  * @page layouts Layouts
   * @order 50
   */
 @import url("04_layouts/body.css");

@@ -242,6 +242,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     const regexIndex = new RegExp(`^/${uriPrefix}?$`)
     const regexPage = new RegExp(`^/${uriPrefix}([a-z0-9_\\-]+).html$`)
     const regexExample = new RegExp(`^/${uriPrefix}examples/([a-z0-9_\\-]+).html$`)
+    const regexShowcase = new RegExp(`^/${uriPrefix}showcases/([a-z0-9_\\-]+).html$`)
     const regexAsset = new RegExp(`^/${uriPrefix}([a-z0-9\\._\\-]+)$`)
 
     server.middlewares.use((req, res, next) => {
@@ -278,6 +279,13 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
 
       if (exampleMatch) {
         writeContent(uidoc.example(exampleMatch[1]))
+        return
+      }
+
+      const showcaseMatch = originalUrl.match(regexShowcase)
+
+      if (showcaseMatch) {
+        writeContent(uidoc.showcase(showcaseMatch[1]))
         return
       }
 

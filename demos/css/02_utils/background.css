@@ -21,24 +21,53 @@
   * <div class="bg bg-blue" style="min-height: 100px"></div>
   * <div class="bg bg-gray" style="min-height: 100px"></div>
   */
+
+/**
+  * @location utils.background.colors.black Black
+  * @variation bg.black Black Background
+  * <div class="bg bg-black" style="padding: 1rem;">{{content}}</div>
+  * @example html
+  * <div class="bg bg-black" style="min-height: 100px"></div>
+  */
 .bg-black {
   --bg-color: var(--color-black);
   --font-color: var(--color-white);
   --accent-color: var(--color-yellow);
 }
 
+/**
+  * @location utils.background.colors.white White
+  * @variation bg.white White Background
+  * <div class="bg bg-white" style="padding: 1rem;">{{content}}</div>
+  * @example html
+  * <div class="bg bg-white" style="min-height: 100px"></div>
+  */
 .bg-white {
   --bg-color: var(--color-white);
   --font-color: var(--color-black);
   --accent-color: var(--color-yellow);
 }
 
+/**
+  * @location utils.background.colors.blue Blue
+  * @variation bg.blue Blue Background
+  * <div class="bg bg-blue" style="padding: 1rem;">{{content}}</div>
+  * @example html
+  * <div class="bg bg-blue" style="min-height: 100px"></div>
+  */
 .bg-blue {
   --bg-color: var(--color-blue);
   --font-color: var(--color-white);
   --accent-color: var(--color-yellow);
 }
 
+/**
+  * @location utils.background.colors.gray Gray
+  * @variation bg.gray Gray Background
+  * <div class="bg bg-gray" style="padding: 1rem;">{{content}}</div>
+  * @example html
+  * <div class="bg bg-gray" style="min-height: 100px"></div>
+  */
 .bg-gray {
   --bg-color: var(--color-gray);
   --font-color: var(--color-black);

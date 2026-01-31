@@ -1,0 +1,12 @@
+{{if:items}}
+<div class="showcase">
+  {{for:items}}
+  <div class="showcase-item">
+    <div class="showcase-label">{{var:variation.name}}</div>
+    <div class="showcase-preview" data-example>
+      <iframe src="{{var:src}}"></iframe>
+    </div>
+  </div>
+  {{/for}}
+</div>
+{{/if}}
