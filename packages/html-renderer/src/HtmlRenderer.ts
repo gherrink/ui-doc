@@ -1,9 +1,10 @@
-import type { Asset, GenerateContext, GenerateExampleContext } from '@ui-doc/core'
+import type { Asset, GenerateContext, GenerateExampleContext, Logger } from '@ui-doc/core'
 
 import type { Node } from './nodes'
 import type { Parser } from './Parser.types'
 import type { Reader } from './Reader.types'
 import type { RenderContext, Renderer, SourceInput } from './Renderer.types'
+import { noopLogger } from '@ui-doc/core'
 import { HTMLRendererError, HTMLRendererSyntaxError, ParserError } from './errors'
 import { InlineReader } from './InlineReader'
 
@@ -21,29 +22,35 @@ function instanceofReader(object: unknown): object is Reader {
 export class HtmlRenderer implements Renderer {
   protected parser: Parser
 
+  protected logger: Logger
+
   protected layouts: Record<string, Node> = {}
 
   protected partials: Record<string, Node> = {}
 
   protected pages: Record<string, Node> = {}
 
-  public constructor(parser: Parser) {
+  public constructor(parser: Parser, logger?: Logger) {
     this.parser = parser
+    this.logger = logger ?? noopLogger
   }
 
   public addLayout(name: string, layout: SourceInput): this {
+    this.logger.debug(`Adding layout "${name}"`, { phase: 'render' })
     this.layouts[name] = this.parse(layout)
 
     return this
   }
 
   public addPartial(name: string, partial: SourceInput): this {
+    this.logger.debug(`Adding partial "${name}"`, { phase: 'render' })
     this.partials[name] = this.parse(partial)
 
     return this
   }
 
   public addPage(name: string, page: SourceInput): this {
+    this.logger.debug(`Adding page template "${name}"`, { phase: 'render' })
     this.pages[name] = this.parse(page)
 
     return this
@@ -73,6 +80,7 @@ export class HtmlRenderer implements Renderer {
 
   public generate(context: GenerateContext | GenerateExampleContext, layout?: string): string {
     layout = layout ?? 'default'
+    this.logger.debug(`Generating output with layout "${layout}"`, { phase: 'render' })
     const content = this.layouts[layout]
 
     if (content === undefined) {

@@ -7,10 +7,12 @@ import type { Block } from './Block.types'
 import type { BlockParser, BlockParserContext } from './BlockParser.types'
 import type { BlockParserEventMap as EventMap } from './BlockParserEvent.types'
 import type { DescriptionParser } from './DescriptionParser.types'
+import type { Logger } from './Logger.types'
 import type { TagTransformer, TagTransformFunction } from './tag-transformers/tag-transformer.types'
 import { parse as parseComments } from 'comment-parser'
 import { BlockParseError, TagTransformerError } from './errors'
 import { EventEmitterBase } from './EventEmitterBase'
+import { noopLogger } from './Logger'
 import tagTransformers from './tag-transformers'
 
 type BlockParserErrorCreate = (
@@ -24,10 +26,13 @@ export class CommentBlockParser extends EventEmitterBase<EventMap> implements Bl
 
   protected descriptionParser: DescriptionParser
 
-  constructor(descriptionParser: DescriptionParser) {
+  protected logger: Logger
+
+  constructor(descriptionParser: DescriptionParser, logger?: Logger) {
     super()
     tagTransformers.forEach(tag => this.registerTagTransformer(tag))
     this.descriptionParser = descriptionParser
+    this.logger = logger ?? noopLogger
   }
 
   public registerTagTransformer({ name, transform: parse }: TagTransformer): this {
@@ -37,6 +42,7 @@ export class CommentBlockParser extends EventEmitterBase<EventMap> implements Bl
   }
 
   public parse(context: BlockParserContext): Block[] {
+    this.logger.debug(`Parsing ${context.identifier}`, { source: context.identifier, phase: 'parse' })
     const createError: BlockParserErrorCreate = (reason, comment, { tag = undefined } = {}) => {
       const code = comment.source.map(line => line.source).join('\n')
 
@@ -49,9 +55,13 @@ export class CommentBlockParser extends EventEmitterBase<EventMap> implements Bl
       })
     }
 
-    return parseComments(context.content, { spacing: 'preserve' })
+    const blocks = parseComments(context.content, { spacing: 'preserve' })
       .map((comment: CommentBlock) => this.toBlock(comment, createError))
       .filter((entry): entry is Block => !!entry)
+
+    this.logger.debug(`Found ${blocks.length} valid blocks`, { source: context.identifier, phase: 'parse' })
+
+    return blocks
   }
 
   protected toBlock(comment: CommentBlock, createError: BlockParserErrorCreate): Block | undefined {
@@ -120,6 +130,9 @@ export class CommentBlockParser extends EventEmitterBase<EventMap> implements Bl
   }
 }
 
-export function createCommentBlockParser(descriptionParser: DescriptionParser): CommentBlockParser {
-  return new CommentBlockParser(descriptionParser)
+export function createCommentBlockParser(
+  descriptionParser: DescriptionParser,
+  logger?: Logger,
+): CommentBlockParser {
+  return new CommentBlockParser(descriptionParser, logger)
 }

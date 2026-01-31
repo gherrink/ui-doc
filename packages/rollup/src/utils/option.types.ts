@@ -13,6 +13,7 @@ import type { AssetOption, AssetResolved } from './asset.types'
 export interface Options {
   renderer?: Renderer
   blockParser?: BlockParser
+  debug?: boolean
   source: string[]
   templatePath?: string
   output?: {
