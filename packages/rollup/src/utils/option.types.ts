@@ -41,6 +41,7 @@ export interface ResolvedOptions {
     path: string
     uri: string
   }
+  templatePath?: string
   uidoc: UIDoc
   source: string[]
   uidocAsset: Api['uidocAsset']

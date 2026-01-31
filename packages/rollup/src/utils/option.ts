@@ -122,6 +122,8 @@ export async function resolveOptions(options: Options): Promise<ResolvedOptions>
     prefix,
     source: options.source,
     staticAssets: options.assets?.static,
+    templatePath:
+      options.templatePath !== undefined ? fileSystem.resolve(options.templatePath) : undefined,
     uidoc,
     uidocAsset,
     isAssetFromInput,

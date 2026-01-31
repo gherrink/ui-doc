@@ -1,5 +1,5 @@
 import type { Api as RollupPluginApi, Options as RollupPluginOptions } from '@ui-doc/rollup'
-import type { InputOptions, OutputBundle, OutputOptions, PluginContext } from 'rollup'
+import type { ChangeEvent, InputOptions, OutputBundle, OutputOptions, PluginContext } from 'rollup'
 import type { Plugin, ViteDevServer } from 'vite'
 
 import path from 'node:path'
@@ -43,6 +43,15 @@ type GenerateBundleHook = (
   options: OutputOptions,
   bundle: OutputBundle,
   isWrite: boolean,
+) => Promise<void> | void
+
+/**
+ * Rollup hook function type for watchChange.
+ */
+type WatchChangeHook = (
+  this: PluginContext,
+  id: string,
+  change: { event: ChangeEvent },
 ) => Promise<void> | void
 
 /**
@@ -121,6 +130,8 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
   }
   api.version = version
 
+  let viteServer: ViteDevServer | undefined
+
   plugin.onLog = (_level, log) => {
     // hide rollup output logs
     if (log.plugin === ROLLUP_PLUGIN_NAME && log.pluginCode === 'OUTPUT') {
@@ -134,6 +145,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
 
   const orgBuildStart = plugin.buildStart as BuildStartHook | undefined
   const orgGenerateBundle = plugin.generateBundle as GenerateBundleHook | undefined
+  const orgWatchChange = plugin.watchChange as WatchChangeHook | undefined
 
   plugin.buildStart = async function (inputOptions) {
     if (orgBuildStart) {
@@ -196,7 +208,26 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     }
   }
 
+  plugin.watchChange = async function (id, change) {
+    if (orgWatchChange) {
+      await orgWatchChange.call(this, id, change)
+    }
+
+    // Trigger reload when template files change in dev mode
+    const templatePath = api.options.templatePath
+    if (
+      serving
+      && viteServer !== undefined
+      && templatePath !== undefined
+      && id.startsWith(templatePath)
+      && (change.event === 'update' || change.event === 'create')
+    ) {
+      viteServer.ws.send({ type: 'full-reload', path: '*' })
+    }
+  }
+
   plugin.configureServer = async function (server: ViteDevServer) {
+    viteServer = server
     const uidoc = api.uidoc
     const uriPrefix = api.options.prefix.uri
     const assets = api.options.assets ?? []

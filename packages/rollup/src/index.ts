@@ -8,6 +8,7 @@ import { BlockParseError } from '@ui-doc/core'
 import { version } from '../package.json'
 import { resolveAssetType } from './utils/asset'
 import { resolveOptions } from './utils/option'
+import { isTemplateFile, reloadTemplate } from './utils/template'
 
 export const PLUGIN_NAME = 'ui-doc'
 
@@ -119,7 +120,27 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         return asset
       })
 
-      // TODO detect template updates when templates in workspace
+      if (options.templatePath !== undefined) {
+        const templateDirs = ['layouts', 'pages', 'partials']
+        const templateGlobs: string[] = []
+
+        for (const dir of templateDirs) {
+          const dirPath = `${options.templatePath}/${dir}`
+          if (await fileSystem.isDirectory(dirPath)) {
+            templateGlobs.push(`${dirPath}/*.html`)
+          }
+        }
+
+        if (templateGlobs.length > 0) {
+          const templateFinder = fileSystem.createFileFinder(templateGlobs)
+
+          await templateFinder.search(async (file: string) => {
+            if (!watchedFiles.includes(file)) {
+              this.addWatchFile(file)
+            }
+          })
+        }
+      }
 
       await finder.search(async (file: string) => {
         if (!watchedFiles.includes(file)) {
@@ -203,6 +224,13 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
 
     async watchChange(id, change) {
       try {
+        if (options.templatePath !== undefined && isTemplateFile(id, options.templatePath)) {
+          if (change.event === 'update' || change.event === 'create') {
+            await reloadTemplate(id, uidoc.renderer, fileSystem)
+          }
+          return
+        }
+
         if (uidoc.sourceExists(id)) {
           if (change.event === 'update') {
             uidoc.sourceUpdate(id, await fileSystem.fileRead(id))
