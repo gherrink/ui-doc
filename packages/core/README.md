@@ -109,7 +109,7 @@ Displays both a live preview and the code. The preview shows how your component 
  */
 ```
 
-![Code and its output](../../doc-assets/core/example.png)
+![Code and its output](../../docs/_assets/core/example.png)
 
 ### @code
 
@@ -124,7 +124,7 @@ Displays only the code block without a live preview.
  */
 ```
 
-![Code tag result](../../doc-assets/core/code.png)
+![Code tag result](../../docs/_assets/core/code.png)
 
 When used with `@example`, the code from `@code` overrides the example code. This is useful for hiding inline styling or extra HTML needed for display:
 
@@ -141,7 +141,7 @@ When used with `@example`, the code from `@code` overrides the example code. Thi
  */
 ```
 
-![Code with example tag result](../../doc-assets/core/code_with_example.png)
+![Code with example tag result](../../docs/_assets/core/code_with_example.png)
 
 ### @hideCode
 
@@ -161,7 +161,7 @@ Hides the code block when you only want to show a visual example.
  */
 ```
 
-![Example with hideCode tag result](../../doc-assets/core/hide_code.png)
+![Example with hideCode tag result](../../docs/_assets/core/hide_code.png)
 
 ### @page
 
@@ -278,7 +278,7 @@ Defines colors used in your styles. Multiple colors can be defined in one block 
  */
 ```
 
-![Color tag result](../../doc-assets/core/color.png)
+![Color tag result](../../docs/_assets/core/color.png)
 
 **Syntax:**
 
@@ -312,7 +312,7 @@ Defines spacing values used in your layout. Multiple spaces can be defined in on
  */
 ```
 
-![Space tag result](../../doc-assets/core/space.png)
+![Space tag result](../../docs/_assets/core/space.png)
 
 **Syntax:**
 
@@ -337,7 +337,7 @@ Defines icons from your icon font. Multiple icons can be defined in one block.
  */
 ```
 
-![Icon tag result](../../doc-assets/core/icon.png)
+![Icon tag result](../../docs/_assets/core/icon.png)
 
 **Syntax:**
 
