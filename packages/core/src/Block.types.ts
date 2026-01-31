@@ -37,6 +37,12 @@ export type BlockIcon = BlockEntry & {
   value: CSSValue | CSSVariable
 }
 
+export type BlockVariation = BlockEntry & {
+  key: string
+  name: string
+  wrapper: string
+}
+
 export interface Block {
   [key: string]: unknown
   key: string
@@ -52,4 +58,11 @@ export interface Block {
   spaces?: BlockSpace[]
   icons?: BlockIcon[]
   hideCode?: boolean
+  variation?: BlockVariation
+  variations?: string[]
+  variationsExclude?: string[]
+  showcase?: string
+  variationdemo?: string
+  variationdemoInclude?: string[]
+  variationdemoExclude?: string[]
 }

@@ -473,6 +473,282 @@ Displays each icon with its variable name and description.
 }
 ```
 
+### @variation
+
+Defines a reusable wrapper context that components can be displayed in. The variation system allows showing components in multiple environments (e.g., light/dark backgrounds, different themes).
+
+**Syntax:**
+
+```text
+@variation {variation-key} [Display Name]
+@example
+[Wrapper HTML with {{content}} placeholder]
+```
+
+**Parameters:**
+
+| Parameter | Required | Type | Description |
+|-----------|----------|------|-------------|
+| variation-key | Yes | `string` | Unique identifier using dot notation (e.g., `bg.light`, `theme.primary`) |
+| Display Name | Yes | `string` | Human-readable name for the variation |
+
+**Example:**
+
+```css
+/**
+ * Light background variation for component showcase.
+ *
+ * @location _variations.backgrounds Backgrounds
+ * @variation bg.light Light Background
+ * @example
+ * <div class="bg bg-light" style="padding: 2rem;">
+ *   {{content}}
+ * </div>
+ */
+.bg-light {
+  --bg-color: var(--color-white);
+  --font-color: var(--color-black);
+}
+
+/**
+ * Dark background variation for component showcase.
+ *
+ * @location _variations.backgrounds Backgrounds
+ * @variation bg.dark Dark Background
+ * @example
+ * <div class="bg bg-dark" style="padding: 2rem;">
+ *   {{content}}
+ * </div>
+ */
+.bg-dark {
+  --bg-color: var(--color-black);
+  --font-color: var(--color-white);
+}
+```
+
+**Output:**
+
+Creates variation definitions that can be applied to components using `@variations`. The wrapper HTML must include `{{content}}` as a placeholder where component examples will be injected.
+
+**Key features:**
+
+- **Hierarchical keys:** Use dot notation like `bg.light`, `bg.dark` to create groups
+- **Group matching:** Components can reference `bg` to use all `bg.*` variations
+- **Required placeholder:** Wrapper must contain `{{content}}`
+
+### @variations
+
+Specifies which variations a component should be displayed in. Supports pattern matching including groups, wildcards, and exclusions.
+
+**Syntax:**
+
+```text
+@variations [pattern1[, pattern2, ...]]
+```
+
+**Parameters:**
+
+| Parameter | Required | Type | Description |
+|-----------|----------|------|-------------|
+| patterns | No | `string` | Comma-separated list of variation patterns (empty/no tag = all variations) |
+
+**Pattern matching:**
+
+| Pattern | Matches | Example |
+|---------|---------|---------|
+| `bg` | All variations in the `bg` group | `bg.light`, `bg.dark`, etc. |
+| `bg.light` | Exact match only | `bg.light` |
+| `*` | All defined variations | Everything |
+| `bg, theme` | Multiple groups | All `bg.*` and `theme.*` |
+| `bg, -bg.dark` | Group with exclusion | All `bg.*` except `bg.dark` |
+| `*, -bg.dark` | Wildcard with exclusion | All variations except `bg.dark` |
+| Empty or no tag | All variations | Same as `*` |
+
+**Example:**
+
+```css
+/**
+ * Primary button shown in all background variations.
+ *
+ * @location components.button.primary Primary Button
+ * @variations bg
+ * @example
+ * <button class="btn btn-primary">Save Changes</button>
+ */
+.btn-primary {
+  background: var(--color-primary);
+  color: white;
+}
+
+/**
+ * Secondary button shown in all backgrounds except dark.
+ *
+ * @location components.button.secondary Secondary Button
+ * @variations bg, -bg.dark
+ * @example
+ * <button class="btn btn-secondary">Cancel</button>
+ */
+.btn-secondary {
+  background: var(--color-secondary);
+  color: white;
+}
+
+/**
+ * Alert shown in all variations.
+ *
+ * @location components.alert Alert
+ * @variations *
+ * @example
+ * <div class="alert">Important message</div>
+ */
+.alert {
+  padding: 1rem;
+  border-radius: 4px;
+}
+```
+
+**Output:**
+
+When used with `@showcase` or the variation rendering system, displays the component wrapped in each matching variation.
+
+### @showcase
+
+Creates a documentation block that displays a component in all its applicable variations. References another block by its key and renders that block's example in each variation.
+
+**Syntax:**
+
+```text
+@showcase {page-key.section-key}
+```
+
+**Parameters:**
+
+| Parameter | Required | Type | Description |
+|-----------|----------|------|-------------|
+| page-key.section-key | Yes | `string` | Block key to showcase (format: `page.section`) |
+
+**Example:**
+
+```css
+/**
+ * Showcase the primary button across all its variations.
+ *
+ * @location showcases.buttons Primary Button Showcase
+ * @showcase components.button.primary
+ */
+
+/**
+ * Override variations to show only on light backgrounds.
+ *
+ * @location showcases.buttons.light Primary Button (Light Only)
+ * @showcase components.button.primary
+ * @variations bg.light
+ */
+```
+
+**Output:**
+
+Creates a section showing the referenced component rendered once in each applicable variation wrapper. If the showcase block includes a `@variations` tag, it overrides the source block's variations.
+
+**How it works:**
+
+1. References the target block (e.g., `components.button.primary`)
+2. Uses the target block's `@example` content
+3. Wraps the example in each variation from the target's `@variations` (or showcase's `@variations` if overridden)
+4. Displays all variations in sequence
+
+### @variationdemo
+
+Creates a documentation block that displays multiple components within a single variation wrapper. This is the inverse of `@showcase` - instead of showing one component in multiple variations, it shows multiple components in one variation.
+
+**Syntax:**
+
+```text
+@variationdemo {variation-key}[, component-patterns]
+```
+
+**Parameters:**
+
+| Parameter | Required | Type | Description |
+|-----------|----------|------|-------------|
+| variation-key | Yes | `string` | The variation to use as the wrapper (e.g., `bg.light`, `bg.dark`) |
+| component-patterns | No | `string` | Comma-separated component patterns with optional `+` or `-` prefixes |
+
+**Pattern modes:**
+
+| Prefix | Mode | Behavior |
+|--------|------|----------|
+| None or `-` | Auto-discover | Find all components with matching `@variations`, optionally exclude specific components |
+| `+` | Explicit | Only include explicitly specified components |
+
+**Example:**
+
+```css
+/**
+ * Auto-discover all components that work with bg.light variation.
+ * This finds all blocks with @variations that match "bg.light".
+ *
+ * @location demos.backgrounds.light Light Background Demo
+ * @variationdemo bg.light
+ */
+
+/**
+ * Auto-discover with exclusion.
+ * Shows all bg.dark components except the white button.
+ *
+ * @location demos.backgrounds.dark Dark Background Demo
+ * @variationdemo bg.dark, -components.button.white
+ */
+
+/**
+ * Explicit mode - only show specified components.
+ * The + prefix switches to explicit selection.
+ *
+ * @location demos.backgrounds.selected Selected Components
+ * @variationdemo bg.blue, +components.button.black, +components.input
+ */
+
+/**
+ * Multiple exclusions in auto-discover mode.
+ *
+ * @location demos.backgrounds.filtered Filtered Demo
+ * @variationdemo bg.gray, -components.button.white, -components.card
+ */
+```
+
+**Output:**
+
+Creates a section showing multiple components rendered together within the specified variation wrapper. The variation wrapper is applied once, and all matching components are displayed inside it.
+
+**Pattern matching rules:**
+
+1. **Auto-discover mode** (no `+` prefix):
+   - Finds all blocks where `@variations` matches the specified variation key
+   - Use `-` prefix to exclude specific components
+   - Example: `bg.black` finds all components with `@variations bg` or `@variations bg.black`
+   - Example: `bg.black, -components.button.white` excludes white button
+
+2. **Explicit mode** (with `+` prefix):
+   - Only includes components explicitly listed with `+` prefix
+   - Auto-discovery is disabled when any `+` prefix is present
+   - Example: `bg.light, +components.button.primary, +components.button.secondary`
+
+**Relationship with other variation tags:**
+
+| Tag | Relationship |
+|-----|--------------|
+| `@showcase` | ONE component → MULTIPLE variations (shows one component across different backgrounds) |
+| `@variationdemo` | ONE variation → MULTIPLE components (shows multiple components in the same background) |
+| `@variation` | Defines the wrapper used by `@variationdemo` |
+| `@variations` | Marks components that can be auto-discovered by `@variationdemo` |
+
+**Use cases:**
+
+- **Background testing:** Show all light-themed components on a dark background
+- **Theme demos:** Display multiple components together in a themed context
+- **Accessibility testing:** View multiple components under high contrast settings
+- **Comparison views:** Compare different component variants side-by-side in the same context
+
 ## Tag combinations
 
 You can combine tags to achieve different documentation outcomes.
@@ -549,9 +825,14 @@ Quick reference for all tags:
 | `@color` | Display | `variable-name`, `description` | Define color variables |
 | `@space` | Display | `{value}`, `variable-name`, `description` | Define spacing variables |
 | `@icon` | Display | `variable-name`, `description` | Define icon font characters |
+| `@variation` | Display | `variation-key`, `Display Name` | Define a reusable wrapper context |
+| `@variations` | Display | Patterns (optional) | Mark which variations to apply |
+| `@showcase` | Display | `page-key.section-key` | Display component in variations |
+| `@variationdemo` | Display | `variation-key`, patterns (optional) | Display multiple components in one variation |
 
 ## See also
 
 - [Getting Started Guide](../getting-started/vite.md) - Learn the basics of writing doc blocks
-- [Custom Tags Guide](../how-to/custom-tags.md) - Create your own tags with tag transformers
+- [Variation System Guide](../guides/variation-system.md) - Complete guide to using variations and showcases
+- [Custom Tags Guide](../how-to/create-transformers.md) - Create your own tags with tag transformers
 - [@ui-doc/core README](../../packages/core/README.md) - Complete Core API reference

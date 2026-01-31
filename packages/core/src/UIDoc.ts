@@ -1,6 +1,6 @@
 import type { Block, BlockExample } from './Block.types'
 import type { BlockParser } from './BlockParser.types'
-import type { Asset, Context, ContextEntry, ContextExample, GenerateExampleContext } from './Context.types'
+import type { Asset, Context, ContextEntry, ContextExample, ContextShowcase, ContextShowcaseExample, ContextShowcaseItem, ContextVariation, ContextVariationdemo, ContextVariationdemoItem, GenerateExampleContext } from './Context.types'
 import type { FilePath } from './FileSystem.types'
 import type { Logger } from './Logger.types'
 import type { Renderer } from './Renderer.types'
@@ -10,11 +10,14 @@ import { createCommentBlockParser } from './CommentBlockParser'
 import { EventEmitterBase } from './EventEmitterBase'
 import { noopLogger } from './Logger'
 import { createMarkdownDescriptionParser } from './MarkdownDescriptionParser'
+import { matchesVariationPattern } from './tag-transformers/variations'
 
 export class UIDoc extends EventEmitterBase<EventMap> {
   protected sources: Record<FilePath, Source>
 
   protected context: Context
+
+  protected showcasesNeedResolution = true
 
   public blockParser: BlockParser
 
@@ -93,9 +96,12 @@ export class UIDoc extends EventEmitterBase<EventMap> {
           title: this.generate.name(),
         },
       },
+      showcases: {},
+      variations: {},
     }
 
     this.registerExampleListeners()
+    this.registerVariationListeners()
   }
 
   protected createParser(): BlockParser {
@@ -154,6 +160,194 @@ export class UIDoc extends EventEmitterBase<EventMap> {
         ),
       )
     })
+  }
+
+  protected registerVariationListeners(): void {
+    const variationKeyToId = (key: string): string => `variation-${key.replaceAll('.', '-')}`
+
+    // Register variations when blocks with @variation are processed
+    this.on('source', ({ source, type }) => {
+      if (type === 'delete') {
+        // Remove variations defined in this source
+        source.blocks.forEach(block => {
+          if (block.variation) {
+            delete this.context.variations[block.variation.key]
+          }
+        })
+
+        return
+      }
+
+      // Register variations from blocks
+      source.blocks.forEach(block => {
+        if (block.variation) {
+          const variation = block.variation
+          const contextVariation: ContextVariation = {
+            ...variation,
+            id: variationKeyToId(variation.key),
+          }
+          this.context.variations[variation.key] = contextVariation
+        }
+      })
+    })
+
+    // Handle showcase resolution - runs after all sources are processed
+    this.on('context-entry', ({ entry, key, type }) => {
+      if (type === 'delete') {
+        if (entry.showcase) {
+          // Clean up showcase examples
+          entry.showcase.items.forEach(item => {
+            const showcaseId = this.showcaseExampleId(key, item.variation.key)
+            delete this.context.showcases[showcaseId]
+          })
+          delete entry.showcase
+        }
+      }
+    })
+
+    // Output showcase files to showcases/ folder
+    this.on('output', ({ promises, write }) => {
+      promises.push(
+        ...Object.values(this.context.showcases).map(async showcase =>
+          write(showcase.file, this.exampleContent(showcase)),
+        ),
+      )
+    })
+  }
+
+  protected resolveAllShowcases(): void {
+    // Clear all existing showcases - we'll rebuild from scratch
+    this.context.showcases = {}
+
+    Object.entries(this.context.entries).forEach(([key, entry]) => {
+      const block = this.findBlockByKey(key)
+
+      // Clear showcase from entry if block no longer has @showcase
+      if (block === undefined || block.showcase === undefined || block.showcase === '') {
+        if (entry.showcase) {
+          delete entry.showcase
+        }
+
+        return
+      }
+
+      const showcase = this.resolveShowcase(key, block)
+
+      if (showcase) {
+        entry.showcase = showcase
+
+        // Register showcase examples so they're available in dev mode
+        showcase.items.forEach(item => {
+          const showcaseId = this.showcaseExampleId(key, item.variation.key)
+          const wrappedContent = item.variation.wrapper.replace(
+            '{{content}}',
+            showcase.sourceExample.content,
+          )
+
+          const showcaseExample: ContextShowcaseExample = {
+            id: showcaseId,
+            type: 'html',
+            content: wrappedContent,
+            title: `${showcase.sourceExample.title || ''} - ${item.variation.name}`,
+            src: item.src,
+            file: item.file,
+            variationKey: item.variation.key,
+            variationName: item.variation.name,
+          }
+
+          this.context.showcases[showcaseId] = showcaseExample
+        })
+      } else if (entry.showcase) {
+        // Showcase resolution failed, clean up
+        delete entry.showcase
+      }
+    })
+  }
+
+  protected showcaseExampleId(blockKey: string, variationKey: string): string {
+    return `${blockKey.replaceAll('.', '-')}-${variationKey.replaceAll('.', '-')}`
+  }
+
+  protected findBlockByKey(key: string): Block | undefined {
+    for (const source of Object.values(this.sources)) {
+      const block = source.blocks.find(b => b.key === key)
+
+      if (block) {
+        return block
+      }
+    }
+
+    return undefined
+  }
+
+  protected resolveShowcase(blockKey: string, block: Block): ContextShowcase | null {
+    if (block.showcase === undefined || block.showcase === '') {
+      return null
+    }
+
+    const sourceBlock = this.findBlockByKey(block.showcase)
+
+    if (!sourceBlock || !sourceBlock.example) {
+      this.logger.debug(`Showcase target "${block.showcase}" not found or has no example`, { phase: 'transform' })
+
+      return null
+    }
+
+    // Determine which variations to use
+    // If the showcase block has its own @variations, use those; otherwise inherit from source
+    const variationsInclude = block.variations ?? sourceBlock.variations ?? ['*']
+    const variationsExclude = block.variationsExclude ?? sourceBlock.variationsExclude ?? []
+
+    const matchingVariations = this.resolveVariations(variationsInclude, variationsExclude)
+
+    if (matchingVariations.length === 0) {
+      this.logger.debug(`No matching variations for showcase "${blockKey}"`, { phase: 'transform' })
+
+      return null
+    }
+
+    const items: ContextShowcaseItem[] = matchingVariations.map(variation => {
+      const showcaseId = this.showcaseExampleId(blockKey, variation.key)
+      const file = `showcases/${showcaseId}.html`
+
+      return {
+        variation,
+        file,
+        src: this.generate.resolve(file, 'showcase'),
+      }
+    })
+
+    return {
+      sourceKey: block.showcase,
+      sourceExample: sourceBlock.example,
+      items,
+    }
+  }
+
+  protected resolveVariations(include: string[], exclude: string[]): ContextVariation[] {
+    const allVariations = Object.values(this.context.variations)
+
+    return allVariations.filter(variation => {
+      // Check if excluded
+      for (const pattern of exclude) {
+        if (matchesVariationPattern(pattern, variation.key)) {
+          return false
+        }
+      }
+
+      // Check if included
+      for (const pattern of include) {
+        if (matchesVariationPattern(pattern, variation.key)) {
+          return true
+        }
+      }
+
+      return false
+    })
+  }
+
+  public variations(): Context['variations'] {
+    return this.context.variations
   }
 
   public sourceExists(file: string): boolean {
@@ -305,6 +499,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
       delete entry.spaces
       delete entry.icons
       delete entry.hideCode
+      delete entry.showcase
 
       return
     }
@@ -387,6 +582,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   }
 
   public pageContent(page: ContextEntry, layout?: string): string {
+    this.ensureShowcasesResolved()
     this.logger.debug(`Rendering page "${page.id}" with layout "${layout ?? 'default'}"`, { phase: 'render' })
     const context = {
       assets: this.context.pageAssets,
@@ -409,9 +605,21 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   }
 
   public example(exampleId: string): string | null {
+    this.ensureShowcasesResolved()
     const example = this.context.examples[exampleId]
 
     return example !== undefined ? this.exampleContent(example) : null
+  }
+
+  public showcase(showcaseId: string): string | null {
+    this.ensureShowcasesResolved()
+    const showcase = this.context.showcases[showcaseId]
+
+    return showcase !== undefined ? this.exampleContent(showcase) : null
+  }
+
+  public showcases(): Context['showcases'] {
+    return this.context.showcases
   }
 
   public exampleContent(example: ContextExample, layout = 'example'): string {
@@ -437,5 +645,179 @@ export class UIDoc extends EventEmitterBase<EventMap> {
 
   protected clearMenu(): void {
     this.context.menu = []
+    this.showcasesNeedResolution = true
+  }
+
+  protected ensureShowcasesResolved(): void {
+    if (this.showcasesNeedResolution) {
+      this.resolveAllShowcases()
+      this.resolveAllVariationdemos()
+      this.showcasesNeedResolution = false
+    }
+  }
+
+  protected resolveAllVariationdemos(): void {
+    Object.entries(this.context.entries).forEach(([key, entry]) => {
+      const block = this.findBlockByKey(key)
+
+      if (block === undefined || block.variationdemo === undefined || block.variationdemo === '') {
+        if (entry.variationdemo) {
+          delete entry.variationdemo
+        }
+
+        return
+      }
+
+      const demo = this.resolveVariationdemo(key, block)
+
+      if (demo) {
+        entry.variationdemo = demo
+
+        // Register demo examples in context.showcases
+        demo.items.forEach(item => {
+          const showcaseId = this.variationdemoId(key, item.componentKey)
+          const componentBlock = this.findBlockByKey(item.componentKey)
+
+          if (!componentBlock || !componentBlock.example) {
+            return
+          }
+
+          const wrappedContent = demo.variation.wrapper.replace(
+            '{{content}}',
+            componentBlock.example.content,
+          )
+
+          const showcaseExample: ContextShowcaseExample = {
+            id: showcaseId,
+            type: 'html',
+            content: wrappedContent,
+            title: `${componentBlock.example.title || ''} - ${demo.variation.name}`,
+            src: item.src,
+            file: item.file,
+            variationKey: demo.variationKey,
+            variationName: demo.variation.name,
+          }
+
+          this.context.showcases[showcaseId] = showcaseExample
+        })
+      } else if (entry.variationdemo) {
+        delete entry.variationdemo
+      }
+    })
+  }
+
+  protected variationdemoId(blockKey: string, componentKey: string): string {
+    return `${blockKey.replaceAll('.', '-')}-${componentKey.replaceAll('.', '-')}`
+  }
+
+  protected resolveVariationdemo(blockKey: string, block: Block): ContextVariationdemo | null {
+    if (block.variationdemo === undefined || block.variationdemo === '') {
+      return null
+    }
+
+    const variation = this.context.variations[block.variationdemo]
+
+    if (variation === undefined) {
+      this.logger.debug(`Variationdemo target variation "${block.variationdemo}" not found`, { phase: 'transform' })
+
+      return null
+    }
+
+    // Find all components that have @variations matching this variation
+    const matchingComponents = this.findComponentsForVariation(block.variationdemo)
+
+    // Apply component include/exclude filters
+    const filtered = this.filterComponents(
+      matchingComponents,
+      block.variationdemoInclude ?? ['*'],
+      block.variationdemoExclude ?? [],
+    )
+
+    if (filtered.length === 0) {
+      this.logger.debug(`No matching components for variationdemo "${blockKey}"`, { phase: 'transform' })
+
+      return null
+    }
+
+    // Create items for each component
+    const items: ContextVariationdemoItem[] = filtered.map(([compKey, compBlock]) => {
+      const demoId = this.variationdemoId(blockKey, compKey)
+      const file = `showcases/${demoId}.html`
+
+      return {
+        componentKey: compKey,
+        componentTitle: compBlock.title !== undefined && compBlock.title !== '' ? compBlock.title : compKey,
+        file,
+        src: this.generate.resolve(file, 'showcase'),
+      }
+    })
+
+    return { variationKey: block.variationdemo, variation, items }
+  }
+
+  protected findComponentsForVariation(variationKey: string): Array<[string, Block]> {
+    const results: Array<[string, Block]> = []
+
+    for (const source of Object.values(this.sources)) {
+      for (const block of source.blocks) {
+        if (!block.variations || !block.example) {
+          continue
+        }
+
+        // Check if any of block's variation patterns match our target
+        const matches = block.variations.some(pattern =>
+          matchesVariationPattern(pattern, variationKey),
+        )
+        const excluded = block.variationsExclude?.some(pattern =>
+          matchesVariationPattern(pattern, variationKey),
+        )
+
+        if (matches && !excluded) {
+          results.push([block.key, block])
+        }
+      }
+    }
+
+    return results
+  }
+
+  protected filterComponents(
+    components: Array<[string, Block]>,
+    include: string[],
+    exclude: string[],
+  ): Array<[string, Block]> {
+    return components.filter(([key]) => {
+      // Exclude first
+      for (const pattern of exclude) {
+        if (this.matchesComponentPattern(pattern, key)) {
+          return false
+        }
+      }
+
+      // Include
+      for (const pattern of include) {
+        if (this.matchesComponentPattern(pattern, key)) {
+          return true
+        }
+      }
+
+      return false
+    })
+  }
+
+  protected matchesComponentPattern(pattern: string, componentKey: string): boolean {
+    if (pattern === '*') {
+      return true
+    }
+
+    if (pattern === componentKey) {
+      return true
+    }
+
+    if (componentKey.startsWith(`${pattern}.`)) {
+      return true
+    }
+
+    return false
   }
 }

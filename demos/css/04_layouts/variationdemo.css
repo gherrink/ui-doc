@@ -1,0 +1,38 @@
+/**
+  * The variationdemo feature shows how multiple components look within a single
+  * variation context. This is useful for comparing different UI elements under
+  * the same styling conditions.
+  *
+  * @location layouts.variationdemo Variation Demo
+  */
+
+/**
+  * Shows all button color variants on a black background. This auto-discovers
+  * all components that have `@variations bg` which matches `bg.black`.
+  *
+  * @location layouts.variationdemo.black Black Background Demo
+  * @variationdemo bg.black
+  */
+
+/**
+  * Shows all button color variants on a white background.
+  *
+  * @location layouts.variationdemo.white White Background Demo
+  * @variationdemo bg.white
+  */
+
+/**
+  * Shows only the black button variant on a blue background using explicit
+  * component selection with the `+` prefix.
+  *
+  * @location layouts.variationdemo.explicit Explicit Selection
+  * @variationdemo bg.blue +components.button.colors.black
+  */
+
+/**
+  * Shows all components except the white button on a gray background using
+  * exclusion with the `-` prefix.
+  *
+  * @location layouts.variationdemo.exclude Exclusion Example
+  * @variationdemo bg.gray -components.button.colors.white
+  */
