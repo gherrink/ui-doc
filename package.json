@@ -70,6 +70,9 @@
   "pnpm": {
     "ignoredBuiltDependencies": [
       "esbuild"
+    ],
+    "onlyBuiltDependencies": [
+      "esbuild"
     ]
   },
   "husky": {
