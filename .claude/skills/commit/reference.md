@@ -77,6 +77,31 @@ Two ways to indicate breaking changes:
 
 Both trigger a MAJOR version bump.
 
+### Workspace Dependency Constraints
+
+When making breaking changes or introducing new APIs that downstream packages depend on, update workspace version constraints **in the same commit**:
+
+1. Check which packages depend on the changed package
+2. Update their `package.json` dependencies/peerDependencies:
+
+   ```json
+   {
+     "dependencies": {
+       "@ui-doc/core": "workspace:^0.5.0"
+     }
+   }
+   ```
+
+3. Include these constraint updates in your commit
+
+**Package dependency chain:**
+
+```
+core → node → html-renderer → rollup → vite
+```
+
+See [Release Process](../../../docs/contributing/release-process.md#workspace-dependencies) for detailed examples.
+
 ## Guidelines
 
 1. **Use imperative mood** - "add" not "added" or "adds"

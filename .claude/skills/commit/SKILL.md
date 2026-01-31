@@ -38,8 +38,9 @@ See [examples.md](./examples.md) for practical examples.
 3. Run `git diff --cached` only if more details are needed to understand the changes
 4. Determine appropriate type based on the nature of changes
 5. Identify scope from affected package(s) — if changes span multiple packages, combine scopes (e.g., `core,node`)
-6. Write concise description in imperative mood
-7. Add body if explanation of what/why is needed
-8. Always include `Co-Authored-By: Claude <noreply@anthropic.com>` footer
-9. Validate message with `echo '<subject line>' | npx commitlint` before committing
-10. Stage files and commit — if commitlint fails, fix the message and re-validate
+6. **For breaking changes or new APIs:** Check if downstream packages need their workspace dependency constraints updated (see [reference.md](./reference.md#workspace-dependency-constraints))
+7. Write concise description in imperative mood
+8. Add body if explanation of what/why is needed
+9. Always include `Co-Authored-By: Claude <noreply@anthropic.com>` footer
+10. Validate message with `echo '<subject line>' | npx commitlint` before committing
+11. Stage files and commit — if commitlint fails, fix the message and re-validate

@@ -230,4 +230,5 @@ When releasing a new major version with breaking changes:
 ## Related Documentation
 
 - [Contributing Guide](../../CONTRIBUTING.md) - Development workflow and standards
+- [Release Process](./release-process.md) - Automated releases and version management
 - [Conventional Commits](https://www.conventionalcommits.org/) - Commit message format
