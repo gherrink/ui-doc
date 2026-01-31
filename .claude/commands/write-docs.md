@@ -37,6 +37,7 @@ Determine the mode based on argument format:
 - `api-reference` - Technical specification
 - `conceptual` - Concept explanation
 - `troubleshooting` - Problem resolution
+- `contributing` - Contributor guidance
 
 ### Step 2: Validate Document Types
 
@@ -54,6 +55,7 @@ Map document types to output directories:
 | `api-reference` | `docs/reference/{topic}.md` |
 | `conceptual` | `docs/concepts/{topic}.md` |
 | `troubleshooting` | `docs/troubleshooting/{topic}.md` |
+| `contributing` | `docs/contributing/{topic}.md` |
 
 ### Step 4: Group Work by Topic
 

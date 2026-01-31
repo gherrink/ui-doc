@@ -166,6 +166,24 @@ test(node): add file discovery edge cases
 
 CI runs automatically on pull requests. Releases are automated after merge to the main branch.
 
+## Branching Model
+
+UI-Doc uses a Modified GitHub Flow. The `master` branch always contains production-ready code, and merging to it triggers an automated release.
+
+### Branch Naming
+
+| Pattern | Purpose | Example |
+|---------|---------|---------|
+| `feat/{description}` | New features | `feat/custom-transformers` |
+| `fix/{description}` | Bug fixes | `fix/template-caching` |
+| `hotfix/{pkg}-{desc}` | Critical fixes | `hotfix/core-memory-leak` |
+| `chore/{description}` | Maintenance | `chore/upgrade-deps` |
+| `docs/{description}` | Documentation | `docs/api-reference` |
+
+For package-specific work, include the package name: `fix/core-parser-edge-case`.
+
+See the [Branching Model Guide](./docs/contributing/branching-model.md) for detailed workflows including hotfix procedures and cross-package changes.
+
 ## Project Structure
 
 ```text

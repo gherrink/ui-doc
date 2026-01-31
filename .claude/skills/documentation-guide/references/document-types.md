@@ -7,20 +7,22 @@ Detailed specifications for each type of documentation.
 Use this flowchart to choose the right document type:
 
 ```
-Is the reader new to UI-Doc?
-├─ Yes → Is this their first time setting up?
-│        ├─ Yes → Getting Started
-│        └─ No → Are they learning a complete workflow?
-│                ├─ Yes → Tutorial
-│                └─ No → Go to "Is this task-focused?"
-│
-└─ No → Is this task-focused?
-        ├─ Yes → How-To Guide
-        └─ No → Is this technical reference?
-                ├─ Yes → API Reference
-                └─ No → Is this explaining a concept?
-                        ├─ Yes → Conceptual Guide
-                        └─ No → Troubleshooting
+Is this about contributing to the project?
+├─ Yes → Contributing
+└─ No → Is the reader new to UI-Doc?
+        ├─ Yes → Is this their first time setting up?
+        │        ├─ Yes → Getting Started
+        │        └─ No → Are they learning a complete workflow?
+        │                ├─ Yes → Tutorial
+        │                └─ No → Go to "Is this task-focused?"
+        │
+        └─ No → Is this task-focused?
+                ├─ Yes → How-To Guide
+                └─ No → Is this technical reference?
+                        ├─ Yes → API Reference
+                        └─ No → Is this explaining a concept?
+                                ├─ Yes → Conceptual Guide
+                                └─ No → Troubleshooting
 ```
 
 ---
@@ -278,3 +280,43 @@ uidoc({
 **If source patterns are wrong:**
 Check that your glob patterns match existing files...
 ```
+
+---
+
+## Contributing
+
+**Purpose:** Document project contribution workflows, processes, and guidelines.
+
+**Audience:** Developers who want to contribute to the UI-Doc project.
+
+**Outcome:** Reader understands the project's development practices and can contribute effectively.
+
+### Required Sections
+
+1. **Overview** - What this document covers
+2. **Main Concept/Process** - Core information (may include tables, diagrams)
+3. **Workflows** - Step-by-step procedures with commands
+4. **Best Practices** - Do's and don'ts
+
+### Guidelines
+
+- Focus on practical guidance over theory
+- Use diagrams and tables to clarify processes
+- Include exact commands where applicable
+- Keep documentation aligned with actual practices
+- Cross-reference CONTRIBUTING.md and related docs
+
+### Anti-Patterns
+
+- Don't duplicate content from CONTRIBUTING.md
+- Don't document aspirational practices not yet in use
+- Don't include user/consumer documentation
+- Don't skip the "why" behind processes
+
+### Example Topics
+
+- Branching model and workflow
+- Release process
+- Code review guidelines
+- Testing standards
+- Documentation contribution guide
