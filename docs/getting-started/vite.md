@@ -117,11 +117,17 @@ Create a CSS file with a documentation block. If you already have CSS files in y
 
 ### Understanding the doc block
 
-- `@page buttons Buttons` creates a documentation page titled "Buttons"
-- `@location buttons.primary Primary Button` places content in a section on the Buttons page
-- `@example` shows a live preview of the button with the HTML code displayed below it
+This example contains two doc blocks:
 
-The text before the tags becomes the section description.
+**The first doc block** (lines 90-94) creates a page:
+
+- `@page buttons Buttons` creates a documentation page titled "Buttons"
+
+**The second doc block** (lines 96-103) creates content on that page:
+
+- `@location buttons.primary Primary Button` places content in the "Primary Button" section on the Buttons page
+- `@example` shows a live preview of the button with the HTML code displayed below it
+- The text before the tags becomes the section description
 
 ## View your documentation
 
@@ -211,9 +217,9 @@ This uses absolute URLs during development (required for the dev server) and rel
 Now that you have UI-Doc running:
 
 - [Understanding doc blocks](../concepts/doc-blocks.md) - Learn how doc blocks work and how to use them effectively
-- [Tag Reference](../reference/tags.md) - See all available documentation tags
-- [Vite Plugin Configuration](../reference/vite-plugin.md) - Explore advanced configuration options
-- [Custom Templates](../how-to/custom-templates.md) - Customize the documentation appearance
+- [First Component Tutorial](../tutorials/first-component.md) - Build a complete component with documentation
+- [@ui-doc/vite Package Reference](../../packages/vite/README.md) - Explore all configuration options
+- [@ui-doc/core Package Reference](../../packages/core/README.md) - Learn about available tags and advanced features
 
 ## Troubleshooting
 
@@ -223,7 +229,7 @@ Make sure you don't set `output.baseUri` to `'.'` in development mode. The Vite 
 
 ### Assets not loading in examples
 
-If your button styles aren't showing in the preview, you may need to register your CSS as an example asset. See the [Vite Plugin Configuration](../reference/vite-plugin.md) for details on the `assets.example` option.
+If your button styles aren't showing in the preview, you may need to register your CSS as an example asset. See the [@ui-doc/vite documentation](../../packages/vite/README.md#assets-configuration) for details on the `assets.example` option.
 
 ### Hot reload not working
 

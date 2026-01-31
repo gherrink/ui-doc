@@ -127,35 +127,25 @@ This creates:
 - Two sections on that page: **Default Button** and **Primary Button** (from `@location`)
 - Each section shows the description, a live preview of the HTML, and the example code
 
-## Placement vs display tags
+## Tag categories
 
-Tags serve two distinct purposes:
+Tags serve two distinct purposes in organizing and displaying documentation:
 
-**Placement tags** determine where content appears in the documentation structure:
+**Placement tags** determine where content appears in the documentation structure. Every doc block needs at least one placement tag to specify its location. The most common are `@page`, `@section`, and `@location` (which combines both).
 
-- `@page` creates or references a page
-- `@section` creates a section within a page
-- `@location` combines page and section in one tag
-- `@order` controls sorting order
+**Display tags** determine what content appears and how it's shown. These include `@example` for live previews, `@code` for code-only display, and specialized tags like `@color` and `@space` for design tokens.
 
-**Display tags** determine what content appears and how it's shown:
-
-- `@example` shows a live preview with code
-- `@code` shows only code (no preview)
-- `@hideCode` hides the code block
-- `@color`, `@space`, `@icon` display design tokens
-
-Every doc block needs at least one placement tag. Without one, UI-Doc doesn't know where to put the content and will report an error.
+Understanding this distinction helps you structure doc blocks effectively: first decide where the content belongs (placement), then decide what to show (display).
 
 ## Why doc blocks matter
 
-**Co-location:** Documentation lives with the code it describes. When you change a component, the docs are right there.
+**Co-location keeps docs synchronized:** Documentation lives with the code it describes. When you change a component, the docs are right there to update. This proximity reduces the friction of keeping documentation current.
 
-**Live examples:** The `@example` tag creates actual rendered previews, not static images. Examples always reflect current styles.
+**Live examples stay accurate:** The `@example` tag creates actual rendered previews, not static images or screenshots. When your styles change, the examples automatically reflect those changes.
 
-**Structured output:** The location system automatically organizes content into a navigable documentation site.
+**Automatic organization:** The location system transforms scattered doc blocks into a structured, navigable documentation site. You focus on documenting individual components; UI-Doc handles the organization.
 
-**Extensibility:** Custom tag transformers let you extend the syntax for your project's needs.
+**Extensibility through transformers:** Custom tag transformers let you extend the syntax for your project's specific needs. Create tags for design patterns, accessibility notes, or any domain-specific documentation.
 
 ## Common misconceptions
 
@@ -173,10 +163,10 @@ By default, pages and sections sort alphabetically by title. Use the `@order` ta
 
 ## Related concepts
 
-- [Tag Reference](../reference/tags.md) - Complete documentation of all available tags
-- [Core API Reference](../reference/core-api.md) - Technical details on UIDoc and CommentBlockParser
+- [Core API Reference](../reference/core-api.md) - Technical details on UIDoc and CommentBlockParser classes
 
 ## Further reading
 
 - [Getting Started with Vite](../getting-started/vite.md) - Set up your first UI-Doc project
-- [Custom Tags](../how-to/custom-tags.md) - Create your own tag transformers
+- [Custom Transformers Tutorial](../tutorials/custom-transformers.md) - Create your own tag transformers
+- [@ui-doc/core README](../../packages/core/README.md) - Complete tag reference and API documentation
