@@ -1,0 +1,56 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+title: '[Feature]: '
+labels: ['type:feature']
+
+body:
+  - type: dropdown
+    id: package
+    attributes:
+      label: Package
+      description: Which package would this feature affect?
+      options:
+        - '@ui-doc/core'
+        - '@ui-doc/node'
+        - '@ui-doc/html-renderer'
+        - '@ui-doc/rollup'
+        - '@ui-doc/vite'
+        - New package
+        - Multiple packages
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / Use Case
+      description: What problem does this feature solve? What is your use case?
+      placeholder: I'm trying to... but currently...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How would you like this to work?
+      placeholder: Describe your ideal solution
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative approaches or workarounds?
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context, examples, or references
+    validations:
+      required: false
