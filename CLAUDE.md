@@ -85,6 +85,8 @@ Tests are in `packages/*/tests/` directories using Vitest. Test files match patt
 
 This project uses [Conventional Commits](https://www.conventionalcommits.org/). Use the `/commit` skill for generating properly formatted commit messages.
 
+Valid scopes: `core`, `node`, `html-renderer`, `rollup`, `vite`, `demos`, `release`. Use `docs:` type for `docs/` changes.
+
 ## Claude Code Tools
 
 This project includes custom Claude Code configurations in `.claude/`:

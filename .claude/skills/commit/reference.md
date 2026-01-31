@@ -27,15 +27,25 @@
 
 ## Project Scopes
 
-| Scope | Directory/Purpose |
-|-------|-------------------|
-| `core` | packages/core |
-| `node` | packages/node |
-| `html-renderer` | packages/html-renderer |
-| `rollup` | packages/rollup |
-| `vite` | packages/vite |
-| `demos` | demos/ |
-| `release` | Version bumps and releases |
+| Scope | Directory |
+|-------|-----------|
+| `core` | `packages/core/` |
+| `node` | `packages/node/` |
+| `html-renderer` | `packages/html-renderer/` |
+| `rollup` | `packages/rollup/` |
+| `vite` | `packages/vite/` |
+| `demos` | `demos/` |
+| `release` | Version bumps (any package) |
+
+**Note:** Changes to `docs/` use the `docs:` commit type without a scope.
+
+### Examples
+
+```
+feat(core): add custom tag transformer     # packages/core/ changes
+fix(node,vite): correct path resolution    # multiple package changes
+docs: update installation guide            # docs/ changes (type, not scope)
+```
 
 ## Combined Scopes
 
