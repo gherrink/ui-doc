@@ -3,10 +3,8 @@ import type { Parser, TagNodeParse } from './Parser.types'
 import type { Reader } from './Reader.types'
 import { ParserError, TagNodeError } from './errors'
 import { HtmlCurlyBraceLexer } from './HtmlCurlyBraceLexer'
-import { CommentNode } from './nodes/CommentNode'
-import { Node } from './nodes/Node'
+import { CommentNode, Node, TemplateNode } from './nodes'
 import tagParsers from './nodes/tags'
-import { TemplateNode } from './nodes/TemplateNode'
 
 export class NodeParser implements Parser {
   protected tags: Record<string, TagNodeParse> = {}
@@ -15,9 +13,6 @@ export class NodeParser implements Parser {
     const parser = new NodeParser()
 
     tagParsers.forEach(tag => parser.registerTagParser(tag))
-
-    // TODO may make async
-    // (await import('./nodes/tags')).default.forEach(tag => parser.registerTag(tag))
 
     return parser
   }
