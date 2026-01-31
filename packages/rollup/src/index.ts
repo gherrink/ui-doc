@@ -154,6 +154,13 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
           }
         }
       })
+
+      // Watch source directories to detect new file creation
+      for (const dir of finder.directories()) {
+        if (!watchedFiles.includes(dir)) {
+          this.addWatchFile(dir)
+        }
+      }
     },
 
     async generateBundle() {

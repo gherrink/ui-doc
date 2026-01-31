@@ -30,6 +30,7 @@ describe('uidocPlugin', () => {
   // Individual mock functions for verification
   let mockSearch: ReturnType<typeof vi.fn>
   let mockMatches: ReturnType<typeof vi.fn>
+  let mockDirectories: ReturnType<typeof vi.fn>
   let mockFileRead: ReturnType<typeof vi.fn>
   let mockFileCopy: ReturnType<typeof vi.fn>
   let mockFileExists: ReturnType<typeof vi.fn>
@@ -53,6 +54,7 @@ describe('uidocPlugin', () => {
     // Create individual mock functions
     mockSearch = vi.fn().mockResolvedValue(undefined)
     mockMatches = vi.fn().mockReturnValue(false)
+    mockDirectories = vi.fn().mockReturnValue([])
     mockFileRead = vi.fn().mockResolvedValue('file content')
     mockFileCopy = vi.fn().mockResolvedValue(undefined)
     mockFileExists = vi.fn().mockResolvedValue(false)
@@ -74,6 +76,7 @@ describe('uidocPlugin', () => {
     mockFileFinder = {
       search: mockSearch,
       matches: mockMatches,
+      directories: mockDirectories,
     } as FileFinder
 
     // Mock FileSystem
@@ -383,6 +386,32 @@ describe('uidocPlugin', () => {
       ).rejects.toThrow('Generic error')
 
       expect(mockWarn).not.toHaveBeenCalled()
+    })
+
+    it('should add watch files for source directories', async () => {
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+
+      mockDirectories.mockReturnValue(['/path/to/src', '/path/to/lib'])
+
+      const buildStart = plugin.buildStart as (options: NormalizedInputOptions) => Promise<void>
+      await buildStart.call(mockPluginContext, {} as NormalizedInputOptions)
+
+      expect(mockDirectories).toHaveBeenCalled()
+      expect(mockAddWatchFile).toHaveBeenCalledWith('/path/to/src')
+      expect(mockAddWatchFile).toHaveBeenCalledWith('/path/to/lib')
+    })
+
+    it('should skip already watched directories', async () => {
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+
+      mockGetWatchFiles.mockReturnValue(['/path/to/src'])
+      mockDirectories.mockReturnValue(['/path/to/src', '/path/to/lib'])
+
+      const buildStart = plugin.buildStart as (options: NormalizedInputOptions) => Promise<void>
+      await buildStart.call(mockPluginContext, {} as NormalizedInputOptions)
+
+      expect(mockAddWatchFile).not.toHaveBeenCalledWith('/path/to/src')
+      expect(mockAddWatchFile).toHaveBeenCalledWith('/path/to/lib')
     })
   })
 

@@ -69,4 +69,11 @@ export class NodeFileFinder implements FileFinder {
   public matches(file: string): boolean {
     return this.globs.some(glob => picomatch.isMatch(file, glob))
   }
+
+  public directories(): string[] {
+    return this.globs.map(glob => {
+      const scan = picomatch.scan(glob, { parts: true, tokens: true })
+      return path.join(scan.prefix, scan.base)
+    })
+  }
 }
