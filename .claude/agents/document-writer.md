@@ -74,6 +74,7 @@ Map document types to templates from your documentation-guide skill:
 | `api-reference` | references/templates/api-reference.md | `docs/reference/` |
 | `conceptual` | references/templates/conceptual-guide.md | `docs/concepts/` |
 | `troubleshooting` | references/templates/troubleshooting.md | `docs/troubleshooting/` |
+| `contributing` | references/templates/contributing.md | `docs/contributing/` |
 
 ### 3. Write Each Document
 
@@ -127,6 +128,11 @@ When writing multiple related documents, add links between them:
 - Target: Users experiencing problems
 - Focus: Quick problem identification and resolution
 - Include: Symptoms, causes, solutions, prevention
+
+### Contributing
+- Target: Project contributors
+- Focus: Development workflows and processes
+- Include: Workflows, best practices, commands, cross-references to CONTRIBUTING.md
 
 ## Code Example Standards
 

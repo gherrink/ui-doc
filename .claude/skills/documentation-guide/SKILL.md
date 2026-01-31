@@ -26,6 +26,7 @@ Create high-quality consumer documentation for the UI-Doc library. This skill pr
 | API Reference | Technical specification | Documenting tags, options, APIs |
 | Conceptual Guide | Core concept explanation | Explaining architecture/philosophy |
 | Troubleshooting | Problem resolution | Common issues and fixes |
+| Contributing | Contributor guidance | Project contribution workflows |
 
 ## Workflow
 
@@ -38,6 +39,7 @@ Ask the user or infer from context what type of documentation is needed. If uncl
 - Is this documenting technical details (tags, options, APIs)? → **API Reference**
 - Is this explaining a concept or architecture? → **Conceptual Guide**
 - Is this addressing errors or common issues? → **Troubleshooting**
+- Is this about contributing to the project itself? → **Contributing**
 
 ### 2. Research the Topic
 
@@ -56,6 +58,7 @@ Load the template from `references/templates/` matching the document type:
 - `api-reference.md` - For technical documentation
 - `conceptual-guide.md` - For concept explanations
 - `troubleshooting.md` - For issue resolution
+- `contributing.md` - For contributor workflows
 
 ### 4. Write Following Style Guidelines
 
@@ -84,6 +87,7 @@ Save documentation files to the appropriate `docs/` subdirectory:
 | API Reference | `reference/` | `{subject}.md` | `reference/tags.md` |
 | Conceptual Guide | `concepts/` | `{topic}.md` | `concepts/doc-blocks.md` |
 | Troubleshooting | `troubleshooting/` | `{area}.md` | `troubleshooting/assets.md` |
+| Contributing | `contributing/` | `{topic}.md` | `contributing/branching-model.md` |
 
 ## Code Example Standards
 

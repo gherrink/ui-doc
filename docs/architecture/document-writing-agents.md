@@ -131,12 +131,13 @@ documentation-guide/
         ├── how-to-guide.md         # Task-focused guide
         ├── api-reference.md        # Technical specification
         ├── conceptual-guide.md     # Concept explanation
-        └── troubleshooting.md      # Problem resolution
+        ├── troubleshooting.md      # Problem resolution
+        └── contributing.md         # Contributor workflows
 ```
 
 **Coverage:**
 
-- Six document type templates
+- Seven document type templates
 - Terminology guidelines ("doc block" not "comment block")
 - Code example standards
 - Cross-referencing conventions
@@ -195,6 +196,7 @@ Add cross-references between related documents.
 | api-reference | `docs/reference/{topic}.md` |
 | conceptual | `docs/concepts/{topic}.md` |
 | troubleshooting | `docs/troubleshooting/{topic}.md` |
+| contributing | `docs/contributing/{topic}.md` |
 
 ## Design Decisions
 
