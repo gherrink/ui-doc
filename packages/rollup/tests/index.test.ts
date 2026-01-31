@@ -32,6 +32,7 @@ describe('uidocPlugin', () => {
   let mockMatches: ReturnType<typeof vi.fn>
   let mockFileRead: ReturnType<typeof vi.fn>
   let mockFileCopy: ReturnType<typeof vi.fn>
+  let mockFileExists: ReturnType<typeof vi.fn>
   let mockFileDirname: ReturnType<typeof vi.fn>
   let mockEnsureDirectoryExists: ReturnType<typeof vi.fn>
   let mockDirectoryCopy: ReturnType<typeof vi.fn>
@@ -54,6 +55,7 @@ describe('uidocPlugin', () => {
     mockMatches = vi.fn().mockReturnValue(false)
     mockFileRead = vi.fn().mockResolvedValue('file content')
     mockFileCopy = vi.fn().mockResolvedValue(undefined)
+    mockFileExists = vi.fn().mockResolvedValue(false)
     mockFileDirname = vi.fn().mockReturnValue('/path/to')
     mockEnsureDirectoryExists = vi.fn().mockResolvedValue(undefined)
     mockDirectoryCopy = vi.fn().mockResolvedValue(undefined)
@@ -78,6 +80,7 @@ describe('uidocPlugin', () => {
     mockFileSystem = {
       fileRead: mockFileRead,
       fileCopy: mockFileCopy,
+      fileExists: mockFileExists,
       fileDirname: mockFileDirname,
       ensureDirectoryExists: mockEnsureDirectoryExists,
       directoryCopy: mockDirectoryCopy,
@@ -654,6 +657,56 @@ describe('uidocPlugin', () => {
       expect(mockEnsureDirectoryExists).toHaveBeenCalledWith('dist/ui-doc')
       expect(mockFileCopy).toHaveBeenCalledWith('dist/main.js', 'dist/ui-doc/main.js')
       expect(mockFileCopy).toHaveBeenCalledWith('dist/styles.css', 'dist/ui-doc/styles.css')
+    })
+
+    it('should copy source maps when they exist alongside assets', async () => {
+      mockResolvedOptions.prefix = { path: 'ui-doc/', uri: 'ui-doc/' }
+      mockResolvedOptions.assetsFromInput.add('main.js')
+
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+
+      mockFileDirname.mockReturnValue('dist/ui-doc')
+      mockFileExists.mockResolvedValue(true)
+
+      type WriteBundleHook = (
+        options: NormalizedOutputOptions,
+        bundle: OutputBundle,
+      ) => Promise<void>
+      const writeBundle = plugin.writeBundle as WriteBundleHook
+      await writeBundle.call(
+        mockPluginContext,
+        { dir: 'dist' } as NormalizedOutputOptions,
+        {},
+      )
+
+      expect(mockFileExists).toHaveBeenCalledWith('dist/main.js.map')
+      expect(mockFileCopy).toHaveBeenCalledWith('dist/main.js', 'dist/ui-doc/main.js')
+      expect(mockFileCopy).toHaveBeenCalledWith('dist/main.js.map', 'dist/ui-doc/main.js.map')
+    })
+
+    it('should not copy source maps when they do not exist', async () => {
+      mockResolvedOptions.prefix = { path: 'ui-doc/', uri: 'ui-doc/' }
+      mockResolvedOptions.assetsFromInput.add('main.js')
+
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+
+      mockFileDirname.mockReturnValue('dist/ui-doc')
+      mockFileExists.mockResolvedValue(false)
+
+      type WriteBundleHook = (
+        options: NormalizedOutputOptions,
+        bundle: OutputBundle,
+      ) => Promise<void>
+      const writeBundle = plugin.writeBundle as WriteBundleHook
+      await writeBundle.call(
+        mockPluginContext,
+        { dir: 'dist' } as NormalizedOutputOptions,
+        {},
+      )
+
+      expect(mockFileExists).toHaveBeenCalledWith('dist/main.js.map')
+      expect(mockFileCopy).toHaveBeenCalledWith('dist/main.js', 'dist/ui-doc/main.js')
+      expect(mockFileCopy).not.toHaveBeenCalledWith('dist/main.js.map', 'dist/ui-doc/main.js.map')
     })
 
     it('should copy static assets when defined', async () => {

@@ -199,7 +199,6 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       // if ui-doc is created into subfolder we need to copy assets referenced in examples and are
       // generated through other plugins
       if (prefix.path !== '') {
-        // TODO may copy map file if exists
         promises.push(
           ...[...assetsFromInput].map(async asset => {
             const destFile = `${outputOptions.dir}/${prefix.path}${asset}`
@@ -207,6 +206,13 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
 
             await fileSystem.ensureDirectoryExists(destDir)
             await fileSystem.fileCopy(`${outputOptions.dir}/${asset}`, destFile)
+
+            // Copy source map if it exists
+            const mapFile = `${asset}.map`
+            const srcMapPath = `${outputOptions.dir}/${mapFile}`
+            if (await fileSystem.fileExists(srcMapPath)) {
+              await fileSystem.fileCopy(srcMapPath, `${outputOptions.dir}/${prefix.path}${mapFile}`)
+            }
           }),
         )
       }
