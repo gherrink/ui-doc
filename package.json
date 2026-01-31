@@ -67,6 +67,11 @@
     "typescript": "^5.4.5",
     "vitest": "^3.0.4"
   },
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "esbuild"
+    ]
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
