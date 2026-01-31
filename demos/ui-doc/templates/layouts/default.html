@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{var:title}}</title>
+    <link rel="shortcut icon" href="./favicon.ico" />
+
+    {{var:styles}}
+    <style>
+      .demo-banner {
+        background: linear-gradient(90deg, #7c3aed, #2563eb);
+        color: white;
+        padding: 0.5rem 1rem;
+        text-align: center;
+        font-size: 0.875rem;
+      }
+      .demo-banner code {
+        background: rgba(255,255,255,0.2);
+        padding: 0.125rem 0.375rem;
+        border-radius: 0.25rem;
+        font-family: monospace;
+      }
+      .demo-footer {
+        border-top: 3px solid #7c3aed;
+      }
+    </style>
+  </head>
+  <body class="page {{var:page.id}}">
+    <div class="demo-banner">
+      Template Hot-Reload Demo - Edit <code>ui-doc/templates/</code> files to see changes instantly
+    </div>
+    {{partial:nav-main}}
+    {{page:page.id page}}
+    <footer class="width-content py bg demo-footer">
+      <div class="text">{{var:footerText}} | Custom Template</div>
+    </footer>
+
+    {{var:scripts}}
+    <script type="application/javascript">
+      hljs.highlightAll()
+    </script>
+  </body>
+</html>
