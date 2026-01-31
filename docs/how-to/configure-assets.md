@@ -279,6 +279,46 @@ uidoc({
 
 See [available themes](https://github.com/highlightjs/highlight.js/tree/main/src/styles) for options.
 
+### Cache-busting with hashed filenames
+
+Use Rollup's `assetFileNames` pattern for custom assets to enable cache busting:
+
+```js
+import uidoc from '@ui-doc/vite'
+
+export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        assetFileNames: 'assets/[name]-[hash][extname]',
+      },
+    },
+  },
+  plugins: [
+    uidoc({
+      source: ['src/**/*.css'],
+      assets: {
+        page: [
+          {
+            name: 'custom-styles.css',
+            file: './src/custom.css',
+            useAssetFileNames: true, // Apply assetFileNames pattern
+          },
+        ],
+      },
+    }),
+  ],
+})
+```
+
+With this configuration, `custom-styles.css` is output as `assets/custom-styles-abc123.css` where `abc123` is a content hash. This ensures browsers fetch the latest version when the file changes.
+
+**Notes:**
+
+- Only applies to custom assets (not built-in UI-Doc or highlight.js assets)
+- Documentation HTML pages always use explicit file names
+- Set to `false` (default) to use the exact file name without hashing
+
 ## Troubleshooting
 
 ### Assets not loading in examples

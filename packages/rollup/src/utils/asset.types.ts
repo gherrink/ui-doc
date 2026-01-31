@@ -7,6 +7,13 @@ export interface AssetOption {
   dependency?: string | (() => string)
   source?: string | Uint8Array | (() => string)
   attrs?: Asset['attrs']
+  /**
+   * When true, omit explicit `fileName` when emitting the asset, allowing Rollup
+   * to apply the `output.assetFileNames` pattern (e.g., for cache-busting hashes).
+   * Built-in assets and HTML pages always use explicit file names.
+   * @default false
+   */
+  useAssetFileNames?: boolean
 }
 
 export interface AssetResolved {
@@ -18,4 +25,9 @@ export interface AssetResolved {
   fromInput?: true
   source?: string | Uint8Array
   attrs?: Asset['attrs']
+  /**
+   * When true, the asset will be emitted without an explicit `fileName`,
+   * allowing Rollup to apply the `output.assetFileNames` pattern.
+   */
+  useAssetFileNames?: boolean
 }

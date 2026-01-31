@@ -533,6 +533,35 @@ HTML attributes to add to the asset tag (script or link element).
 <script src="/assets/app-abc123.js" type="module" defer="true"></script>
 ```
 
+### useAssetFileNames
+
+Allow Rollup to apply the `output.assetFileNames` pattern (e.g., for cache-busting hashes) instead of using an explicit file name.
+
+**Type:** `boolean`
+
+**Default:** `false`
+
+**Example:**
+
+```text
+{
+  name: 'custom-styles.css',
+  file: './src/custom.css',
+  useAssetFileNames: true,
+}
+```
+
+**Output:**
+
+With `assetFileNames: 'assets/[name]-[hash][extname]'` configured, the asset is emitted as `assets/custom-styles-abc123.css` instead of `custom-styles.css`.
+
+**Notes:**
+
+- Only applies to custom assets in `assets.page` and `assets.example`
+- Built-in assets (ui-doc.css, highlight.js) always use explicit file names
+- HTML documentation pages always use explicit file names
+- Useful for cache busting and consistent asset naming patterns
+
 ## Complete options example
 
 ```js
@@ -546,6 +575,9 @@ export default defineConfig(({ command }) => ({
       input: {
         'app': 'js/app.js',
         'ui-doc-custom': 'ui-doc/custom.css',
+      },
+      output: {
+        assetFileNames: 'assets/[name]-[hash][extname]',
       },
     },
   },
@@ -584,6 +616,11 @@ export default defineConfig(({ command }) => ({
           {
             name: 'ui-doc-custom',
             fromInput: true,
+          },
+          {
+            name: 'theme.css',
+            file: './src/theme.css',
+            useAssetFileNames: true, // Use hashed filename
           },
         ],
         example: [

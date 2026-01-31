@@ -849,6 +849,42 @@ describe('asset', () => {
           },
         })
       })
+
+      it('should resolve page asset with useAssetFileNames option', async () => {
+        const mockAssetLoader = createMockAssetLoader({
+          resolve: vi
+            .fn<AssetLoader['resolve']>()
+            .mockResolvedValueOnce('/resolved/ui-doc.min.css')
+            .mockResolvedValueOnce('/resolved/ui-doc.min.js')
+            .mockResolvedValueOnce('/resolved/highlight.min.css')
+            .mockResolvedValueOnce('/resolved/highlight.min.js'),
+          read: vi.fn<AssetLoader['read']>().mockResolvedValue('content'),
+        })
+
+        const fileSystem = createMockFileSystem({
+          assetLoader: vi.fn<FileSystem['assetLoader']>().mockReturnValue(mockAssetLoader),
+        })
+
+        const customAsset: AssetOption = {
+          name: 'hashed.css',
+          source: 'body { color: blue; }',
+          useAssetFileNames: true,
+        }
+
+        const options: Options = {
+          source: [],
+          assets: {
+            page: [customAsset],
+          },
+        }
+
+        const assets = await resolveAssets(options, fileSystem)
+
+        expect(assets[4]).toMatchObject({
+          name: 'hashed.css',
+          useAssetFileNames: true,
+        })
+      })
     })
 
     describe('custom example assets', () => {

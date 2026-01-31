@@ -867,6 +867,65 @@ HTML attributes to add to the asset tag.
 - Attributes are added to `<script>` or `<link>` tags
 - Use for `type="module"`, `media` queries, etc.
 
+### useAssetFileNames
+
+Allow Rollup to apply the `output.assetFileNames` pattern instead of using an explicit file name.
+
+**Type:** `boolean`
+
+**Required:** No
+
+**Default:** `false`
+
+**Example:**
+
+```text
+{
+  name: 'custom-theme.css',
+  file: './src/theme.css',
+  useAssetFileNames: true,
+}
+```
+
+**Example (with Rollup configuration):**
+
+```js
+import uidoc from '@ui-doc/rollup'
+
+export default {
+  output: {
+    dir: 'dist',
+    assetFileNames: 'assets/[name]-[hash][extname]',
+  },
+  plugins: [
+    uidoc({
+      source: ['src/**/*.css'],
+      assets: {
+        page: [
+          {
+            name: 'custom-theme.css',
+            file: './src/theme.css',
+            useAssetFileNames: true, // Use Rollup's assetFileNames pattern
+          },
+        ],
+      },
+    }),
+  ],
+}
+```
+
+**Output:**
+
+With the configuration above, `custom-theme.css` is emitted as `dist/assets/custom-theme-abc123.css` instead of `dist/custom-theme.css`.
+
+**Notes:**
+
+- Enables cache busting with content hashes
+- Only applies to custom assets in `assets.page` and `assets.example`
+- Built-in assets (ui-doc.css, highlight.js) always use explicit file names
+- HTML documentation pages always use explicit file names
+- Set to `false` (default) to use explicit file name without hash
+
 ## Complete options example
 
 Complete configuration demonstrating all major options:
@@ -881,6 +940,7 @@ export default {
   },
   output: {
     dir: 'dist',
+    assetFileNames: 'assets/[name]-[hash][extname]',
   },
   plugins: [
     uidoc({
@@ -915,6 +975,7 @@ export default {
           {
             name: 'custom-page.css',
             file: 'ui-doc/page-styles.css',
+            useAssetFileNames: true, // Use hashed filename
           },
         ],
         example: [

@@ -59,6 +59,7 @@ export async function resolveAssets(
       type: type ?? undefined,
       context,
       attrs: assetOption.attrs,
+      useAssetFileNames: assetOption.useAssetFileNames,
     }
 
     if (assetOption.dependency !== undefined) {

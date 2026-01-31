@@ -595,6 +595,92 @@ describe('uidocPlugin', () => {
         message: 'styles.css from src/styles.css',
       })
     })
+
+    it('should emit asset without explicit fileName when useAssetFileNames is true', async () => {
+      mockResolvedOptions.assets = [
+        {
+          name: 'hashed',
+          fileName: 'hashed.css',
+          context: 'page',
+          source: 'body { color: blue; }',
+          useAssetFileNames: true,
+        },
+      ]
+
+      mockEmitFile.mockReturnValue('ref-123')
+      const mockGetFileName = vi.fn().mockReturnValue('hashed-abc123.css')
+      mockPluginContext.getFileName = mockGetFileName
+
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+
+      type GenerateBundleHook = (
+        options: NormalizedOutputOptions,
+        bundle: OutputBundle,
+        isWrite: boolean,
+      ) => Promise<void>
+      const generateBundle = plugin.generateBundle as GenerateBundleHook
+      await generateBundle.call(
+        mockPluginContext,
+        {} as NormalizedOutputOptions,
+        {},
+        false,
+      )
+
+      expect(mockEmitFile).toHaveBeenCalledWith({
+        name: 'hashed',
+        source: 'body { color: blue; }',
+        type: 'asset',
+      })
+      expect(mockGetFileName).toHaveBeenCalledWith('ref-123')
+      expect(mockResolvedOptions.uidocAsset).toHaveBeenCalledWith('hashed-abc123.css', 'page', {
+        attrs: undefined,
+        fromInput: false,
+        type: undefined,
+      })
+    })
+
+    it('should strip prefix.path from getFileName result when useAssetFileNames is true', async () => {
+      mockResolvedOptions.prefix = { path: 'ui-doc/', uri: 'ui-doc/' }
+      mockResolvedOptions.assets = [
+        {
+          name: 'hashed',
+          fileName: 'hashed.css',
+          context: 'page',
+          source: 'body { color: blue; }',
+          useAssetFileNames: true,
+        },
+      ]
+
+      mockEmitFile.mockReturnValue('ref-456')
+      const mockGetFileName = vi.fn().mockReturnValue('ui-doc/hashed-xyz789.css')
+      mockPluginContext.getFileName = mockGetFileName
+
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+
+      type GenerateBundleHook = (
+        options: NormalizedOutputOptions,
+        bundle: OutputBundle,
+        isWrite: boolean,
+      ) => Promise<void>
+      const generateBundle = plugin.generateBundle as GenerateBundleHook
+      await generateBundle.call(
+        mockPluginContext,
+        {} as NormalizedOutputOptions,
+        {},
+        false,
+      )
+
+      expect(mockEmitFile).toHaveBeenCalledWith({
+        name: 'ui-doc/hashed',
+        source: 'body { color: blue; }',
+        type: 'asset',
+      })
+      expect(mockResolvedOptions.uidocAsset).toHaveBeenCalledWith('hashed-xyz789.css', 'page', {
+        attrs: undefined,
+        fromInput: false,
+        type: undefined,
+      })
+    })
   })
 
   describe('writeBundle', () => {
