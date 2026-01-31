@@ -25,20 +25,20 @@ Install UI-Doc and its dependencies:
 
 ```bash
 # npm
-npm install --save-dev @ui-doc/rollup @ui-doc/html-renderer
+npm install --save-dev @ui-doc/rollup @ui-doc/html-renderer @highlightjs/cdn-assets
 
 # yarn
-yarn add --dev @ui-doc/rollup @ui-doc/html-renderer
+yarn add --dev @ui-doc/rollup @ui-doc/html-renderer @highlightjs/cdn-assets
 
 # pnpm
-pnpm install --save-dev @ui-doc/rollup @ui-doc/html-renderer
+pnpm install --save-dev @ui-doc/rollup @ui-doc/html-renderer @highlightjs/cdn-assets
 ```
 
-> **Note:** `@ui-doc/html-renderer` is a peer dependency required for generating HTML documentation pages.
+> **Note:** `@ui-doc/html-renderer` is required for generating HTML documentation pages. `@highlightjs/cdn-assets` provides syntax highlighting for code examples and can be skipped if you disable highlighting in your configuration.
 
 ## Basic setup
 
-Add the UI-Doc plugin to your Rollup configuration. This minimal setup searches your source files for documentation blocks and generates HTML pages in your output directory.
+Add the UI-Doc plugin to your Rollup configuration. This minimal setup searches your source files for doc blocks and generates HTML pages in your output directory.
 
 ```js
 // rollup.config.js
@@ -75,7 +75,8 @@ This configuration:
 Create a CSS file or add to an existing one with a documentation block:
 
 ```css
-/* src/styles.css */
+/* src/button.css */
+
 /**
  * Button components for user interactions.
  *
@@ -84,17 +85,23 @@ Create a CSS file or add to an existing one with a documentation block:
 
 /**
  * Primary button for main calls to action.
+ * Use this for form submissions and important actions.
  *
  * @location buttons.primary Primary Button
  * @example
  * <button class="btn btn-primary">Save Changes</button>
  */
 .btn-primary {
-  padding: 10px 20px;
   background: #0066cc;
   color: white;
+  padding: 10px 20px;
   border: none;
   border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: #0052a3;
 }
 ```
 
@@ -102,7 +109,9 @@ Create a CSS file or add to an existing one with a documentation block:
 
 - `@page buttons Buttons` creates a documentation page titled "Buttons" with the key `buttons`
 - `@location buttons.primary Primary Button` places content on the "Buttons" page in a section titled "Primary Button"
-- `@example` creates a live preview showing the rendered button, followed by the code
+- `@example` creates a live preview showing the rendered button, followed by the HTML code
+
+The text before the tags becomes the section description.
 
 ## Build your documentation
 
@@ -141,12 +150,92 @@ Open `dist/index.html` in your browser. You should see:
 
 Try clicking the button in the preview. It works as a real HTML element because UI-Doc renders actual markup, not screenshots.
 
+## Build for production
+
+The documentation is generated as static HTML files in your output directory. To serve them in production:
+
+1. Deploy the entire `dist/` directory to your web server or hosting platform
+2. The documentation will be available at the root of your deployment
+3. No server-side processing is required - all pages are static HTML
+
+### Organizing documentation separately
+
+To keep documentation in a separate directory, configure the `output.dir` option:
+
+```js
+// rollup.config.js
+import uidoc from '@ui-doc/rollup'
+
+export default {
+  input: 'src/index.js',
+  output: {
+    dir: 'dist',
+    format: 'es',
+  },
+  plugins: [
+    uidoc({
+      source: ['src/**/*.css', 'src/**/*.js'],
+      output: {
+        dir: 'ui-doc',
+        baseUri: '.',
+      },
+      settings: {
+        texts: {
+          title: 'My Component Library',
+        },
+      },
+    }),
+  ],
+}
+```
+
+This generates documentation in `dist/ui-doc/` with relative URLs, making it portable and viewable without a web server.
+
+## Watch mode
+
+To rebuild documentation automatically during development, use Rollup's watch mode:
+
+```bash
+# If using npm scripts
+npm run dev
+
+# Or run Rollup directly
+npx rollup -c --watch
+```
+
+UI-Doc will regenerate documentation whenever you modify files matching your `source` patterns.
+
 ## Next steps
 
 Now that you have UI-Doc running with Rollup:
 
-- Read [Understanding doc blocks](../concepts/doc-blocks.md) to learn how doc blocks work
-- See all available tags in the Tag Reference (coming soon)
-- Learn how to include your bundled CSS and JavaScript in examples by using assets with `fromInput: true`
+- Learn more about doc blocks and available tags in the [@ui-doc/core documentation](../../packages/core/README.md)
+- Explore advanced configuration in the [@ui-doc/rollup documentation](../../packages/rollup/README.md)
+- Include your bundled CSS in examples using `assets.example` with `fromInput: true`
+- Customize the documentation appearance with custom templates using the `templatePath` option
 
-For more advanced configuration options like custom assets, output directories, and templates, see the [@ui-doc/rollup package documentation](../../packages/rollup/README.md).
+## Troubleshooting
+
+### Documentation not generated
+
+If no documentation files appear in your output directory:
+
+- Verify your `source` patterns match your files (use `npx rollup -c` with verbose logging)
+- Check that your files contain valid JSDoc-style doc blocks using `/** */` syntax
+- Ensure at least one doc block includes a `@page` tag to create a documentation page
+
+### Styles not showing in examples
+
+If your button styles don't appear in the example preview:
+
+- Add your CSS as an example asset using the `assets.example` option
+- For CSS generated by your Rollup build, use `fromInput: true` to reference the bundled output
+- See the [@ui-doc/rollup documentation](../../packages/rollup/README.md#assets-options) for details on asset configuration
+
+### Assets not loading
+
+If you see 404 errors for documentation assets:
+
+- Check that `output.baseUri` matches your deployment path
+- When using `output.dir`, ensure `baseUri` is set correctly (use `'.'` for relative URLs)
+- Verify the asset files exist in the expected location in your output directory

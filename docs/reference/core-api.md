@@ -1,4 +1,4 @@
-# Core API reference
+# Core API Reference
 
 Technical reference for the `@ui-doc/core` package, covering the UIDoc class, CommentBlockParser, events, and configuration options.
 
@@ -6,7 +6,7 @@ Technical reference for the `@ui-doc/core` package, covering the UIDoc class, Co
 
 The `@ui-doc/core` package provides the parsing engine and context management for UI-Doc. It extracts doc blocks from source files, transforms them into structured data, and coordinates output through a renderer.
 
-## UIDoc class
+## UIDoc Class
 
 The main class that orchestrates parsing, context building, and output generation.
 
@@ -55,12 +55,26 @@ const uidoc = new UIDoc({
 
 ### Texts
 
+Customizable text strings used throughout the documentation.
+
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
 | `title` | `string` | `'UI-Doc'` | Title of your documentation site |
 | `copyright` | `string` | `'UI-Doc'` | Copyright text used in footer |
 
-### Generate functions
+**Example:**
+
+```js
+const uidoc = new UIDoc({
+  renderer,
+  texts: {
+    title: 'Component Library',
+    copyright: '© 2025 My Company',
+  },
+})
+```
+
+### Generate Functions
 
 Functions that control how various parts of the documentation are generated.
 
@@ -100,9 +114,13 @@ const uidoc = new UIDoc({
 
 Add a new source file to be processed.
 
+**Syntax:**
+
 ```text
 uidoc.sourceCreate(file: string, content: string): void
 ```
+
+**Parameters:**
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -122,42 +140,84 @@ uidoc.sourceCreate('./src/buttons.css', content)
 
 Update an existing source file. Creates the source if it doesn't exist.
 
+**Syntax:**
+
 ```text
 uidoc.sourceUpdate(file: string, content: string): void
 ```
+
+**Parameters:**
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `file` | `string` | File path identifier |
 | `content` | `string` | Updated file content |
 
+**Example:**
+
+```js
+uidoc.sourceUpdate('./src/buttons.css', updatedContent)
+```
+
 #### sourceDelete
 
 Remove a source file and its associated context entries.
+
+**Syntax:**
 
 ```text
 uidoc.sourceDelete(file: string): void
 ```
 
+**Parameters:**
+
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `file` | `string` | File path identifier |
+
+**Example:**
+
+```js
+uidoc.sourceDelete('./src/buttons.css')
+```
 
 #### sourceExists
 
 Check if a source file has been added.
 
+**Syntax:**
+
 ```text
 uidoc.sourceExists(file: string): boolean
+```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `file` | `string` | File path identifier |
+
+**Returns:** `true` if the source exists, `false` otherwise.
+
+**Example:**
+
+```js
+if (uidoc.sourceExists('./src/buttons.css')) {
+  console.log('Source file exists')
+}
 ```
 
 #### output
 
 Generate all documentation files.
 
+**Syntax:**
+
 ```text
 await uidoc.output(callback: OutputCallback): Promise<void>
 ```
+
+**Parameters:**
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -177,48 +237,106 @@ await uidoc.output(async (fileName, content) => {
 
 Get the rendered content for a specific page.
 
+**Syntax:**
+
 ```text
 uidoc.page(pageId: string): string | null
 ```
 
-Returns `null` if the page doesn't exist.
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `pageId` | `string` | Page identifier |
+
+**Returns:** Rendered page content as a string, or `null` if the page doesn't exist.
+
+**Example:**
+
+```js
+const content = uidoc.page('buttons')
+if (content) {
+  console.log('Page found')
+}
+```
 
 #### example
 
 Get the rendered content for a specific example.
 
+**Syntax:**
+
 ```text
 uidoc.example(exampleId: string): string | null
 ```
 
-Returns `null` if the example doesn't exist.
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `exampleId` | `string` | Example identifier |
+
+**Returns:** Rendered example content as a string, or `null` if the example doesn't exist.
+
+**Example:**
+
+```js
+const exampleContent = uidoc.example('button-primary')
+```
 
 #### pages
 
 Get all pages in the context.
 
+**Syntax:**
+
 ```text
 uidoc.pages(): Record<string, ContextEntry>
 ```
 
+**Returns:** Object mapping page IDs to `ContextEntry` objects.
+
+**Example:**
+
+```js
+const allPages = uidoc.pages()
+Object.keys(allPages).forEach(pageId => {
+  console.log(`Page: ${pageId}`)
+})
+```
+
 #### entries
 
-Get all context entries.
+Get all context entries (pages and sections).
+
+**Syntax:**
 
 ```text
 uidoc.entries(): Record<string, ContextEntry>
+```
+
+**Returns:** Object mapping entry keys to `ContextEntry` objects.
+
+**Example:**
+
+```js
+const allEntries = uidoc.entries()
 ```
 
 #### addAsset
 
 Add an asset (CSS or JS) to be included on documentation pages.
 
+**Syntax:**
+
 ```text
 uidoc.addAsset(asset: Asset): void
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+**Parameters:**
+
+| Property | Type | Description |
+|----------|------|-------------|
 | `asset.type` | `'style' \| 'script'` | Asset type |
 | `asset.src` | `string` | Asset URL or path |
 | `asset.attrs` | `Record<string, string>` | Optional HTML attributes |
@@ -242,15 +360,28 @@ uidoc.addAsset({
 
 Add an asset to be included on example pages (iframes).
 
+**Syntax:**
+
 ```text
 uidoc.addExampleAsset(asset: Asset): void
 ```
 
-Same parameters as `addAsset`.
+**Parameters:** Same as `addAsset`.
+
+**Example:**
+
+```js
+uidoc.addExampleAsset({
+  type: 'style',
+  src: 'example-styles.css',
+})
+```
 
 #### replaceGenerate
 
 Replace a generate function after instantiation.
+
+**Syntax:**
 
 ```text
 uidoc.replaceGenerate<K extends keyof GenerateFunctions>(
@@ -259,29 +390,69 @@ uidoc.replaceGenerate<K extends keyof GenerateFunctions>(
 ): void
 ```
 
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `name` | `keyof GenerateFunctions` | Name of the generate function to replace |
+| `callback` | `GenerateFunctions[K]` | New function implementation |
+
 **Example:**
 
 ```js
 uidoc.replaceGenerate('logo', () => '<span>New Logo</span>')
+uidoc.replaceGenerate('pageTitle', page => `${page.title} | Docs`)
 ```
 
 #### on
 
 Register an event listener.
 
+**Syntax:**
+
 ```text
 uidoc.on(event: string, listener: Function): void
 ```
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `event` | `string` | Event name |
+| `listener` | `Function` | Event handler function |
+
+See [Events](#uidoc-events) for available events.
 
 #### off
 
 Remove an event listener.
 
+**Syntax:**
+
 ```text
 uidoc.off(event: string, listener: Function): void
 ```
 
-## CommentBlockParser class
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `event` | `string` | Event name |
+| `listener` | `Function` | Event handler function to remove |
+
+**Example:**
+
+```js
+function onContextEntry({ entry }) {
+  console.log(`Entry created: ${entry.title}`)
+}
+
+uidoc.on('context-entry', onContextEntry)
+// Later...
+uidoc.off('context-entry', onContextEntry)
+```
+
+## CommentBlockParser Class
 
 Extracts and parses JSDoc-style doc blocks from source code.
 
@@ -292,6 +463,8 @@ import { CommentBlockParser, createMarkdownDescriptionParser } from '@ui-doc/cor
 
 const parser = new CommentBlockParser(descriptionParser)
 ```
+
+**Parameters:**
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
@@ -305,9 +478,11 @@ import { CommentBlockParser, createMarkdownDescriptionParser } from '@ui-doc/cor
 const parser = new CommentBlockParser(createMarkdownDescriptionParser())
 ```
 
-### Factory function
+### Factory Function
 
-A convenience function for creating a parser with default settings:
+A convenience function for creating a parser with default settings.
+
+**Syntax:**
 
 ```ts
 import { createCommentBlockParser, createMarkdownDescriptionParser } from '@ui-doc/core'
@@ -321,12 +496,16 @@ const parser = createCommentBlockParser(createMarkdownDescriptionParser())
 
 Parse source content and extract doc blocks.
 
+**Syntax:**
+
 ```text
 parser.parse(context: BlockParserContext): Block[]
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+**Parameters:**
+
+| Property | Type | Description |
+|----------|------|-------------|
 | `context.content` | `string` | Source file content |
 | `context.identifier` | `string` | File identifier (used in error messages) |
 
@@ -345,12 +524,16 @@ const blocks = parser.parse({
 
 Register a custom tag transformer.
 
+**Syntax:**
+
 ```text
 parser.registerTagTransformer(transformer: TagTransformer): CommentBlockParser
 ```
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+**Parameters:**
+
+| Property | Type | Description |
+|----------|------|-------------|
 | `transformer.name` | `string` | Tag name (without `@`) |
 | `transformer.transform` | `TagTransformFunction` | Transform function |
 
@@ -372,11 +555,36 @@ parser.registerTagTransformer({
 The transform function receives:
 
 - `block` - The block object being built
-- `spec` - Parsed tag data with properties: `name`, `description`, `type`
+- `spec` - Parsed tag data with properties:
+  - `spec.name` - The name portion of the tag
+  - `spec.description` - The description portion
+  - `spec.type` - The type portion (content in braces)
+
+#### on
+
+Register an event listener.
+
+**Syntax:**
+
+```text
+parser.on(event: string, listener: Function): void
+```
+
+See [CommentBlockParser Events](#commentblockparser-events) for available events.
+
+#### off
+
+Remove an event listener.
+
+**Syntax:**
+
+```text
+parser.off(event: string, listener: Function): void
+```
 
 ## Events
 
-### UIDoc events
+### UIDoc Events
 
 | Event | Payload | Description |
 |-------|---------|-------------|
@@ -389,6 +597,8 @@ The transform function receives:
 #### context-entry
 
 Fired when a context entry changes.
+
+**Event Payload:**
 
 ```ts
 interface ContextEntryEvent {
@@ -416,6 +626,8 @@ uidoc.on('context-entry', ({ entry, type }) => {
 
 Fired when a source file changes.
 
+**Event Payload:**
+
 ```ts
 interface SourceEvent {
   file: string
@@ -424,9 +636,19 @@ interface SourceEvent {
 }
 ```
 
+**Example:**
+
+```js
+uidoc.on('source', ({ file, type }) => {
+  console.log(`Source ${type}: ${file}`)
+})
+```
+
 #### output
 
 Fired before output generation. Use to add custom output files.
+
+**Event Payload:**
 
 ```ts
 interface OutputEvent {
@@ -449,6 +671,8 @@ uidoc.on('output', ({ promises, write }) => {
 
 Fired before a page is rendered.
 
+**Event Payload:**
+
 ```ts
 interface PageEvent {
   layout?: string
@@ -456,9 +680,19 @@ interface PageEvent {
 }
 ```
 
+**Example:**
+
+```js
+uidoc.on('page', ({ page }) => {
+  console.log(`Rendering page: ${page.title}`)
+})
+```
+
 #### example
 
 Fired before an example is rendered.
+
+**Event Payload:**
 
 ```ts
 interface ExampleEvent {
@@ -467,7 +701,15 @@ interface ExampleEvent {
 }
 ```
 
-### CommentBlockParser events
+**Example:**
+
+```js
+uidoc.on('example', ({ example }) => {
+  console.log(`Rendering example: ${example.id}`)
+})
+```
+
+### CommentBlockParser Events
 
 | Event | Payload | Description |
 |-------|---------|-------------|
@@ -505,6 +747,69 @@ interface Block {
 }
 ```
 
+### BlockCode
+
+Represents a code block.
+
+```ts
+interface BlockCode {
+  content: string
+  title: string
+  type: string
+}
+```
+
+### BlockExample
+
+Represents an example with preview and code.
+
+```ts
+interface BlockExample extends BlockCode {
+  modifier?: string
+  code?: string
+  id?: string
+  file?: string
+  src?: string
+}
+```
+
+### BlockColor
+
+Represents a color definition.
+
+```ts
+interface BlockColor {
+  font?: CSSColor | CSSVariable
+  name: string
+  text: string
+  value: CSSColor | CSSVariable
+}
+```
+
+### BlockSpace
+
+Represents a spacing definition.
+
+```ts
+interface BlockSpace {
+  name: string
+  text: string
+  value: CSSValue | CSSVariable
+}
+```
+
+### BlockIcon
+
+Represents an icon definition.
+
+```ts
+interface BlockIcon {
+  name: string
+  text: string
+  value: CSSValue | CSSVariable
+}
+```
+
 ### ContextEntry
 
 Represents a page or section in the documentation.
@@ -524,6 +829,19 @@ interface ContextEntry {
   spaces?: BlockSpace[]
   icons?: BlockIcon[]
   hideCode?: boolean
+}
+```
+
+### ContextExample
+
+Represents an example in the context.
+
+```ts
+interface ContextExample extends BlockExample {
+  id: string
+  type: 'html'
+  src: string
+  file: string
 }
 ```
 
@@ -579,9 +897,9 @@ The `spec` parameter contains parsed tag data from `comment-parser`:
 - `spec.description` - The description portion
 - `spec.type` - The type portion (content in braces)
 
-## Complete reference table
+## Complete Reference Table
 
-### UIDoc methods
+### UIDoc Methods
 
 | Method | Description |
 |--------|-------------|
@@ -600,7 +918,7 @@ The `spec` parameter contains parsed tag data from `comment-parser`:
 | `on(event, listener)` | Add event listener |
 | `off(event, listener)` | Remove event listener |
 
-### CommentBlockParser methods
+### CommentBlockParser Methods
 
 | Method | Description |
 |--------|-------------|
@@ -609,8 +927,8 @@ The `spec` parameter contains parsed tag data from `comment-parser`:
 | `on(event, listener)` | Add event listener |
 | `off(event, listener)` | Remove event listener |
 
-## See also
+## See Also
 
 - [Understanding Doc Blocks](../concepts/doc-blocks.md) - How doc blocks work
 - [Tag Reference](./tags.md) - All available tags
-- [Custom Tags](../how-to/custom-tags.md) - Creating custom tag transformers
+- [Custom Tags Tutorial](../tutorials/custom-tags.md) - Creating custom tag transformers
