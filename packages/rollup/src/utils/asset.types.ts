@@ -1,5 +1,25 @@
 import type { Asset } from '@ui-doc/core'
 
+/**
+ * Configuration for copying assets (fonts, images, etc.) to the output directory.
+ */
+export interface CopyAssetOption {
+  /** Glob pattern for source files (e.g., 'src/fonts/**\/*.woff2') */
+  from: string
+  /** Output subdirectory (default: output root) */
+  to?: string
+}
+
+/**
+ * Resolved copy asset with absolute source path and relative output path.
+ */
+export interface CopyAssetResolved {
+  /** Absolute path to the source file */
+  sourcePath: string
+  /** Relative output path (e.g., 'fonts/my-font.woff2') */
+  outputPath: string
+}
+
 export interface AssetOption {
   name: string | (() => string)
   fromInput?: boolean | ((asset: AssetResolved) => boolean)

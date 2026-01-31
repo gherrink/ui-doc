@@ -8,7 +8,7 @@ import type {
 } from '@ui-doc/core'
 
 import type { Api } from '../index'
-import type { AssetOption, AssetResolved } from './asset.types'
+import type { AssetOption, AssetResolved, CopyAssetOption, CopyAssetResolved } from './asset.types'
 
 export interface Options {
   renderer?: Renderer
@@ -23,6 +23,8 @@ export interface Options {
   settings?: Pick<UIDocOptions, 'generate' | 'texts'>
   assets?: {
     static?: string
+    /** Copy assets (fonts, images, etc.) to output with glob patterns */
+    copy?: CopyAssetOption[]
     styleAsset?: false | string
     highlightStyle?: false | string
     highlightTheme?: string
@@ -35,6 +37,7 @@ export interface Options {
 export interface ResolvedOptions {
   assets: AssetResolved[]
   assetsFromInput: Set<string>
+  copyAssets: CopyAssetResolved[]
   staticAssets?: string
   fileSystem: FileSystem
   finder: FileFinder

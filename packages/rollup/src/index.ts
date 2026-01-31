@@ -62,6 +62,7 @@ function handleBlockParseError(this: PluginContext, error: unknown): void {
 export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<Api>> {
   const options = await resolveOptions(rawOptions)
   const {
+    copyAssets,
     finder,
     fileSystem,
     uidoc,
@@ -161,6 +162,13 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
           this.addWatchFile(dir)
         }
       }
+
+      // Watch copy asset source files
+      for (const copyAsset of copyAssets) {
+        if (!watchedFiles.includes(copyAsset.sourcePath)) {
+          this.addWatchFile(copyAsset.sourcePath)
+        }
+      }
     },
 
     async generateBundle() {
@@ -256,6 +264,24 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
           code: 'OUTPUT',
           message: `copying assets from ${staticAssets}`,
         })
+      }
+
+      // Copy copy assets to output
+      if (copyAssets.length > 0) {
+        promises.push(
+          ...copyAssets.map(async ({ sourcePath, outputPath }) => {
+            const destFile = `${outputOptions.dir}/${prefix.path}${outputPath}`
+            const destDir = fileSystem.fileDirname(destFile)
+
+            await fileSystem.ensureDirectoryExists(destDir)
+            await fileSystem.fileCopy(sourcePath, destFile)
+
+            this.info({
+              code: 'OUTPUT',
+              message: `${outputPath} from ${sourcePath}`,
+            })
+          }),
+        )
       }
 
       await Promise.all(promises)

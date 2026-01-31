@@ -3,7 +3,7 @@ import type { Options, ResolvedOptions } from './option.types'
 import { createConsoleLogger, noopLogger, UIDoc } from '@ui-doc/core'
 
 import { NodeFileSystem } from '@ui-doc/node'
-import { resolveAssets, resolveAssetType } from './asset'
+import { resolveAssets, resolveAssetType, resolveCopyAssets } from './asset'
 
 async function createDefaultRenderer(
   templatePath: string | undefined,
@@ -119,9 +119,12 @@ export async function resolveOptions(options: Options): Promise<ResolvedOptions>
     })
   }
 
+  const copyAssets = await resolveCopyAssets(options.assets?.copy, fileSystem)
+
   return {
-    assets: await resolveAssets(options, fileSystem),
+    assets: await resolveAssets(options, fileSystem, copyAssets),
     assetsFromInput,
+    copyAssets,
     fileSystem,
     finder,
     prefix,

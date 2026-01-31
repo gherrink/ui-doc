@@ -231,6 +231,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     const uidoc = api.uidoc
     const uriPrefix = api.options.prefix.uri
     const assets = api.options.assets ?? []
+    const copyAssets = api.options.copyAssets ?? []
     const staticAssets = api.options.staticAssets ?? undefined
 
     if (!uriPrefix) {
@@ -301,6 +302,16 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       }
 
       const fileSystem = api.fileSystem
+
+      // Check if request matches a copy asset output path
+      const requestPath = originalUrl.replace(`/${uriPrefix}`, '').split('?')[0]
+      const copyAsset = copyAssets.find(entry => entry.outputPath === requestPath)
+
+      if (copyAsset) {
+        // Redirect to source file via Vite's /@fs prefix
+        req.url = `/@fs${copyAsset.sourcePath}`
+        return next()
+      }
 
       if (staticAssets === undefined || fileSystem === undefined) {
         return next()

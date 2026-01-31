@@ -1,9 +1,14 @@
-import type { AssetLoader, FileSystem } from '@ui-doc/core'
-import type { AssetOption } from '../src/utils/asset.types'
+import type { AssetLoader, FileFinder, FileSystem } from '@ui-doc/core'
+import type { AssetOption, CopyAssetResolved } from '../src/utils/asset.types'
 
 import type { Options } from '../src/utils/option.types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { resolveAssets, resolveAssetType } from '../src/utils/asset'
+import {
+  resolveAssets,
+  resolveAssetType,
+  resolveCopyAssets,
+  rewriteCssUrls,
+} from '../src/utils/asset'
 
 function createMockAssetLoader(overrides: Partial<AssetLoader> = {}): AssetLoader {
   return {
@@ -1248,6 +1253,235 @@ describe('asset', () => {
         expect(assets[2].source).toBe('highlight-css')
         expect(assets[3].source).toBe('highlight-js')
       })
+    })
+  })
+
+  describe('resolveCopyAssets', () => {
+    it('should return empty array when copyOptions is undefined', async () => {
+      const fileSystem = createMockFileSystem()
+
+      const result = await resolveCopyAssets(undefined, fileSystem)
+
+      expect(result).toEqual([])
+    })
+
+    it('should return empty array when copyOptions is empty', async () => {
+      const fileSystem = createMockFileSystem()
+
+      const result = await resolveCopyAssets([], fileSystem)
+
+      expect(result).toEqual([])
+    })
+
+    it('should resolve copy assets with glob pattern', async () => {
+      const mockSearch = vi.fn().mockImplementation(async (callback: (file: string) => void) => {
+        callback('/project/src/fonts/regular.woff2')
+        callback('/project/src/fonts/bold.woff2')
+      })
+
+      const mockFileFinder: FileFinder = {
+        search: mockSearch,
+        matches: vi.fn(),
+        directories: vi.fn(),
+      }
+
+      const fileSystem = createMockFileSystem({
+        createFileFinder: vi.fn().mockReturnValue(mockFileFinder),
+        resolve: vi.fn().mockImplementation((file: string) => `/project/${file}`),
+      })
+
+      const result = await resolveCopyAssets(
+        [{ from: 'src/fonts/**/*', to: 'fonts' }],
+        fileSystem,
+      )
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toMatchObject({
+        sourcePath: '/project/src/fonts/regular.woff2',
+        outputPath: 'fonts/regular.woff2',
+      })
+      expect(result[1]).toMatchObject({
+        sourcePath: '/project/src/fonts/bold.woff2',
+        outputPath: 'fonts/bold.woff2',
+      })
+    })
+
+    it('should use relative path only when to is undefined', async () => {
+      const mockSearch = vi.fn().mockImplementation(async (callback: (file: string) => void) => {
+        callback('/project/public/images/logo.svg')
+      })
+
+      const mockFileFinder: FileFinder = {
+        search: mockSearch,
+        matches: vi.fn(),
+        directories: vi.fn(),
+      }
+
+      const fileSystem = createMockFileSystem({
+        createFileFinder: vi.fn().mockReturnValue(mockFileFinder),
+        resolve: vi.fn().mockImplementation((file: string) => `/project/${file}`),
+      })
+
+      const result = await resolveCopyAssets(
+        [{ from: 'public/**/*' }],
+        fileSystem,
+      )
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toMatchObject({
+        sourcePath: '/project/public/images/logo.svg',
+        outputPath: 'images/logo.svg',
+      })
+    })
+
+    it('should handle multiple copy options', async () => {
+      const mockSearch = vi.fn()
+        .mockImplementationOnce(async (callback: (file: string) => void) => {
+          callback('/project/src/fonts/font.woff2')
+        })
+        .mockImplementationOnce(async (callback: (file: string) => void) => {
+          callback('/project/src/images/icon.svg')
+        })
+
+      const mockFileFinder: FileFinder = {
+        search: mockSearch,
+        matches: vi.fn(),
+        directories: vi.fn(),
+      }
+
+      const fileSystem = createMockFileSystem({
+        createFileFinder: vi.fn().mockReturnValue(mockFileFinder),
+        resolve: vi.fn().mockImplementation((file: string) => `/project/${file}`),
+      })
+
+      const result = await resolveCopyAssets(
+        [
+          { from: 'src/fonts/**/*', to: 'fonts' },
+          { from: 'src/images/**/*', to: 'images' },
+        ],
+        fileSystem,
+      )
+
+      expect(result).toHaveLength(2)
+      expect(result[0].outputPath).toBe('fonts/font.woff2')
+      expect(result[1].outputPath).toBe('images/icon.svg')
+    })
+  })
+
+  describe('rewriteCssUrls', () => {
+    interface AssetInput { source: string, output: string }
+    const createCopyAssets = (assets: AssetInput[]): CopyAssetResolved[] =>
+      assets.map(({ source, output }) => ({
+        sourcePath: source,
+        outputPath: output,
+      }))
+
+    it('should return original content when copyAssets is empty', () => {
+      const css = 'body { background: url("./images/bg.png"); }'
+
+      const result = rewriteCssUrls(css, '/project/src/styles.css', [])
+
+      expect(result).toBe(css)
+    })
+
+    it('should rewrite quoted url() references', () => {
+      const css = '@font-face { src: url("../fonts/font.woff2"); }'
+      const copyAssets = createCopyAssets([
+        { source: '/project/fonts/font.woff2', output: 'assets/fonts/font.woff2' },
+      ])
+
+      const result = rewriteCssUrls(css, '/project/src/styles.css', copyAssets)
+
+      expect(result).toBe('@font-face { src: url("./assets/fonts/font.woff2"); }')
+    })
+
+    it('should rewrite single-quoted url() references', () => {
+      const css = '.icon { background: url(\'./images/icon.svg\'); }'
+      const copyAssets = createCopyAssets([
+        { source: '/project/src/images/icon.svg', output: 'images/icon.svg' },
+      ])
+
+      const result = rewriteCssUrls(css, '/project/src/styles.css', copyAssets)
+
+      expect(result).toBe('.icon { background: url(\'./images/icon.svg\'); }')
+    })
+
+    it('should rewrite unquoted url() references', () => {
+      const css = 'body { background: url(images/bg.png); }'
+      const copyAssets = createCopyAssets([
+        { source: '/project/src/images/bg.png', output: 'static/bg.png' },
+      ])
+
+      const result = rewriteCssUrls(css, '/project/src/styles.css', copyAssets)
+
+      expect(result).toBe('body { background: url(./static/bg.png); }')
+    })
+
+    it('should skip data URIs', () => {
+      const css = 'body { background: url("data:image/png;base64,ABC123"); }'
+      const copyAssets = createCopyAssets([
+        { source: '/project/data:image/png;base64,ABC123', output: 'invalid.png' },
+      ])
+
+      const result = rewriteCssUrls(css, '/project/src/styles.css', copyAssets)
+
+      expect(result).toBe(css)
+    })
+
+    it('should skip http URLs', () => {
+      const css = 'body { background: url("http://example.com/image.png"); }'
+      const copyAssets = createCopyAssets([
+        { source: '/project/http://example.com/image.png', output: 'image.png' },
+      ])
+
+      const result = rewriteCssUrls(css, '/project/src/styles.css', copyAssets)
+
+      expect(result).toBe(css)
+    })
+
+    it('should skip https URLs', () => {
+      const css = 'body { background: url("https://example.com/image.png"); }'
+      const copyAssets = createCopyAssets([])
+
+      const result = rewriteCssUrls(css, '/project/src/styles.css', copyAssets)
+
+      expect(result).toBe(css)
+    })
+
+    it('should skip protocol-relative URLs', () => {
+      const css = 'body { background: url("//example.com/image.png"); }'
+      const copyAssets = createCopyAssets([])
+
+      const result = rewriteCssUrls(css, '/project/src/styles.css', copyAssets)
+
+      expect(result).toBe(css)
+    })
+
+    it('should not modify urls that do not match copy assets', () => {
+      const css = 'body { background: url("./unknown.png"); }'
+      const copyAssets = createCopyAssets([
+        { source: '/project/src/other.png', output: 'other.png' },
+      ])
+
+      const result = rewriteCssUrls(css, '/project/src/styles.css', copyAssets)
+
+      expect(result).toBe(css)
+    })
+
+    it('should rewrite multiple url() references in same file', () => {
+      const css = `
+        @font-face { src: url("../fonts/regular.woff2"); }
+        @font-face { src: url("../fonts/bold.woff2"); }
+      `
+      const copyAssets = createCopyAssets([
+        { source: '/project/fonts/regular.woff2', output: 'fonts/regular.woff2' },
+        { source: '/project/fonts/bold.woff2', output: 'fonts/bold.woff2' },
+      ])
+
+      const result = rewriteCssUrls(css, '/project/src/styles.css', copyAssets)
+
+      expect(result).toContain('url("./fonts/regular.woff2")')
+      expect(result).toContain('url("./fonts/bold.woff2")')
     })
   })
 })

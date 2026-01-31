@@ -104,6 +104,7 @@ describe('uidocPlugin', () => {
     mockResolvedOptions = {
       assets: [],
       assetsFromInput: new Set<string>(),
+      copyAssets: [],
       staticAssets: undefined,
       fileSystem: mockFileSystem,
       finder: mockFileFinder,
