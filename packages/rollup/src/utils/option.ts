@@ -1,6 +1,6 @@
-import type { FileSystem, Renderer } from '@ui-doc/core'
+import type { FileSystem, Logger, Renderer } from '@ui-doc/core'
 import type { Options, ResolvedOptions } from './option.types'
-import { UIDoc } from '@ui-doc/core'
+import { createConsoleLogger, noopLogger, UIDoc } from '@ui-doc/core'
 
 import { NodeFileSystem } from '@ui-doc/node'
 import { resolveAssets, resolveAssetType } from './asset'
@@ -8,6 +8,7 @@ import { resolveAssets, resolveAssetType } from './asset'
 async function createDefaultRenderer(
   templatePath: string | undefined,
   fileSystem: FileSystem,
+  logger: Logger,
 ): Promise<Renderer> {
   let rendererImport
   try {
@@ -17,7 +18,7 @@ async function createDefaultRenderer(
       '@ui-doc/html-renderer is required but not installed. Please install it as a dependency.',
     )
   }
-  const renderer = new rendererImport.HtmlRenderer(rendererImport.NodeParser.init())
+  const renderer = new rendererImport.HtmlRenderer(rendererImport.NodeParser.init(), logger)
   const packageTemplatePath = await fileSystem
     .assetLoader()
     .packagePath(rendererImport.TemplateLoader.TEMPLATES_PACKAGE)
@@ -80,9 +81,13 @@ export async function resolveOptions(options: Options): Promise<ResolvedOptions>
   const resolvedSettings = settingsOverride ?? options.settings
   const fileSystem = NodeFileSystem.init()
   const finder = fileSystem.createFileFinder(options.source)
+  const logger = options.debug === true ? createConsoleLogger('debug') : noopLogger
+  const renderer = options.renderer
+    ?? (await createDefaultRenderer(options.templatePath, fileSystem, logger))
   const uidoc = new UIDoc({
     blockParser: options.blockParser,
-    renderer: options.renderer ?? (await createDefaultRenderer(options.templatePath, fileSystem)),
+    logger,
+    renderer,
     ...(resolvedSettings ?? {}),
   })
   const assetsFromInput = new Set<string>()

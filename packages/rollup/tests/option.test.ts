@@ -10,6 +10,18 @@ import { resolveOptions } from '../src/utils/option'
 
 vi.mock('@ui-doc/core', () => ({
   UIDoc: vi.fn(),
+  noopLogger: {
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+  },
+  createConsoleLogger: vi.fn(() => ({
+    debug: vi.fn(),
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+  })),
 }))
 
 vi.mock('@ui-doc/node', () => ({

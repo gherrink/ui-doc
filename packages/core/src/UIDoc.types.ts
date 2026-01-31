@@ -1,11 +1,13 @@
 import type { Block } from './Block.types'
 import type { BlockParser } from './BlockParser.types'
 import type { Context, ContextEntry, ContextExample } from './Context.types'
+import type { Logger } from './Logger.types'
 import type { Renderer } from './Renderer.types'
 
 export interface Options {
   blockParser?: BlockParser
   generate?: Partial<GenerateFunctions>
+  logger?: Logger
   renderer: Renderer
   texts?: Partial<Texts>
 }

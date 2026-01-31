@@ -2,11 +2,13 @@ import type { Block, BlockExample } from './Block.types'
 import type { BlockParser } from './BlockParser.types'
 import type { Asset, Context, ContextEntry, ContextExample, GenerateExampleContext } from './Context.types'
 import type { FilePath } from './FileSystem.types'
+import type { Logger } from './Logger.types'
 import type { Renderer } from './Renderer.types'
 import type { GenerateFunctions, Options, OutputCallback, Source } from './UIDoc.types'
 import type { ContextEntryEvent, UIDocEventMap as EventMap } from './UIDocEvent.types'
 import { createCommentBlockParser } from './CommentBlockParser'
 import { EventEmitterBase } from './EventEmitterBase'
+import { noopLogger } from './Logger'
 import { createMarkdownDescriptionParser } from './MarkdownDescriptionParser'
 
 export class UIDoc extends EventEmitterBase<EventMap> {
@@ -17,6 +19,8 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   public blockParser: BlockParser
 
   public renderer: Renderer
+
+  public logger: Logger
 
   protected texts = {
     copyright: 'UI-Doc',
@@ -70,6 +74,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   constructor(options: Options) {
     super()
     this.sources = {}
+    this.logger = options.logger ?? noopLogger
     this.blockParser = options.blockParser ?? this.createParser()
     this.renderer = options.renderer
     this.generate = Object.assign(this.generate, options.generate ?? {})
@@ -156,9 +161,11 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   }
 
   public sourceCreate(file: string, content: string): void {
+    this.logger.debug(`Creating source ${file}`, { source: file, phase: 'parse' })
     const source: Source = {
       blocks: this.blockParser.parse({ content, identifier: file }),
     }
+    this.logger.debug(`Parsed ${source.blocks.length} blocks`, { source: file, phase: 'parse' })
 
     this.sources[file] = source
     this.emit('source', { file, source, type: 'create' })
@@ -173,9 +180,11 @@ export class UIDoc extends EventEmitterBase<EventMap> {
       return
     }
 
+    this.logger.debug(`Updating source ${file}`, { source: file, phase: 'parse' })
     const blocksNew = this.blockParser.parse({ content, identifier: file })
     const sourceBlockKeysOld = this.sources[file].blocks.map(block => block.key)
     const sourceBlockKeysNew = blocksNew.map(block => block.key)
+    this.logger.debug(`Parsed ${blocksNew.length} blocks`, { source: file, phase: 'parse' })
 
     // write new blocks to source
     this.sources[file].blocks = blocksNew
@@ -198,6 +207,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
       return
     }
 
+    this.logger.debug(`Deleting source ${file}`, { source: file, phase: 'parse' })
     this.emit('source', { file, source: this.sources[file], type: 'delete' })
     this.sources[file].blocks
       .map(block => block.key)
@@ -215,6 +225,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   }
 
   protected blockToContext(block: Block): void {
+    this.logger.debug(`Transforming block "${block.key}"`, { phase: 'transform' })
     const entry = this.contextEntry(block.key)
     // Explicit list of properties that can be transferred from Block to ContextEntry
     const transferableProps = ['order', 'description', 'code', 'example', 'colors', 'spaces', 'icons', 'hideCode'] as const
@@ -359,6 +370,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     }
 
     const pages = Object.values(this.pages())
+    this.logger.info(`Generating ${pages.length} pages`, { phase: 'output' })
     const promises = pages.map(async page =>
       write(`${page.id}.html`, this.pageContent(page, page.layout)),
     )
@@ -375,6 +387,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   }
 
   public pageContent(page: ContextEntry, layout?: string): string {
+    this.logger.debug(`Rendering page "${page.id}" with layout "${layout ?? 'default'}"`, { phase: 'render' })
     const context = {
       assets: this.context.pageAssets,
       footerText: this.generate.footerText(),
@@ -402,6 +415,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   }
 
   public exampleContent(example: ContextExample, layout = 'example'): string {
+    this.logger.debug(`Rendering example "${example.id}" with layout "${layout}"`, { phase: 'render' })
     const context: GenerateExampleContext = {
       ...JSON.parse(JSON.stringify(example)) as ContextExample,
       title: this.generate.exampleTitle(example),
