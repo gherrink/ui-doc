@@ -184,6 +184,24 @@ For package-specific work, include the package name: `fix/core-parser-edge-case`
 
 See the [Branching Model Guide](./docs/contributing/branching-model.md) for detailed workflows including hotfix procedures and cross-package changes.
 
+## Release Process
+
+Releases are fully automated via GitHub Actions. When code is merged to `master`:
+
+1. Each package is analyzed for conventional commits since its last release
+2. Versions are bumped based on commit types (fix → patch, feat → minor, breaking → major)
+3. CHANGELOGs are generated and packages are published to npm
+
+Packages are versioned independently—a `feat(core):` commit only releases `@ui-doc/core`, not downstream packages.
+
+### Key Points
+
+- Use proper commit scopes (`core`, `node`, `html-renderer`, `rollup`, `vite`) to trigger releases
+- Commits without package scopes (`docs:`, `chore:`) don't trigger releases
+- When making breaking changes, update workspace dependency constraints in the same PR
+
+See the [Release Process Guide](./docs/contributing/release-process.md) for workspace dependency management, manual procedures, and troubleshooting.
+
 ## Project Structure
 
 ```text
