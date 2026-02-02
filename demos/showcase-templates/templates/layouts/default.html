@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{var:title}} - Custom Branding</title>
+    <link rel="shortcut icon" href="./favicon.ico" />
+
+    {{var:styles}}
+    <style>
+      :root {
+        --brand-primary: #6366f1;
+        --brand-secondary: #8b5cf6;
+      }
+      .custom-header {
+        background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+        color: white;
+        padding: 1rem;
+        text-align: center;
+      }
+      .custom-header h1 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+      .custom-header p {
+        margin: 0.5rem 0 0;
+        opacity: 0.9;
+        font-size: 0.875rem;
+      }
+      .custom-footer {
+        background: #1f2937;
+        color: #9ca3af;
+        padding: 1rem;
+        text-align: center;
+        font-size: 0.875rem;
+      }
+      .custom-footer a {
+        color: #6366f1;
+      }
+    </style>
+  </head>
+  <body class="page {{var:page.id}}">
+    <header class="custom-header">
+      <h1>Custom Branded Docs</h1>
+      <p>Demonstrating custom HTML templates in UI-Doc</p>
+    </header>
+
+    {{partial:nav-main}}
+    {{page:page.id page}}
+
+    <footer class="custom-footer">
+      <p>Built with <a href="https://github.com/example/ui-doc">UI-Doc</a> | Custom Template Demo</p>
+    </footer>
+
+    {{var:scripts}}
+    <script type="application/javascript">
+      hljs.highlightAll()
+    </script>
+  </body>
+</html>

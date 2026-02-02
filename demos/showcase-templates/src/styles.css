@@ -1,0 +1,137 @@
+/**
+ * Custom Templates Demo
+ * This demo shows how to customize UI-Doc's HTML output with your own templates.
+ *
+ * @page index Custom Templates
+ */
+
+/**
+ * UI components for the templates demo.
+ *
+ * @page components Components
+ * @order 10
+ */
+
+/**
+ * Primary action button.
+ *
+ * @location components.button Button
+ * @example
+ * <button class="btn">Action</button>
+ * <button class="btn btn-outline">Outline</button>
+ */
+.btn {
+  cursor: pointer;
+
+  padding: 10px 20px;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+
+  background: #6366f1;
+  border: 2px solid #6366f1;
+  border-radius: 6px;
+
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: #4f46e5;
+  border-color: #4f46e5;
+}
+
+.btn-outline {
+  color: #6366f1;
+  background: transparent;
+}
+
+.btn-outline:hover {
+  color: white;
+  background: #6366f1;
+}
+
+/**
+ * Input field for forms.
+ *
+ * @location components.input Input
+ * @example
+ * <input type="text" class="input" placeholder="Enter text..." />
+ * <input type="text" class="input" value="With value" />
+ */
+.input {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px 14px;
+
+  font-size: 14px;
+
+  border: 2px solid #e5e7eb;
+  border-radius: 6px;
+
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: #6366f1;
+  outline: none;
+}
+
+/**
+ * Toggle switch component.
+ *
+ * @location components.toggle Toggle
+ * @example
+ * <label class="toggle">
+ *   <input type="checkbox" />
+ *   <span class="toggle-slider"></span>
+ * </label>
+ */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+}
+
+.toggle input {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.toggle-slider {
+  cursor: pointer;
+
+  position: absolute;
+  inset: 0;
+
+  background: #e5e7eb;
+  border-radius: 26px;
+
+  transition: 0.3s;
+}
+
+.toggle-slider::before {
+  content: "";
+
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+
+  width: 20px;
+  height: 20px;
+
+  background: white;
+  border-radius: 50%;
+
+  transition: 0.3s;
+}
+
+.toggle input:checked + .toggle-slider {
+  background: #6366f1;
+}
+
+.toggle input:checked + .toggle-slider::before {
+  transform: translateX(22px);
+}
