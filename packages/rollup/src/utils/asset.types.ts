@@ -43,6 +43,8 @@ export interface AssetResolved {
   type?: Asset['type']
   originalFileName?: string
   fromInput?: true
+  /** Absolute path to source file, used for dev server file serving */
+  file?: string
   source?: string | Uint8Array
   attrs?: Asset['attrs']
   /**

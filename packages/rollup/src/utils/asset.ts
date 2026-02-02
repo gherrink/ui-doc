@@ -171,9 +171,11 @@ export async function resolveAssets(
           : assetOption.dependency,
       )
     } else if (assetOption.file !== undefined) {
-      asset.originalFileName = fileSystem.resolve(
+      const resolvedFile = fileSystem.resolve(
         typeof assetOption.file === 'function' ? assetOption.file() : assetOption.file,
       )
+      asset.originalFileName = resolvedFile
+      asset.file = resolvedFile
     }
 
     if (

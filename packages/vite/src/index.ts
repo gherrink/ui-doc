@@ -295,6 +295,11 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         const asset = assets.find(entry => entry.name === assetName)
 
         if (asset) {
+          // For file-based assets, redirect to Vite's file server
+          if (asset.file !== undefined && asset.file !== '') {
+            req.url = `/@fs${asset.file}`
+            return next()
+          }
           res.write(asset.source)
           res.end()
           return
