@@ -62,6 +62,7 @@ function handleBlockParseError(this: PluginContext, error: unknown): void {
 export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<Api>> {
   const options = await resolveOptions(rawOptions)
   const {
+    copyAssets,
     finder,
     fileSystem,
     uidoc,
@@ -154,26 +155,66 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
           }
         }
       })
+
+      // Watch source directories to detect new file creation
+      for (const dir of finder.directories()) {
+        if (!watchedFiles.includes(dir)) {
+          this.addWatchFile(dir)
+        }
+      }
+
+      // Watch copy asset source files
+      for (const copyAsset of copyAssets) {
+        if (!watchedFiles.includes(copyAsset.sourcePath)) {
+          this.addWatchFile(copyAsset.sourcePath)
+        }
+      }
     },
 
     async generateBundle() {
       options.assets.forEach(
-        ({ name, fileName, source, originalFileName, context, attrs, type, fromInput = false }) => {
+        ({
+          name,
+          fileName,
+          source,
+          originalFileName,
+          context,
+          attrs,
+          type,
+          fromInput = false,
+          useAssetFileNames = false,
+        }) => {
+          let resolvedFileName = fileName
+
           if (source !== undefined) {
-            this.emitFile({
-              name,
-              fileName: `${prefix.path}${fileName}`,
-              source,
-              type: 'asset',
-            })
+            if (useAssetFileNames) {
+              // Let Rollup apply assetFileNames pattern (e.g., for cache-busting hashes)
+              const referenceId = this.emitFile({
+                name: `${prefix.path}${name}`,
+                source,
+                type: 'asset',
+              })
+              resolvedFileName = this.getFileName(referenceId)
+              // Remove prefix.path since getFileName returns the full path
+              if (prefix.path !== '' && resolvedFileName.startsWith(prefix.path)) {
+                resolvedFileName = resolvedFileName.slice(prefix.path.length)
+              }
+            } else {
+              this.emitFile({
+                name,
+                fileName: `${prefix.path}${fileName}`,
+                source,
+                type: 'asset',
+              })
+            }
 
             this.info({
               code: 'OUTPUT',
-              message: `${fileName} from ${originalFileName}`,
+              message: `${resolvedFileName} from ${originalFileName}`,
             })
           }
 
-          uidocAsset(fileName, context, { attrs, fromInput, type })
+          uidocAsset(resolvedFileName, context, { attrs, fromInput, type })
         },
       )
 
@@ -223,6 +264,24 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
           code: 'OUTPUT',
           message: `copying assets from ${staticAssets}`,
         })
+      }
+
+      // Copy copy assets to output
+      if (copyAssets.length > 0) {
+        promises.push(
+          ...copyAssets.map(async ({ sourcePath, outputPath }) => {
+            const destFile = `${outputOptions.dir}/${prefix.path}${outputPath}`
+            const destDir = fileSystem.fileDirname(destFile)
+
+            await fileSystem.ensureDirectoryExists(destDir)
+            await fileSystem.fileCopy(sourcePath, destFile)
+
+            this.info({
+              code: 'OUTPUT',
+              message: `${outputPath} from ${sourcePath}`,
+            })
+          }),
+        )
       }
 
       await Promise.all(promises)

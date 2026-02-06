@@ -30,6 +30,7 @@ describe('uidocPlugin', () => {
   // Individual mock functions for verification
   let mockSearch: ReturnType<typeof vi.fn>
   let mockMatches: ReturnType<typeof vi.fn>
+  let mockDirectories: ReturnType<typeof vi.fn>
   let mockFileRead: ReturnType<typeof vi.fn>
   let mockFileCopy: ReturnType<typeof vi.fn>
   let mockFileExists: ReturnType<typeof vi.fn>
@@ -53,6 +54,7 @@ describe('uidocPlugin', () => {
     // Create individual mock functions
     mockSearch = vi.fn().mockResolvedValue(undefined)
     mockMatches = vi.fn().mockReturnValue(false)
+    mockDirectories = vi.fn().mockReturnValue([])
     mockFileRead = vi.fn().mockResolvedValue('file content')
     mockFileCopy = vi.fn().mockResolvedValue(undefined)
     mockFileExists = vi.fn().mockResolvedValue(false)
@@ -74,6 +76,7 @@ describe('uidocPlugin', () => {
     mockFileFinder = {
       search: mockSearch,
       matches: mockMatches,
+      directories: mockDirectories,
     } as FileFinder
 
     // Mock FileSystem
@@ -101,6 +104,7 @@ describe('uidocPlugin', () => {
     mockResolvedOptions = {
       assets: [],
       assetsFromInput: new Set<string>(),
+      copyAssets: [],
       staticAssets: undefined,
       fileSystem: mockFileSystem,
       finder: mockFileFinder,
@@ -384,6 +388,32 @@ describe('uidocPlugin', () => {
 
       expect(mockWarn).not.toHaveBeenCalled()
     })
+
+    it('should add watch files for source directories', async () => {
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+
+      mockDirectories.mockReturnValue(['/path/to/src', '/path/to/lib'])
+
+      const buildStart = plugin.buildStart as (options: NormalizedInputOptions) => Promise<void>
+      await buildStart.call(mockPluginContext, {} as NormalizedInputOptions)
+
+      expect(mockDirectories).toHaveBeenCalled()
+      expect(mockAddWatchFile).toHaveBeenCalledWith('/path/to/src')
+      expect(mockAddWatchFile).toHaveBeenCalledWith('/path/to/lib')
+    })
+
+    it('should skip already watched directories', async () => {
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+
+      mockGetWatchFiles.mockReturnValue(['/path/to/src'])
+      mockDirectories.mockReturnValue(['/path/to/src', '/path/to/lib'])
+
+      const buildStart = plugin.buildStart as (options: NormalizedInputOptions) => Promise<void>
+      await buildStart.call(mockPluginContext, {} as NormalizedInputOptions)
+
+      expect(mockAddWatchFile).not.toHaveBeenCalledWith('/path/to/src')
+      expect(mockAddWatchFile).toHaveBeenCalledWith('/path/to/lib')
+    })
   })
 
   describe('generateBundle', () => {
@@ -593,6 +623,92 @@ describe('uidocPlugin', () => {
       expect(mockInfo).toHaveBeenCalledWith({
         code: 'OUTPUT',
         message: 'styles.css from src/styles.css',
+      })
+    })
+
+    it('should emit asset without explicit fileName when useAssetFileNames is true', async () => {
+      mockResolvedOptions.assets = [
+        {
+          name: 'hashed',
+          fileName: 'hashed.css',
+          context: 'page',
+          source: 'body { color: blue; }',
+          useAssetFileNames: true,
+        },
+      ]
+
+      mockEmitFile.mockReturnValue('ref-123')
+      const mockGetFileName = vi.fn().mockReturnValue('hashed-abc123.css')
+      mockPluginContext.getFileName = mockGetFileName
+
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+
+      type GenerateBundleHook = (
+        options: NormalizedOutputOptions,
+        bundle: OutputBundle,
+        isWrite: boolean,
+      ) => Promise<void>
+      const generateBundle = plugin.generateBundle as GenerateBundleHook
+      await generateBundle.call(
+        mockPluginContext,
+        {} as NormalizedOutputOptions,
+        {},
+        false,
+      )
+
+      expect(mockEmitFile).toHaveBeenCalledWith({
+        name: 'hashed',
+        source: 'body { color: blue; }',
+        type: 'asset',
+      })
+      expect(mockGetFileName).toHaveBeenCalledWith('ref-123')
+      expect(mockResolvedOptions.uidocAsset).toHaveBeenCalledWith('hashed-abc123.css', 'page', {
+        attrs: undefined,
+        fromInput: false,
+        type: undefined,
+      })
+    })
+
+    it('should strip prefix.path from getFileName result when useAssetFileNames is true', async () => {
+      mockResolvedOptions.prefix = { path: 'ui-doc/', uri: 'ui-doc/' }
+      mockResolvedOptions.assets = [
+        {
+          name: 'hashed',
+          fileName: 'hashed.css',
+          context: 'page',
+          source: 'body { color: blue; }',
+          useAssetFileNames: true,
+        },
+      ]
+
+      mockEmitFile.mockReturnValue('ref-456')
+      const mockGetFileName = vi.fn().mockReturnValue('ui-doc/hashed-xyz789.css')
+      mockPluginContext.getFileName = mockGetFileName
+
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+
+      type GenerateBundleHook = (
+        options: NormalizedOutputOptions,
+        bundle: OutputBundle,
+        isWrite: boolean,
+      ) => Promise<void>
+      const generateBundle = plugin.generateBundle as GenerateBundleHook
+      await generateBundle.call(
+        mockPluginContext,
+        {} as NormalizedOutputOptions,
+        {},
+        false,
+      )
+
+      expect(mockEmitFile).toHaveBeenCalledWith({
+        name: 'ui-doc/hashed',
+        source: 'body { color: blue; }',
+        type: 'asset',
+      })
+      expect(mockResolvedOptions.uidocAsset).toHaveBeenCalledWith('hashed-xyz789.css', 'page', {
+        attrs: undefined,
+        fromInput: false,
+        type: undefined,
       })
     })
   })

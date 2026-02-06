@@ -1,0 +1,181 @@
+/**
+ * Variations Demo - Shows how @variations creates permutation grids.
+ *
+ * @page index Variations Demo
+ */
+
+/**
+ * Button variations showcase.
+ *
+ * @page buttons Buttons
+ * @order 10
+ */
+
+/**
+ * Background colors that can be used as variations.
+ *
+ * @page backgrounds Backgrounds
+ * @order 20
+ */
+
+/**
+ * Black background variation.
+ *
+ * @location backgrounds.black Black
+ */
+.bg-black {
+  color: white;
+  background-color: #1f2937;
+}
+
+/**
+ * White background variation.
+ *
+ * @location backgrounds.white White
+ */
+.bg-white {
+  color: #1f2937;
+  background-color: #fff;
+}
+
+/**
+ * Blue background variation.
+ *
+ * @location backgrounds.blue Blue
+ */
+.bg-blue {
+  color: white;
+  background-color: #3b82f6;
+}
+
+/**
+ * Gray background variation.
+ *
+ * @location backgrounds.gray Gray
+ */
+.bg-gray {
+  color: #1f2937;
+  background-color: #f3f4f6;
+}
+
+/**
+ * Primary button - shown on all background variations.
+ * The @variations tag creates a grid showing this button on each bg color.
+ *
+ * @location buttons.primary Primary
+ * @variations backgrounds
+ * @example
+ * <button class="btn btn-primary">Primary Button</button>
+ */
+.btn-primary {
+  cursor: pointer;
+
+  padding: 8px 16px;
+
+  font-size: 14px;
+  color: white;
+
+  background: #3b82f6;
+  border: none;
+  border-radius: 4px;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+/**
+ * Secondary button - shown on all background variations.
+ *
+ * @location buttons.secondary Secondary
+ * @variations backgrounds
+ * @example
+ * <button class="btn btn-secondary">Secondary Button</button>
+ */
+.btn-secondary {
+  cursor: pointer;
+
+  padding: 8px 16px;
+
+  font-size: 14px;
+  color: inherit;
+
+  background: transparent;
+  border: 2px solid #6b7280;
+  border-radius: 4px;
+}
+
+.btn-secondary:hover {
+  background: rgb(107 114 128 / 10%);
+}
+
+/**
+ * Ghost button - minimal styling for subtle actions.
+ *
+ * @location buttons.ghost Ghost
+ * @variations backgrounds
+ * @example
+ * <button class="btn btn-ghost">Ghost Button</button>
+ */
+.btn-ghost {
+  cursor: pointer;
+
+  padding: 8px 16px;
+
+  font-size: 14px;
+  color: inherit;
+
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+}
+
+.btn-ghost:hover {
+  background: rgb(0 0 0 / 5%);
+}
+
+/**
+ * Size variations for buttons.
+ *
+ * @page sizes Sizes
+ * @order 30
+ */
+
+/**
+ * Small size variation.
+ *
+ * @location sizes.small Small
+ */
+.size-small {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+/**
+ * Medium size variation (default).
+ *
+ * @location sizes.medium Medium
+ */
+.size-medium {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+/**
+ * Large size variation.
+ *
+ * @location sizes.large Large
+ */
+.size-large {
+  padding: 12px 24px;
+  font-size: 16px;
+}
+
+/**
+ * Button with size variations - creates a grid for each size.
+ *
+ * @location buttons.sized Sized Button
+ * @variations sizes
+ * @example
+ * <button class="btn btn-primary">Sized Button</button>
+ */

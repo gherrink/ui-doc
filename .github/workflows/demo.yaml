@@ -33,14 +33,13 @@ jobs:
           node-version: 20
           cache: pnpm
 
-      - name: Install global dependencies
+      - name: Install dependencies
         run: pnpm install
 
-      - name: Install demo dependencies
-        working-directory: ./demos
-        run: pnpm install
+      - name: Build packages
+        run: pnpm workspace:build
 
-      - name: Build
+      - name: Build demo
         working-directory: ./demos
         run: pnpm run vite:build
 

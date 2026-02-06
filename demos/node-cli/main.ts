@@ -10,11 +10,11 @@ import { createNodeFileSystem } from '@ui-doc/node'
 // TODO clean up output directory
 // TODO make it run parallel
 async function main() {
-  const outputDir = './dist/base'
+  const outputDir = './dist/node-cli'
   const fileSystem = createNodeFileSystem()
   const assetLoader = fileSystem.assetLoader()
   const renderer = new HtmlRenderer(NodeParser.init())
-  const finder = fileSystem.createFileFinder(['css/**/*.css'])
+  const finder = fileSystem.createFileFinder(['shared/css/**/*.css'])
   const templatePath = await assetLoader.packagePath(TemplateLoader.TEMPLATES_PACKAGE)
 
   if (!templatePath) {

@@ -1,0 +1,71 @@
+/**
+ * Welcome to the minimal UI-Doc demo!
+ * This demonstrates the bare minimum setup needed.
+ *
+ * @page index Welcome
+ */
+
+/**
+ * Basic components for the minimal demo.
+ *
+ * @page components Components
+ * @order 10
+ */
+
+/**
+ * A simple button component.
+ *
+ * @location components.button Button
+ * @example
+ * <button class="btn">Click me</button>
+ * <button class="btn" disabled>Disabled</button>
+ */
+.btn {
+  cursor: pointer;
+
+  padding: 8px 16px;
+
+  font-size: 14px;
+  color: white;
+
+  background: #3b82f6;
+  border: none;
+  border-radius: 4px;
+}
+
+.btn:hover {
+  background: #2563eb;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  background: #9ca3af;
+}
+
+/**
+ * A simple card component for displaying content.
+ *
+ * @location components.card Card
+ * @example
+ * <div class="card">
+ *   <h3 class="card-title">Card Title</h3>
+ *   <p class="card-body">This is card content.</p>
+ * </div>
+ */
+.card {
+  padding: 16px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.card-title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.card-body {
+  margin: 0;
+  color: #6b7280;
+}

@@ -4,7 +4,7 @@ import type { Options } from '../src/utils/option.types'
 
 import { UIDoc } from '@ui-doc/core'
 import { NodeFileSystem } from '@ui-doc/node'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { resolveAssets, resolveAssetType } from '../src/utils/asset'
 import { resolveOptions } from '../src/utils/option'
 
@@ -32,6 +32,7 @@ vi.mock('@ui-doc/node', () => ({
 
 vi.mock('../src/utils/asset', () => ({
   resolveAssets: vi.fn(),
+  resolveCopyAssets: vi.fn().mockResolvedValue([]),
   resolveAssetType: vi.fn((fileName: string) => {
     if (/\.(?:css|less|sass|scss)$/.test(fileName)) {
       return 'style'
@@ -112,11 +113,19 @@ describe('resolveOptions', () => {
     vi.mocked(NodeFileSystem.init).mockReturnValue(mockFileSystem as unknown as NodeFS)
     vi.mocked(UIDoc).mockReturnValue(mockUIDocInstance)
     vi.mocked(resolveAssets).mockResolvedValue([])
+    // Reset resolveAssetType to its default implementation
+    vi.mocked(resolveAssetType).mockImplementation((fileName: string) => {
+      if (/\.(?:css|less|sass|scss)$/.test(fileName)) {
+        return 'style'
+      }
+      if (/\.(?:js|ts)$/.test(fileName)) {
+        return 'script'
+      }
+      return null
+    })
   })
 
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
+  // Note: Don't use vi.restoreAllMocks() in afterEach as it breaks vi.mock() at module level
 
   describe('minimal configuration', () => {
     it('should resolve options with minimal config', async () => {
@@ -163,7 +172,7 @@ describe('resolveOptions', () => {
 
       await resolveOptions(options)
 
-      expect(resolveAssets).toHaveBeenCalledWith(options, mockFileSystem)
+      expect(resolveAssets).toHaveBeenCalledWith(options, mockFileSystem, [])
     })
   })
 

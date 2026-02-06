@@ -1,0 +1,123 @@
+/**
+ * Multi-Source Demo - CSS Components
+ * This demo shows documentation from multiple file types.
+ *
+ * @page index Multi-Source Demo
+ */
+
+/**
+ * UI components documented in CSS.
+ *
+ * @page components Components
+ * @order 10
+ */
+
+/**
+ * A card component for displaying grouped content.
+ *
+ * @location components.card Card
+ * @example
+ * <div class="card">
+ *   <h3 class="card-header">Card Header</h3>
+ *   <div class="card-content">Card content goes here.</div>
+ *   <div class="card-footer">Card footer</div>
+ * </div>
+ */
+.card {
+  overflow: hidden;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.card-header {
+  margin: 0;
+  padding: 16px;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.card-content {
+  padding: 16px;
+}
+
+.card-footer {
+  padding: 12px 16px;
+
+  font-size: 14px;
+  color: #6b7280;
+
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+}
+
+/**
+ * Alert component for displaying messages.
+ *
+ * @location components.alert Alert
+ * @example
+ * <div class="alert alert-info">Info message</div>
+ * <div class="alert alert-success">Success message</div>
+ * <div class="alert alert-warning">Warning message</div>
+ * <div class="alert alert-error">Error message</div>
+ */
+.alert {
+  margin-bottom: 8px;
+  padding: 12px 16px;
+  border-radius: 4px;
+}
+
+.alert-info {
+  color: #1e40af;
+  background: #dbeafe;
+}
+
+.alert-success {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.alert-warning {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.alert-error {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+/**
+ * Badge component for status indicators.
+ *
+ * @location components.badge Badge
+ * @example
+ * <span class="badge">Default</span>
+ * <span class="badge badge-primary">Primary</span>
+ * <span class="badge badge-success">Success</span>
+ */
+.badge {
+  display: inline-block;
+
+  padding: 2px 8px;
+
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+
+  background: #e5e7eb;
+  border-radius: 9999px;
+}
+
+.badge-primary {
+  color: #1e40af;
+  background: #dbeafe;
+}
+
+.badge-success {
+  color: #166534;
+  background: #dcfce7;
+}

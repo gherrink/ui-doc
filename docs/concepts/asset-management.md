@@ -52,12 +52,19 @@ During the build, UI-Doc emits assets into your build output:
 1. UI-Doc creates a Rollup asset through `this.emitFile()`
 2. The asset is written to the output directory with the configured `output.dir` prefix
 3. Asset type (style or script) is determined by file extension
+4. File naming is controlled by the `useAssetFileNames` option:
+   - When `false` (default): Uses explicit `fileName` (e.g., `custom.css`)
+   - When `true`: Omits `fileName`, letting Rollup apply `output.assetFileNames` pattern (e.g., `assets/custom-abc123.css`)
 
 **For assets from input** (`fromInput: true`):
 
 1. Rollup/Vite generates the asset through your normal build process
 2. UI-Doc registers the asset but doesn't emit it (it already exists)
 3. If `output.dir` creates a subdirectory, the asset is copied after the build completes
+
+**Special handling for built-in assets:**
+
+Built-in assets (ui-doc.css, ui-doc.js, highlight.js, etc.) and HTML documentation pages always use explicit file names regardless of the `useAssetFileNames` option. This ensures documentation structure remains predictable and accessible.
 
 ### Delivery phase
 

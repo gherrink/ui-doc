@@ -194,4 +194,36 @@ describe('nodeFileFinder', () => {
       expect(fileFinder.matches('/src/sub/index.ts')).toBe(false)
     })
   })
+
+  describe('directories', () => {
+    it('should return base directories from glob patterns', () => {
+      const fileFinder = new NodeFileFinder(['/src/**/*.ts'])
+      expect(fileFinder.directories()).toEqual(['/src'])
+    })
+
+    it('should handle multiple globs', () => {
+      const fileFinder = new NodeFileFinder(['/src/**/*.ts', '/lib/**/*.js'])
+      expect(fileFinder.directories()).toEqual(['/src', '/lib'])
+    })
+
+    it('should handle non-recursive globs', () => {
+      const fileFinder = new NodeFileFinder(['/src/*.ts'])
+      expect(fileFinder.directories()).toEqual(['/src'])
+    })
+
+    it('should handle nested base directories', () => {
+      const fileFinder = new NodeFileFinder(['/src/components/**/*.tsx'])
+      expect(fileFinder.directories()).toEqual(['/src/components'])
+    })
+
+    it('should return empty array when no globs configured', () => {
+      const fileFinder = new NodeFileFinder([])
+      expect(fileFinder.directories()).toEqual([])
+    })
+
+    it('should return empty array for default constructor', () => {
+      const fileFinder = new NodeFileFinder()
+      expect(fileFinder.directories()).toEqual([])
+    })
+  })
 })
