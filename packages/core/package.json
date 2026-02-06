@@ -1,6 +1,6 @@
 {
   "name": "@ui-doc/core",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Core to generate a ui documentation out of comments.",
   "author": "Maurice Busch",
   "license": "MIT",
