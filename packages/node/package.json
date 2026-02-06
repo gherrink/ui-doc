@@ -1,6 +1,6 @@
 {
   "name": "@ui-doc/node",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Node implementations for UI-Doc.",
   "author": "Maurice Busch",
   "license": "MIT",
