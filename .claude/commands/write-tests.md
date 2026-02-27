@@ -11,11 +11,13 @@ Generate comprehensive Vitest tests for a source file using a two-agent pipeline
 ## Pipeline Overview
 
 ```
-Source File → [Test Spec Agent] → Specification → [Test Writer Agent] → Test File
-                                                          ↓
-                                                   PostToolUse Hook → ESLint --fix
-                                                          ↓
-                                                   Lint Verification → Test Run → Report
+Source File → [Test Spec Agent] → .claude/specs/{name}.spec.md → [Test Writer Agent] → Test File
+                    ↓                        ↓                            ↓
+              Writes spec file        Returns summary              Reads spec file
+                                                                          ↓
+                                                                   PostToolUse Hook → ESLint --fix
+                                                                          ↓
+                                                                   Lint Verification → Test Run → Report
 ```
 
 ## Workflow
@@ -37,29 +39,32 @@ Analyze the source file at: $ARGUMENTS
 Generate a comprehensive test specification following your output format.
 Include all public API, edge cases, error conditions, and mock requirements.
 Check for existing tests at the corresponding test path and note what's already covered.
+
+Write the full specification to: .claude/specs/{SourceFileName}.spec.md
+Return only a compact summary (not the full spec).
 ```
 
 The spec agent will:
 - Read and analyze the source code
 - Identify all testable scenarios
 - Document mock requirements
-- Output a structured Markdown specification
+- **Write the full specification to `.claude/specs/{SourceFileName}.spec.md`**
+- **Return only a compact summary** (~20 lines vs 150+ lines)
 
 ### Step 3: Write Tests from Specification
 
-Launch the **test-writer** agent with ONLY the specification (not source code):
+Launch the **test-writer** agent with the spec file path (not the full specification):
 
 ```
-Write Vitest tests based on this specification:
+Write Vitest tests based on the specification at: .claude/specs/{SourceFileName}.spec.md
 
-[Insert specification from Step 2]
-
-Write the tests to the file path specified in the spec.
+Read the spec file, then write the tests to the file path specified in the spec.
 If tests already exist, preserve them and add new scenarios.
 Follow all UI-Doc testing conventions from your vitest-guide skill.
 ```
 
 The writer agent will:
+- **Read the specification from the file path**
 - Parse the specification
 - Create type-safe mocks
 - Write idiomatic Vitest tests
@@ -149,7 +154,9 @@ Options:
 
 ## Notes
 
-- The test writer NEVER sees source code, only the specification
+- The test writer NEVER sees source code, only the specification file
 - This ensures focused, behavior-driven tests
 - Existing tests are preserved when adding new scenarios
 - The user has full control over error resolution
+- **Spec files are gitignored** — `.claude/specs/` is excluded from version control
+- Spec files can be manually removed after tests are written, or kept for reference
