@@ -22,6 +22,7 @@ export interface CopyAssetResolved {
 
 export interface AssetOption {
   name: string | (() => string)
+  type?: Asset['type']
   fromInput?: boolean | ((asset: AssetResolved) => boolean)
   file?: string | (() => string)
   dependency?: string | (() => string)

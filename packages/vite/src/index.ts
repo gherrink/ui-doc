@@ -93,8 +93,8 @@ function prepareServe(api: Api): void {
   }
 
   // register all assets to ui-doc
-  api.options.assets.forEach(({ fileName, context, attrs, fromInput = false }) => {
-    api.uidocAsset(fileName, context, { attrs, fromInput })
+  api.options.assets.forEach(({ fileName, context, attrs, type, fromInput = false }) => {
+    api.uidocAsset(fileName, context, { attrs, fromInput, type })
   })
 
   // add vite client script to ui-doc

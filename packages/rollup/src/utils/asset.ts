@@ -153,7 +153,7 @@ export async function resolveAssets(
     context: AssetResolved['context'],
   ): Promise<AssetResolved> => {
     const name = typeof assetOption.name === 'function' ? assetOption.name() : assetOption.name
-    const type = resolveAssetType(name)
+    const type = assetOption.type ?? resolveAssetType(name)
 
     const asset: AssetResolved = {
       name,
