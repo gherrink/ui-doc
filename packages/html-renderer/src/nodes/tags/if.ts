@@ -45,7 +45,7 @@ export class TagIfNode extends TagNode {
     contextKey: 'firstContextKey' | 'secondContextKey',
   ): unknown {
     return this.options[contextKey] !== undefined
-      ? readNestedValue(this.options[contextKey]!, context)
+      ? readNestedValue(this.options[contextKey], context)
       : this.options[valueKey]
   }
 

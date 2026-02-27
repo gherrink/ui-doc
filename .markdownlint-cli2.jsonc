@@ -21,6 +21,7 @@
     ".claude/**",
     "LICENSE.md",
     "TODO.md",
-    "TODOs.md"
+    "TODOs.md",
+    "TODOs_*.md"
   ]
 }

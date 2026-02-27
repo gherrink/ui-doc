@@ -30,12 +30,12 @@
   border-radius: unset;
   outline: none;
 
-  &:hover:not([aria-disabled="true"], [disabled], .btn[class*="bg-"], .no-hover) {
-    --font-color: var(--control-hover-color, var(--accent-color));
+  &:disabled,
+  &[aria-disabled="true"] {
+    cursor: not-allowed;
   }
 
-  &[aria-disabled="true"],
-  &:disabled {
-    cursor: not-allowed;
+  &:hover:not([aria-disabled="true"], [disabled], .btn[class*="bg-"], .no-hover) {
+    --font-color: var(--control-hover-color, var(--accent-color));
   }
 }
