@@ -35,9 +35,15 @@ async function main() {
     process.exit(0)
   }
 
-  // Run oxlint with --fix
+  // Run oxlint with --fix.
+  //
+  // Deliberately without --type-aware: given a single explicit path, tsgolint
+  // cannot build a full program for it and reports every import as an `error`
+  // type - 59 phantom findings on an untouched file. Type-aware rules are
+  // essentially non-autofixable anyway, and `pnpm lint` enforces them over the
+  // whole repo, which resolves correctly.
   try {
-    execSync(`npx oxlint --type-aware --fix --format json "${filePath}"`, {
+    execSync(`npx oxlint --fix --format json "${filePath}"`, {
       encoding: 'utf8',
       stdio: ['pipe', 'pipe', 'pipe'],
     })

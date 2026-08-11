@@ -16,6 +16,13 @@
     "linter": { "enabled": false },
   },
   "files": {
-    "includes": ["**/*.json", "**/*.jsonc", "!**/dist", "!**/coverage", "!**/node_modules"],
+    "includes": [
+      "**/*.json",
+      "**/*.jsonc",
+      "!**/dist",
+      "!**/coverage",
+      "!**/node_modules",
+      "!**/.claude",
+    ],
   },
 }
