@@ -10,8 +10,12 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
       reportsDirectory: './coverage',
-      include: ['packages/*/src/**/*.ts'],
-      exclude: ['**/*.d.ts', '**/dist/**', '**/tests/**', '**/scripts/**'],
+      // packages/*/scripts/** is the browser bundle shipped as
+      // @ui-doc/html-renderer/ui-doc.js. It lives outside src/ because it is
+      // built by a separate tsconfig, but it is published code and is covered
+      // by tests/scripts/, so it belongs in the report.
+      include: ['packages/*/src/**/*.ts', 'packages/*/scripts/**/*.ts'],
+      exclude: ['**/*.d.ts', '**/dist/**', '**/tests/**'],
     },
   },
 })
