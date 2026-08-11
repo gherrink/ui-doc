@@ -2,6 +2,32 @@ packages:
   - 'packages/*'
   - demos
 
+# esbuild is the only dependency allowed to run an install script. pnpm 11 no
+# longer reads the `pnpm` field in package.json, and renamed the setting from
+# `onlyBuiltDependencies` to this name/boolean map, so this is its new home.
+allowBuilds:
+  esbuild: true
+
+# @antfu/eslint-config 4.19 accepts any @typescript-eslint 8.x, and 8.66 ships a
+# `no-unnecessary-type-assertion` that reports false positives here: it flags the
+# `as AssetResolved` in packages/rollup/src/utils/asset.ts (removing it widens
+# `context: 'page'` to string and fails tsc) and the `as unknown as T` casts in
+# the html-renderer test mocks (autofixing them fails 37 tests). Pinning to the
+# version this branch was verified against keeps `pnpm lint` meaningful.
+#
+# Remove this together with ESLint itself when the linter is replaced.
+overrides:
+  '@typescript-eslint/eslint-plugin': 8.56.1
+  '@typescript-eslint/parser': 8.56.1
+  '@typescript-eslint/project-service': 8.56.1
+  '@typescript-eslint/scope-manager': 8.56.1
+  '@typescript-eslint/tsconfig-utils': 8.56.1
+  '@typescript-eslint/type-utils': 8.56.1
+  '@typescript-eslint/types': 8.56.1
+  '@typescript-eslint/typescript-estree': 8.56.1
+  '@typescript-eslint/utils': 8.56.1
+  '@typescript-eslint/visitor-keys': 8.56.1
+
 # Shared version specifiers for dependencies declared in more than one manifest.
 #
 # Rationale: divergent @types/node specifiers (root ^20.19.35 vs packages/node

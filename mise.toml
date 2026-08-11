@@ -2,8 +2,8 @@
 #
 # Keep `node` in sync with `node-version` in .github/workflows/*.yaml.
 # The exact pnpm version lives in the `packageManager` field of package.json;
-# pnpm 10 self-manages to it, so this entry only guarantees a pnpm 10 exists.
+# pnpm self-manages to it, so this entry only guarantees a pnpm 11 exists.
 
 [tools]
 node = "24"
-pnpm = "10"
+pnpm = "11"
