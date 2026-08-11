@@ -6,7 +6,7 @@ export class MarkdownDescriptionParser implements DescriptionParser {
   parse(description: string): string {
     return marked.parse(description, {
       async: false,
-    }) as string
+    })
   }
 }
 
