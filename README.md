@@ -244,7 +244,7 @@ Check out the [demos](./demos) directory for complete examples:
 ### Prerequisites
 
 - [mise](https://mise.jdx.dev) (recommended), which installs the pinned toolchain from `mise.toml`
-- Otherwise: Node.js 24 and pnpm 10
+- Otherwise: Node.js 24 and pnpm 11
 
 ### Setup
 
