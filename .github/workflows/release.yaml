@@ -11,8 +11,7 @@ permissions:
 jobs:
   publish:
     if: |
-      !startsWith(github.event.head_commit.message, 'chore(release):') &&
-      !startsWith(github.event.head_commit.message, 'chore(repo):')
+      !startsWith(github.event.head_commit.message, 'chore(release):')
 
     runs-on: ubuntu-latest
     name: release
@@ -28,19 +27,24 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      # Must run before setup-node: `cache: pnpm` needs pnpm on PATH.
+      # Version comes from the packageManager field in package.json.
+      - name: Install PNPM
+        uses: pnpm/action-setup@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-
-      - name: Install PNPM
-        uses: pnpm/action-setup@v4
+          node-version: 24 # keep in sync with mise.toml
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Sanity Check
         run: |
           echo branch `git branch --show-current`;
           echo node `node -v`;
-          echo pnpm `pnpm -v`
+          echo pnpm `pnpm -v`;
+          echo npm `npm -v`
 
       - name: Set Git Config
         run: |
