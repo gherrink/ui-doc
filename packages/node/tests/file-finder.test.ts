@@ -19,15 +19,15 @@ function createDirent(name: string, isDir: boolean): Dirent {
 
 /**
  * NodeFileFinder calls fs.readdir(dir, { withFileTypes: true }), which resolves
- * to Dirent<string>[]. Bare vi.spyOn picks readdir's buffer overload instead,
- * so narrow the spy to the overload actually under test.
+ * to Dirent<string>[]. The return type pins the spy to that overload so the
+ * tests below get Dirent[] rather than readdir's buffer signature.
+ *
+ * @returns The readdir spy, narrowed to the overload under test.
  */
 function mockReaddir(): MockInstance<
   (path: string, options: { withFileTypes: true }) => Promise<Dirent[]>
 > {
-  return vi.spyOn(fs, 'readdir') as unknown as MockInstance<
-    (path: string, options: { withFileTypes: true }) => Promise<Dirent[]>
-  >
+  return vi.spyOn(fs, 'readdir')
 }
 
 describe('nodeFileFinder', () => {
