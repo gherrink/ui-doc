@@ -1,6 +1,7 @@
 import type { Dirent } from 'node:fs'
-import fs from 'node:fs/promises'
+import type { MockInstance } from 'vitest'
 
+import fs from 'node:fs/promises'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { NodeFileFinder } from '../src'
@@ -13,6 +14,19 @@ function createDirent(name: string, isDir: boolean): Dirent {
     isFile: () => !isDir,
     name,
   }) as Dirent
+}
+
+/**
+ * NodeFileFinder calls fs.readdir(dir, { withFileTypes: true }), which resolves
+ * to Dirent<string>[]. Bare vi.spyOn picks readdir's buffer overload instead,
+ * so narrow the spy to the overload actually under test.
+ */
+function mockReaddir(): MockInstance<
+  (path: string, options: { withFileTypes: true }) => Promise<Dirent[]>
+> {
+  return vi.spyOn(fs, 'readdir') as unknown as MockInstance<
+    (path: string, options: { withFileTypes: true }) => Promise<Dirent[]>
+  >
 }
 
 describe('nodeFileFinder', () => {
@@ -45,8 +59,7 @@ describe('nodeFileFinder', () => {
 
   describe('search', () => {
     it('should find all matching files recursively', async () => {
-      const fsReaddirMock = vi
-        .spyOn(fs, 'readdir')
+      const fsReaddirMock = mockReaddir()
         .mockResolvedValueOnce([
           createDirent('sub-dir', true),
           createDirent('bar.test', false),
@@ -75,7 +88,7 @@ describe('nodeFileFinder', () => {
     })
 
     it('should not recurse into subdirectories for non-recursive glob', async () => {
-      const fsReaddirMock = vi.spyOn(fs, 'readdir').mockResolvedValueOnce([
+      const fsReaddirMock = mockReaddir().mockResolvedValueOnce([
         createDirent('sub-dir', true),
         createDirent('foo.ts', false),
         createDirent('bar.ts', false),
@@ -94,7 +107,7 @@ describe('nodeFileFinder', () => {
     })
 
     it('should handle empty directory', async () => {
-      vi.spyOn(fs, 'readdir').mockResolvedValueOnce([])
+      mockReaddir().mockResolvedValueOnce([])
 
       const onFoundMock = vi.fn()
 
@@ -106,7 +119,7 @@ describe('nodeFileFinder', () => {
     })
 
     it('should handle multiple globs', async () => {
-      vi.spyOn(fs, 'readdir')
+      mockReaddir()
         .mockResolvedValueOnce([createDirent('a.ts', false)])
         .mockResolvedValueOnce([createDirent('b.js', false)])
 
@@ -120,7 +133,7 @@ describe('nodeFileFinder', () => {
     })
 
     it('should handle synchronous callback', async () => {
-      vi.spyOn(fs, 'readdir').mockResolvedValueOnce([createDirent('file.ts', false)])
+      mockReaddir().mockResolvedValueOnce([createDirent('file.ts', false)])
 
       const onFoundMock = vi.fn(() => undefined)
 
@@ -132,7 +145,7 @@ describe('nodeFileFinder', () => {
     })
 
     it('should skip entries that are neither files nor directories', async () => {
-      vi.spyOn(fs, 'readdir').mockResolvedValueOnce([
+      mockReaddir().mockResolvedValueOnce([
         createDirent('file.ts', false),
         { isDirectory: () => false, isFile: () => false, name: 'symlink' } as Dirent,
       ])
@@ -148,7 +161,7 @@ describe('nodeFileFinder', () => {
     })
 
     it('should search deeply nested directories', async () => {
-      vi.spyOn(fs, 'readdir')
+      mockReaddir()
         .mockResolvedValueOnce([createDirent('level1', true)])
         .mockResolvedValueOnce([createDirent('level2', true)])
         .mockResolvedValueOnce([createDirent('deep.ts', false)])

@@ -67,6 +67,7 @@ describe('resolveOptions', () => {
     mockFileFinder = {
       search: vi.fn(async () => Promise.resolve()),
       matches: vi.fn(() => true),
+      directories: vi.fn(() => []),
     }
 
     mockFileSystem = {
