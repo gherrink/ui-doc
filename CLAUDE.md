@@ -41,10 +41,11 @@ pnpm typecheck:all                # Type check everything incl. tests and demos
 ### Linting & Formatting
 
 ```bash
-pnpm lint                     # Run all linters (docs, js, css)
+pnpm lint                     # Run all linters and the format check
 pnpm fix                      # Run all auto-fixes (docs, js, css)
-pnpm fix:js                   # Fix JS/TS lint issues only
-pnpm fix:css                  # Fix CSS lint issues only
+pnpm fix:js                   # Fix JS/TS lint issues only (oxlint)
+pnpm fix:css                  # Fix CSS lint issues only (stylelint)
+pnpm fix:format               # Reformat everything (oxfmt)
 ```
 
 ### Release
