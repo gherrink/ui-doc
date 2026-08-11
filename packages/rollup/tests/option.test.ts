@@ -1,7 +1,7 @@
 import type { AssetLoader, BlockParser, FileSystem, Renderer } from '@ui-doc/core'
 import { UIDoc } from '@ui-doc/core'
 import { NodeFileSystem } from '@ui-doc/node'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { assert, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { resolveAssets, resolveAssetType } from '../src/utils/asset'
 import type { AssetResolved } from '../src/utils/asset.types'
@@ -119,7 +119,7 @@ describe('resolveOptions', () => {
     // A function implementation returning an object still wins over `this`.
     vi.mocked(UIDoc).mockImplementation(function () {
       return mockUIDocInstance
-    } as unknown as () => UIDoc)
+    })
     vi.mocked(resolveAssets).mockResolvedValue([])
     // Reset resolveAssetType to its default implementation
     vi.mocked(resolveAssetType).mockImplementation((fileName: string) => {
@@ -485,13 +485,11 @@ describe('resolveOptions', () => {
       const uidocCall = vi.mocked(UIDoc).mock.calls[0][0]
       const wrappedResolve = uidocCall.generate?.resolve
 
-      expect(wrappedResolve).toBeDefined()
+      assert(wrappedResolve !== undefined)
 
-      if (wrappedResolve) {
-        wrappedResolve('test.css', 'style')
-        // Code prepends '/' and adds prefix.uri (which becomes 'base/' with trailing slash)
-        expect(customResolve).toHaveBeenCalledWith('/base/test.css', 'style')
-      }
+      wrappedResolve('test.css', 'style')
+      // Code prepends '/' and adds prefix.uri (which becomes 'base/' with trailing slash)
+      expect(customResolve).toHaveBeenCalledWith('/base/test.css', 'style')
     })
 
     it('should create resolve function when none exists', async () => {
@@ -508,13 +506,11 @@ describe('resolveOptions', () => {
       const uidocCall = vi.mocked(UIDoc).mock.calls[0][0]
       const wrappedResolve = uidocCall.generate?.resolve
 
-      expect(wrappedResolve).toBeDefined()
+      assert(wrappedResolve !== undefined)
 
-      if (wrappedResolve) {
-        const result = wrappedResolve('test.css', 'style')
-        // Code prepends '/' and adds prefix.uri (which becomes 'base/' with trailing slash)
-        expect(result).toBe('/base/test.css')
-      }
+      const result = wrappedResolve('test.css', 'style')
+      // Code prepends '/' and adds prefix.uri (which becomes 'base/' with trailing slash)
+      expect(result).toBe('/base/test.css')
     })
   })
 
