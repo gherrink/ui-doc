@@ -4,6 +4,10 @@
 #   git config blame.ignoreRevsFile .git-blame-ignore-revs
 #
 # GitHub reads this file automatically and needs no setup.
+#
+# Note: master is rebase-merged, so a commit's final SHA is only known after
+# the merge. Any entry added here has to be confirmed against master
+# afterwards - `git merge-base --is-ancestor <sha> master` will say.
 
 # style: adopt oxfmt and reformat
-697f19fe6386cc5fc0635f8cce68fe70338b7f44
+57fdde8cfee94dd5f9f1e002d3a60d02d94f3547
