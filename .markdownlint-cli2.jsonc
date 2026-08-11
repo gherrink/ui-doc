@@ -1,4 +1,8 @@
 {
+  // `gitignore` covers node_modules, dist, .worktree and TODOs*.md.
+  // Only paths that are tracked-but-unlinted, or untracked-and-not-ignored,
+  // need listing below.
+  "gitignore": true,
   "config": {
     "default": true,
     "MD013": false,
@@ -9,19 +13,8 @@
     "MD036": false
   },
   "ignores": [
-    "node_modules/**",
-    "**/node_modules/**",
-    "dist/**",
-    "**/dist/**",
-    "coverage/**",
-    "perf/**",
-    "tmp/**",
-    "_tmp/**",
-    "cache/**",
+    "**/coverage/**",
     ".claude/**",
-    "LICENSE.md",
-    "TODO.md",
-    "TODOs.md",
-    "TODOs_*.md"
+    "LICENSE.md"
   ]
 }

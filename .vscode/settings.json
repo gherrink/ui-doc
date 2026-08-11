@@ -1,10 +1,13 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "editor.defaultFormatter": null,
   "eslint.format.enable": true,
   "eslint.validate": [
     "javascript",
-    "typescript"
+    "typescript",
+    "json",
+    "jsonc",
+    "yaml",
+    "markdown"
   ],
   "cSpell.words": [
     "atomico",
@@ -13,9 +16,18 @@
     "uidoc"
   ],
   "search.exclude": {
-    "**/dist/": true
+    "**/dist/": true,
+    "**/.worktree/": true
   },
-  "conventionalCommits.scopes": ["core", "html-renderer", "node", "rollup", "demos"],
+  "conventionalCommits.scopes": [
+    "core",
+    "html-renderer",
+    "node",
+    "rollup",
+    "vite",
+    "demos",
+    "release"
+  ],
   "[css]": {
     "editor.defaultFormatter": "stylelint.vscode-stylelint"
   },
@@ -23,7 +35,7 @@
     "editor.defaultFormatter": "stylelint.vscode-stylelint"
   },
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.html-language-features"
   },
   "[javascript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
@@ -31,9 +43,12 @@
   "[typescript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
+  "[json]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "postcss.validate": false,
-  "css.customData": [".vscode/postcss.json"]
+  "css.lint.unknownAtRules": "ignore"
 }

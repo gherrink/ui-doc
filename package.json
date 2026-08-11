@@ -81,8 +81,8 @@
       "eslint --cache --fix"
     ],
     "*.md": [
-      "eslint --cache --fix",
-      "markdownlint-cli2 --fix"
+      "markdownlint-cli2 --fix",
+      "eslint --cache --fix"
     ]
   }
 }

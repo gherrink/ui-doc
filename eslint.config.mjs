@@ -46,14 +46,10 @@ export default antfu({
   jsonc: true,
   yaml: true,
   markdown: true,
+  // antfu's config defaults to gitignore: true, which already covers
+  // node_modules, dist, .worktree and TODOs*.md. coverage/ is not gitignored.
   ignores: [
-    '**/_tmp/**',
-    '**/cache/**',
     '**/coverage/**',
-    '**/dist/**',
-    '**/node_modules/**',
-    '**/perf/**',
-    '**/tmp/**',
   ],
 },
 
@@ -179,13 +175,6 @@ export default antfu({
 // ─────────────────────────────────────────────────────────────────────────────
 // Markdown Files
 // ─────────────────────────────────────────────────────────────────────────────
-{
-  files: ['**/*.md'],
-  rules: {
-    'style/max-len': 'off', // Handled by markdownlint
-  },
-},
-
 // ─────────────────────────────────────────────────────────────────────────────
 // YAML Files
 // ─────────────────────────────────────────────────────────────────────────────
