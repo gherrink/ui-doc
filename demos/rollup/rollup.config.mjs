@@ -1,9 +1,8 @@
 import path from 'node:path'
 
 import uidoc from '@ui-doc/rollup'
-import autoprefixer from 'autoprefixer'
 import postcssImport from 'postcss-import'
-import postcssNested from 'postcss-nested'
+import postcssPresetEnv from 'postcss-preset-env'
 import postcss from 'rollup-plugin-postcss'
 
 const sharedDir = path.resolve(import.meta.dirname, '../shared')
@@ -23,7 +22,7 @@ export default {
       autoModules: true,
       extract: true,
       minimize: true,
-      plugins: [postcssImport(), postcssNested(), autoprefixer()],
+      plugins: [postcssImport(), postcssPresetEnv()],
       sourceMap: true,
     }),
     uidoc({

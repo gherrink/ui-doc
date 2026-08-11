@@ -1,7 +1,8 @@
-import autoprefixer from 'autoprefixer'
 import postcssImport from 'postcss-import'
-import postcssNested from 'postcss-nested'
+import postcssPresetEnv from 'postcss-preset-env'
 
 export default {
-  plugins: [postcssImport(), postcssNested(), autoprefixer()],
+  // postcssImport must run first so @import-ed files are inlined before nesting
+  // is flattened. postcssPresetEnv runs autoprefixer internally.
+  plugins: [postcssImport(), postcssPresetEnv()],
 }

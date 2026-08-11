@@ -4,10 +4,9 @@ import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'
 import typescript from '@rollup/plugin-typescript'
-import autoprefixer from 'autoprefixer'
 import cssnano from 'cssnano'
 import postcssImport from 'postcss-import'
-import postcssNested from 'postcss-nested'
+import postcssPresetEnv from 'postcss-preset-env'
 import postcss from 'rollup-plugin-postcss'
 
 /**
@@ -120,7 +119,9 @@ export function configPostcssWeb({ input }) {
       postcss({
         extract: true,
         sourceMap: true,
-        plugins: [postcssImport(), postcssNested(), autoprefixer()],
+        // postcssImport must run first so @import-ed files are inlined before
+        // nesting is flattened. postcssPresetEnv runs autoprefixer internally.
+        plugins: [postcssImport(), postcssPresetEnv()],
       }),
       {
         async generateBundle(option, bundle) {
