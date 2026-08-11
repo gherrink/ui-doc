@@ -23,14 +23,21 @@
   },
   "dependencies": {
     "@highlightjs/cdn-assets": "^11.9.0",
-    "@types/node": "^20.19.0",
-    "@ui-doc/core": "workspace:*",
-    "@ui-doc/html-renderer": "workspace:*",
-    "@ui-doc/node": "workspace:*",
-    "@ui-doc/rollup": "workspace:*",
-    "@ui-doc/vite": "workspace:*",
+    "@ui-doc/core": "workspace:^",
+    "@ui-doc/html-renderer": "workspace:^",
+    "@ui-doc/node": "workspace:^",
+    "@ui-doc/rollup": "workspace:^",
+    "@ui-doc/vite": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "autoprefixer": "^10.4.27",
+    "postcss-import": "^16.1.1",
+    "postcss-nested": "^6.2.0",
+    "rollup": "catalog:",
+    "rollup-plugin-postcss": "^4.0.2",
     "ts-node": "^10.9.2",
-    "typescript": "^4.9.5",
-    "vite": "^7.3.1"
+    "typescript": "catalog:",
+    "vite": "catalog:"
   }
 }

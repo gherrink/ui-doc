@@ -59,8 +59,9 @@
     "picomatch": "^4.0.2"
   },
   "devDependencies": {
-    "@types/node": "^20.19.0",
-    "@types/picomatch": "^2.3.3",
-    "@ui-doc/core": "workspace:^"
+    "@types/node": "catalog:",
+    "@types/picomatch": "catalog:",
+    "@ui-doc/core": "workspace:^",
+    "vitest": "catalog:"
   }
 }

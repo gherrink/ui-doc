@@ -1,3 +1,25 @@
 packages:
   - 'packages/*'
   - demos
+
+# Shared version specifiers for dependencies declared in more than one manifest.
+#
+# Rationale: divergent @types/node specifiers (root ^20.19.35 vs packages/node
+# and demos ^20.19.0) resolved to two different @types/node versions, which
+# produced two vite peer-resolution variants and two rollup instances. That made
+# `PluginContext` structurally incompatible between @ui-doc/rollup and
+# @ui-doc/vite and broke `pnpm typecheck`.
+#
+# Deps that live in exactly one manifest are intentionally NOT catalogued -
+# a catalog entry for those adds indirection without preventing anything.
+#
+# Published dependency/peerDependency ranges are also intentionally NOT
+# catalogued: `pnpm pack` rewrites `catalog:` to the catalog's specifier, which
+# would silently narrow consumer-facing ranges (e.g. rollup's peer ^4.0.0).
+catalog:
+  '@types/node': ^24.13.3
+  '@types/picomatch': ^4.0.3
+  rollup: ^4.59.0
+  typescript: ^5.9.3
+  vite: ^7.3.1
+  vitest: ^3.2.4
