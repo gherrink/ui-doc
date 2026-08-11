@@ -1,5 +1,4 @@
 import { builtinModules } from 'node:module'
-import babel from '@rollup/plugin-babel'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
@@ -85,15 +84,15 @@ export function configTsWeb({ external, input }) {
         sourcemap: false,
       },
     ],
+    // The browser target is set by tsconfig.web.json (target: ES6). There is no
+    // babel step: the repo-root .babelrc was never loaded, because babel's
+    // config search does not walk above `root`, which defaults to rollup's cwd
+    // (the package dir). It ran with zero presets - a parse-and-reprint no-op.
     plugins: [
       typescript({
         declaration: true,
         outDir: './dist/assets',
         tsconfig: './tsconfig.web.json',
-      }),
-      babel({
-        babelHelpers: 'bundled',
-        exclude: '../../node_modules/**',
       }),
     ],
   }
