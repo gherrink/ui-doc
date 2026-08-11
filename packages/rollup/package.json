@@ -1,6 +1,6 @@
 {
   "name": "@ui-doc/rollup",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Rollup plugin for UI-Doc generation.",
   "author": "Maurice Busch",
   "license": "MIT",
