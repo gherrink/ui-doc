@@ -12,9 +12,9 @@
   gap: calc(var(--space-xs) * var(--space-unit));
   justify-content: center;
 
-  text-align: center;
-
   border: 1px solid rgb(var(--border-color, var(--font-color)));
+
+  text-align: center;
 
   > .show,
   > .show::before,

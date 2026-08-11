@@ -31,8 +31,8 @@
   --space-py: var(--nav-list-item-space-py);
   --space-px: var(--nav-list-item-space-px);
 
+  border-left: 1px solid rgb(var(--nav-list-item-border-color) / var(--border-opacity, 0.1));
   text-align: left;
-  border-left: 1px solid rgba(var(--nav-list-item-border-color) / var(--border-opacity, 0.1));
 
   &:hover {
     --border-opacity: 1;
