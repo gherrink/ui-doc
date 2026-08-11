@@ -177,7 +177,9 @@ describe('resolveOptions', () => {
 
       await resolveOptions(options)
 
-      expect(resolveAssets).toHaveBeenCalledWith(options, mockFileSystem, [])
+      // The fourth argument is the collector resolveAssets fills with assets
+      // whose configured `file` could not be read.
+      expect(resolveAssets).toHaveBeenCalledWith(options, mockFileSystem, [], [])
     })
   })
 

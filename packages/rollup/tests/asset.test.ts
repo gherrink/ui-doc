@@ -531,6 +531,62 @@ describe('asset', () => {
         })
       })
 
+      // A `file` may point at something this same build produces. Options are
+      // resolved before Rollup starts, so on a clean build that file does not
+      // exist yet - throwing here made a first build impossible.
+      it('should skip a file asset that cannot be read instead of throwing', async () => {
+        const mockAssetLoader = createMockAssetLoader({
+          resolve: vi.fn<AssetLoader['resolve']>().mockResolvedValue('/resolved/built-in'),
+          read: vi.fn<AssetLoader['read']>().mockResolvedValue('content'),
+        })
+
+        const fileSystem = createMockFileSystem({
+          assetLoader: vi.fn<FileSystem['assetLoader']>().mockReturnValue(mockAssetLoader),
+          resolve: vi.fn<FileSystem['resolve']>().mockReturnValue('/project/dist/app.css'),
+          fileRead: vi
+            .fn<FileSystem['fileRead']>()
+            .mockRejectedValue(new Error('ENOENT: no such file or directory')),
+        })
+
+        const options: Options = {
+          source: [],
+          assets: {
+            example: [{ name: 'app.css', file: 'dist/app.css' }],
+          },
+        }
+
+        const unreadable: { name: string, file: string }[] = []
+        const assets = await resolveAssets(options, fileSystem, [], unreadable)
+
+        expect(assets.some(asset => asset.name === 'app.css')).toBe(false)
+        expect(unreadable).toEqual([{ name: 'app.css', file: '/project/dist/app.css' }])
+      })
+
+      // Built-in assets ship inside a package. If those cannot be read the
+      // installation is broken, and failing loudly is the correct response.
+      it('should still throw when a dependency asset cannot be read', async () => {
+        const mockAssetLoader = createMockAssetLoader({
+          resolve: vi.fn<AssetLoader['resolve']>().mockResolvedValue('/resolved/dep.css'),
+          read: vi.fn<AssetLoader['read']>().mockResolvedValue('content'),
+        })
+
+        const fileSystem = createMockFileSystem({
+          assetLoader: vi.fn<FileSystem['assetLoader']>().mockReturnValue(mockAssetLoader),
+          fileRead: vi
+            .fn<FileSystem['fileRead']>()
+            .mockRejectedValue(new Error('ENOENT: no such file or directory')),
+        })
+
+        const options: Options = {
+          source: [],
+          assets: {
+            page: [{ name: 'dep.css', dependency: 'some-package/dep.css' }],
+          },
+        }
+
+        await expect(resolveAssets(options, fileSystem)).rejects.toThrow('ENOENT')
+      })
+
       it('should resolve page asset with function file option', async () => {
         const mockAssetLoader = createMockAssetLoader({
           resolve: vi

@@ -121,6 +121,16 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         return asset
       })
 
+      // Report configured `file` assets that could not be read. This is the
+      // first point with a plugin context, so it is the earliest place the
+      // warning can reach Rollup rather than being thrown at config time.
+      options.unreadableAssets.forEach(({ name, file }) => {
+        this.warn(
+          `Asset "${name}" could not be read from "${file}" and was skipped. `
+          + 'If it is produced by this build, it will be picked up on the next run.',
+        )
+      })
+
       if (options.templatePath !== undefined) {
         const templateDirs = ['layouts', 'pages', 'partials']
         const templateGlobs: string[] = []

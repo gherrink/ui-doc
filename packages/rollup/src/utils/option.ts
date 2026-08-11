@@ -120,9 +120,11 @@ export async function resolveOptions(options: Options): Promise<ResolvedOptions>
   }
 
   const copyAssets = await resolveCopyAssets(options.assets?.copy, fileSystem)
+  const unreadableAssets: ResolvedOptions['unreadableAssets'] = []
 
   return {
-    assets: await resolveAssets(options, fileSystem, copyAssets),
+    assets: await resolveAssets(options, fileSystem, copyAssets, unreadableAssets),
+    unreadableAssets,
     assetsFromInput,
     copyAssets,
     fileSystem,
