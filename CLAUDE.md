@@ -21,13 +21,21 @@ docs/               # Consumer documentation
 
 ## Commands
 
+### Toolchain
+
+Node and pnpm are pinned in `mise.toml`. Run `mise trust && mise install` once
+after cloning. The exact pnpm version lives in the `packageManager` field of
+`package.json`.
+
 ### Build & Test
 
 ```bash
 pnpm workspace:build              # Build all packages
-pnpm test                          # Run all package tests
+pnpm test                         # Run all tests (one Vitest run, all projects)
+pnpm test:coverage                # Aggregated coverage across packages
 pnpm --filter @ui-doc/core test   # Run tests for a specific package
 pnpm typecheck                    # Type check all packages
+pnpm typecheck:all                # Type check everything incl. tests and demos
 ```
 
 ### Linting & Formatting
