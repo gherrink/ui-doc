@@ -13,6 +13,7 @@ TODOs.md
 TODOs_*.md
 
 .worktree
+.claude/worktrees/
 
 # Log files
 npm-debug.log*
