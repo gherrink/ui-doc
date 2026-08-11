@@ -66,21 +66,21 @@
   "lint-staged": {
     "*.{ts,js,mjs,cjs}": [
       "oxlint --fix",
-      "oxfmt"
+      "oxfmt --no-error-on-unmatched-pattern"
     ],
     "*.css": [
       "stylelint --fix"
     ],
     "*.{json,jsonc}": [
       "biome lint --write --no-errors-on-unmatched",
-      "oxfmt"
+      "oxfmt --no-error-on-unmatched-pattern"
     ],
     "*.md": [
       "markdownlint-cli2 --fix",
-      "oxfmt"
+      "oxfmt --no-error-on-unmatched-pattern"
     ],
     "*.{yml,yaml}": [
-      "oxfmt"
+      "oxfmt --no-error-on-unmatched-pattern"
     ]
   },
   "browserslist": [
