@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 import type { BlockParser } from '../src/BlockParser.types'
 import type { Renderer } from '../src/Renderer.types'
 import { UIDoc } from '../src/UIDoc'
+import type { GenerateFunctions } from '../src/UIDoc.types'
 
 interface UidocMockResult {
   blockParser: BlockParser
@@ -560,12 +561,24 @@ describe('uI-Doc', () => {
 
   describe('replaceGenerate', () => {
     it('should replace generate function', () => {
-      const { uidoc } = uidocMock({})
+      const { uidoc, renderer } = uidocMock({
+        rendererGenerate: vi.fn<Renderer['generate']>().mockReturnValue(''),
+        blockParserParse: vi
+          .fn<BlockParser['parse']>()
+          .mockReturnValue([{ key: 'foo', order: 0, title: 'Foo' }]),
+      })
 
-      const customLogo = vi.fn().mockReturnValue('CUSTOM LOGO')
+      const customLogo = vi.fn<GenerateFunctions['logo']>().mockReturnValue('CUSTOM LOGO')
       uidoc.replaceGenerate('logo', customLogo)
 
       uidoc.sourceCreate('test.css', '')
+      uidoc.page('foo')
+
+      expect(customLogo).toHaveBeenCalled()
+      expect(renderer.generate).toHaveBeenCalledWith(
+        expect.objectContaining({ logo: 'CUSTOM LOGO' }),
+        undefined,
+      )
     })
   })
 

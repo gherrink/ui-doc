@@ -59,7 +59,7 @@ describe('uidocPlugin', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(createRollupPlugin).mockResolvedValue(mockRollupPlugin as never)
+    vi.mocked(createRollupPlugin).mockResolvedValue(mockRollupPlugin)
   })
 
   describe('resolveOptions', () => {

@@ -83,13 +83,6 @@ describe('blockParseError', () => {
 
       expect(throwError).toThrow(BlockParseError)
       expect(throwError).toThrow(SyntaxError)
-
-      try {
-        throwError()
-      } catch (error) {
-        expect(error).toBeInstanceOf(SyntaxError)
-        expect(error).toBeInstanceOf(BlockParseError)
-      }
     })
   })
 })
@@ -119,13 +112,6 @@ describe('cSSParseError', () => {
 
       expect(throwError).toThrow(CSSParseError)
       expect(throwError).toThrow(Error)
-
-      try {
-        throwError()
-      } catch (error) {
-        expect(error).toBeInstanceOf(Error)
-        expect(error).toBeInstanceOf(CSSParseError)
-      }
     })
   })
 })
@@ -166,14 +152,6 @@ describe('colorParseError', () => {
       expect(throwError).toThrow(ColorParseError)
       expect(throwError).toThrow(CSSParseError)
       expect(throwError).toThrow(Error)
-
-      try {
-        throwError()
-      } catch (error) {
-        expect(error).toBeInstanceOf(ColorParseError)
-        expect(error).toBeInstanceOf(CSSParseError)
-        expect(error).toBeInstanceOf(Error)
-      }
     })
   })
 })
@@ -238,13 +216,6 @@ describe('tagTransformerError', () => {
 
       expect(throwError).toThrow(TagTransformerError)
       expect(throwError).toThrow(Error)
-
-      try {
-        throwError()
-      } catch (error) {
-        expect(error).toBeInstanceOf(TagTransformerError)
-        expect(error).toBeInstanceOf(Error)
-      }
     })
   })
 })

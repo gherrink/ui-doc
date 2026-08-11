@@ -8,6 +8,25 @@ import type { Parser } from '../src/Parser.types'
 import type { Reader } from '../src/Reader.types'
 import type { RenderContext } from '../src/Renderer.types'
 
+/**
+ * Runs `fn` and returns the value it threw.
+ *
+ * Asserting on the thrown value inside a `catch` block means the assertions are
+ * silently skipped when nothing throws, so the test passes vacuously. This
+ * fails loudly instead.
+ *
+ * @returns The thrown value.
+ */
+function captureError(fn: () => unknown): unknown {
+  try {
+    fn()
+  } catch (error) {
+    return error
+  }
+
+  throw new Error('Expected the function to throw, but it returned normally')
+}
+
 describe('htmlRenderer', () => {
   let mockParser: Parser
   let mockNode: Node
@@ -186,13 +205,12 @@ describe('htmlRenderer', () => {
   })
 
   describe('generate', () => {
-    const createContext = (assets: Asset[] = []): GenerateContext =>
-      ({
-        assets,
-        menu: [],
-        name: 'Test',
-        title: 'Test Page',
-      }) as unknown as GenerateContext
+    const createContext = (assets: Asset[] = []): GenerateContext => ({
+      assets,
+      menu: [],
+      name: 'Test',
+      title: 'Test Page',
+    })
 
     beforeEach(() => {
       renderer.addLayout('default', { content: '<html></html>', source: 'default.html' })
@@ -404,17 +422,17 @@ describe('htmlRenderer', () => {
         renderer.addLayout('broken', { content: '{{ invalid }}', source: 'broken.html' }),
       ).toThrow('Syntax error in template')
 
-      try {
-        renderer.addLayout('broken', { content: '{{ invalid }}', source: 'broken.html' })
-      } catch (error) {
-        if (error instanceof HTMLRendererSyntaxError) {
-          // The InlineReader returns the content from the input
-          expect(error.code).toBe('{{ invalid }}')
-          expect(error.line).toBe(1)
-          expect(error.column).toBe(1)
-          expect(error.source).toBe('broken.html')
-        }
-      }
+      // The InlineReader returns the content from the input
+      expect(
+        captureError(() =>
+          renderer.addLayout('broken', { content: '{{ invalid }}', source: 'broken.html' }),
+        ),
+      ).toMatchObject({
+        code: '{{ invalid }}',
+        line: 1,
+        column: 1,
+        source: 'broken.html',
+      })
     })
 
     it('should transform ParserError to HTMLRendererSyntaxError with Reader input', () => {
@@ -425,16 +443,12 @@ describe('htmlRenderer', () => {
       // When using Reader input, the debug info comes from the provided Reader
       expect(() => renderer.addLayout('broken', mockReader)).toThrow(HTMLRendererSyntaxError)
 
-      try {
-        renderer.addLayout('broken', mockReader)
-      } catch (error) {
-        if (error instanceof HTMLRendererSyntaxError) {
-          expect(error.code).toBe('test code')
-          expect(error.line).toBe(1)
-          expect(error.column).toBe(1)
-          expect(error.source).toBe('test-source')
-        }
-      }
+      expect(captureError(() => renderer.addLayout('broken', mockReader))).toMatchObject({
+        code: 'test code',
+        line: 1,
+        column: 1,
+        source: 'test-source',
+      })
     })
 
     it('should re-throw non-ParserError unchanged', () => {
