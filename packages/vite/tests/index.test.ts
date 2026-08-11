@@ -1,7 +1,8 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 
 import createRollupPlugin from '@ui-doc/rollup'
-import type { Plugin, ViteDevServer } from 'vite'
+import type { FunctionPluginHooks } from 'rollup'
+import type { HotPayload, Logger, Plugin, ViteDevServer } from 'vite'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Api, Options } from '../src'
@@ -12,24 +13,44 @@ interface MockRequest extends Partial<IncomingMessage> {
   originalUrl?: string
 }
 
+// Connect middleware the plugin registers via server.middlewares.use()
+type MiddlewareHandler = (req: IncomingMessage, res: ServerResponse, next: () => void) => void
+
+// ServerResponse#write and #end are overloaded, and a vi.fn() mock collapses to a
+// single signature. These merge the node overloads into one signature that still
+// satisfies every one of them, so the doubles stay assignable to ServerResponse.
+type ResponseWrite = (
+  chunk: unknown,
+  encodingOrCallback?: BufferEncoding | ((error: Error | null | undefined) => void),
+  callback?: (error: Error | null | undefined) => void,
+) => boolean
+
+type ResponseEnd = (
+  chunkOrCallback?: unknown,
+  encodingOrCallback?: BufferEncoding | (() => void),
+  callback?: () => void,
+) => ServerResponse
+
 // Mock @ui-doc/rollup module - vi.mock is hoisted automatically
 vi.mock('@ui-doc/rollup', () => ({
   PLUGIN_NAME: 'ui-doc',
-  default: vi.fn(),
+  default: vi.fn<typeof createRollupPlugin>(),
 }))
 
 describe('uidocPlugin', () => {
   const mockUidoc = {
-    page: vi.fn((name: string): string | null => `<html>Page: ${name}</html>`),
-    example: vi.fn((name: string): string | null => `<html>Example: ${name}</html>`),
-    replaceGenerate: vi.fn(),
-    on: vi.fn(),
+    page: vi.fn<Api['uidoc']['page']>(name => `<html>Page: ${name}</html>`),
+    example: vi.fn<Api['uidoc']['example']>(name => `<html>Example: ${name}</html>`),
+    replaceGenerate: vi.fn<Api['uidoc']['replaceGenerate']>(),
+    // The real `on` is chainable; this double only records the listener, so it
+    // borrows the parameters and drops the `this` return.
+    on: vi.fn<(...args: Parameters<Api['uidoc']['on']>) => void>(),
   }
 
   const mockFileSystem = {
-    fileExists: vi.fn().mockResolvedValue(false),
-    fileRead: vi.fn(),
-    fileDirname: vi.fn(),
+    fileExists: vi.fn<Api['fileSystem']['fileExists']>().mockResolvedValue(false),
+    fileRead: vi.fn<Api['fileSystem']['fileRead']>(),
+    fileDirname: vi.fn<Api['fileSystem']['fileDirname']>(),
   }
 
   const mockApi = {
@@ -41,17 +62,17 @@ describe('uidocPlugin', () => {
       staticAssets: undefined as string | undefined,
     },
     fileSystem: mockFileSystem,
-    isAssetFromInput: vi.fn().mockReturnValue(false),
-    uidocAsset: vi.fn(),
-    addAssetFromInput: vi.fn(),
+    isAssetFromInput: vi.fn<Api['isAssetFromInput']>().mockReturnValue(false),
+    uidocAsset: vi.fn<Api['uidocAsset']>(),
+    addAssetFromInput: vi.fn<Api['addAssetFromInput']>(),
   }
 
   const mockRollupPlugin = {
     name: 'ui-doc',
     version: '1.0.0',
     api: mockApi,
-    buildStart: vi.fn(),
-    generateBundle: vi.fn(),
+    buildStart: vi.fn<FunctionPluginHooks['buildStart']>(),
+    generateBundle: vi.fn<FunctionPluginHooks['generateBundle']>(),
     onLog: undefined,
     config: undefined,
     configureServer: undefined,
@@ -338,30 +359,30 @@ describe('uidocPlugin', () => {
     let mockReq: MockRequest
     let mockRes: Partial<ServerResponse>
     let nextFn: ReturnType<typeof vi.fn<() => void>>
-    let middlewareHandler: (req: IncomingMessage, res: ServerResponse, next: () => void) => void
+    let middlewareHandler: MiddlewareHandler
 
     beforeEach(async () => {
-      nextFn = vi.fn()
+      nextFn = vi.fn<() => void>()
       mockReq = { originalUrl: '/ui-doc/', url: '/ui-doc/' }
       mockRes = {
-        write: vi.fn(),
-        end: vi.fn(),
-        setHeader: vi.fn(),
+        write: vi.fn<ResponseWrite>(),
+        end: vi.fn<ResponseEnd>(),
+        setHeader: vi.fn<ServerResponse['setHeader']>(),
         statusCode: 200,
       }
       mockServer = {
         middlewares: {
-          use: vi.fn((handler: typeof middlewareHandler) => {
+          use: vi.fn<(handler: MiddlewareHandler) => void>(handler => {
             middlewareHandler = handler
           }),
         },
         httpServer: {
-          once: vi.fn(),
+          once: vi.fn<(event: string, handler: () => void) => void>(),
         },
         config: {
-          logger: { info: vi.fn(), error: vi.fn() },
+          logger: { info: vi.fn<Logger['info']>(), error: vi.fn<Logger['error']>() },
         },
-        ws: { send: vi.fn() },
+        ws: { send: vi.fn<(payload: HotPayload) => void>() },
         resolvedUrls: { local: ['http://localhost:5173/'] },
       } as unknown as ViteDevServer
 
@@ -519,30 +540,30 @@ describe('uidocPlugin', () => {
     let mockReq: MockRequest
     let mockRes: Partial<ServerResponse>
     let nextFn: ReturnType<typeof vi.fn<() => void>>
-    let middlewareHandler: (req: IncomingMessage, res: ServerResponse, next: () => void) => void
+    let middlewareHandler: MiddlewareHandler
 
     beforeEach(async () => {
-      nextFn = vi.fn()
+      nextFn = vi.fn<() => void>()
       mockReq = { originalUrl: '/ui-doc/', url: '/ui-doc/' }
       mockRes = {
-        write: vi.fn(),
-        end: vi.fn(),
-        setHeader: vi.fn(),
+        write: vi.fn<ResponseWrite>(),
+        end: vi.fn<ResponseEnd>(),
+        setHeader: vi.fn<ServerResponse['setHeader']>(),
         statusCode: 200,
       }
       mockServer = {
         middlewares: {
-          use: vi.fn((handler: typeof middlewareHandler) => {
+          use: vi.fn<(handler: MiddlewareHandler) => void>(handler => {
             middlewareHandler = handler
           }),
         },
         httpServer: {
-          once: vi.fn(),
+          once: vi.fn<(event: string, handler: () => void) => void>(),
         },
         config: {
-          logger: { info: vi.fn(), error: vi.fn() },
+          logger: { info: vi.fn<Logger['info']>(), error: vi.fn<Logger['error']>() },
         },
-        ws: { send: vi.fn() },
+        ws: { send: vi.fn<(payload: HotPayload) => void>() },
         resolvedUrls: { local: ['http://localhost:5173/'] },
       } as unknown as ViteDevServer
     })
@@ -573,7 +594,7 @@ describe('uidocPlugin', () => {
       mockApi.options.staticAssets = '/path/to/static'
       const error = new Error('Permission denied')
       mockFileSystem.fileExists.mockRejectedValue(error)
-      const loggerErrorMock = vi.fn()
+      const loggerErrorMock = vi.fn<Logger['error']>()
       mockServer.config.logger.error = loggerErrorMock
 
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
@@ -655,7 +676,7 @@ describe('uidocPlugin', () => {
 
   describe('generateBundle', () => {
     it('should call original generateBundle if it exists', async () => {
-      const originalGenerateBundle = vi.fn()
+      const originalGenerateBundle = vi.fn<FunctionPluginHooks['generateBundle']>()
       mockRollupPlugin.generateBundle = originalGenerateBundle
 
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
@@ -899,7 +920,7 @@ describe('uidocPlugin', () => {
 
   describe('buildStart', () => {
     it('should call original buildStart if it exists', async () => {
-      const originalBuildStart = vi.fn()
+      const originalBuildStart = vi.fn<FunctionPluginHooks['buildStart']>()
       mockRollupPlugin.buildStart = originalBuildStart
 
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
@@ -972,20 +993,20 @@ describe('uidocPlugin', () => {
   describe('hTTP server events', () => {
     it('should log server ready message with multiple local URLs', async () => {
       vi.useFakeTimers()
-      const loggerInfoMock = vi.fn()
+      const loggerInfoMock = vi.fn<Logger['info']>()
       const mockServer = {
-        middlewares: { use: vi.fn() },
+        middlewares: { use: vi.fn<(handler: MiddlewareHandler) => void>() },
         httpServer: {
-          once: vi.fn((event: string, handler: () => void) => {
+          once: vi.fn<(event: string, handler: () => void) => void>((event, handler) => {
             if (event === 'listening') {
               handler()
             }
           }),
         },
         config: {
-          logger: { info: loggerInfoMock, error: vi.fn() },
+          logger: { info: loggerInfoMock, error: vi.fn<Logger['error']>() },
         },
-        ws: { send: vi.fn() },
+        ws: { send: vi.fn<(payload: HotPayload) => void>() },
         resolvedUrls: {
           local: ['http://localhost:5173/', 'http://192.168.1.100:5173/'],
         },
@@ -1007,20 +1028,20 @@ describe('uidocPlugin', () => {
 
     it('should handle server ready event without local URLs', async () => {
       vi.useFakeTimers()
-      const loggerInfoMock = vi.fn()
+      const loggerInfoMock = vi.fn<Logger['info']>()
       const mockServer = {
-        middlewares: { use: vi.fn() },
+        middlewares: { use: vi.fn<(handler: MiddlewareHandler) => void>() },
         httpServer: {
-          once: vi.fn((event: string, handler: () => void) => {
+          once: vi.fn<(event: string, handler: () => void) => void>((event, handler) => {
             if (event === 'listening') {
               handler()
             }
           }),
         },
         config: {
-          logger: { info: loggerInfoMock, error: vi.fn() },
+          logger: { info: loggerInfoMock, error: vi.fn<Logger['error']>() },
         },
-        ws: { send: vi.fn() },
+        ws: { send: vi.fn<(payload: HotPayload) => void>() },
         resolvedUrls: { local: undefined },
       } as unknown as ViteDevServer
 
@@ -1040,20 +1061,20 @@ describe('uidocPlugin', () => {
 
     it('should handle server ready event with empty local URLs array', async () => {
       vi.useFakeTimers()
-      const loggerInfoMock = vi.fn()
+      const loggerInfoMock = vi.fn<Logger['info']>()
       const mockServer = {
-        middlewares: { use: vi.fn() },
+        middlewares: { use: vi.fn<(handler: MiddlewareHandler) => void>() },
         httpServer: {
-          once: vi.fn((event: string, handler: () => void) => {
+          once: vi.fn<(event: string, handler: () => void) => void>((event, handler) => {
             if (event === 'listening') {
               handler()
             }
           }),
         },
         config: {
-          logger: { info: loggerInfoMock, error: vi.fn() },
+          logger: { info: loggerInfoMock, error: vi.fn<Logger['error']>() },
         },
-        ws: { send: vi.fn() },
+        ws: { send: vi.fn<(payload: HotPayload) => void>() },
         resolvedUrls: { local: [] },
       } as unknown as ViteDevServer
 
@@ -1070,25 +1091,25 @@ describe('uidocPlugin', () => {
     })
 
     it('should trigger HMR full reload on context-entry event', async () => {
-      const wsSendMock = vi.fn()
+      const wsSendMock = vi.fn<(payload: HotPayload) => void>()
       let contextEntryHandler: (() => void) | undefined
       const mockServer = {
-        middlewares: { use: vi.fn() },
+        middlewares: { use: vi.fn<(handler: MiddlewareHandler) => void>() },
         httpServer: {
-          once: vi.fn((event: string, handler: () => void) => {
+          once: vi.fn<(event: string, handler: () => void) => void>((event, handler) => {
             if (event === 'listening') {
               handler()
             }
           }),
         },
         config: {
-          logger: { info: vi.fn(), error: vi.fn() },
+          logger: { info: vi.fn<Logger['info']>(), error: vi.fn<Logger['error']>() },
         },
         ws: { send: wsSendMock },
         resolvedUrls: { local: [] },
       } as unknown as ViteDevServer
 
-      mockUidoc.on.mockImplementation((event: string, handler: () => void) => {
+      mockUidoc.on.mockImplementation((event, handler) => {
         if (event === 'context-entry') {
           contextEntryHandler = handler
         }
@@ -1110,12 +1131,12 @@ describe('uidocPlugin', () => {
 
     it('should handle null httpServer gracefully', async () => {
       const mockServer = {
-        middlewares: { use: vi.fn() },
+        middlewares: { use: vi.fn<(handler: MiddlewareHandler) => void>() },
         httpServer: null,
         config: {
-          logger: { info: vi.fn(), error: vi.fn() },
+          logger: { info: vi.fn<Logger['info']>(), error: vi.fn<Logger['error']>() },
         },
-        ws: { send: vi.fn() },
+        ws: { send: vi.fn<(payload: HotPayload) => void>() },
         resolvedUrls: { local: [] },
       } as unknown as ViteDevServer
 
