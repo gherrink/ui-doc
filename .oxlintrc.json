@@ -1,0 +1,164 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "oxc",
+    "import",
+    "jsdoc",
+    "promise",
+    "node"
+  ],
+  "jsPlugins": [
+    "eslint-plugin-regexp",
+    {
+      "name": "jsdoc-js",
+      "specifier": "eslint-plugin-jsdoc"
+    }
+  ],
+  "categories": {
+    "correctness": "error"
+  },
+  "ignorePatterns": [
+    "**/coverage/**",
+    "**/dist/**",
+    "**/node_modules/**"
+  ],
+  "rules": {
+    "curly": [
+      "error",
+      "all"
+    ],
+    "no-console": [
+      "error",
+      {
+        "allow": [
+          "warn",
+          "error"
+        ]
+      }
+    ],
+    "typescript/no-explicit-any": "error",
+    "typescript/no-unsafe-argument": "error",
+    "typescript/no-unsafe-assignment": "error",
+    "typescript/no-unsafe-call": "error",
+    "typescript/no-unsafe-function-type": "error",
+    "typescript/no-unsafe-member-access": "error",
+    "typescript/no-unsafe-return": "error",
+    "typescript/restrict-template-expressions": [
+      "error",
+      {
+        "allowNumber": true
+      }
+    ],
+    "typescript/strict-boolean-expressions": [
+      "error",
+      {
+        "allowNullableBoolean": true,
+        "allowNullableObject": true
+      }
+    ],
+    "typescript/ban-ts-comment": [
+      "error",
+      {
+        "minimumDescriptionLength": 10,
+        "ts-expect-error": "allow-with-description",
+        "ts-ignore": true
+      }
+    ],
+    "typescript/explicit-function-return-type": [
+      "error",
+      {
+        "allowExpressions": true
+      }
+    ],
+    "typescript/method-signature-style": [
+      "error",
+      "property"
+    ],
+    "typescript/switch-exhaustiveness-check": "error",
+    "typescript/unbound-method": [
+      "error",
+      {
+        "ignoreStatic": true
+      }
+    ],
+    "typescript/await-thenable": "error",
+    "typescript/no-floating-promises": [
+      "error",
+      {
+        "ignoreIIFE": true,
+        "ignoreVoid": true
+      }
+    ],
+    "typescript/no-misused-promises": [
+      "error",
+      {
+        "checksConditionals": true
+      }
+    ],
+    "regexp/no-super-linear-backtracking": "error",
+    "regexp/no-unused-capturing-group": "error",
+    "unicorn/error-message": "error",
+    "no-unused-vars": [
+      "error",
+      {
+        "args": "after-used",
+        "argsIgnorePattern": "^_",
+        "caughtErrors": "all",
+        "caughtErrorsIgnorePattern": "^_",
+        "vars": "all",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "jsdoc/check-tag-names": "off",
+    "jsdoc/require-returns-description": "error",
+    "typescript/no-redundant-type-constituents": "off",
+    "typescript/no-base-to-string": "off",
+    "typescript/no-useless-default-assignment": "off",
+    "unicorn/no-useless-fallback-in-spread": "off",
+    "jsdoc-js/check-param-names": "error"
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.cjs",
+        "*.js",
+        "*.mjs",
+        ".*.cjs",
+        ".*.js",
+        ".*.mjs",
+        ".claude/**/*.{js,mjs,cjs}",
+        "**/*.config.cjs",
+        "**/*.config.js",
+        "**/*.config.mjs",
+        "demos/**/*.{js,mjs,cjs,ts}",
+        "shared/**/*.mjs"
+      ],
+      "rules": {
+        "typescript/await-thenable": "off",
+        "typescript/explicit-function-return-type": "off",
+        "typescript/no-floating-promises": "off",
+        "typescript/no-misused-promises": "off",
+        "typescript/no-unsafe-argument": "off",
+        "typescript/no-unsafe-assignment": "off",
+        "typescript/no-unsafe-call": "off",
+        "typescript/no-unsafe-member-access": "off",
+        "typescript/no-unsafe-return": "off",
+        "typescript/restrict-template-expressions": "off",
+        "typescript/strict-boolean-expressions": "off",
+        "typescript/switch-exhaustiveness-check": "off",
+        "typescript/unbound-method": "off"
+      }
+    },
+    {
+      "files": [
+        "**/*.test.ts",
+        "**/*.spec.ts"
+      ],
+      "rules": {
+        "typescript/no-unsafe-assignment": "off"
+      }
+    }
+  ]
+}

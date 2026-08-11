@@ -1,14 +1,7 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "eslint.format.enable": true,
-  "eslint.validate": [
-    "javascript",
-    "typescript",
-    "json",
-    "jsonc",
-    "yaml",
-    "markdown"
-  ],
+  "oxc.enable": true,
+  "oxc.lint.run": "onType",
   "cSpell.words": [
     "atomico",
     "highlightjs",
@@ -38,16 +31,16 @@
     "editor.defaultFormatter": "vscode.html-language-features"
   },
   "[javascript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[json]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "postcss.validate": false,
   "css.lint.unknownAtRules": "ignore"
