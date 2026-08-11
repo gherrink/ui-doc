@@ -7,14 +7,14 @@ import {
   resolveCopyAssets,
   rewriteCssUrls,
 } from '../src/utils/asset'
-import type { AssetOption, CopyAssetResolved } from '../src/utils/asset.types'
+import type { AssetOption, AssetResolved, CopyAssetResolved } from '../src/utils/asset.types'
 import type { Options } from '../src/utils/option.types'
 
 function createMockAssetLoader(overrides: Partial<AssetLoader> = {}): AssetLoader {
   return {
-    copy: vi.fn(),
-    packageExists: vi.fn(),
-    packagePath: vi.fn(),
+    copy: vi.fn<AssetLoader['copy']>(),
+    packageExists: vi.fn<AssetLoader['packageExists']>(),
+    packagePath: vi.fn<AssetLoader['packagePath']>(),
     read: vi.fn<AssetLoader['read']>().mockResolvedValue(''),
     resolve: vi.fn<AssetLoader['resolve']>().mockResolvedValue(''),
     ...overrides,
@@ -23,18 +23,18 @@ function createMockAssetLoader(overrides: Partial<AssetLoader> = {}): AssetLoade
 
 function createMockFileSystem(overrides: Partial<FileSystem> = {}): FileSystem {
   return {
-    createFileFinder: vi.fn(),
+    createFileFinder: vi.fn<FileSystem['createFileFinder']>(),
     assetLoader: vi.fn<FileSystem['assetLoader']>().mockReturnValue(createMockAssetLoader()),
     resolve: vi.fn<FileSystem['resolve']>().mockImplementation((file: string) => file),
-    directoryCopy: vi.fn(),
-    ensureDirectoryExists: vi.fn(),
-    isDirectory: vi.fn(),
+    directoryCopy: vi.fn<FileSystem['directoryCopy']>(),
+    ensureDirectoryExists: vi.fn<FileSystem['ensureDirectoryExists']>(),
+    isDirectory: vi.fn<FileSystem['isDirectory']>(),
     fileRead: vi.fn<FileSystem['fileRead']>().mockResolvedValue('file content'),
-    fileWrite: vi.fn(),
-    fileCopy: vi.fn(),
-    fileExists: vi.fn(),
-    fileBasename: vi.fn(),
-    fileDirname: vi.fn(),
+    fileWrite: vi.fn<FileSystem['fileWrite']>(),
+    fileCopy: vi.fn<FileSystem['fileCopy']>(),
+    fileExists: vi.fn<FileSystem['fileExists']>(),
+    fileBasename: vi.fn<FileSystem['fileBasename']>(),
+    fileDirname: vi.fn<FileSystem['fileDirname']>(),
     ...overrides,
   }
 }
@@ -769,7 +769,7 @@ describe('asset', () => {
           assetLoader: vi.fn<FileSystem['assetLoader']>().mockReturnValue(mockAssetLoader),
         })
 
-        const fromInputFn = vi.fn(() => true)
+        const fromInputFn = vi.fn<(asset: AssetResolved) => boolean>(() => true)
         const customAsset: AssetOption = {
           name: 'conditional-input.css',
           fromInput: fromInputFn,
@@ -805,7 +805,7 @@ describe('asset', () => {
           fileRead: vi.fn<FileSystem['fileRead']>().mockResolvedValue('dependency content'),
         })
 
-        const fromInputFn = vi.fn(() => false)
+        const fromInputFn = vi.fn<(asset: AssetResolved) => boolean>(() => false)
         const customAsset: AssetOption = {
           name: 'conditional-dep.js',
           dependency: 'package/conditional.js',
@@ -842,7 +842,7 @@ describe('asset', () => {
           assetLoader: vi.fn<FileSystem['assetLoader']>().mockReturnValue(mockAssetLoader),
         })
 
-        const nameFn = vi.fn(() => 'dynamic-name.css')
+        const nameFn = vi.fn<() => string>(() => 'dynamic-name.css')
         const customAsset: AssetOption = {
           name: nameFn,
           source: 'body {}',
@@ -1316,20 +1316,24 @@ describe('asset', () => {
     })
 
     it('should resolve copy assets with glob pattern', async () => {
-      const mockSearch = vi.fn().mockImplementation(async (callback: (file: string) => void) => {
-        callback('/project/src/fonts/regular.woff2')
-        callback('/project/src/fonts/bold.woff2')
-      })
+      const mockSearch = vi
+        .fn<FileFinder['search']>()
+        .mockImplementation(async (callback: (file: string) => void) => {
+          callback('/project/src/fonts/regular.woff2')
+          callback('/project/src/fonts/bold.woff2')
+        })
 
       const mockFileFinder: FileFinder = {
         search: mockSearch,
-        matches: vi.fn(),
-        directories: vi.fn(),
+        matches: vi.fn<FileFinder['matches']>(),
+        directories: vi.fn<FileFinder['directories']>(),
       }
 
       const fileSystem = createMockFileSystem({
-        createFileFinder: vi.fn().mockReturnValue(mockFileFinder),
-        resolve: vi.fn().mockImplementation((file: string) => `/project/${file}`),
+        createFileFinder: vi.fn<FileSystem['createFileFinder']>().mockReturnValue(mockFileFinder),
+        resolve: vi
+          .fn<FileSystem['resolve']>()
+          .mockImplementation((file: string) => `/project/${file}`),
       })
 
       const result = await resolveCopyAssets([{ from: 'src/fonts/**/*', to: 'fonts' }], fileSystem)
@@ -1346,19 +1350,23 @@ describe('asset', () => {
     })
 
     it('should use relative path only when to is undefined', async () => {
-      const mockSearch = vi.fn().mockImplementation(async (callback: (file: string) => void) => {
-        callback('/project/public/images/logo.svg')
-      })
+      const mockSearch = vi
+        .fn<FileFinder['search']>()
+        .mockImplementation(async (callback: (file: string) => void) => {
+          callback('/project/public/images/logo.svg')
+        })
 
       const mockFileFinder: FileFinder = {
         search: mockSearch,
-        matches: vi.fn(),
-        directories: vi.fn(),
+        matches: vi.fn<FileFinder['matches']>(),
+        directories: vi.fn<FileFinder['directories']>(),
       }
 
       const fileSystem = createMockFileSystem({
-        createFileFinder: vi.fn().mockReturnValue(mockFileFinder),
-        resolve: vi.fn().mockImplementation((file: string) => `/project/${file}`),
+        createFileFinder: vi.fn<FileSystem['createFileFinder']>().mockReturnValue(mockFileFinder),
+        resolve: vi
+          .fn<FileSystem['resolve']>()
+          .mockImplementation((file: string) => `/project/${file}`),
       })
 
       const result = await resolveCopyAssets([{ from: 'public/**/*' }], fileSystem)
@@ -1372,7 +1380,7 @@ describe('asset', () => {
 
     it('should handle multiple copy options', async () => {
       const mockSearch = vi
-        .fn()
+        .fn<FileFinder['search']>()
         .mockImplementationOnce(async (callback: (file: string) => void) => {
           callback('/project/src/fonts/font.woff2')
         })
@@ -1382,13 +1390,15 @@ describe('asset', () => {
 
       const mockFileFinder: FileFinder = {
         search: mockSearch,
-        matches: vi.fn(),
-        directories: vi.fn(),
+        matches: vi.fn<FileFinder['matches']>(),
+        directories: vi.fn<FileFinder['directories']>(),
       }
 
       const fileSystem = createMockFileSystem({
-        createFileFinder: vi.fn().mockReturnValue(mockFileFinder),
-        resolve: vi.fn().mockImplementation((file: string) => `/project/${file}`),
+        createFileFinder: vi.fn<FileSystem['createFileFinder']>().mockReturnValue(mockFileFinder),
+        resolve: vi
+          .fn<FileSystem['resolve']>()
+          .mockImplementation((file: string) => `/project/${file}`),
       })
 
       const result = await resolveCopyAssets(

@@ -1,4 +1,12 @@
-import type { AssetLoader, BlockParser, FileSystem, Renderer } from '@ui-doc/core'
+import type {
+  AssetLoader,
+  BlockParser,
+  FileFinder,
+  FileSystem,
+  GenerateFunctions,
+  Logger,
+  Renderer,
+} from '@ui-doc/core'
 import { UIDoc } from '@ui-doc/core'
 import { NodeFileSystem } from '@ui-doc/node'
 import { assert, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -9,31 +17,33 @@ import { resolveOptions } from '../src/utils/option'
 import type { Options } from '../src/utils/option.types'
 
 vi.mock('@ui-doc/core', () => ({
-  UIDoc: vi.fn(),
+  UIDoc: vi.fn<typeof import('@ui-doc/core').UIDoc>(),
   noopLogger: {
-    debug: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
+    debug: vi.fn<Logger['debug']>(),
+    info: vi.fn<Logger['info']>(),
+    warn: vi.fn<Logger['warn']>(),
+    error: vi.fn<Logger['error']>(),
   },
-  createConsoleLogger: vi.fn(() => ({
-    debug: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
+  createConsoleLogger: vi.fn<typeof import('@ui-doc/core').createConsoleLogger>(() => ({
+    debug: vi.fn<Logger['debug']>(),
+    info: vi.fn<Logger['info']>(),
+    warn: vi.fn<Logger['warn']>(),
+    error: vi.fn<Logger['error']>(),
   })),
 }))
 
 vi.mock('@ui-doc/node', () => ({
   NodeFileSystem: {
-    init: vi.fn(),
+    init: vi.fn<typeof NodeFileSystem.init>(),
   },
 }))
 
 vi.mock('../src/utils/asset', () => ({
-  resolveAssets: vi.fn(),
-  resolveCopyAssets: vi.fn().mockResolvedValue([]),
-  resolveAssetType: vi.fn((fileName: string) => {
+  resolveAssets: vi.fn<typeof resolveAssets>(),
+  resolveCopyAssets: vi
+    .fn<typeof import('../src/utils/asset').resolveCopyAssets>()
+    .mockResolvedValue([]),
+  resolveAssetType: vi.fn<typeof resolveAssetType>((fileName: string) => {
     if (/\.(?:css|less|sass|scss)$/.test(fileName)) {
       return 'style'
     }
@@ -50,8 +60,8 @@ describe('resolveOptions', () => {
   let mockAssetLoader: AssetLoader
   let mockUIDocInstance: UIDoc
   let mockRenderer: Renderer
-  let mockAddAsset: ReturnType<typeof vi.fn>
-  let mockAddExampleAsset: ReturnType<typeof vi.fn>
+  let mockAddAsset: ReturnType<typeof vi.fn<UIDoc['addAsset']>>
+  let mockAddExampleAsset: ReturnType<typeof vi.fn<UIDoc['addExampleAsset']>>
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -65,9 +75,9 @@ describe('resolveOptions', () => {
     }
 
     mockFileFinder = {
-      search: vi.fn(async () => Promise.resolve()),
-      matches: vi.fn(() => true),
-      directories: vi.fn(() => []),
+      search: vi.fn<FileFinder['search']>(async () => Promise.resolve()),
+      matches: vi.fn<FileFinder['matches']>(() => true),
+      directories: vi.fn<FileFinder['directories']>(() => []),
     }
 
     mockFileSystem = {
@@ -93,24 +103,24 @@ describe('resolveOptions', () => {
       generate: vi.fn<Renderer['generate']>().mockReturnValue('<html></html>'),
     }
 
-    mockAddAsset = vi.fn()
-    mockAddExampleAsset = vi.fn()
+    mockAddAsset = vi.fn<UIDoc['addAsset']>()
+    mockAddExampleAsset = vi.fn<UIDoc['addExampleAsset']>()
 
     mockUIDocInstance = {
-      sourceCreate: vi.fn(),
-      sourceUpdate: vi.fn(),
-      sourceDelete: vi.fn(),
-      sourceExists: vi.fn(),
+      sourceCreate: vi.fn<UIDoc['sourceCreate']>(),
+      sourceUpdate: vi.fn<UIDoc['sourceUpdate']>(),
+      sourceDelete: vi.fn<UIDoc['sourceDelete']>(),
+      sourceExists: vi.fn<UIDoc['sourceExists']>(),
       blockParser: {} as BlockParser,
-      entries: vi.fn(),
-      pages: vi.fn(),
-      page: vi.fn(),
-      example: vi.fn(),
-      output: vi.fn(),
+      entries: vi.fn<UIDoc['entries']>(),
+      pages: vi.fn<UIDoc['pages']>(),
+      page: vi.fn<UIDoc['page']>(),
+      example: vi.fn<UIDoc['example']>(),
+      output: vi.fn<UIDoc['output']>(),
       addAsset: mockAddAsset,
       addExampleAsset: mockAddExampleAsset,
-      replaceGenerate: vi.fn(),
-      on: vi.fn(),
+      replaceGenerate: vi.fn<UIDoc['replaceGenerate']>(),
+      on: vi.fn<UIDoc['on']>(),
     } as unknown as UIDoc
 
     type NodeFS = ReturnType<typeof NodeFileSystem.init>
@@ -270,7 +280,7 @@ describe('resolveOptions', () => {
     })
 
     it('should pass generate settings to UIDoc', async () => {
-      const customResolve = vi.fn((uri: string) => `/custom/${uri}`)
+      const customResolve = vi.fn<GenerateFunctions['resolve']>((uri: string) => `/custom/${uri}`)
 
       const options: Options = {
         source: ['src/**/*.ts'],
@@ -465,7 +475,7 @@ describe('resolveOptions', () => {
     })
 
     it('should wrap existing generate.resolve function', async () => {
-      const customResolve = vi.fn((uri: string) => `/custom${uri}`)
+      const customResolve = vi.fn<GenerateFunctions['resolve']>((uri: string) => `/custom${uri}`)
 
       const options: Options = {
         source: ['src/**/*.ts'],
@@ -689,11 +699,13 @@ describe('resolveOptions', () => {
         // Must be a function, not an arrow: HtmlRenderer is invoked with `new`,
         // and arrows are not constructable.
         // eslint-disable-next-line prefer-arrow-callback
-        HtmlRenderer: vi.fn().mockImplementation(function () {
-          return mockRenderer
-        }),
+        HtmlRenderer: vi
+          .fn<typeof import('@ui-doc/html-renderer').HtmlRenderer>()
+          .mockImplementation(function () {
+            return mockRenderer
+          }),
         NodeParser: {
-          init: vi.fn().mockReturnValue({}),
+          init: vi.fn<typeof import('@ui-doc/html-renderer').NodeParser.init>(),
         },
         TemplateLoader: {
           TEMPLATES_PACKAGE: '@ui-doc/html-renderer',
@@ -739,7 +751,7 @@ describe('resolveOptions', () => {
         registerTagTransformer: vi.fn<BlockParser['registerTagTransformer']>(),
       }
 
-      const customResolve = vi.fn((uri: string) => uri)
+      const customResolve = vi.fn<GenerateFunctions['resolve']>((uri: string) => uri)
 
       const options: Options = {
         source: ['src/**/*.ts', 'lib/**/*.js'],
