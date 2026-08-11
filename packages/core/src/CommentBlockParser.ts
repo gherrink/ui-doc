@@ -43,7 +43,7 @@ export class CommentBlockParser extends EventEmitterBase<EventMap> implements Bl
       source: context.identifier,
       phase: 'parse',
     })
-    const createError: BlockParserErrorCreate = (reason, comment, { tag = undefined } = {}) => {
+    const createError: BlockParserErrorCreate = (reason, comment, { tag } = {}) => {
       const code = comment.source.map(line => line.source).join('\n')
 
       return new BlockParseError({

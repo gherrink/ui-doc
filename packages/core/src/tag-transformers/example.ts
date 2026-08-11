@@ -15,7 +15,7 @@ export const tag: TagTransformer = {
       const params = data.type.split('|')
 
       data.type = params[1].trim()
-      data.modifier = `${params[0].trim()}`
+      data.modifier = params[0].trim()
     } else {
       data.modifier = data.type !== 'html' ? data.type : undefined
       data.type = 'html'

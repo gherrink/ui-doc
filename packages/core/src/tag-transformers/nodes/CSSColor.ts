@@ -108,6 +108,6 @@ export class CSSColor implements RenderValue {
   }
 
   public toString(): string {
-    return `${this.rgb}`
+    return this.rgb
   }
 }
