@@ -1,6 +1,6 @@
 {
   "name": "@ui-doc/core",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Core to generate a ui documentation out of comments.",
   "keywords": [
     "documentation",
