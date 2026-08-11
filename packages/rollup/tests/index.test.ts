@@ -1,4 +1,10 @@
-import type { FileFinder, FileSystem, UIDoc } from '@ui-doc/core'
+import type {
+  FileFinder,
+  FileFinderOnFoundCallback,
+  FileSystem,
+  OutputCallback,
+  UIDoc,
+} from '@ui-doc/core'
 import type {
   InputOptions,
   NormalizedInputOptions,
@@ -28,7 +34,7 @@ describe('uidocPlugin', () => {
   let mockPluginContext: PluginContext
 
   // Individual mock functions for verification
-  let mockSearch: ReturnType<typeof vi.fn>
+  let mockSearch: ReturnType<typeof vi.fn<FileFinder['search']>>
   let mockMatches: ReturnType<typeof vi.fn>
   let mockDirectories: ReturnType<typeof vi.fn>
   let mockFileRead: ReturnType<typeof vi.fn>
@@ -41,7 +47,7 @@ describe('uidocPlugin', () => {
   let mockSourceCreate: ReturnType<typeof vi.fn>
   let mockSourceUpdate: ReturnType<typeof vi.fn>
   let mockSourceDelete: ReturnType<typeof vi.fn>
-  let mockOutput: ReturnType<typeof vi.fn>
+  let mockOutput: ReturnType<typeof vi.fn<UIDoc['output']>>
   let mockWarn: ReturnType<typeof vi.fn>
   let mockInfo: ReturnType<typeof vi.fn>
   let mockEmitFile: ReturnType<typeof vi.fn>
@@ -206,7 +212,7 @@ describe('uidocPlugin', () => {
     it('should add watch files for new sources', async () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
 
-      mockSearch.mockImplementation(async (callback: (file: string) => Promise<void>) => {
+      mockSearch.mockImplementation(async (callback: FileFinderOnFoundCallback) => {
         await callback('file1.css')
         await callback('file2.css')
       })
@@ -223,7 +229,7 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
 
       mockGetWatchFiles.mockReturnValue(['file1.css'])
-      mockSearch.mockImplementation(async (callback: (file: string) => Promise<void>) => {
+      mockSearch.mockImplementation(async (callback: FileFinderOnFoundCallback) => {
         await callback('file1.css')
         await callback('file2.css')
       })
@@ -238,7 +244,7 @@ describe('uidocPlugin', () => {
     it('should create source for new files', async () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
 
-      mockSearch.mockImplementation(async (callback: (file: string) => Promise<void>) => {
+      mockSearch.mockImplementation(async (callback: FileFinderOnFoundCallback) => {
         await callback('file1.css')
       })
       mockFileRead.mockResolvedValue('content')
@@ -254,7 +260,7 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
 
       mockSourceExists.mockReturnValue(true)
-      mockSearch.mockImplementation(async (callback: (file: string) => Promise<void>) => {
+      mockSearch.mockImplementation(async (callback: FileFinderOnFoundCallback) => {
         await callback('file1.css')
       })
 
@@ -350,7 +356,7 @@ describe('uidocPlugin', () => {
         source: 'file1.css',
       })
 
-      mockSearch.mockImplementation(async (callback: (file: string) => Promise<void>) => {
+      mockSearch.mockImplementation(async (callback: FileFinderOnFoundCallback) => {
         await callback('file1.css')
       })
       mockSourceCreate.mockImplementation(() => {
@@ -373,7 +379,7 @@ describe('uidocPlugin', () => {
 
       const error = new Error('Generic error')
 
-      mockSearch.mockImplementation(async (callback: (file: string) => Promise<void>) => {
+      mockSearch.mockImplementation(async (callback: FileFinderOnFoundCallback) => {
         await callback('file1.css')
       })
       mockSourceCreate.mockImplementation(() => {
@@ -517,7 +523,7 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
 
       mockOutput.mockImplementation(
-        async (callback: (fileName: string, source: string) => Promise<void>) => {
+        async (callback: OutputCallback) => {
           await callback('index.html', '<html>Index</html>')
           await callback('page.html', '<html>Page</html>')
         },
@@ -563,7 +569,7 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
 
       mockOutput.mockImplementation(
-        async (callback: (fileName: string, source: string) => Promise<void>) => {
+        async (callback: OutputCallback) => {
           await callback('index.html', '<html>Index</html>')
         },
       )
@@ -1045,7 +1051,7 @@ describe('uidocPlugin', () => {
         source: 'file.css',
       })
 
-      mockSearch.mockImplementation(async (callback: (file: string) => Promise<void>) => {
+      mockSearch.mockImplementation(async (callback: FileFinderOnFoundCallback) => {
         await callback('file.css')
       })
       mockSourceCreate.mockImplementation(() => {
@@ -1068,7 +1074,7 @@ describe('uidocPlugin', () => {
 
       const error = new TypeError('Type error')
 
-      mockSearch.mockImplementation(async (callback: (file: string) => Promise<void>) => {
+      mockSearch.mockImplementation(async (callback: FileFinderOnFoundCallback) => {
         await callback('file.css')
       })
       mockSourceCreate.mockImplementation(() => {
