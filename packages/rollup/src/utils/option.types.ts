@@ -36,6 +36,12 @@ export interface Options {
 
 export interface ResolvedOptions {
   assets: AssetResolved[]
+  /**
+   * Configured `file` assets whose file could not be read, so they were left
+   * out of `assets`. Reported as warnings from `buildStart`, which is the
+   * earliest point with a plugin context.
+   */
+  unreadableAssets: { name: string, file: string }[]
   assetsFromInput: Set<string>
   copyAssets: CopyAssetResolved[]
   staticAssets?: string

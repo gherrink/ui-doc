@@ -146,6 +146,7 @@ export async function resolveAssets(
   options: Options,
   fileSystem: FileSystem,
   copyAssets: CopyAssetResolved[] = [],
+  unreadable: ResolvedOptions['unreadableAssets'] = [],
 ): Promise<ResolvedOptions['assets']> {
   const assetLoader = fileSystem.assetLoader()
   const resolveAssetOption = async (
@@ -189,14 +190,30 @@ export async function resolveAssets(
       asset.source
         = typeof assetOption.source === 'function' ? assetOption.source() : assetOption.source
     } else if (asset.originalFileName !== undefined && asset.originalFileName !== '') {
-      let source = await fileSystem.fileRead(asset.originalFileName)
+      try {
+        let source = await fileSystem.fileRead(asset.originalFileName)
 
-      // Rewrite CSS url() references for page/example CSS assets
-      if (type === 'style' && copyAssets.length > 0) {
-        source = rewriteCssUrls(source, asset.originalFileName, copyAssets)
+        // Rewrite CSS url() references for page/example CSS assets
+        if (type === 'style' && copyAssets.length > 0) {
+          source = rewriteCssUrls(source, asset.originalFileName, copyAssets)
+        }
+
+        asset.source = source
+      } catch (error) {
+        // Options are resolved while Rollup is still normalising plugins, so
+        // nothing this build produces exists on disk yet. A `file` pointing at
+        // the build's own output is therefore missing on the very first run,
+        // and aborting here would make a clean build impossible. Leave the
+        // source unset and let buildStart report it as a warning.
+        //
+        // Assets resolved through `dependency` are a different matter: they
+        // ship inside a package and must be readable, so those still throw.
+        if (assetOption.file === undefined) {
+          throw error
+        }
+
+        unreadable.push({ name, file: asset.file ?? asset.originalFileName })
       }
-
-      asset.source = source
     }
 
     return asset

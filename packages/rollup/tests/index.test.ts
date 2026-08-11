@@ -109,6 +109,7 @@ describe('uidocPlugin', () => {
     // Mock ResolvedOptions
     mockResolvedOptions = {
       assets: [],
+      unreadableAssets: [],
       assetsFromInput: new Set<string>(),
       copyAssets: [],
       staticAssets: undefined,
@@ -319,6 +320,30 @@ describe('uidocPlugin', () => {
       const asset = mockResolvedOptions.assets[0]
       expect(asset.fileName).toBe('main.js')
       expect(asset.originalFileName).toBeUndefined()
+    })
+
+    it('should warn about assets whose configured file could not be read', async () => {
+      mockResolvedOptions.unreadableAssets = [
+        { name: 'app.css', file: '/project/dist/app.css' },
+      ]
+
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+
+      const buildStart = plugin.buildStart as (options: NormalizedInputOptions) => Promise<void>
+      await buildStart.call(mockPluginContext, {} as NormalizedInputOptions)
+
+      expect(mockPluginContext.warn).toHaveBeenCalledWith(
+        expect.stringContaining('Asset "app.css" could not be read from "/project/dist/app.css"'),
+      )
+    })
+
+    it('should not warn when every asset was readable', async () => {
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+
+      const buildStart = plugin.buildStart as (options: NormalizedInputOptions) => Promise<void>
+      await buildStart.call(mockPluginContext, {} as NormalizedInputOptions)
+
+      expect(mockPluginContext.warn).not.toHaveBeenCalled()
     })
 
     it('should handle null input gracefully', async () => {
