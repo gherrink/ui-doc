@@ -1,6 +1,7 @@
 import type { Dirent } from 'node:fs'
 import fs from 'node:fs/promises'
 
+import type { FileFinderOnFoundCallback } from '@ui-doc/core'
 import type { MockInstance } from 'vitest'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -71,7 +72,7 @@ describe('nodeFileFinder', () => {
           createDirent('baz.not', false),
         ])
 
-      const onFoundMock = vi.fn(async () => Promise.resolve())
+      const onFoundMock = vi.fn<FileFinderOnFoundCallback>(async () => Promise.resolve())
 
       const fileFinder = new NodeFileFinder(['/test/**/*.test'])
 
@@ -94,7 +95,7 @@ describe('nodeFileFinder', () => {
         createDirent('bar.ts', false),
       ])
 
-      const onFoundMock = vi.fn()
+      const onFoundMock = vi.fn<FileFinderOnFoundCallback>()
 
       const fileFinder = new NodeFileFinder(['/test/*.ts'])
 
@@ -109,7 +110,7 @@ describe('nodeFileFinder', () => {
     it('should handle empty directory', async () => {
       mockReaddir().mockResolvedValueOnce([])
 
-      const onFoundMock = vi.fn()
+      const onFoundMock = vi.fn<FileFinderOnFoundCallback>()
 
       const fileFinder = new NodeFileFinder(['/empty/**/*.ts'])
 
@@ -123,7 +124,7 @@ describe('nodeFileFinder', () => {
         .mockResolvedValueOnce([createDirent('a.ts', false)])
         .mockResolvedValueOnce([createDirent('b.js', false)])
 
-      const onFoundMock = vi.fn()
+      const onFoundMock = vi.fn<FileFinderOnFoundCallback>()
 
       const fileFinder = new NodeFileFinder(['/src/*.ts', '/lib/*.js'])
 
@@ -135,7 +136,7 @@ describe('nodeFileFinder', () => {
     it('should handle synchronous callback', async () => {
       mockReaddir().mockResolvedValueOnce([createDirent('file.ts', false)])
 
-      const onFoundMock = vi.fn(() => undefined)
+      const onFoundMock = vi.fn<FileFinderOnFoundCallback>(() => undefined)
 
       const fileFinder = new NodeFileFinder(['/src/*.ts'])
 
@@ -150,7 +151,7 @@ describe('nodeFileFinder', () => {
         { isDirectory: () => false, isFile: () => false, name: 'symlink' } as Dirent,
       ])
 
-      const onFoundMock = vi.fn()
+      const onFoundMock = vi.fn<FileFinderOnFoundCallback>()
 
       const fileFinder = new NodeFileFinder(['/src/*.ts'])
 
@@ -166,7 +167,7 @@ describe('nodeFileFinder', () => {
         .mockResolvedValueOnce([createDirent('level2', true)])
         .mockResolvedValueOnce([createDirent('deep.ts', false)])
 
-      const onFoundMock = vi.fn()
+      const onFoundMock = vi.fn<FileFinderOnFoundCallback>()
 
       const fileFinder = new NodeFileFinder(['/root/**/*.ts'])
 

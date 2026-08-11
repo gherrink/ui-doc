@@ -10,36 +10,38 @@ import { NodeAssetLoader } from '../src'
 
 vi.mock('node:fs/promises')
 vi.mock('node:module', () => ({
-  createRequire: vi.fn(),
+  createRequire: vi.fn<typeof createRequire>(),
 }))
 
 function createMockFileSystem(overrides: Partial<FileSystem> = {}): FileSystem {
   return {
-    createFileFinder: vi.fn(),
-    assetLoader: vi.fn(),
-    resolve: vi.fn((file: string) => file),
-    directoryCopy: vi.fn(),
-    ensureDirectoryExists: vi.fn(),
-    isDirectory: vi.fn(),
-    fileRead: vi.fn().mockResolvedValue('file content'),
-    fileWrite: vi.fn(),
-    fileCopy: vi.fn().mockResolvedValue(true),
-    fileExists: vi.fn().mockResolvedValue(true),
-    fileBasename: vi.fn(),
-    fileDirname: vi.fn(),
+    createFileFinder: vi.fn<FileSystem['createFileFinder']>(),
+    assetLoader: vi.fn<FileSystem['assetLoader']>(),
+    resolve: vi.fn<FileSystem['resolve']>(file => file),
+    directoryCopy: vi.fn<FileSystem['directoryCopy']>(),
+    ensureDirectoryExists: vi.fn<FileSystem['ensureDirectoryExists']>(),
+    isDirectory: vi.fn<FileSystem['isDirectory']>(),
+    fileRead: vi.fn<FileSystem['fileRead']>().mockResolvedValue('file content'),
+    fileWrite: vi.fn<FileSystem['fileWrite']>(),
+    fileCopy: vi.fn<FileSystem['fileCopy']>().mockResolvedValue(true),
+    fileExists: vi.fn<FileSystem['fileExists']>().mockResolvedValue(true),
+    fileBasename: vi.fn<FileSystem['fileBasename']>(),
+    fileDirname: vi.fn<FileSystem['fileDirname']>(),
     ...overrides,
   }
 }
 
 describe('nodeAssetLoader', () => {
   let mockRequire: {
-    resolve: ReturnType<typeof vi.fn> & { paths: ReturnType<typeof vi.fn> }
+    resolve: ReturnType<typeof vi.fn<NodeRequire['resolve']>> & {
+      paths: ReturnType<typeof vi.fn<NodeRequire['resolve']['paths']>>
+    }
   }
 
   beforeEach(() => {
     mockRequire = {
-      resolve: Object.assign(vi.fn(), {
-        paths: vi.fn().mockReturnValue(['/node_modules']),
+      resolve: Object.assign(vi.fn<NodeRequire['resolve']>(), {
+        paths: vi.fn<NodeRequire['resolve']['paths']>().mockReturnValue(['/node_modules']),
       }),
     }
     vi.mocked(createRequire).mockReturnValue(mockRequire as unknown as NodeRequire)
@@ -159,7 +161,9 @@ describe('nodeAssetLoader', () => {
     it('should resolve and verify file exists', async () => {
       mockRequire.resolve.mockReturnValue('/resolved/path/file.js')
 
-      const fileSystem = createMockFileSystem({ fileExists: vi.fn().mockResolvedValue(true) })
+      const fileSystem = createMockFileSystem({
+        fileExists: vi.fn<FileSystem['fileExists']>().mockResolvedValue(true),
+      })
       const loader = new NodeAssetLoader(fileSystem)
       const resolved = await loader.resolve('some-package/file.js')
 
@@ -169,7 +173,9 @@ describe('nodeAssetLoader', () => {
     it('should return undefined when file does not exist', async () => {
       mockRequire.resolve.mockReturnValue('/resolved/path/file.js')
 
-      const fileSystem = createMockFileSystem({ fileExists: vi.fn().mockResolvedValue(false) })
+      const fileSystem = createMockFileSystem({
+        fileExists: vi.fn<FileSystem['fileExists']>().mockResolvedValue(false),
+      })
       const loader = new NodeAssetLoader(fileSystem)
       const resolved = await loader.resolve('some-package/nonexistent.js')
 
@@ -181,9 +187,9 @@ describe('nodeAssetLoader', () => {
     it('should copy asset from resolved path', async () => {
       mockRequire.resolve.mockReturnValue('/from/asset.css')
 
-      const fileCopyMock = vi.fn().mockResolvedValue(true)
+      const fileCopyMock = vi.fn<FileSystem['fileCopy']>().mockResolvedValue(true)
       const fileSystem = createMockFileSystem({
-        fileExists: vi.fn().mockResolvedValue(true),
+        fileExists: vi.fn<FileSystem['fileExists']>().mockResolvedValue(true),
         fileCopy: fileCopyMock,
       })
       const loader = new NodeAssetLoader(fileSystem)
@@ -196,7 +202,9 @@ describe('nodeAssetLoader', () => {
     it('should throw error when source cannot be resolved', async () => {
       mockRequire.resolve.mockReturnValue('/from/asset.css')
 
-      const fileSystem = createMockFileSystem({ fileExists: vi.fn().mockResolvedValue(false) })
+      const fileSystem = createMockFileSystem({
+        fileExists: vi.fn<FileSystem['fileExists']>().mockResolvedValue(false),
+      })
       const loader = new NodeAssetLoader(fileSystem)
 
       await expect(loader.copy('nonexistent/file.css', '/dest/file.css')).rejects.toThrow(
@@ -207,7 +215,9 @@ describe('nodeAssetLoader', () => {
     it('should throw error when resolved path is empty', async () => {
       mockRequire.resolve.mockReturnValue('')
 
-      const fileSystem = createMockFileSystem({ fileExists: vi.fn().mockResolvedValue(true) })
+      const fileSystem = createMockFileSystem({
+        fileExists: vi.fn<FileSystem['fileExists']>().mockResolvedValue(true),
+      })
       const loader = new NodeAssetLoader(fileSystem)
 
       await expect(loader.copy('bad/file.css', '/dest/file.css')).rejects.toThrow(
@@ -221,8 +231,8 @@ describe('nodeAssetLoader', () => {
       mockRequire.resolve.mockReturnValue('/from/asset.txt')
 
       const fileSystem = createMockFileSystem({
-        fileExists: vi.fn().mockResolvedValue(true),
-        fileRead: vi.fn().mockResolvedValue('asset content'),
+        fileExists: vi.fn<FileSystem['fileExists']>().mockResolvedValue(true),
+        fileRead: vi.fn<FileSystem['fileRead']>().mockResolvedValue('asset content'),
       })
       const loader = new NodeAssetLoader(fileSystem)
       const content = await loader.read('package/asset.txt')
@@ -233,7 +243,9 @@ describe('nodeAssetLoader', () => {
     it('should throw error when asset cannot be resolved', async () => {
       mockRequire.resolve.mockReturnValue('/from/asset.txt')
 
-      const fileSystem = createMockFileSystem({ fileExists: vi.fn().mockResolvedValue(false) })
+      const fileSystem = createMockFileSystem({
+        fileExists: vi.fn<FileSystem['fileExists']>().mockResolvedValue(false),
+      })
       const loader = new NodeAssetLoader(fileSystem)
 
       await expect(loader.read('nonexistent/file.txt')).rejects.toThrow(
@@ -244,7 +256,9 @@ describe('nodeAssetLoader', () => {
     it('should throw error when resolved path is empty', async () => {
       mockRequire.resolve.mockReturnValue('')
 
-      const fileSystem = createMockFileSystem({ fileExists: vi.fn().mockResolvedValue(true) })
+      const fileSystem = createMockFileSystem({
+        fileExists: vi.fn<FileSystem['fileExists']>().mockResolvedValue(true),
+      })
       const loader = new NodeAssetLoader(fileSystem)
 
       await expect(loader.read('bad/file.txt')).rejects.toThrow(
@@ -275,7 +289,7 @@ describe('nodeAssetLoader', () => {
     ): NodeRequire {
       return {
         resolve: Object.assign(vi.fn(resolveImpl), {
-          paths: vi.fn().mockReturnValue(paths),
+          paths: vi.fn<NodeRequire['resolve']['paths']>().mockReturnValue(paths),
         }),
       } as unknown as NodeRequire
     }
@@ -419,7 +433,9 @@ describe('nodeAssetLoader', () => {
       )
 
       const loader = new NodeAssetLoader(
-        createMockFileSystem({ fileExists: vi.fn().mockResolvedValue(true) }),
+        createMockFileSystem({
+          fileExists: vi.fn<FileSystem['fileExists']>().mockResolvedValue(true),
+        }),
       )
 
       expect(await loader.resolve('pkg/asset.css')).toBe('/own/node_modules/pkg/asset.css')
@@ -433,7 +449,7 @@ describe('nodeAssetLoader', () => {
 
       const loader = new NodeAssetLoader(
         createMockFileSystem({
-          fileExists: vi.fn(async file =>
+          fileExists: vi.fn<FileSystem['fileExists']>(async file =>
             Promise.resolve(file === '/own/node_modules/pkg/asset.css'),
           ),
         }),
@@ -449,7 +465,9 @@ describe('nodeAssetLoader', () => {
       )
 
       const loader = new NodeAssetLoader(
-        createMockFileSystem({ fileExists: vi.fn().mockResolvedValue(true) }),
+        createMockFileSystem({
+          fileExists: vi.fn<FileSystem['fileExists']>().mockResolvedValue(true),
+        }),
       )
 
       expect(await loader.resolve('pkg/asset.css')).toBe('/consumer/node_modules/pkg/asset.css')
