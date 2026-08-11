@@ -8,6 +8,12 @@
     "MD013": false,
     "MD024": { "siblings_only": true },
     "MD025": false,
+    // New in markdownlint 0.41, purely cosmetic table pipe alignment. No style
+    // fits the existing docs - measured against all four: any 615 issues,
+    // compact 891, aligned 1141, tight 3552. Enabling any of them means
+    // reformatting every table in 17 files, which is unrelated churn.
+    // Turn on deliberately if the docs are ever normalised.
+    "MD060": false,
     "MD033": false,
     "MD034": false,
     "MD036": false
