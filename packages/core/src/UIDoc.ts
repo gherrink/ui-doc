@@ -24,6 +24,10 @@ import { matchesVariationPattern } from './tag-transformers/variations'
 import type { GenerateFunctions, Options, OutputCallback, Source } from './UIDoc.types'
 import type { ContextEntryEvent, UIDocEventMap as EventMap } from './UIDocEvent.types'
 
+const exampleKeyToId = (key: string): string => key.replaceAll('.', '-')
+
+const variationKeyToId = (key: string): string => `variation-${key.replaceAll('.', '-')}`
+
 export class UIDoc extends EventEmitterBase<EventMap> {
   protected sources: Record<FilePath, Source>
 
@@ -64,7 +68,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
         })
       })
 
-      return menu.sort((a, b) => {
+      return menu.toSorted((a, b) => {
         if (a.order !== b.order) {
           return a.order - b.order
         }
@@ -83,7 +87,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     pageLink: page => this.generate.resolve(`${page.id}.html`, 'page'),
     pageTitle: page =>
       page.id !== 'index' ? `${page.title} | ${this.texts.title}` : this.texts.title,
-    resolve: uri => `${uri}`,
+    resolve: uri => uri,
   }
 
   constructor(options: Options) {
@@ -138,8 +142,6 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   }
 
   protected registerExampleListeners(): void {
-    const exampleKeyToId = (key: string): string => key.replaceAll('.', '-')
-
     this.on('context-entry', ({ entry, key, type }) => {
       if (type === 'delete' || !entry.example || entry.example.type !== 'html') {
         return
@@ -180,8 +182,6 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   }
 
   protected registerVariationListeners(): void {
-    const variationKeyToId = (key: string): string => `variation-${key.replaceAll('.', '-')}`
-
     // Register variations when blocks with @variation are processed
     this.on('source', ({ source, type }) => {
       if (type === 'delete') {
@@ -396,7 +396,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     this.logger.debug(`Updating source ${file}`, { source: file, phase: 'parse' })
     const blocksNew = this.blockParser.parse({ content, identifier: file })
     const sourceBlockKeysOld = this.sources[file].blocks.map(block => block.key)
-    const sourceBlockKeysNew = blocksNew.map(block => block.key)
+    const sourceBlockKeysNew = new Set(blocksNew.map(block => block.key))
     this.logger.debug(`Parsed ${blocksNew.length} blocks`, { source: file, phase: 'parse' })
 
     // write new blocks to source
@@ -408,8 +408,8 @@ export class UIDoc extends EventEmitterBase<EventMap> {
 
     // remove old blocks
     sourceBlockKeysOld
-      .filter(key => !sourceBlockKeysNew.includes(key))
-      .sort((a, b) => b.length - a.length)
+      .filter(key => !sourceBlockKeysNew.has(key))
+      .toSorted((a, b) => b.length - a.length)
       .forEach(key => this.contextEntryDelete(key))
 
     this.clearMenu()
@@ -424,7 +424,7 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     this.emit('source', { file, source: this.sources[file], type: 'delete' })
     this.sources[file].blocks
       .map(block => block.key)
-      .sort((a, b) => b.length - a.length)
+      .toSorted((a, b) => b.length - a.length)
       .forEach(key => this.contextEntryDelete(key))
     delete this.sources[file]
 
