@@ -5,7 +5,7 @@ import { TagForNode } from '../../src/nodes/tags/for'
 import type { RenderContext, Renderer } from '../../src/Renderer.types'
 
 // Helper to cast arrays/objects to RenderContext for testing for-loop iteration
-const asContext = <T>(value: T): RenderContext => value as unknown as RenderContext
+const asContext = (value: unknown): RenderContext => value as RenderContext
 
 describe('render tag for', () => {
   const renderer = {} as Renderer
