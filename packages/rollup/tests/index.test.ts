@@ -22,7 +22,7 @@ import type { ResolvedOptions } from '../src/utils/option.types'
 
 // Mock dependencies
 vi.mock('../src/utils/option', () => ({
-  resolveOptions: vi.fn(),
+  resolveOptions: vi.fn<typeof import('../src/utils/option').resolveOptions>(),
 }))
 
 describe('uidocPlugin', () => {
@@ -34,55 +34,55 @@ describe('uidocPlugin', () => {
 
   // Individual mock functions for verification
   let mockSearch: ReturnType<typeof vi.fn<FileFinder['search']>>
-  let mockMatches: ReturnType<typeof vi.fn>
-  let mockDirectories: ReturnType<typeof vi.fn>
-  let mockFileRead: ReturnType<typeof vi.fn>
-  let mockFileCopy: ReturnType<typeof vi.fn>
-  let mockFileExists: ReturnType<typeof vi.fn>
-  let mockFileDirname: ReturnType<typeof vi.fn>
-  let mockEnsureDirectoryExists: ReturnType<typeof vi.fn>
-  let mockDirectoryCopy: ReturnType<typeof vi.fn>
-  let mockSourceExists: ReturnType<typeof vi.fn>
-  let mockSourceCreate: ReturnType<typeof vi.fn>
-  let mockSourceUpdate: ReturnType<typeof vi.fn>
-  let mockSourceDelete: ReturnType<typeof vi.fn>
+  let mockMatches: ReturnType<typeof vi.fn<FileFinder['matches']>>
+  let mockDirectories: ReturnType<typeof vi.fn<FileFinder['directories']>>
+  let mockFileRead: ReturnType<typeof vi.fn<FileSystem['fileRead']>>
+  let mockFileCopy: ReturnType<typeof vi.fn<FileSystem['fileCopy']>>
+  let mockFileExists: ReturnType<typeof vi.fn<FileSystem['fileExists']>>
+  let mockFileDirname: ReturnType<typeof vi.fn<FileSystem['fileDirname']>>
+  let mockEnsureDirectoryExists: ReturnType<typeof vi.fn<FileSystem['ensureDirectoryExists']>>
+  let mockDirectoryCopy: ReturnType<typeof vi.fn<FileSystem['directoryCopy']>>
+  let mockSourceExists: ReturnType<typeof vi.fn<UIDoc['sourceExists']>>
+  let mockSourceCreate: ReturnType<typeof vi.fn<UIDoc['sourceCreate']>>
+  let mockSourceUpdate: ReturnType<typeof vi.fn<UIDoc['sourceUpdate']>>
+  let mockSourceDelete: ReturnType<typeof vi.fn<UIDoc['sourceDelete']>>
   let mockOutput: ReturnType<typeof vi.fn<UIDoc['output']>>
-  let mockWarn: ReturnType<typeof vi.fn>
-  let mockInfo: ReturnType<typeof vi.fn>
-  let mockEmitFile: ReturnType<typeof vi.fn>
-  let mockGetWatchFiles: ReturnType<typeof vi.fn>
-  let mockAddWatchFile: ReturnType<typeof vi.fn>
+  let mockWarn: ReturnType<typeof vi.fn<PluginContext['warn']>>
+  let mockInfo: ReturnType<typeof vi.fn<PluginContext['info']>>
+  let mockEmitFile: ReturnType<typeof vi.fn<PluginContext['emitFile']>>
+  let mockGetWatchFiles: ReturnType<typeof vi.fn<PluginContext['getWatchFiles']>>
+  let mockAddWatchFile: ReturnType<typeof vi.fn<PluginContext['addWatchFile']>>
 
   beforeEach(() => {
     vi.clearAllMocks()
 
     // Create individual mock functions
-    mockSearch = vi.fn().mockResolvedValue(undefined)
-    mockMatches = vi.fn().mockReturnValue(false)
-    mockDirectories = vi.fn().mockReturnValue([])
-    mockFileRead = vi.fn().mockResolvedValue('file content')
-    mockFileCopy = vi.fn().mockResolvedValue(undefined)
-    mockFileExists = vi.fn().mockResolvedValue(false)
-    mockFileDirname = vi.fn().mockReturnValue('/path/to')
-    mockEnsureDirectoryExists = vi.fn().mockResolvedValue(undefined)
-    mockDirectoryCopy = vi.fn().mockResolvedValue(undefined)
-    mockSourceExists = vi.fn().mockReturnValue(false)
-    mockSourceCreate = vi.fn()
-    mockSourceUpdate = vi.fn()
-    mockSourceDelete = vi.fn()
-    mockOutput = vi.fn().mockResolvedValue(undefined)
-    mockWarn = vi.fn()
-    mockInfo = vi.fn()
-    mockEmitFile = vi.fn().mockReturnValue('asset-ref')
-    mockGetWatchFiles = vi.fn().mockReturnValue([])
-    mockAddWatchFile = vi.fn()
+    mockSearch = vi.fn<FileFinder['search']>().mockResolvedValue(undefined)
+    mockMatches = vi.fn<FileFinder['matches']>().mockReturnValue(false)
+    mockDirectories = vi.fn<FileFinder['directories']>().mockReturnValue([])
+    mockFileRead = vi.fn<FileSystem['fileRead']>().mockResolvedValue('file content')
+    mockFileCopy = vi.fn<FileSystem['fileCopy']>().mockResolvedValue(true)
+    mockFileExists = vi.fn<FileSystem['fileExists']>().mockResolvedValue(false)
+    mockFileDirname = vi.fn<FileSystem['fileDirname']>().mockReturnValue('/path/to')
+    mockEnsureDirectoryExists = vi.fn<FileSystem['ensureDirectoryExists']>().mockResolvedValue(true)
+    mockDirectoryCopy = vi.fn<FileSystem['directoryCopy']>().mockResolvedValue(true)
+    mockSourceExists = vi.fn<UIDoc['sourceExists']>().mockReturnValue(false)
+    mockSourceCreate = vi.fn<UIDoc['sourceCreate']>()
+    mockSourceUpdate = vi.fn<UIDoc['sourceUpdate']>()
+    mockSourceDelete = vi.fn<UIDoc['sourceDelete']>()
+    mockOutput = vi.fn<UIDoc['output']>().mockResolvedValue(undefined)
+    mockWarn = vi.fn<PluginContext['warn']>()
+    mockInfo = vi.fn<PluginContext['info']>()
+    mockEmitFile = vi.fn<PluginContext['emitFile']>().mockReturnValue('asset-ref')
+    mockGetWatchFiles = vi.fn<PluginContext['getWatchFiles']>().mockReturnValue([])
+    mockAddWatchFile = vi.fn<PluginContext['addWatchFile']>()
 
     // Mock FileFinder
     mockFileFinder = {
       search: mockSearch,
       matches: mockMatches,
       directories: mockDirectories,
-    } as FileFinder
+    }
 
     // Mock FileSystem
     mockFileSystem = {
@@ -101,8 +101,8 @@ describe('uidocPlugin', () => {
       sourceUpdate: mockSourceUpdate,
       sourceDelete: mockSourceDelete,
       output: mockOutput,
-      addAsset: vi.fn(),
-      addExampleAsset: vi.fn(),
+      addAsset: vi.fn<UIDoc['addAsset']>(),
+      addExampleAsset: vi.fn<UIDoc['addExampleAsset']>(),
     } as unknown as UIDoc
 
     // Mock ResolvedOptions
@@ -117,9 +117,9 @@ describe('uidocPlugin', () => {
       prefix: { path: '', uri: '' },
       uidoc: mockUidoc,
       source: ['src/**/*.css'],
-      uidocAsset: vi.fn(),
-      isAssetFromInput: vi.fn().mockReturnValue(false),
-      addAssetFromInput: vi.fn(),
+      uidocAsset: vi.fn<ResolvedOptions['uidocAsset']>(),
+      isAssetFromInput: vi.fn<ResolvedOptions['isAssetFromInput']>().mockReturnValue(false),
+      addAssetFromInput: vi.fn<ResolvedOptions['addAssetFromInput']>(),
     }
 
     // Mock PluginContext
@@ -630,7 +630,9 @@ describe('uidocPlugin', () => {
       ]
 
       mockEmitFile.mockReturnValue('ref-123')
-      const mockGetFileName = vi.fn().mockReturnValue('hashed-abc123.css')
+      const mockGetFileName = vi
+        .fn<PluginContext['getFileName']>()
+        .mockReturnValue('hashed-abc123.css')
       mockPluginContext.getFileName = mockGetFileName
 
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
@@ -669,7 +671,9 @@ describe('uidocPlugin', () => {
       ]
 
       mockEmitFile.mockReturnValue('ref-456')
-      const mockGetFileName = vi.fn().mockReturnValue('ui-doc/hashed-xyz789.css')
+      const mockGetFileName = vi
+        .fn<PluginContext['getFileName']>()
+        .mockReturnValue('ui-doc/hashed-xyz789.css')
       mockPluginContext.getFileName = mockGetFileName
 
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
