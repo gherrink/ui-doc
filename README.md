@@ -256,7 +256,7 @@ pnpm install
 pnpm workspace:build
 
 # Run tests
-pnpm workspace:test
+pnpm test
 
 # Lint code
 pnpm lint
@@ -284,7 +284,7 @@ Tests are located in `packages/*/tests/` and use Vitest with TypeScript support.
 
 ```bash
 # Run all tests
-pnpm workspace:test
+pnpm test
 
 # Run tests for a specific package
 pnpm --filter @ui-doc/core test

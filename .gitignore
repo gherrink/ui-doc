@@ -8,6 +8,7 @@ dist
 .env.*
 .eslintcache
 .stylelintcache
+coverage
 
 TODOs.md
 TODOs_*.md

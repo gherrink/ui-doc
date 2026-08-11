@@ -345,7 +345,7 @@ describe('uidocPlugin', () => {
     let mockServer: ViteDevServer
     let mockReq: MockRequest
     let mockRes: Partial<ServerResponse>
-    let nextFn: ReturnType<typeof vi.fn>
+    let nextFn: ReturnType<typeof vi.fn<() => void>>
     let middlewareHandler: (req: IncomingMessage, res: ServerResponse, next: () => void) => void
 
     beforeEach(async () => {
@@ -528,7 +528,7 @@ describe('uidocPlugin', () => {
     let mockServer: ViteDevServer
     let mockReq: MockRequest
     let mockRes: Partial<ServerResponse>
-    let nextFn: ReturnType<typeof vi.fn>
+    let nextFn: ReturnType<typeof vi.fn<() => void>>
     let middlewareHandler: (req: IncomingMessage, res: ServerResponse, next: () => void) => void
 
     beforeEach(async () => {

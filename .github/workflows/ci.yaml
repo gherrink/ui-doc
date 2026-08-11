@@ -49,4 +49,4 @@ jobs:
         run: pnpm typecheck
 
       - name: Test
-        run: pnpm workspace:test
+        run: pnpm test

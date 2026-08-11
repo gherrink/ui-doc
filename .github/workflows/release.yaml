@@ -63,7 +63,7 @@ jobs:
         run: pnpm lint
 
       - name: Run Tests
-        run: pnpm workspace:test
+        run: pnpm test
 
       - name: OIDC Preflight
         shell: bash

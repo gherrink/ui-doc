@@ -50,7 +50,7 @@ UI-Doc is a TypeScript monorepo with packages in the `packages/` directory:
 | Command | Description |
 |---------|-------------|
 | `pnpm workspace:build` | Build all packages |
-| `pnpm workspace:test` | Run all package tests |
+| `pnpm test` | Run all package tests |
 | `pnpm --filter @ui-doc/core test` | Run tests for a specific package |
 | `pnpm lint` | Run all linters (docs, js, css) |
 | `pnpm fix` | Run all auto-fixes |
@@ -97,7 +97,7 @@ Tests use [Vitest](https://vitest.dev/) and are located in `packages/*/tests/`. 
 
 ```bash
 # Run all tests
-pnpm workspace:test
+pnpm test
 
 # Run tests for a specific package
 pnpm --filter @ui-doc/core test

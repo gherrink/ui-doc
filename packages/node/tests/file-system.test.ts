@@ -211,9 +211,10 @@ describe('nodeFileSystem', () => {
 
   describe('directoryCopy', () => {
     it('should copy directory contents recursively', async () => {
-      vi.spyOn(fs, 'stat')
-        .mockResolvedValueOnce({ isDirectory: () => true } as Stats)
-        .mockResolvedValueOnce({ isDirectory: () => true } as Stats)
+      // directoryCopy stats only the source directory; the two nested entries
+      // are files, so a single queued value is all that is consumed. Queueing a
+      // second leaks it into the next test.
+      vi.spyOn(fs, 'stat').mockResolvedValueOnce({ isDirectory: () => true } as Stats)
       vi.spyOn(fs, 'mkdir').mockResolvedValue(undefined)
       vi.spyOn(fs, 'readdir').mockResolvedValue([
         { isDirectory: () => false, name: 'file1.txt' },

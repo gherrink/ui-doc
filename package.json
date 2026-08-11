@@ -24,14 +24,15 @@
     "package:release-dry": "versioner --dry --stripShortName='^@.+/' --target",
     "preinstall": "npx only-allow pnpm",
     "prepare": "husky",
-    "release": "pnpm lint && pnpm workspace:test && pnpm -r --filter './packages/*' --workspace-concurrency=1 run release",
-    "release:dry": "pnpm lint && pnpm workspace:test && pnpm -r --filter './packages/*' --workspace-concurrency=1 run release:dry",
+    "release": "pnpm lint && pnpm test && pnpm -r --filter './packages/*' --workspace-concurrency=1 run release",
+    "release:dry": "pnpm lint && pnpm test && pnpm -r --filter './packages/*' --workspace-concurrency=1 run release:dry",
     "security": "pnpm audit --audit-level=high",
-    "test": "pnpm -r --filter './packages/*' run test",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest",
     "typecheck": "pnpm -r --filter './packages/*' run typecheck",
     "typecheck:all": "tsc --noEmit -p tsconfig.eslint.json",
-    "workspace:build": "pnpm -r --filter './packages/*' run build",
-    "workspace:test": "pnpm -r --filter './packages/*' run test"
+    "workspace:build": "pnpm -r --filter './packages/*' run build"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.19.0",
@@ -44,6 +45,7 @@
     "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^12.3.0",
     "@types/node": "catalog:",
+    "@vitest/coverage-v8": "4.1.10",
     "cssnano": "^8.0.5",
     "eslint": "^9.39.3",
     "husky": "^9.1.7",
