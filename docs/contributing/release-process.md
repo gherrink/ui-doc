@@ -230,6 +230,11 @@ This is rarely needed since GitHub Actions handles automated releases.
    npm publish --access public
    ```
 
+   Publishing from CI uses GitHub OIDC (npm Trusted Publisher) and needs no
+   token. Publishing locally is the only path that requires credentials —
+   authenticate via your own `~/.npmrc`. The repository deliberately ships no
+   `.npmrc` of its own.
+
 ### Version Mismatch Between Packages
 
 **Symptoms:** A downstream package references a version that doesn't exist.
