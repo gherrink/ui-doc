@@ -1,9 +1,9 @@
-import type { AssetLoader, FilePath, FileSystem } from '@ui-doc/core'
 import fs from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import path from 'node:path'
-
 import process from 'node:process'
+
+import type { AssetLoader, FilePath, FileSystem } from '@ui-doc/core'
 
 export class NodeAssetLoader implements AssetLoader {
   private resolvedPackages: Record<string, string | null> = {}
@@ -48,7 +48,7 @@ export class NodeAssetLoader implements AssetLoader {
     if (this.resolvedPackages[packageName] !== undefined) {
       return this.resolvedPackages[packageName] === null
         ? undefined
-        : this.resolvedPackages[packageName] ?? undefined
+        : (this.resolvedPackages[packageName] ?? undefined)
     }
 
     const paths = this.resolvePaths(packageName)

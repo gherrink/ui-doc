@@ -79,13 +79,13 @@ The entry point for users. Orchestrates agent invocation based on arguments.
 
 Researches a topic and generates one or more documentation files.
 
-| Property | Value |
-|----------|-------|
-| Model | Sonnet |
-| Tools | Read, Write, Edit, Glob, Grep |
-| Skills | documentation-guide |
-| Input | Topic + list of document types with output paths |
-| Output | Markdown documentation files |
+| Property | Value                                            |
+| -------- | ------------------------------------------------ |
+| Model    | Sonnet                                           |
+| Tools    | Read, Write, Edit, Glob, Grep                    |
+| Skills   | documentation-guide                              |
+| Input    | Topic + list of document types with output paths |
+| Output   | Markdown documentation files                     |
 
 **Workflow:**
 
@@ -178,6 +178,7 @@ Each agent receives a structured prompt:
 ```markdown
 Topic: custom-templates
 Documents:
+
 - tutorial → docs/tutorials/custom-templates.md
 - how-to → docs/how-to/custom-templates.md
 
@@ -188,15 +189,15 @@ Add cross-references between related documents.
 
 ### Output Directory Structure
 
-| Document Type | Output Path |
-|---------------|-------------|
+| Document Type   | Output Path                       |
+| --------------- | --------------------------------- |
 | getting-started | `docs/getting-started/{topic}.md` |
-| tutorial | `docs/tutorials/{topic}.md` |
-| how-to | `docs/how-to/{topic}.md` |
-| api-reference | `docs/reference/{topic}.md` |
-| conceptual | `docs/concepts/{topic}.md` |
+| tutorial        | `docs/tutorials/{topic}.md`       |
+| how-to          | `docs/how-to/{topic}.md`          |
+| api-reference   | `docs/reference/{topic}.md`       |
+| conceptual      | `docs/concepts/{topic}.md`        |
 | troubleshooting | `docs/troubleshooting/{topic}.md` |
-| contributing | `docs/contributing/{topic}.md` |
+| contributing    | `docs/contributing/{topic}.md`    |
 
 ## Design Decisions
 
@@ -204,12 +205,12 @@ Add cross-references between related documents.
 
 Unlike test writing, documentation doesn't benefit from separating analysis from implementation:
 
-| Consideration | Test Writing | Documentation |
-|---------------|--------------|---------------|
-| Source code visibility | Writer shouldn't see (focus on behavior) | Writer should see (accurate examples) |
-| Intermediate artifact | Spec enables behavior focus | Spec would add latency without benefit |
-| Template complexity | High (mock patterns, assertions) | Moderate (already in skill) |
-| Research reuse | N/A (each test file independent) | High (same topic → multiple doc types) |
+| Consideration          | Test Writing                             | Documentation                          |
+| ---------------------- | ---------------------------------------- | -------------------------------------- |
+| Source code visibility | Writer shouldn't see (focus on behavior) | Writer should see (accurate examples)  |
+| Intermediate artifact  | Spec enables behavior focus              | Spec would add latency without benefit |
+| Template complexity    | High (mock patterns, assertions)         | Moderate (already in skill)            |
+| Research reuse         | N/A (each test file independent)         | High (same topic → multiple doc types) |
 
 ### Why Group by Topic?
 
@@ -254,14 +255,14 @@ Topics are independent — docs about "vite" don't depend on docs about "rollup"
 
 ## Comparison: Test vs Documentation Pipelines
 
-| Aspect | Test Writing | Documentation |
-|--------|--------------|---------------|
-| **Architecture** | Two-agent pipeline | Single-agent |
-| **Phases** | Spec → Write | Research → Write |
-| **Parallelism** | Per-file | Per-topic |
-| **Source visibility** | Writer isolated from source | Writer sees source |
-| **Skill** | vitest-guide (patterns) | documentation-guide (templates) |
-| **Output** | `.test.ts` files | `.md` files |
+| Aspect                | Test Writing                | Documentation                   |
+| --------------------- | --------------------------- | ------------------------------- |
+| **Architecture**      | Two-agent pipeline          | Single-agent                    |
+| **Phases**            | Spec → Write                | Research → Write                |
+| **Parallelism**       | Per-file                    | Per-topic                       |
+| **Source visibility** | Writer isolated from source | Writer sees source              |
+| **Skill**             | vitest-guide (patterns)     | documentation-guide (templates) |
+| **Output**            | `.test.ts` files            | `.md` files                     |
 
 ## Extension Points
 

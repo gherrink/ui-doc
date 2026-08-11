@@ -45,6 +45,7 @@ Return only a compact summary (not the full spec).
 ```
 
 The spec agent will:
+
 - Read and analyze the source code
 - Identify all testable scenarios
 - Document mock requirements
@@ -64,6 +65,7 @@ Follow all UI-Doc testing conventions from your vitest-guide skill.
 ```
 
 The writer agent will:
+
 - **Read the specification from the file path**
 - Parse the specification
 - Create type-safe mocks
@@ -82,6 +84,7 @@ pnpm lint:js packages/<pkg>/tests/<test-file>.test.ts
 **Note:** The PostToolUse hook will automatically run ESLint on test files after Write/Edit operations. This explicit step catches any remaining issues.
 
 If lint errors persist:
+
 1. Review the error messages (rule IDs help identify the fix)
 2. Edit the test file to fix the issues
 3. Re-run lint verification
@@ -97,6 +100,7 @@ pnpm --filter @ui-doc/<package> test
 ### Step 6: Report Results
 
 **If tests pass:**
+
 ```
 ✅ Tests generated successfully!
 
@@ -107,6 +111,7 @@ Tests: ✓ All passing
 ```
 
 **If lint fails:**
+
 ```
 ⚠️ Tests have lint errors
 
@@ -120,6 +125,7 @@ Options:
 ```
 
 **If tests fail:**
+
 ```
 ❌ Some tests failed
 

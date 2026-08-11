@@ -40,7 +40,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 // Import the class/function under test
 import { ClassUnderTest } from '../src/ClassUnderTest'
 
-describe('classUnderTest', () => { // Use camelCase starting lowercase
+describe('classUnderTest', () => {
+  // Use camelCase starting lowercase
   // Declare mocks at describe level
   let mockDependency: DependencyType
   let instance: ClassUnderTest
@@ -164,9 +165,7 @@ const mockDependency: DependencyName = {
 ### Sequential Returns (for state tests)
 
 ```typescript
-mockDep.method
-  .mockReturnValueOnce(firstReturn)
-  .mockReturnValueOnce(secondReturn)
+mockDep.method.mockReturnValueOnce(firstReturn).mockReturnValueOnce(secondReturn)
 ```
 
 ## Mock Verification
@@ -215,7 +214,12 @@ const mockFn = vi.fn<() => string>().mockReturnValue('value')
 
 ```typescript
 // Bad: Long line
-expect(result).toEqual({ property1: 'value1', property2: 'value2', property3: 'value3', property4: 'value4' })
+expect(result).toEqual({
+  property1: 'value1',
+  property2: 'value2',
+  property3: 'value3',
+  property4: 'value4',
+})
 
 // Good: Multi-line formatting
 expect(result).toEqual({
@@ -260,13 +264,13 @@ const mockDep = {
 
 ### Common Rule Fixes
 
-| Rule ID | Fix |
-|---------|-----|
-| `@typescript-eslint/no-unused-vars` | Remove unused imports/variables or prefix with `_` |
-| `@typescript-eslint/no-explicit-any` | Use proper types or `unknown` |
-| `max-len` | Break into multiple lines |
-| `@typescript-eslint/no-floating-promises` | Add `await` or `.catch()` |
-| `prefer-const` | Change `let` to `const` for non-reassigned variables |
+| Rule ID                                   | Fix                                                  |
+| ----------------------------------------- | ---------------------------------------------------- |
+| `@typescript-eslint/no-unused-vars`       | Remove unused imports/variables or prefix with `_`   |
+| `@typescript-eslint/no-explicit-any`      | Use proper types or `unknown`                        |
+| `max-len`                                 | Break into multiple lines                            |
+| `@typescript-eslint/no-floating-promises` | Add `await` or `.catch()`                            |
+| `prefer-const`                            | Change `let` to `const` for non-reassigned variables |
 
 ## What NOT to Do
 
@@ -292,6 +296,7 @@ After writing the test file, return a compact summary:
 - **Status**: Created | Updated
 
 ### Test Groups
+
 - `{describe block 1}`: {N} tests
 - `{describe block 2}`: {N} tests
 ```

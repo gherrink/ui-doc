@@ -171,7 +171,7 @@ export default defineConfig(({ command }) => {
       outDir: 'dist',
       rollupOptions: {
         input: {
-          'app': 'js/app.js',
+          app: 'js/app.js',
           'ui-doc-custom': 'ui-doc/custom.css',
         },
       },
@@ -260,9 +260,7 @@ const fileSystem = new NodeFileSystem()
 const renderer = new HtmlRenderer(NodeParser.init())
 
 // Load built-in templates
-const templatePath = await fileSystem.assetLoader().packagePath(
-  TemplateLoader.TEMPLATES_PACKAGE,
-)
+const templatePath = await fileSystem.assetLoader().packagePath(TemplateLoader.TEMPLATES_PACKAGE)
 await TemplateLoader.load({ renderer, fileSystem, templatePath })
 
 // Create UI-Doc instance

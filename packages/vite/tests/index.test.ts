@@ -1,10 +1,10 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
-import type { Plugin, ViteDevServer } from 'vite'
-import type { Api, Options } from '../src'
 
 import createRollupPlugin from '@ui-doc/rollup'
+import type { Plugin, ViteDevServer } from 'vite'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import type { Api, Options } from '../src'
 import uidocPlugin from '../src'
 
 // Extended interface for mock request with connect middleware properties
@@ -236,9 +236,7 @@ describe('uidocPlugin', () => {
       await buildStartHook.call({}, {})
 
       // Get the resolver function that was passed to replaceGenerate
-      const resolverCall = mockUidoc.replaceGenerate.mock.calls.find(
-        call => call[0] === 'resolve',
-      )
+      const resolverCall = mockUidoc.replaceGenerate.mock.calls.find(call => call[0] === 'resolve')
       expect(resolverCall).toBeDefined()
       const resolver = resolverCall![1] as (uri: string, type: string) => string
 
@@ -259,9 +257,7 @@ describe('uidocPlugin', () => {
       const buildStartHook = plugin.buildStart as (options: object) => Promise<void>
       await buildStartHook.call({}, {})
 
-      const resolverCall = mockUidoc.replaceGenerate.mock.calls.find(
-        call => call[0] === 'resolve',
-      )
+      const resolverCall = mockUidoc.replaceGenerate.mock.calls.find(call => call[0] === 'resolve')
       const resolver = resolverCall![1] as (uri: string, type: string) => string
 
       const result = resolver('@vite/client', 'asset')
@@ -278,9 +274,7 @@ describe('uidocPlugin', () => {
       const buildStartHook = plugin.buildStart as (options: object) => Promise<void>
       await buildStartHook.call({}, {})
 
-      const resolverCall = mockUidoc.replaceGenerate.mock.calls.find(
-        call => call[0] === 'resolve',
-      )
+      const resolverCall = mockUidoc.replaceGenerate.mock.calls.find(call => call[0] === 'resolve')
       const resolver = resolverCall![1] as (uri: string, type: string) => string
 
       const result = resolver('components.html', 'page')
@@ -299,9 +293,7 @@ describe('uidocPlugin', () => {
       const buildStartHook = plugin.buildStart as (options: object) => Promise<void>
       await buildStartHook.call({}, {})
 
-      const resolverCall = mockUidoc.replaceGenerate.mock.calls.find(
-        call => call[0] === 'resolve',
-      )
+      const resolverCall = mockUidoc.replaceGenerate.mock.calls.find(call => call[0] === 'resolve')
       const resolver = resolverCall![1] as (uri: string, type: string) => string
 
       const result = resolver('example.js', 'asset-example')
@@ -461,9 +453,7 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const configureServer = plugin.configureServer as (server: ViteDevServer) => Promise<void>
 
-      await expect(configureServer(mockServer)).rejects.toThrow(
-        'UI-Doc base url is not available',
-      )
+      await expect(configureServer(mockServer)).rejects.toThrow('UI-Doc base url is not available')
 
       // Reset
       mockApi.options.prefix = originalPrefix
@@ -682,14 +672,12 @@ describe('uidocPlugin', () => {
     })
 
     it('should process assets from input', async () => {
-      mockApi.options.assets = [
-        { name: 'main', fromInput: true, type: 'script' },
-      ]
+      mockApi.options.assets = [{ name: 'main', fromInput: true, type: 'script' }]
 
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const generateBundle = plugin.generateBundle as (
         options: object,
-        bundle: Record<string, { name: string, fileName: string }>,
+        bundle: Record<string, { name: string; fileName: string }>,
         isWrite: boolean,
       ) => Promise<void>
 
@@ -707,9 +695,7 @@ describe('uidocPlugin', () => {
     })
 
     it('should process script asset with importedAssets metadata', async () => {
-      mockApi.options.assets = [
-        { name: 'main', fromInput: true, type: 'script', fileName: '' },
-      ]
+      mockApi.options.assets = [{ name: 'main', fromInput: true, type: 'script', fileName: '' }]
 
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const generateBundle = plugin.generateBundle as (
@@ -764,16 +750,16 @@ describe('uidocPlugin', () => {
       expect(mockApi.addAssetFromInput).toHaveBeenCalledWith('assets/main.css')
       expect(mockApi.addAssetFromInput).toHaveBeenCalledWith('assets/vendor.css')
       expect(mockApi.uidocAsset).toHaveBeenCalledWith('assets/main.css', 'page', { type: 'style' })
-      expect(mockApi.uidocAsset).toHaveBeenCalledWith('assets/vendor.css', 'page', { type: 'style' })
+      expect(mockApi.uidocAsset).toHaveBeenCalledWith('assets/vendor.css', 'page', {
+        type: 'style',
+      })
 
       // Reset
       mockApi.options.assets = []
     })
 
     it('should process style asset with importedCss metadata', async () => {
-      mockApi.options.assets = [
-        { name: 'styles', fromInput: true, type: 'style', fileName: '' },
-      ]
+      mockApi.options.assets = [{ name: 'styles', fromInput: true, type: 'style', fileName: '' }]
 
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const generateBundle = plugin.generateBundle as (
@@ -802,9 +788,7 @@ describe('uidocPlugin', () => {
     })
 
     it('should not modify style asset fileName when importedCss is empty', async () => {
-      mockApi.options.assets = [
-        { name: 'styles', fromInput: true, type: 'style', fileName: '' },
-      ]
+      mockApi.options.assets = [{ name: 'styles', fromInput: true, type: 'style', fileName: '' }]
 
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const generateBundle = plugin.generateBundle as (
@@ -859,9 +843,7 @@ describe('uidocPlugin', () => {
     })
 
     it('should not update script asset fileName when bundle fileName is empty', async () => {
-      mockApi.options.assets = [
-        { name: 'main', fromInput: true, type: 'script', fileName: '' },
-      ]
+      mockApi.options.assets = [{ name: 'main', fromInput: true, type: 'script', fileName: '' }]
 
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const generateBundle = plugin.generateBundle as (
@@ -954,7 +936,7 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const onLog = plugin.onLog as (
         level: string,
-        log: { plugin: string, pluginCode: string },
+        log: { plugin: string; pluginCode: string },
       ) => boolean | void
 
       const result = onLog('info', { plugin: 'ui-doc', pluginCode: 'OUTPUT' })
@@ -966,7 +948,7 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const onLog = plugin.onLog as (
         level: string,
-        log: { plugin: string, pluginCode: string },
+        log: { plugin: string; pluginCode: string },
       ) => boolean | void
 
       const result = onLog('info', { plugin: 'ui-doc', pluginCode: 'OTHER' })
@@ -978,7 +960,7 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const onLog = plugin.onLog as (
         level: string,
-        log: { plugin: string, pluginCode: string },
+        log: { plugin: string; pluginCode: string },
       ) => boolean | void
 
       const result = onLog('info', { plugin: 'other-plugin', pluginCode: 'OUTPUT' })

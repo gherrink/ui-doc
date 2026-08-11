@@ -1,8 +1,8 @@
-import type { Node, NodeOperator } from '../../src/nodes/Node'
-
-import type { Renderer } from '../../src/Renderer.types'
 import { describe, expect, it, vi } from 'vitest'
+
+import type { Node, NodeOperator } from '../../src/nodes/Node'
 import { TagIfNode } from '../../src/nodes/tags/if'
+import type { Renderer } from '../../src/Renderer.types'
 
 describe('render tag if', () => {
   const renderer = {} as Renderer

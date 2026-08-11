@@ -36,10 +36,10 @@ function toggleInert(target: HTMLElement, show: boolean): void {
     const activeParentWithSameSelector = !show
       ? queryParentSelector(
           target.parentElement,
-          `[data-inert="${selector}"],`
-          + `[data-inert^="${selector},"],`
-          + `[data-inert$=",${selector}"],`
-          + `[data-inert*=",${selector},"]`,
+          `[data-inert="${selector}"],` +
+            `[data-inert^="${selector},"],` +
+            `[data-inert$=",${selector}"],` +
+            `[data-inert*=",${selector},"]`,
         )
       : null
 

@@ -1,7 +1,7 @@
-import type { Renderer } from '../../src/Renderer.types'
-
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { TagPartialNode } from '../../src/nodes/tags/partial'
+import type { Renderer } from '../../src/Renderer.types'
 
 describe('render tag partial', () => {
   const partialMock = vi.fn<Renderer['partial']>(() => '').mockReturnValue('')

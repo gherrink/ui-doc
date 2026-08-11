@@ -35,23 +35,20 @@ uidoc.off('context-entry', onContextEntry)
 The `on` method returns the UIDoc instance, allowing you to chain multiple listeners:
 
 ```ts
-uidoc
-  .on('source', handleSource)
-  .on('context-entry', handleEntry)
-  .on('page', handlePage)
+uidoc.on('source', handleSource).on('context-entry', handleEntry).on('page', handlePage)
 ```
 
 ### Event types
 
 UI-Doc emits five core events during documentation generation:
 
-| Event | When | Use Case |
-|-------|------|----------|
-| `source` | Before a source file is created, updated, or deleted | Track which files are being processed |
+| Event           | When                                                   | Use Case                                            |
+| --------------- | ------------------------------------------------------ | --------------------------------------------------- |
+| `source`        | Before a source file is created, updated, or deleted   | Track which files are being processed               |
 | `context-entry` | Before a context entry is created, updated, or deleted | Modify documentation entries, add custom properties |
-| `page` | Before a page is rendered | Change page layout, add metadata |
-| `example` | Before an example is rendered | Customize example presentation |
-| `output` | Before the complete documentation is written | Add additional files, post-process output |
+| `page`          | Before a page is rendered                              | Change page layout, add metadata                    |
+| `example`       | Before an example is rendered                          | Customize example presentation                      |
+| `output`        | Before the complete documentation is written           | Add additional files, post-process output           |
 
 ## Event lifecycle
 
@@ -125,9 +122,7 @@ The `output` event is special because it provides a `write` function and a `prom
 ```ts
 uidoc.on('output', ({ promises, write }) => {
   // Add a custom file to the output
-  promises.push(
-    write('custom-data.json', JSON.stringify(customData)),
-  )
+  promises.push(write('custom-data.json', JSON.stringify(customData)))
 })
 ```
 
@@ -209,9 +204,7 @@ uidoc.on('output', ({ promises, write }) => {
     })),
   }
 
-  promises.push(
-    write('manifest.json', JSON.stringify(manifest, null, 2)),
-  )
+  promises.push(write('manifest.json', JSON.stringify(manifest, null, 2)))
 })
 ```
 

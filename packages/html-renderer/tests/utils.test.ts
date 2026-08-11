@@ -129,7 +129,7 @@ describe('escapeHtml', () => {
     })
 
     it('should escape single quote character', () => {
-      const result = escapeHtml('\'')
+      const result = escapeHtml("'")
 
       expect(result).toBe('&#039;')
     })
@@ -171,9 +171,7 @@ describe('escapeHtml', () => {
     it('should escape HTML tag with attributes', () => {
       const result = escapeHtml('<div class="container" id=\'main\'>')
 
-      expect(result).toBe(
-        '&lt;div class=&quot;container&quot; id=&#039;main&#039;&gt;',
-      )
+      expect(result).toBe('&lt;div class=&quot;container&quot; id=&#039;main&#039;&gt;')
     })
 
     it('should preserve newlines and tabs in string', () => {

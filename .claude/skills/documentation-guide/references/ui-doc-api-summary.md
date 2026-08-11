@@ -8,23 +8,23 @@ Tags are separated into two roles: **Placement** (where content appears) and **D
 
 ### Placement Tags
 
-| Tag | Syntax | Description |
-|-----|--------|-------------|
-| `@page` | `@page key Title` | Create or reference a documentation page |
-| `@section` | `@section key Title` | Create a section within a page |
+| Tag         | Syntax                         | Description                                |
+| ----------- | ------------------------------ | ------------------------------------------ |
+| `@page`     | `@page key Title`              | Create or reference a documentation page   |
+| `@section`  | `@section key Title`           | Create a section within a page             |
 | `@location` | `@location page.section Title` | Shorthand combining `@page` and `@section` |
-| `@order` | `@order number` | Define sorting order (lower = first) |
+| `@order`    | `@order number`                | Define sorting order (lower = first)       |
 
 ### Display Tags
 
-| Tag | Syntax | Description |
-|-----|--------|-------------|
-| `@example` | `@example\n<html>` | Live preview with code display |
-| `@code` | `@code\n<html>` | Code block only (no preview) |
-| `@hideCode` | `@hideCode` | Show preview without code |
-| `@color` | `@color {value} name description` | Define a color variable |
-| `@space` | `@space {value} name description` | Define a spacing variable |
-| `@icon` | `@icon {code} name description` | Define an icon from icon font |
+| Tag         | Syntax                            | Description                    |
+| ----------- | --------------------------------- | ------------------------------ |
+| `@example`  | `@example\n<html>`                | Live preview with code display |
+| `@code`     | `@code\n<html>`                   | Code block only (no preview)   |
+| `@hideCode` | `@hideCode`                       | Show preview without code      |
+| `@color`    | `@color {value} name description` | Define a color variable        |
+| `@space`    | `@space {value} name description` | Define a spacing variable      |
+| `@icon`     | `@icon {code} name description`   | Define an icon from icon font  |
 
 ## Tag Syntax Details
 
@@ -35,7 +35,7 @@ Tags are separated into two roles: **Placement** (where content appears) and **D
 @page buttons Buttons
 
 /* Reference existing page */
-@page buttons
+@page buttons;
 ```
 
 ### @section
@@ -45,7 +45,7 @@ Tags are separated into two roles: **Placement** (where content appears) and **D
 @section primary Primary Button
 
 /* Nested sections use dot notation */
-@section primary.small Small Primary Button
+@section primary.small Small Primary Button;
 ```
 
 ### @location
@@ -57,22 +57,21 @@ Combines `@page` and `@section`:
 @location buttons.primary Primary Button
 
 /* Nested sections */
-@location buttons.primary.small Small Variant
+@location buttons.primary.small Small Variant;
 ```
 
 ### @example and @code
 
 ```css
 /* Show preview and code */
-@example
-<button class="btn">Click me</button>
+@example <button class="btn">Click me</button>
 
 /* Override displayed code while keeping different preview */
 @example
 <button class="btn" style="margin: 10px">Click me</button>
 
 @code
-<button class="btn">Click me</button>
+<button class="btn">Click me</button>;
 ```
 
 ### @color
@@ -299,17 +298,16 @@ const uidoc = new UIDoc({
 
 ```html
 <!-- Variables -->
-{{var:title}}
-{{var:page.content}}
+{{var:title}} {{var:page.content}}
 
 <!-- Conditionals -->
 {{if:showNav}}
-  <nav>...</nav>
+<nav>...</nav>
 {{/if}}
 
 <!-- Loops -->
 {{for:items}}
-  <li>{{var:_loop.value}}</li>
+<li>{{var:_loop.value}}</li>
 {{/for}}
 
 <!-- Include page template -->
@@ -358,11 +356,7 @@ export default defineConfig(({ command }) => ({
 
 ```js
 uidoc({
-  source: [
-    'src/**/*.css',
-    'src/**/*.js',
-    'src/**/*.ts',
-  ],
+  source: ['src/**/*.css', 'src/**/*.js', 'src/**/*.ts'],
 })
 ```
 

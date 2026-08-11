@@ -1,6 +1,6 @@
-import type { Block } from '../../src/Block.types'
-
 import { describe, expect, it } from 'vitest'
+
+import type { Block } from '../../src/Block.types'
 import code from '../../src/tag-transformers/code'
 
 describe('code tag transformer', () => {

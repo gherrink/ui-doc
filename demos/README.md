@@ -4,17 +4,17 @@ This folder contains demonstrations of UI-Doc integration patterns and feature s
 
 ## Structure
 
-| Demo | Description | Command |
-|------|-------------|---------|
-| **Build Tool Demos** | Same CSS content, different build tools ||
-| `node-cli/` | Node.js programmatic API | `pnpm node-cli` |
-| `rollup/` | Rollup plugin | `pnpm rollup` |
-| `vite/` | Vite plugin | `pnpm vite:build` |
-| **Feature Showcases** | Unique content demonstrating specific features ||
-| `showcase-minimal/` | Bare minimum setup | `pnpm showcase:minimal` |
-| `showcase-variations/` | `@variations` tag demo | `pnpm showcase:variations` |
-| `showcase-multi-source/` | CSS + JS doc blocks | `pnpm showcase:multi-source` |
-| `showcase-templates/` | Custom HTML templates | `pnpm showcase:templates` |
+| Demo                     | Description                                    | Command                      |
+| ------------------------ | ---------------------------------------------- | ---------------------------- |
+| **Build Tool Demos**     | Same CSS content, different build tools        |                              |
+| `node-cli/`              | Node.js programmatic API                       | `pnpm node-cli`              |
+| `rollup/`                | Rollup plugin                                  | `pnpm rollup`                |
+| `vite/`                  | Vite plugin                                    | `pnpm vite:build`            |
+| **Feature Showcases**    | Unique content demonstrating specific features |                              |
+| `showcase-minimal/`      | Bare minimum setup                             | `pnpm showcase:minimal`      |
+| `showcase-variations/`   | `@variations` tag demo                         | `pnpm showcase:variations`   |
+| `showcase-multi-source/` | CSS + JS doc blocks                            | `pnpm showcase:multi-source` |
+| `showcase-templates/`    | Custom HTML templates                          | `pnpm showcase:templates`    |
 
 ## Shared Resources
 

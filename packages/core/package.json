@@ -2,23 +2,31 @@
   "name": "@ui-doc/core",
   "version": "0.5.1",
   "description": "Core to generate a ui documentation out of comments.",
-  "author": "Maurice Busch",
-  "license": "MIT",
+  "keywords": [
+    "documentation",
+    "generation",
+    "styleguide",
+    "ui-doc",
+    "ui-kit"
+  ],
   "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/core#readme",
+  "bugs": "https://github.com/gherrink/ui-doc/issues",
+  "license": "MIT",
+  "author": "Maurice Busch",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gherrink/ui-doc.git",
     "directory": "packages/core"
   },
-  "bugs": "https://github.com/gherrink/ui-doc/issues",
-  "keywords": [
-    "ui-doc",
-    "styleguide",
-    "ui-kit",
-    "documentation",
-    "generation"
+  "files": [
+    "LICENSE.md",
+    "README.md",
+    "dist"
   ],
   "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -26,16 +34,8 @@
       "default": "./dist/index.cjs"
     }
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "LICENSE.md",
-    "README.md",
-    "dist"
-  ],
-  "engines": {
-    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "pnpm clean && tsc -p tsconfig.json --noEmit false --declaration --emitDeclarationOnly --rootDir src --declarationDir dist && rollup -c",
@@ -46,14 +46,14 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "dependencies": {
     "comment-parser": "^1.4.1",
     "marked": "^18.0.0"
   },
   "devDependencies": {
     "vitest": "catalog:"
+  },
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
   }
 }

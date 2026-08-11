@@ -69,9 +69,7 @@ import { defineConfig } from 'vite'
 import { authorTransformer } from './author-transformer'
 
 // Create a custom comment block parser
-const commentBlockParser = new CommentBlockParser(
-  createMarkdownDescriptionParser(),
-)
+const commentBlockParser = new CommentBlockParser(createMarkdownDescriptionParser())
 
 // Register your custom transformer
 commentBlockParser.registerTagTransformer(authorTransformer)
@@ -186,7 +184,7 @@ import type { TagTransformer } from '@ui-doc/core'
 import { TagTransformerError } from '@ui-doc/core'
 
 const VALID_VARIANTS = ['success', 'warning', 'error', 'info'] as const
-type BadgeVariant = typeof VALID_VARIANTS[number]
+type BadgeVariant = (typeof VALID_VARIANTS)[number]
 
 interface Badge {
   variant: BadgeVariant
@@ -208,10 +206,7 @@ export const badgeTransformer: TagTransformer = {
     // Validate text (from description)
     const text = spec.description?.trim()
     if (!text) {
-      throw new TagTransformerError(
-        'Missing badge text. Use @badge {variant} Badge Text',
-        'badge',
-      )
+      throw new TagTransformerError('Missing badge text. Use @badge {variant} Badge Text', 'badge')
     }
 
     // Initialize the badges array if needed
@@ -289,9 +284,7 @@ import { defineConfig } from 'vite'
 import { authorTransformer } from './author-transformer'
 import { badgeTransformer } from './badge-transformer'
 
-const commentBlockParser = new CommentBlockParser(
-  createMarkdownDescriptionParser(),
-)
+const commentBlockParser = new CommentBlockParser(createMarkdownDescriptionParser())
 
 // Register both transformers
 commentBlockParser.registerTagTransformer(authorTransformer)
@@ -372,7 +365,7 @@ import type { TagTransformer } from '@ui-doc/core'
 import { TagTransformerError } from '@ui-doc/core'
 
 const VALID_VARIANTS = ['success', 'warning', 'error', 'info'] as const
-type BadgeVariant = typeof VALID_VARIANTS[number]
+type BadgeVariant = (typeof VALID_VARIANTS)[number]
 
 interface Badge {
   variant: BadgeVariant
@@ -394,10 +387,7 @@ export const badgeTransformer: TagTransformer = {
     // Validate text (from description)
     const text = spec.description?.trim()
     if (!text) {
-      throw new TagTransformerError(
-        'Missing badge text. Use @badge {variant} Badge Text',
-        'badge',
-      )
+      throw new TagTransformerError('Missing badge text. Use @badge {variant} Badge Text', 'badge')
     }
 
     // Initialize the badges array if needed
@@ -428,9 +418,7 @@ import { defineConfig } from 'vite'
 import { authorTransformer } from './author-transformer'
 import { badgeTransformer } from './badge-transformer'
 
-const commentBlockParser = new CommentBlockParser(
-  createMarkdownDescriptionParser(),
-)
+const commentBlockParser = new CommentBlockParser(createMarkdownDescriptionParser())
 
 // Register both transformers
 commentBlockParser.registerTagTransformer(authorTransformer)

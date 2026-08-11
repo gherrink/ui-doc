@@ -1,4 +1,11 @@
-import type { BlockCode, BlockColor, BlockExample, BlockIcon, BlockSpace, BlockVariation } from './Block.types'
+import type {
+  BlockCode,
+  BlockColor,
+  BlockExample,
+  BlockIcon,
+  BlockSpace,
+  BlockVariation,
+} from './Block.types'
 
 export interface ContextEntry {
   id: string

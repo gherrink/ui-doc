@@ -11,7 +11,7 @@ export function createTagTransformerError(message: string, spec: Spec): TagTrans
   return new TagTransformerError(message, spec.tag, { line })
 }
 
-export function identifier(data: Spec): { key: string, name: string } {
+export function identifier(data: Spec): { key: string; name: string } {
   if (!data.name) {
     throw createTagTransformerError(
       `Missing key. You should use "@${data.tag} your-${data.tag}-key"`,

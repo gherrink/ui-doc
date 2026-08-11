@@ -2,24 +2,32 @@
   "name": "@ui-doc/node",
   "version": "0.3.4",
   "description": "Node implementations for UI-Doc.",
-  "author": "Maurice Busch",
-  "license": "MIT",
+  "keywords": [
+    "documentation",
+    "generation",
+    "node",
+    "styleguide",
+    "ui-doc",
+    "ui-kit"
+  ],
   "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/node#readme",
+  "bugs": "https://github.com/gherrink/ui-doc/issues",
+  "license": "MIT",
+  "author": "Maurice Busch",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gherrink/ui-doc.git",
     "directory": "packages/node"
   },
-  "bugs": "https://github.com/gherrink/ui-doc/issues",
-  "keywords": [
-    "ui-doc",
-    "styleguide",
-    "ui-kit",
-    "documentation",
-    "generation",
-    "node"
+  "files": [
+    "LICENSE.md",
+    "README.md",
+    "dist"
   ],
   "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -27,16 +35,8 @@
       "default": "./dist/index.cjs"
     }
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "LICENSE.md",
-    "README.md",
-    "dist"
-  ],
-  "engines": {
-    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "pnpm clean && tsc -p tsconfig.json --noEmit false --declaration --emitDeclarationOnly --rootDir src --declarationDir dist && rollup -c",
@@ -47,12 +47,6 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "peerDependencies": {
-    "@ui-doc/core": "workspace:^"
-  },
   "dependencies": {
     "picomatch": "^4.0.2"
   },
@@ -61,5 +55,11 @@
     "@types/picomatch": "catalog:",
     "@ui-doc/core": "workspace:^",
     "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "@ui-doc/core": "workspace:^"
+  },
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
   }
 }

@@ -1,5 +1,5 @@
-import type { RenderValue } from './RenderValue'
 import { ColorParseError } from '../../errors/ColorParseError'
+import type { RenderValue } from './RenderValue'
 
 interface CSSColorValue {
   r: number
@@ -22,15 +22,15 @@ function isValidColorValue(value: unknown): value is CSSColorValue {
   const obj = value as Record<string, unknown>
 
   return (
-    typeof obj.r === 'number'
-    && typeof obj.g === 'number'
-    && typeof obj.b === 'number'
-    && obj.r >= 0
-    && obj.r <= 255
-    && obj.g >= 0
-    && obj.g <= 255
-    && obj.b >= 0
-    && obj.b <= 255
+    typeof obj.r === 'number' &&
+    typeof obj.g === 'number' &&
+    typeof obj.b === 'number' &&
+    obj.r >= 0 &&
+    obj.r <= 255 &&
+    obj.g >= 0 &&
+    obj.g <= 255 &&
+    obj.b >= 0 &&
+    obj.b <= 255
   )
 }
 
@@ -94,9 +94,9 @@ export class CSSColor implements RenderValue {
   }
 
   public static hexToValue(color: string): CSSColorValue {
-    const [r, g, b]
-      = (unifyHex(color).substring(1).match(/.{2}/g) ?? [])
-        .map(x => Number.parseInt(x, 16))
+    const [r, g, b] = (unifyHex(color).substring(1).match(/.{2}/g) ?? []).map(x =>
+      Number.parseInt(x, 16),
+    )
 
     const value = { r, g, b }
 

@@ -1,7 +1,7 @@
-import type { DescriptionParser } from '../src/DescriptionParser.types'
-
 import { describe, expect, it, vi } from 'vitest'
+
 import { CommentBlockParser } from '../src/CommentBlockParser'
+import type { DescriptionParser } from '../src/DescriptionParser.types'
 import { BlockParseError, TagTransformerError } from '../src/errors'
 
 class TestDescriptionParser implements DescriptionParser {
@@ -69,7 +69,7 @@ describe('commentBlockParser', () => {
         code: prepareForBlockParserException(content),
         column: 0,
         line: 5,
-        message: 'Undefined tag type \'fooo\'.',
+        message: "Undefined tag type 'fooo'.",
         source: 'inline:test',
       }),
     )
@@ -129,7 +129,7 @@ describe('commentBlockParser', () => {
         column: 0,
         line: 2,
         message:
-          'Missing block location. Don\'t know where to place this block, please use @location, @page or @section + @page.',
+          "Missing block location. Don't know where to place this block, please use @location, @page or @section + @page.",
         source: 'inline:test',
       }),
     )

@@ -1,14 +1,14 @@
 import type { AssetLoader, FileFinder, FileSystem } from '@ui-doc/core'
-import type { AssetOption, CopyAssetResolved } from '../src/utils/asset.types'
-
-import type { Options } from '../src/utils/option.types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import {
   resolveAssets,
   resolveAssetType,
   resolveCopyAssets,
   rewriteCssUrls,
 } from '../src/utils/asset'
+import type { AssetOption, CopyAssetResolved } from '../src/utils/asset.types'
+import type { Options } from '../src/utils/option.types'
 
 function createMockAssetLoader(overrides: Partial<AssetLoader> = {}): AssetLoader {
   return {
@@ -500,12 +500,8 @@ describe('asset', () => {
 
         const fileSystem = createMockFileSystem({
           assetLoader: vi.fn<FileSystem['assetLoader']>().mockReturnValue(mockAssetLoader),
-          resolve: vi
-            .fn<FileSystem['resolve']>()
-            .mockReturnValue('/project/local-file.css'),
-          fileRead: vi
-            .fn<FileSystem['fileRead']>()
-            .mockResolvedValue('local file content'),
+          resolve: vi.fn<FileSystem['resolve']>().mockReturnValue('/project/local-file.css'),
+          fileRead: vi.fn<FileSystem['fileRead']>().mockResolvedValue('local file content'),
         })
 
         const customAsset: AssetOption = {
@@ -555,7 +551,7 @@ describe('asset', () => {
           },
         }
 
-        const unreadable: { name: string, file: string }[] = []
+        const unreadable: { name: string; file: string }[] = []
         const assets = await resolveAssets(options, fileSystem, [], unreadable)
 
         expect(assets.some(asset => asset.name === 'app.css')).toBe(false)
@@ -600,12 +596,8 @@ describe('asset', () => {
 
         const fileSystem = createMockFileSystem({
           assetLoader: vi.fn<FileSystem['assetLoader']>().mockReturnValue(mockAssetLoader),
-          resolve: vi
-            .fn<FileSystem['resolve']>()
-            .mockReturnValue('/project/dynamic-file.js'),
-          fileRead: vi
-            .fn<FileSystem['fileRead']>()
-            .mockResolvedValue('dynamic file content'),
+          resolve: vi.fn<FileSystem['resolve']>().mockReturnValue('/project/dynamic-file.js'),
+          fileRead: vi.fn<FileSystem['fileRead']>().mockResolvedValue('dynamic file content'),
         })
 
         const customAsset: AssetOption = {
@@ -1208,9 +1200,7 @@ describe('asset', () => {
           read: vi.fn<AssetLoader['read']>().mockResolvedValue('content'),
         })
 
-        const fileResolve = vi
-          .fn<FileSystem['resolve']>()
-          .mockReturnValue('/project/local.css')
+        const fileResolve = vi.fn<FileSystem['resolve']>().mockReturnValue('/project/local.css')
 
         const fileSystem = createMockFileSystem({
           assetLoader: vi.fn<FileSystem['assetLoader']>().mockReturnValue(mockAssetLoader),
@@ -1246,15 +1236,11 @@ describe('asset', () => {
           read: vi.fn<AssetLoader['read']>().mockResolvedValue('content'),
         })
 
-        const fileRead = vi
-          .fn<FileSystem['fileRead']>()
-          .mockResolvedValue('local file content')
+        const fileRead = vi.fn<FileSystem['fileRead']>().mockResolvedValue('local file content')
 
         const fileSystem = createMockFileSystem({
           assetLoader: vi.fn<FileSystem['assetLoader']>().mockReturnValue(mockAssetLoader),
-          resolve: vi
-            .fn<FileSystem['resolve']>()
-            .mockReturnValue('/project/to-read.js'),
+          resolve: vi.fn<FileSystem['resolve']>().mockReturnValue('/project/to-read.js'),
           fileRead,
         })
 
@@ -1346,10 +1332,7 @@ describe('asset', () => {
         resolve: vi.fn().mockImplementation((file: string) => `/project/${file}`),
       })
 
-      const result = await resolveCopyAssets(
-        [{ from: 'src/fonts/**/*', to: 'fonts' }],
-        fileSystem,
-      )
+      const result = await resolveCopyAssets([{ from: 'src/fonts/**/*', to: 'fonts' }], fileSystem)
 
       expect(result).toHaveLength(2)
       expect(result[0]).toMatchObject({
@@ -1378,10 +1361,7 @@ describe('asset', () => {
         resolve: vi.fn().mockImplementation((file: string) => `/project/${file}`),
       })
 
-      const result = await resolveCopyAssets(
-        [{ from: 'public/**/*' }],
-        fileSystem,
-      )
+      const result = await resolveCopyAssets([{ from: 'public/**/*' }], fileSystem)
 
       expect(result).toHaveLength(1)
       expect(result[0]).toMatchObject({
@@ -1391,7 +1371,8 @@ describe('asset', () => {
     })
 
     it('should handle multiple copy options', async () => {
-      const mockSearch = vi.fn()
+      const mockSearch = vi
+        .fn()
         .mockImplementationOnce(async (callback: (file: string) => void) => {
           callback('/project/src/fonts/font.woff2')
         })
@@ -1425,7 +1406,10 @@ describe('asset', () => {
   })
 
   describe('rewriteCssUrls', () => {
-    interface AssetInput { source: string, output: string }
+    interface AssetInput {
+      source: string
+      output: string
+    }
     const createCopyAssets = (assets: AssetInput[]): CopyAssetResolved[] =>
       assets.map(({ source, output }) => ({
         sourcePath: source,
@@ -1452,14 +1436,14 @@ describe('asset', () => {
     })
 
     it('should rewrite single-quoted url() references', () => {
-      const css = '.icon { background: url(\'./images/icon.svg\'); }'
+      const css = ".icon { background: url('./images/icon.svg'); }"
       const copyAssets = createCopyAssets([
         { source: '/project/src/images/icon.svg', output: 'images/icon.svg' },
       ])
 
       const result = rewriteCssUrls(css, '/project/src/styles.css', copyAssets)
 
-      expect(result).toBe('.icon { background: url(\'./images/icon.svg\'); }')
+      expect(result).toBe(".icon { background: url('./images/icon.svg'); }")
     })
 
     it('should rewrite unquoted url() references', () => {

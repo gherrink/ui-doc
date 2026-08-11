@@ -17,12 +17,12 @@ packages/<package-name>/
 
 ### Naming Convention
 
-| Source File | Test File |
-|-------------|-----------|
-| `UIDoc.ts` | `ui-doc.test.ts` |
+| Source File             | Test File                      |
+| ----------------------- | ------------------------------ |
+| `UIDoc.ts`              | `ui-doc.test.ts`               |
 | `CommentBlockParser.ts` | `comment-block-parser.test.ts` |
-| `HTMLRenderer.ts` | `html-renderer.test.ts` |
-| `index.ts` | `index.test.ts` |
+| `HTMLRenderer.ts`       | `html-renderer.test.ts`        |
+| `index.ts`              | `index.test.ts`                |
 
 ## Import Patterns
 

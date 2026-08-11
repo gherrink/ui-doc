@@ -184,7 +184,7 @@ describe('tagTransformerError', () => {
       const error = new TagTransformerError('missing value', 'example')
 
       expect(error.name).toBe('TagTransformerError')
-      expect(error.message).toBe('Problem with \'@example\' - missing value')
+      expect(error.message).toBe("Problem with '@example' - missing value")
       expect(error.tag).toBe('example')
       expect(error.line).toBeUndefined()
       expect(error.column).toBeUndefined()
@@ -194,7 +194,7 @@ describe('tagTransformerError', () => {
       const error = new TagTransformerError('invalid format', 'param', { line: 15 })
 
       expect(error.name).toBe('TagTransformerError')
-      expect(error.message).toBe('Problem with \'@param\' - invalid format')
+      expect(error.message).toBe("Problem with '@param' - invalid format")
       expect(error.tag).toBe('param')
       expect(error.line).toBe(15)
       expect(error.column).toBeUndefined()
@@ -207,7 +207,7 @@ describe('tagTransformerError', () => {
       })
 
       expect(error.name).toBe('TagTransformerError')
-      expect(error.message).toBe('Problem with \'@returns\' - syntax error')
+      expect(error.message).toBe("Problem with '@returns' - syntax error")
       expect(error.tag).toBe('returns')
       expect(error.line).toBe(20)
       expect(error.column).toBe(8)
@@ -216,7 +216,7 @@ describe('tagTransformerError', () => {
     it('should handle empty message', () => {
       const error = new TagTransformerError('', 'test')
 
-      expect(error.message).toBe('Problem with \'@test\' - ')
+      expect(error.message).toBe("Problem with '@test' - ")
     })
 
     it('should handle zero line and column values', () => {

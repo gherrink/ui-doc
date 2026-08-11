@@ -99,11 +99,8 @@ Create `ui-doc/templates/layouts/default.html` with the following content:
     </style>
   </head>
   <body class="page {{var:page.id}}">
-    <div class="custom-header">
-      🎨 Custom Documentation Theme
-    </div>
-    {{partial:nav-main}}
-    {{page:page.id page}}
+    <div class="custom-header">🎨 Custom Documentation Theme</div>
+    {{partial:nav-main}} {{page:page.id page}}
     <footer class="width-content py bg custom-footer">
       <div class="text">{{var:footerText}} | Powered by UI-Doc</div>
     </footer>
@@ -228,11 +225,8 @@ Update your layout to remove the inline styles since they're now in the external
     {{var:styles}}
   </head>
   <body class="page {{var:page.id}}">
-    <div class="custom-header">
-      🎨 Custom Documentation Theme
-    </div>
-    {{partial:nav-main}}
-    {{page:page.id page}}
+    <div class="custom-header">🎨 Custom Documentation Theme</div>
+    {{partial:nav-main}} {{page:page.id page}}
     <footer class="width-content py bg custom-footer">
       <div class="text">{{var:footerText}} | Powered by UI-Doc</div>
     </footer>
@@ -502,11 +496,8 @@ export default defineConfig({
     {{var:styles}}
   </head>
   <body class="page {{var:page.id}}">
-    <div class="custom-header">
-      🎨 Custom Documentation Theme
-    </div>
-    {{partial:nav-main}}
-    {{page:page.id page}}
+    <div class="custom-header">🎨 Custom Documentation Theme</div>
+    {{partial:nav-main}} {{page:page.id page}}
     <footer class="width-content py bg custom-footer">
       <div class="text">{{var:footerText}} | Powered by UI-Doc</div>
     </footer>

@@ -1,8 +1,9 @@
-import type { Renderer } from '../src/Renderer.types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { CommentNode } from '../src/nodes/CommentNode'
 import { Node } from '../src/nodes/Node'
 import { TemplateNode } from '../src/nodes/TemplateNode'
+import type { Renderer } from '../src/Renderer.types'
 
 describe('node', () => {
   beforeEach(() => {

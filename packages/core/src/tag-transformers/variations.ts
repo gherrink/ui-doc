@@ -7,7 +7,7 @@ import type { TagTransformer } from './tag-transformer.types'
  * @param value The raw tag value (e.g., "bg, theme, -bg.dark")
  * @returns Object with include patterns and exclude patterns
  */
-export function parseVariationPatterns(value: string): { include: string[], exclude: string[] } {
+export function parseVariationPatterns(value: string): { include: string[]; exclude: string[] } {
   if (!value || value.trim() === '') {
     // Empty value means all variations
     return { include: ['*'], exclude: [] }
@@ -16,7 +16,10 @@ export function parseVariationPatterns(value: string): { include: string[], excl
   const include: string[] = []
   const exclude: string[] = []
 
-  const parts = value.split(',').map(p => p.trim()).filter(p => p !== '')
+  const parts = value
+    .split(',')
+    .map(p => p.trim())
+    .filter(p => p !== '')
 
   for (const part of parts) {
     if (part.startsWith('-')) {

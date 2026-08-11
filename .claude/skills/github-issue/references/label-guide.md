@@ -8,67 +8,67 @@ Allowed labels for the UI-Doc repository. **Only use labels listed here.** Never
 
 **Exactly one** type label is required per issue. No exceptions.
 
-| Label | Use For |
-|-------|---------|
-| `type:bug` | Bug reports, unexpected behavior |
-| `type:feature` | New functionality |
-| `type:enhancement` | Improvements to existing features |
-| `type:docs` | Documentation issues |
-| `type:testing` | Test coverage, test infrastructure |
+| Label              | Use For                            |
+| ------------------ | ---------------------------------- |
+| `type:bug`         | Bug reports, unexpected behavior   |
+| `type:feature`     | New functionality                  |
+| `type:enhancement` | Improvements to existing features  |
+| `type:docs`        | Documentation issues               |
+| `type:testing`     | Test coverage, test infrastructure |
 
 **Issue type → type label mapping:**
 
-| Issue Type | Type Label |
-|------------|------------|
-| Bug Report | `type:bug` |
+| Issue Type      | Type Label     |
+| --------------- | -------------- |
+| Bug Report      | `type:bug`     |
 | Feature Request | `type:feature` |
-| Documentation | `type:docs` |
+| Documentation   | `type:docs`    |
 
 ### Scope Labels
 
 Add for each affected package. Multiple scope labels are allowed.
 
-| Label | Package / Area |
-|-------|----------------|
-| `scope:core` | `@ui-doc/core` — parsing engine |
-| `scope:node` | `@ui-doc/node` — file system operations |
+| Label                 | Package / Area                           |
+| --------------------- | ---------------------------------------- |
+| `scope:core`          | `@ui-doc/core` — parsing engine          |
+| `scope:node`          | `@ui-doc/node` — file system operations  |
 | `scope:html-renderer` | `@ui-doc/html-renderer` — HTML rendering |
-| `scope:rollup` | `@ui-doc/rollup` — Rollup plugin |
-| `scope:vite` | `@ui-doc/vite` — Vite plugin |
-| `scope:demos` | `demos/` — example configurations |
-| `scope:docs` | `docs/` — consumer documentation |
+| `scope:rollup`        | `@ui-doc/rollup` — Rollup plugin         |
+| `scope:vite`          | `@ui-doc/vite` — Vite plugin             |
+| `scope:demos`         | `demos/` — example configurations        |
+| `scope:docs`          | `docs/` — consumer documentation         |
 
 **Detection from file paths:**
 
-| Path | Scope Label |
-|------|-------------|
-| `packages/core/` | `scope:core` |
-| `packages/node/` | `scope:node` |
+| Path                      | Scope Label           |
+| ------------------------- | --------------------- |
+| `packages/core/`          | `scope:core`          |
+| `packages/node/`          | `scope:node`          |
 | `packages/html-renderer/` | `scope:html-renderer` |
-| `packages/rollup/` | `scope:rollup` |
-| `packages/vite/` | `scope:vite` |
-| `demos/` | `scope:demos` |
-| `docs/` | `scope:docs` |
+| `packages/rollup/`        | `scope:rollup`        |
+| `packages/vite/`          | `scope:vite`          |
+| `demos/`                  | `scope:demos`         |
+| `docs/`                   | `scope:docs`          |
 
 ### Priority Labels
 
 Optional. Add **only** when priority is explicitly stated or clearly urgent.
 
-| Label | Criteria |
-|-------|----------|
+| Label               | Criteria                                    |
+| ------------------- | ------------------------------------------- |
 | `priority:critical` | Blocks all usage, data loss, security issue |
-| `priority:high` | Major feature broken, no workaround |
-| `priority:medium` | Feature broken but workaround exists |
-| `priority:low` | Minor inconvenience, cosmetic |
+| `priority:high`     | Major feature broken, no workaround         |
+| `priority:medium`   | Feature broken but workaround exists        |
+| `priority:low`      | Minor inconvenience, cosmetic               |
 
 ### Community Labels
 
 Optional. Add **only** when specifically requested.
 
-| Label | Use For |
-|-------|---------|
+| Label              | Use For                              |
+| ------------------ | ------------------------------------ |
 | `good-first-issue` | Well-scoped, beginner-friendly tasks |
-| `help-wanted` | Open for community contributions |
+| `help-wanted`      | Open for community contributions     |
 
 ## Validation Rules
 

@@ -1,12 +1,12 @@
 import type { Asset, GenerateContext } from '@ui-doc/core'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { HTMLRendererError, HTMLRendererSyntaxError, ParserError } from '../src/errors'
+import { HtmlRenderer } from '../src/HtmlRenderer'
 import type { Node } from '../src/nodes'
 import type { Parser } from '../src/Parser.types'
 import type { Reader } from '../src/Reader.types'
 import type { RenderContext } from '../src/Renderer.types'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { HTMLRendererError, HTMLRendererSyntaxError, ParserError } from '../src/errors'
-import { HtmlRenderer } from '../src/HtmlRenderer'
 
 describe('htmlRenderer', () => {
   let mockParser: Parser
@@ -59,7 +59,12 @@ describe('htmlRenderer', () => {
 
     it('should start with no layouts registered', () => {
       // Verify by checking that generate throws for missing layout
-      const context = { assets: [], menu: [], name: 'Test', title: 'Test' } as unknown as GenerateContext
+      const context = {
+        assets: [],
+        menu: [],
+        name: 'Test',
+        title: 'Test',
+      } as unknown as GenerateContext
       expect(() => renderer.generate(context)).toThrow(HTMLRendererError)
     })
 
@@ -80,7 +85,12 @@ describe('htmlRenderer', () => {
 
       expect(mockParseFn).toHaveBeenCalledTimes(1)
       // Verify the layout was stored by successfully generating with it
-      const context = { assets: [], menu: [], name: 'Test', title: 'Test' } as unknown as GenerateContext
+      const context = {
+        assets: [],
+        menu: [],
+        name: 'Test',
+        title: 'Test',
+      } as unknown as GenerateContext
       expect(() => renderer.generate(context, 'main')).not.toThrow()
       expect(result).toBe(renderer)
     })
@@ -163,7 +173,12 @@ describe('htmlRenderer', () => {
       expect(result).toBe(renderer)
       expect(mockParseFn).toHaveBeenCalledTimes(3)
       // Verify all templates were stored
-      const context = { assets: [], menu: [], name: 'Test', title: 'Test' } as unknown as GenerateContext
+      const context = {
+        assets: [],
+        menu: [],
+        name: 'Test',
+        title: 'Test',
+      } as unknown as GenerateContext
       expect(() => renderer.generate(context, 'main')).not.toThrow()
       expect(() => renderer.partial('header')).not.toThrow()
       expect(() => renderer.page('index', {})).not.toThrow()
@@ -225,7 +240,8 @@ describe('htmlRenderer', () => {
 
       expect(mockRenderFn).toHaveBeenCalledWith(
         expect.objectContaining({
-          styles: '<link href="main.css" rel="stylesheet">\n<link href="theme.css" rel="stylesheet">',
+          styles:
+            '<link href="main.css" rel="stylesheet">\n<link href="theme.css" rel="stylesheet">',
         }),
         renderer,
       )

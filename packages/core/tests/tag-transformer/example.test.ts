@@ -1,9 +1,13 @@
-import type { Block } from '../../src/Block.types'
-
 import { describe, expect, it } from 'vitest'
+
+import type { Block } from '../../src/Block.types'
 import example from '../../src/tag-transformers/example'
 
-interface CodeData { content: string, title: string, type: string }
+interface CodeData {
+  content: string
+  title: string
+  type: string
+}
 
 function exampleToCode(data: CodeData): CodeData {
   return {

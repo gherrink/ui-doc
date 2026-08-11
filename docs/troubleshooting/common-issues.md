@@ -193,7 +193,7 @@ Ensure the asset `name` exactly matches the key in your build tool's input confi
 // Vite/Rollup config
 export default {
   input: {
-    'app': 'src/main.js', // Key is 'app'
+    app: 'src/main.js', // Key is 'app'
     'custom-theme': 'ui-doc/theme.css', // Key is 'custom-theme'
   },
   plugins: [
@@ -509,12 +509,12 @@ Templates use a specific syntax documented in the [@ui-doc/html-renderer README]
 
 <!-- Conditionals -->
 {{if:showContent}}
-  <p>Content</p>
+<p>Content</p>
 {{/if}}
 
 <!-- Loops -->
 {{for:items}}
-  <li>{{var:_loop.value}}</li>
+<li>{{var:_loop.value}}</li>
 {{/for}}
 
 <!-- Partials -->
@@ -801,8 +801,7 @@ Ensure custom templates include the required template tags. At minimum, layouts 
     {{var:styles}}
   </head>
   <body>
-    {{page:default}}
-    {{var:scripts}}
+    {{page:default}} {{var:scripts}}
   </body>
 </html>
 ```
@@ -810,9 +809,7 @@ Ensure custom templates include the required template tags. At minimum, layouts 
 And pages need:
 
 ```html
-<main>
-  {{var:content}}
-</main>
+<main>{{var:content}}</main>
 ```
 
 **If context is missing:**

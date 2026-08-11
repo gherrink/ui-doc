@@ -285,9 +285,7 @@ For small style tweaks, you can include styles directly in your custom layout te
     </style>
   </head>
   <body class="page {{var:page.id}}">
-    {{partial:nav-main}}
-    {{page:page.id page}}
-    {{var:scripts}}
+    {{partial:nav-main}} {{page:page.id page}} {{var:scripts}}
   </body>
 </html>
 ```

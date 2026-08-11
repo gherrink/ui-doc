@@ -22,9 +22,8 @@ function formatMessage(level: LogLevel, message: string, context?: LogContext): 
   }
 
   if (context?.source !== undefined && context.source !== '') {
-    const location = context.line !== undefined
-      ? `${context.source}:${context.line}`
-      : context.source
+    const location =
+      context.line !== undefined ? `${context.source}:${context.line}` : context.source
     parts.push(`(${location})`)
   }
 

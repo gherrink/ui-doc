@@ -6,10 +6,10 @@ UI-Doc uses a **Modified GitHub Flow** branching strategy. This provides structu
 
 ### Permanent Branches
 
-| Branch | Purpose | Auto-Release |
-|--------|---------|--------------|
-| `master` | Production-ready code | Stable versions (x.y.z) |
-| `next` | Pre-release staging (future) | Beta versions (x.y.z-beta.n) |
+| Branch   | Purpose                      | Auto-Release                 |
+| -------- | ---------------------------- | ---------------------------- |
+| `master` | Production-ready code        | Stable versions (x.y.z)      |
+| `next`   | Pre-release staging (future) | Beta versions (x.y.z-beta.n) |
 
 The `master` branch always contains production-ready code. Merging to `master` triggers an automated release.
 
@@ -17,20 +17,20 @@ The `master` branch always contains production-ready code. Merging to `master` t
 
 Create these branches from `master` and merge back via pull request:
 
-| Pattern | Purpose | Example |
-|---------|---------|---------|
-| `feat/{description}` | New features | `feat/custom-transformers` |
-| `fix/{description}` | Bug fixes | `fix/template-caching` |
-| `hotfix/{pkg}-{desc}` | Critical production fixes | `hotfix/core-memory-leak` |
-| `chore/{description}` | Maintenance tasks | `chore/upgrade-deps` |
-| `docs/{description}` | Documentation updates | `docs/api-reference` |
+| Pattern               | Purpose                   | Example                    |
+| --------------------- | ------------------------- | -------------------------- |
+| `feat/{description}`  | New features              | `feat/custom-transformers` |
+| `fix/{description}`   | Bug fixes                 | `fix/template-caching`     |
+| `hotfix/{pkg}-{desc}` | Critical production fixes | `hotfix/core-memory-leak`  |
+| `chore/{description}` | Maintenance tasks         | `chore/upgrade-deps`       |
+| `docs/{description}`  | Documentation updates     | `docs/api-reference`       |
 
 ### Long-Lived Maintenance Branches
 
 For maintaining older major versions after a breaking release:
 
-| Pattern | Purpose | Example |
-|---------|---------|---------|
+| Pattern                  | Purpose                   | Example           |
+| ------------------------ | ------------------------- | ----------------- |
 | `release/{pkg}-v{major}` | Major version maintenance | `release/core-v0` |
 
 These branches are created when needed, not proactively.

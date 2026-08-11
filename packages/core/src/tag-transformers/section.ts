@@ -7,7 +7,14 @@ export const tag: TagTransformer = {
     const { key, name } = identifier(spec)
 
     block.section = key
-    if (!((block.location !== undefined && block.location !== '') && (block.title !== undefined && block.title !== ''))) {
+    if (
+      !(
+        block.location !== undefined &&
+        block.location !== '' &&
+        block.title !== undefined &&
+        block.title !== ''
+      )
+    ) {
       block.title = name
     }
 

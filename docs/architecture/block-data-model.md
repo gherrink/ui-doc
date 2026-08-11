@@ -43,10 +43,7 @@ Source file → CommentBlock → Partial<Block> → Block → ContextEntry → R
 1. **Tag transformer compatibility** - Transformers receive `Partial<Block>` and return the mutated object. This pattern works naturally with plain objects:
 
    ```typescript
-   export type TagTransformFunction = (
-     block: Partial<Block>,
-     spec: CommentSpec,
-   ) => Partial<Block>
+   export type TagTransformFunction = (block: Partial<Block>, spec: CommentSpec) => Partial<Block>
 
    // Example transformer
    export const tag: TagTransformer = {
@@ -98,7 +95,7 @@ class UIDoc {
   // packages/core/src/UIDoc.ts line 628
   public exampleContent(example: ContextExample, layout = 'example'): string {
     const context: GenerateExampleContext = {
-      ...JSON.parse(JSON.stringify(example)) as ContextExample,
+      ...(JSON.parse(JSON.stringify(example)) as ContextExample),
       title: this.generate.exampleTitle(example),
       assets: this.context.exampleAssets,
     }
@@ -228,7 +225,11 @@ block = locationTransformer(block, { name: 'components.button', description: 'Pr
 // → { key: 'components.button', order: 0, title: 'Primary Button' }
 
 // @color primary #ff0000 Primary action color
-block = colorTransformer(block, { name: 'primary', type: '#ff0000', description: 'Primary action color' })
+block = colorTransformer(block, {
+  name: 'primary',
+  type: '#ff0000',
+  description: 'Primary action color',
+})
 // → { key: 'components.button', order: 0, title: 'Primary Button',
 //     colors: [{ name: 'primary', value: CSSColor(...), text: 'Primary action color' }] }
 
@@ -287,7 +288,10 @@ interface BlockInterface {
 }
 
 class BlockClass {
-  constructor(public key: string, public title?: string) {}
+  constructor(
+    public key: string,
+    public title?: string,
+  ) {}
 }
 
 // TypeScript prevents this in both cases
@@ -316,7 +320,7 @@ The `output` property is pre-computed once at construction time, not stored in a
 
 ```typescript
 class CSSColor {
-  constructor(value: { r: number, g: number, b: number }) {
+  constructor(value: { r: number; g: number; b: number }) {
     this.hex = valueToHex(value) // Computed once
     this.rgb = valueToRgb(value) // Computed once
     this.output = this.toString() // Computed once

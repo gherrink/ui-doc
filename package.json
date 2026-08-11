@@ -1,15 +1,7 @@
 {
   "name": "ui-doc",
-  "type": "module",
   "private": true,
-  "browserslist": [
-    "defaults",
-    "not IE 11"
-  ],
-  "packageManager": "pnpm@11.21.0",
-  "engines": {
-    "node": ">=22.13.0"
-  },
+  "type": "module",
   "scripts": {
     "clean": "pnpm -r --filter './packages/*' run clean",
     "fix": "pnpm run /^fix:/",
@@ -34,7 +26,9 @@
     "typecheck:all": "tsc --noEmit -p tsconfig.all.json",
     "workspace:build": "pnpm -r --filter './packages/*' run build",
     "lint:json": "biome lint .",
-    "fix:json": "biome lint --write ."
+    "fix:json": "biome lint --write .",
+    "lint:format": "oxfmt --check .",
+    "fix:format": "oxfmt ."
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.7",
@@ -71,16 +65,30 @@
   },
   "lint-staged": {
     "*.{ts,js,mjs,cjs}": [
-      "oxlint --type-aware --fix"
+      "oxlint --type-aware --fix",
+      "oxfmt"
     ],
     "*.css": [
       "stylelint --fix"
     ],
     "*.{json,jsonc}": [
-      "biome lint --write --no-errors-on-unmatched"
+      "biome lint --write --no-errors-on-unmatched",
+      "oxfmt"
     ],
     "*.md": [
-      "markdownlint-cli2 --fix"
+      "markdownlint-cli2 --fix",
+      "oxfmt"
+    ],
+    "*.{yml,yaml}": [
+      "oxfmt"
     ]
-  }
+  },
+  "browserslist": [
+    "defaults",
+    "not IE 11"
+  ],
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "packageManager": "pnpm@11.21.0"
 }

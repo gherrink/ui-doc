@@ -1,9 +1,9 @@
+import { TagNodeError } from '../../errors'
 import type { TagNodeParse } from '../../Parser.types'
 import type { RenderContext, Renderer } from '../../Renderer.types'
 import type { TokenValue } from '../../Token.types'
-import type { NodeOperator } from '../Node'
-import { TagNodeError } from '../../errors'
 import { readNestedValue } from '../../utils'
+import type { NodeOperator } from '../Node'
 import { nodeOperators } from '../Node'
 import { TagNode } from '../TagNode'
 
@@ -34,7 +34,8 @@ export class TagIfNode extends TagNode {
       )
     }
 
-    const isTruthy = value !== undefined && value !== null && value !== false && value !== 0 && value !== ''
+    const isTruthy =
+      value !== undefined && value !== null && value !== false && value !== 0 && value !== ''
 
     return isTruthy ? this.renderChildNodes(context, renderer) : ''
   }
@@ -147,9 +148,9 @@ export const parseTagIfNode: TagNodeParse = {
         }
 
         if (
-          options.operator !== undefined
-          && options.secondContextKey === undefined
-          && options.secondValue === undefined
+          options.operator !== undefined &&
+          options.secondContextKey === undefined &&
+          options.secondValue === undefined
         ) {
           throw new TagNodeError('Expected second context key or value when operator is given')
         }

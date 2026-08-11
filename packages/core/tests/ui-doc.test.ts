@@ -1,7 +1,7 @@
-import type { BlockParser } from '../src/BlockParser.types'
-
-import type { Renderer } from '../src/Renderer.types'
 import { describe, expect, it, vi } from 'vitest'
+
+import type { BlockParser } from '../src/BlockParser.types'
+import type { Renderer } from '../src/Renderer.types'
 import { UIDoc } from '../src/UIDoc'
 
 interface UidocMockResult {
@@ -540,9 +540,9 @@ describe('uI-Doc', () => {
   it('should emit context-entry events on block changes', () => {
     const contextEntryListener = vi.fn()
     const { uidoc } = uidocMock({
-      blockParserParse: vi.fn<BlockParser['parse']>().mockReturnValue([
-        { key: 'foo', order: 0, title: 'Foo' },
-      ]),
+      blockParserParse: vi
+        .fn<BlockParser['parse']>()
+        .mockReturnValue([{ key: 'foo', order: 0, title: 'Foo' }]),
     })
 
     uidoc.on('context-entry', contextEntryListener)
@@ -573,9 +573,9 @@ describe('uI-Doc', () => {
     it('should add page asset with resolved src', () => {
       const { uidoc, renderer } = uidocMock({
         rendererGenerate: vi.fn<Renderer['generate']>().mockReturnValue(''),
-        blockParserParse: vi.fn<BlockParser['parse']>().mockReturnValue([
-          { key: 'foo', order: 0, title: 'Foo' },
-        ]),
+        blockParserParse: vi
+          .fn<BlockParser['parse']>()
+          .mockReturnValue([{ key: 'foo', order: 0, title: 'Foo' }]),
       })
 
       uidoc.addAsset({ src: 'styles.css', type: 'style' })
@@ -649,9 +649,9 @@ describe('uI-Doc', () => {
       const outputCallback = vi.fn().mockResolvedValue(undefined)
       const { uidoc } = uidocMock({
         rendererGenerate: vi.fn<Renderer['generate']>().mockReturnValue('<html></html>'),
-        blockParserParse: vi.fn<BlockParser['parse']>().mockReturnValue([
-          { key: 'foo', order: 0, title: 'Foo' },
-        ]),
+        blockParserParse: vi
+          .fn<BlockParser['parse']>()
+          .mockReturnValue([{ key: 'foo', order: 0, title: 'Foo' }]),
       })
 
       uidoc.sourceCreate('file.css', '')
@@ -685,10 +685,12 @@ describe('uI-Doc', () => {
   describe('page', () => {
     it('should return page content for existing page', () => {
       const { uidoc } = uidocMock({
-        rendererGenerate: vi.fn<Renderer['generate']>().mockReturnValue('<html>page content</html>'),
-        blockParserParse: vi.fn<BlockParser['parse']>().mockReturnValue([
-          { key: 'foo', order: 0, title: 'Foo' },
-        ]),
+        rendererGenerate: vi
+          .fn<Renderer['generate']>()
+          .mockReturnValue('<html>page content</html>'),
+        blockParserParse: vi
+          .fn<BlockParser['parse']>()
+          .mockReturnValue([{ key: 'foo', order: 0, title: 'Foo' }]),
       })
 
       uidoc.sourceCreate('file.css', '')
@@ -712,9 +714,9 @@ describe('uI-Doc', () => {
       const pageListener = vi.fn()
       const { uidoc } = uidocMock({
         rendererGenerate: vi.fn<Renderer['generate']>().mockReturnValue(''),
-        blockParserParse: vi.fn<BlockParser['parse']>().mockReturnValue([
-          { key: 'foo', order: 0, title: 'Foo' },
-        ]),
+        blockParserParse: vi
+          .fn<BlockParser['parse']>()
+          .mockReturnValue([{ key: 'foo', order: 0, title: 'Foo' }]),
       })
 
       uidoc.on('page', pageListener)
@@ -819,9 +821,9 @@ describe('uI-Doc', () => {
     it('should not include index page in menu', () => {
       const { uidoc, renderer } = uidocMock({
         rendererGenerate: vi.fn<Renderer['generate']>().mockReturnValue(''),
-        blockParserParse: vi.fn<BlockParser['parse']>().mockReturnValue([
-          { key: 'foo', order: 0, title: 'Foo' },
-        ]),
+        blockParserParse: vi
+          .fn<BlockParser['parse']>()
+          .mockReturnValue([{ key: 'foo', order: 0, title: 'Foo' }]),
       })
 
       uidoc.sourceCreate('file.css', '')
@@ -850,7 +852,7 @@ describe('uI-Doc', () => {
       uidoc.page('foo')
 
       const call = renderer.generate.mock.calls[0]
-      const context = call[0] as { menu: Array<{ text: string, active: boolean }> }
+      const context = call[0] as { menu: Array<{ text: string; active: boolean }> }
       const fooItem = context.menu.find(item => item.text === 'Foo')
       const barItem = context.menu.find(item => item.text === 'Bar')
 

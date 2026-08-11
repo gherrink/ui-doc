@@ -7,15 +7,15 @@
   "formatter": { "enabled": false },
   "linter": {
     "enabled": true,
-    "rules": { "preset": "recommended" }
+    "rules": { "preset": "recommended" },
   },
   "javascript": {
-    "linter": { "enabled": false }
+    "linter": { "enabled": false },
   },
   "css": {
-    "linter": { "enabled": false }
+    "linter": { "enabled": false },
   },
   "files": {
-    "includes": ["**/*.json", "**/*.jsonc", "!**/dist", "!**/coverage", "!**/node_modules"]
-  }
+    "includes": ["**/*.json", "**/*.jsonc", "!**/dist", "!**/coverage", "!**/node_modules"],
+  },
 }

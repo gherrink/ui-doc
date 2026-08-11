@@ -43,13 +43,15 @@ async function main() {
     })
     // Success - no errors remain after fix
     // oxlint-disable-next-line no-console
-    console.log(JSON.stringify({
-      hookSpecificOutput: {
-        linted: true,
-        file: filePath,
-        message: 'Test file passed linting',
-      },
-    }))
+    console.log(
+      JSON.stringify({
+        hookSpecificOutput: {
+          linted: true,
+          file: filePath,
+          message: 'Test file passed linting',
+        },
+      }),
+    )
   } catch (error) {
     // oxlint returns a non-zero exit code when errors remain
     // Parse the JSON output to extract error details
@@ -59,48 +61,60 @@ async function main() {
     } catch {
       // If we can't parse the linter output, report the raw error
       // oxlint-disable-next-line no-console
-      console.log(JSON.stringify({
-        decision: 'block',
-        reason: `oxlint failed to run: ${error.message}`,
-      }))
+      console.log(
+        JSON.stringify({
+          decision: 'block',
+          reason: `oxlint failed to run: ${error.message}`,
+        }),
+      )
       return
     }
 
     // oxlint reports a flat `diagnostics` array, each entry carrying its rule
     // in `code` and its position in the first label's span.
-    const diagnostics = (lintOutput.diagnostics ?? [])
-      .filter(diagnostic => diagnostic.severity === 'error')
+    const diagnostics = (lintOutput.diagnostics ?? []).filter(
+      diagnostic => diagnostic.severity === 'error',
+    )
 
     const errors = diagnostics
       .slice(0, 5) // Limit to first 5 errors to keep feedback concise
-      .map(diagnostic => `Line ${diagnostic.labels?.[0]?.span?.line ?? '?'}: `
-        + `[${diagnostic.code}] ${diagnostic.message}`)
+      .map(
+        diagnostic =>
+          `Line ${diagnostic.labels?.[0]?.span?.line ?? '?'}: ` +
+          `[${diagnostic.code}] ${diagnostic.message}`,
+      )
 
     if (errors.length > 0) {
       const totalErrors = diagnostics.length
 
       // oxlint-disable-next-line no-console
-      console.log(JSON.stringify({
-        decision: 'block',
-        reason: [
-          `Test file has ${totalErrors} lint error(s) that could not be auto-fixed:`,
-          '',
-          ...errors,
-          totalErrors > 5 ? `\n... and ${totalErrors - 5} more error(s)` : '',
-          '',
-          'Please fix these errors before continuing.',
-        ].filter(Boolean).join('\n'),
-      }))
+      console.log(
+        JSON.stringify({
+          decision: 'block',
+          reason: [
+            `Test file has ${totalErrors} lint error(s) that could not be auto-fixed:`,
+            '',
+            ...errors,
+            totalErrors > 5 ? `\n... and ${totalErrors - 5} more error(s)` : '',
+            '',
+            'Please fix these errors before continuing.',
+          ]
+            .filter(Boolean)
+            .join('\n'),
+        }),
+      )
     } else {
       // No errors remain (maybe only warnings)
       // oxlint-disable-next-line no-console
-      console.log(JSON.stringify({
-        hookSpecificOutput: {
-          linted: true,
-          file: filePath,
-          message: 'Test file passed linting (with warnings)',
-        },
-      }))
+      console.log(
+        JSON.stringify({
+          hookSpecificOutput: {
+            linted: true,
+            file: filePath,
+            message: 'Test file passed linting (with warnings)',
+          },
+        }),
+      )
     }
   }
 }

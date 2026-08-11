@@ -166,7 +166,7 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        'app': 'src/main.js',
+        app: 'src/main.js',
         'ui-doc-theme': 'ui-doc/theme.css',
       },
     },
@@ -198,7 +198,7 @@ export default defineConfig({
 ```js
 export default {
   input: {
-    'app': 'src/index.js',
+    app: 'src/index.js',
     'ui-doc-custom': 'ui-doc/custom.css',
   },
   output: {

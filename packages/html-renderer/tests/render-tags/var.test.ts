@@ -35,9 +35,7 @@ describe('render tag var', () => {
       const htmlContext = { content: '<script>alert("XSS")</script>' }
       const node = new TagVarNode({ contextKey: 'content', escape: true })
 
-      expect(node.render(htmlContext)).toBe(
-        '&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;',
-      )
+      expect(node.render(htmlContext)).toBe('&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;')
     })
 
     it('should escape ampersand', () => {
@@ -48,7 +46,7 @@ describe('render tag var', () => {
     })
 
     it('should escape single quotes', () => {
-      const htmlContext = { content: 'It\'s working' }
+      const htmlContext = { content: "It's working" }
       const node = new TagVarNode({ contextKey: 'content', escape: true })
 
       expect(node.render(htmlContext)).toBe('It&#039;s working')

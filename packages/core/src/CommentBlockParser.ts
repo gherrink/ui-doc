@@ -1,19 +1,16 @@
-import type {
-  Block as CommentBlock,
-  Spec as CommentSpec,
-} from 'comment-parser'
-import type { Block } from './Block.types'
+import type { Block as CommentBlock, Spec as CommentSpec } from 'comment-parser'
+import { parse as parseComments } from 'comment-parser'
 
+import type { Block } from './Block.types'
 import type { BlockParser, BlockParserContext } from './BlockParser.types'
 import type { BlockParserEventMap as EventMap } from './BlockParserEvent.types'
 import type { DescriptionParser } from './DescriptionParser.types'
-import type { Logger } from './Logger.types'
-import type { TagTransformer, TagTransformFunction } from './tag-transformers/tag-transformer.types'
-import { parse as parseComments } from 'comment-parser'
 import { BlockParseError, TagTransformerError } from './errors'
 import { EventEmitterBase } from './EventEmitterBase'
 import { noopLogger } from './Logger'
+import type { Logger } from './Logger.types'
 import tagTransformers from './tag-transformers'
+import type { TagTransformer, TagTransformFunction } from './tag-transformers/tag-transformer.types'
 
 type BlockParserErrorCreate = (
   reason: string,
@@ -42,7 +39,10 @@ export class CommentBlockParser extends EventEmitterBase<EventMap> implements Bl
   }
 
   public parse(context: BlockParserContext): Block[] {
-    this.logger.debug(`Parsing ${context.identifier}`, { source: context.identifier, phase: 'parse' })
+    this.logger.debug(`Parsing ${context.identifier}`, {
+      source: context.identifier,
+      phase: 'parse',
+    })
     const createError: BlockParserErrorCreate = (reason, comment, { tag = undefined } = {}) => {
       const code = comment.source.map(line => line.source).join('\n')
 
@@ -59,7 +59,10 @@ export class CommentBlockParser extends EventEmitterBase<EventMap> implements Bl
       .map((comment: CommentBlock) => this.toBlock(comment, createError))
       .filter((entry): entry is Block => !!entry)
 
-    this.logger.debug(`Found ${blocks.length} valid blocks`, { source: context.identifier, phase: 'parse' })
+    this.logger.debug(`Found ${blocks.length} valid blocks`, {
+      source: context.identifier,
+      phase: 'parse',
+    })
 
     return blocks
   }
@@ -114,8 +117,11 @@ export class CommentBlockParser extends EventEmitterBase<EventMap> implements Bl
   }
 
   protected validateBlock(block: Partial<Block>): string | undefined {
-    if ((block.page === undefined || block.page === '') && (block.location === undefined || block.location === '')) {
-      return 'Missing block location. Don\'t know where to place this block, please use @location, @page or @section + @page.'
+    if (
+      (block.page === undefined || block.page === '') &&
+      (block.location === undefined || block.location === '')
+    ) {
+      return "Missing block location. Don't know where to place this block, please use @location, @page or @section + @page."
     }
 
     return undefined
@@ -126,7 +132,10 @@ export class CommentBlockParser extends EventEmitterBase<EventMap> implements Bl
       return block.location
     }
 
-    return (block.page ?? '') + (block.section !== undefined && block.section !== '' ? `.${block.section}` : '')
+    return (
+      (block.page ?? '') +
+      (block.section !== undefined && block.section !== '' ? `.${block.section}` : '')
+    )
   }
 }
 

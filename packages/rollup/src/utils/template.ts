@@ -3,9 +3,9 @@ import type { FileSystem, Renderer } from '@ui-doc/core'
 type TemplateType = 'layout' | 'page' | 'partial'
 
 interface ReloadableRenderer extends Renderer {
-  addLayout: (name: string, source: { source: string, content: string }) => void
-  addPage: (name: string, source: { source: string, content: string }) => void
-  addPartial: (name: string, source: { source: string, content: string }) => void
+  addLayout: (name: string, source: { source: string; content: string }) => void
+  addPage: (name: string, source: { source: string; content: string }) => void
+  addPartial: (name: string, source: { source: string; content: string }) => void
 }
 
 /**
@@ -36,9 +36,9 @@ export function getTemplateName(filePath: string, fileSystem: FileSystem): strin
  */
 export function isReloadableRenderer(renderer: Renderer): renderer is ReloadableRenderer {
   return (
-    typeof (renderer as ReloadableRenderer).addLayout === 'function'
-    && typeof (renderer as ReloadableRenderer).addPage === 'function'
-    && typeof (renderer as ReloadableRenderer).addPartial === 'function'
+    typeof (renderer as ReloadableRenderer).addLayout === 'function' &&
+    typeof (renderer as ReloadableRenderer).addPage === 'function' &&
+    typeof (renderer as ReloadableRenderer).addPartial === 'function'
   )
 }
 

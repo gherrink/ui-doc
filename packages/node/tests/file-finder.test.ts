@@ -1,7 +1,7 @@
 import type { Dirent } from 'node:fs'
-import type { MockInstance } from 'vitest'
-
 import fs from 'node:fs/promises'
+
+import type { MockInstance } from 'vitest'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { NodeFileFinder } from '../src'
@@ -9,11 +9,11 @@ import { NodeFileFinder } from '../src'
 vi.mock('node:fs/promises')
 
 function createDirent(name: string, isDir: boolean): Dirent {
-  return ({
+  return {
     isDirectory: () => isDir,
     isFile: () => !isDir,
     name,
-  }) as Dirent
+  } as Dirent
 }
 
 /**

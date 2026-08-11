@@ -301,18 +301,14 @@ Ensure the CSS file is configured in `assets.page` or `assets.example`:
 // Wrong - CSS not processed
 uidoc({
   assets: {
-    copy: [
-      { from: 'src/fonts/**/*.woff2', to: 'fonts' },
-    ],
+    copy: [{ from: 'src/fonts/**/*.woff2', to: 'fonts' }],
   },
 })
 
 // Correct - CSS processed for URL rewriting
 uidoc({
   assets: {
-    copy: [
-      { from: 'src/fonts/**/*.woff2', to: 'fonts' },
-    ],
+    copy: [{ from: 'src/fonts/**/*.woff2', to: 'fonts' }],
     page: [
       {
         name: 'custom.css',

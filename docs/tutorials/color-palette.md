@@ -184,10 +184,10 @@ Add semantic colors for UI states using hex values. This demonstrates that you c
  * @color {#3b82f6|#fff} --color-info | Info Blue
  */
 :root {
-  --color-success: 34 197 94;   /* #22c55e in RGB */
-  --color-warning: 234 179 8;   /* #eab308 in RGB */
-  --color-error: 239 68 68;     /* #ef4444 in RGB */
-  --color-info: 59 130 246;     /* #3b82f6 in RGB */
+  --color-success: 34 197 94; /* #22c55e in RGB */
+  --color-warning: 234 179 8; /* #eab308 in RGB */
+  --color-error: 239 68 68; /* #ef4444 in RGB */
+  --color-info: 59 130 246; /* #3b82f6 in RGB */
 }
 ```
 
@@ -319,10 +319,10 @@ Here's the complete color palette file from this tutorial:
  * @color {#3b82f6|#fff} --color-info | Info Blue
  */
 :root {
-  --color-success: 34 197 94;   /* #22c55e in RGB */
-  --color-warning: 234 179 8;   /* #eab308 in RGB */
-  --color-error: 239 68 68;     /* #ef4444 in RGB */
-  --color-info: 59 130 246;     /* #3b82f6 in RGB */
+  --color-success: 34 197 94; /* #22c55e in RGB */
+  --color-warning: 234 179 8; /* #eab308 in RGB */
+  --color-error: 239 68 68; /* #ef4444 in RGB */
+  --color-info: 59 130 246; /* #3b82f6 in RGB */
 }
 
 /**

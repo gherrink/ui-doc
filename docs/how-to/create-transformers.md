@@ -82,9 +82,7 @@ import uidoc from '@ui-doc/vite'
 import { defineConfig } from 'vite'
 import { authorTransformer } from './author-transformer'
 
-const commentBlockParser = new CommentBlockParser(
-  createMarkdownDescriptionParser(),
-)
+const commentBlockParser = new CommentBlockParser(createMarkdownDescriptionParser())
 
 commentBlockParser.registerTagTransformer(authorTransformer)
 
@@ -106,9 +104,7 @@ import { CommentBlockParser, createMarkdownDescriptionParser } from '@ui-doc/cor
 import uidoc from '@ui-doc/rollup'
 import { authorTransformer } from './author-transformer'
 
-const commentBlockParser = new CommentBlockParser(
-  createMarkdownDescriptionParser(),
-)
+const commentBlockParser = new CommentBlockParser(createMarkdownDescriptionParser())
 
 commentBlockParser.registerTagTransformer(authorTransformer)
 
@@ -217,10 +213,7 @@ export const badgeTransformer: TagTransformer = {
     // Validate text from description
     const text = spec.description?.trim()
     if (!text) {
-      throw new TagTransformerError(
-        'Missing badge text. Use @badge {variant} Badge Text',
-        'badge',
-      )
+      throw new TagTransformerError('Missing badge text. Use @badge {variant} Badge Text', 'badge')
     }
 
     // Initialize badges array if needed
@@ -251,7 +244,9 @@ Usage:
  * @example
  * <div class="alert">Message</div>
  */
-.alert { /* ... */ }
+.alert {
+  /* ... */
+}
 ```
 
 ### Use utility functions for common patterns

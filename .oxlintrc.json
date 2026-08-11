@@ -1,14 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "typescript",
-    "unicorn",
-    "oxc",
-    "import",
-    "jsdoc",
-    "promise",
-    "node"
-  ],
+  "plugins": ["typescript", "unicorn", "oxc", "import", "jsdoc", "promise", "node"],
   "jsPlugins": [
     "eslint-plugin-regexp",
     {
@@ -19,23 +11,13 @@
   "categories": {
     "correctness": "error"
   },
-  "ignorePatterns": [
-    "**/coverage/**",
-    "**/dist/**",
-    "**/node_modules/**"
-  ],
+  "ignorePatterns": ["**/coverage/**", "**/dist/**", "**/node_modules/**"],
   "rules": {
-    "curly": [
-      "error",
-      "all"
-    ],
+    "curly": ["error", "all"],
     "no-console": [
       "error",
       {
-        "allow": [
-          "warn",
-          "error"
-        ]
+        "allow": ["warn", "error"]
       }
     ],
     "typescript/no-explicit-any": "error",
@@ -72,10 +54,7 @@
         "allowExpressions": true
       }
     ],
-    "typescript/method-signature-style": [
-      "error",
-      "property"
-    ],
+    "typescript/method-signature-style": ["error", "property"],
     "typescript/switch-exhaustiveness-check": "error",
     "typescript/unbound-method": [
       "error",
@@ -152,10 +131,7 @@
       }
     },
     {
-      "files": [
-        "**/*.test.ts",
-        "**/*.spec.ts"
-      ],
+      "files": ["**/*.test.ts", "**/*.spec.ts"],
       "rules": {
         "typescript/no-unsafe-assignment": "off"
       }

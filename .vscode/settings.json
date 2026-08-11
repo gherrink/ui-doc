@@ -2,12 +2,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "oxc.enable": true,
   "oxc.lint.run": "onType",
-  "cSpell.words": [
-    "atomico",
-    "highlightjs",
-    "styleguide",
-    "uidoc"
-  ],
+  "cSpell.words": ["atomico", "highlightjs", "styleguide", "uidoc"],
   "search.exclude": {
     "**/dist/": true,
     "**/.worktree/": true

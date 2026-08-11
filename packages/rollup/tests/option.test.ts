@@ -1,12 +1,12 @@
 import type { AssetLoader, BlockParser, FileSystem, Renderer } from '@ui-doc/core'
-import type { AssetResolved } from '../src/utils/asset.types'
-import type { Options } from '../src/utils/option.types'
-
 import { UIDoc } from '@ui-doc/core'
 import { NodeFileSystem } from '@ui-doc/node'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { resolveAssets, resolveAssetType } from '../src/utils/asset'
+import type { AssetResolved } from '../src/utils/asset.types'
 import { resolveOptions } from '../src/utils/option'
+import type { Options } from '../src/utils/option.types'
 
 vi.mock('@ui-doc/core', () => ({
   UIDoc: vi.fn(),
@@ -76,14 +76,17 @@ describe('resolveOptions', () => {
       resolve: vi.fn<FileSystem['resolve']>((path: string) => `/resolved/${path}`),
       fileRead: vi.fn<FileSystem['fileRead']>().mockResolvedValue('file content'),
       fileWrite: vi.fn<FileSystem['fileWrite']>().mockResolvedValue(true),
-      fileDirname: vi
-        .fn<FileSystem['fileDirname']>((path: string) => path.split('/').slice(0, -1).join('/')),
+      fileDirname: vi.fn<FileSystem['fileDirname']>((path: string) =>
+        path.split('/').slice(0, -1).join('/'),
+      ),
       fileCopy: vi.fn<FileSystem['fileCopy']>().mockResolvedValue(true),
       directoryCopy: vi.fn<FileSystem['directoryCopy']>().mockResolvedValue(true),
       ensureDirectoryExists: vi.fn<FileSystem['ensureDirectoryExists']>().mockResolvedValue(true),
       isDirectory: vi.fn<FileSystem['isDirectory']>().mockResolvedValue(true),
       fileExists: vi.fn<FileSystem['fileExists']>().mockResolvedValue(true),
-      fileBasename: vi.fn<FileSystem['fileBasename']>((path: string) => path.split('/').pop() ?? ''),
+      fileBasename: vi.fn<FileSystem['fileBasename']>(
+        (path: string) => path.split('/').pop() ?? '',
+      ),
     }
 
     mockRenderer = {

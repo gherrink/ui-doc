@@ -56,14 +56,14 @@ UI-Doc is a TypeScript monorepo with packages in the `packages/` directory:
 
 ### Common Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm workspace:build` | Build all packages |
-| `pnpm test` | Run all package tests |
+| Command                           | Description                      |
+| --------------------------------- | -------------------------------- |
+| `pnpm workspace:build`            | Build all packages               |
+| `pnpm test`                       | Run all package tests            |
 | `pnpm --filter @ui-doc/core test` | Run tests for a specific package |
-| `pnpm lint` | Run all linters (docs, js, css) |
-| `pnpm fix` | Run all auto-fixes |
-| `pnpm typecheck` | Type check all packages |
+| `pnpm lint`                       | Run all linters (docs, js, css)  |
+| `pnpm fix`                        | Run all auto-fixes               |
+| `pnpm typecheck`                  | Type check all packages          |
 
 ### Running the Demo
 
@@ -184,13 +184,13 @@ UI-Doc uses a Modified GitHub Flow. The `master` branch always contains producti
 
 ### Branch Naming
 
-| Pattern | Purpose | Example |
-|---------|---------|---------|
-| `feat/{description}` | New features | `feat/custom-transformers` |
-| `fix/{description}` | Bug fixes | `fix/template-caching` |
-| `hotfix/{pkg}-{desc}` | Critical fixes | `hotfix/core-memory-leak` |
-| `chore/{description}` | Maintenance | `chore/upgrade-deps` |
-| `docs/{description}` | Documentation | `docs/api-reference` |
+| Pattern               | Purpose        | Example                    |
+| --------------------- | -------------- | -------------------------- |
+| `feat/{description}`  | New features   | `feat/custom-transformers` |
+| `fix/{description}`   | Bug fixes      | `fix/template-caching`     |
+| `hotfix/{pkg}-{desc}` | Critical fixes | `hotfix/core-memory-leak`  |
+| `chore/{description}` | Maintenance    | `chore/upgrade-deps`       |
+| `docs/{description}`  | Documentation  | `docs/api-reference`       |
 
 For package-specific work, include the package name: `fix/core-parser-edge-case`.
 
@@ -248,7 +248,7 @@ such as Jest's default, will not be able to load it.
 ### picomatch is bundled into @ui-doc/rollup
 
 `configTs` derives Rollup's `external` list from `dependencies` plus
-`peerDependencies`. picomatch is a *devDependency* of `@ui-doc/rollup`, so it
+`peerDependencies`. picomatch is a _devDependency_ of `@ui-doc/rollup`, so it
 is inlined into the published bundle, while `@ui-doc/node` declares it as a
 dependency and keeps it external. That is deliberate — promoting it would flip
 it from bundled to external and change the published contract — but it has two

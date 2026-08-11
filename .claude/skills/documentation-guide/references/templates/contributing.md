@@ -19,7 +19,7 @@ Use this template for project contributor documentation (workflows, processes, g
 [Description with tables, diagrams, or lists as appropriate]
 
 | Column 1 | Column 2 | Column 3 |
-|----------|----------|----------|
+| -------- | -------- | -------- |
 | Value    | Value    | Value    |
 
 ### [Another Subsection]

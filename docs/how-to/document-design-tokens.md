@@ -116,10 +116,10 @@ Add icon font definitions using the `@icon` tag. Each icon is displayed with its
  * @icon {e903} --icon-chevron-up | Chevron Up
  */
 :root {
-  --icon-chevron-down: "\e900";
-  --icon-chevron-left: "\e901";
-  --icon-chevron-right: "\e902";
-  --icon-chevron-up: "\e903";
+  --icon-chevron-down: '\e900';
+  --icon-chevron-left: '\e901';
+  --icon-chevron-right: '\e902';
+  --icon-chevron-up: '\e903';
 }
 ```
 
@@ -154,9 +154,9 @@ You can define colors using hex notation instead of RGB.
  * @color {#ef4444|#fff} --color-error | Error Red
  */
 :root {
-  --color-success: 34 197 94;   /* RGB equivalent of #22c55e */
-  --color-warning: 234 179 8;   /* RGB equivalent of #eab308 */
-  --color-error: 239 68 68;     /* RGB equivalent of #ef4444 */
+  --color-success: 34 197 94; /* RGB equivalent of #22c55e */
+  --color-warning: 234 179 8; /* RGB equivalent of #eab308 */
+  --color-error: 239 68 68; /* RGB equivalent of #ef4444 */
 }
 ```
 

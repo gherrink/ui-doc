@@ -26,10 +26,10 @@ Use this template for technical documentation of tags, options, or APIs.
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| [param1] | Yes | `string` | [Description] |
-| [param2] | No | `number` | [Description] Default: `[value]` |
+| Parameter | Required | Type     | Description                      |
+| --------- | -------- | -------- | -------------------------------- |
+| [param1]  | Yes      | `string` | [Description]                    |
+| [param2]  | No       | `number` | [Description] Default: `[value]` |
 
 **Example:**
 
@@ -56,9 +56,9 @@ Use this template for technical documentation of tags, options, or APIs.
 [Summary table if appropriate]
 
 | [Column 1] | [Column 2] | [Column 3] |
-|------------|------------|------------|
-| [Value] | [Value] | [Value] |
-| [Value] | [Value] | [Value] |
+| ---------- | ---------- | ---------- |
+| [Value]    | [Value]    | [Value]    |
+| [Value]    | [Value]    | [Value]    |
 
 ## See also
 

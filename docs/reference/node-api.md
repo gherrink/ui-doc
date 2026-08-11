@@ -60,20 +60,16 @@ fileSystem.createFileFinder(globs: string[]): NodeFileFinder
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `globs` | Yes | `string[]` | Array of glob patterns using picomatch syntax |
+| Parameter | Required | Type       | Description                                   |
+| --------- | -------- | ---------- | --------------------------------------------- |
+| `globs`   | Yes      | `string[]` | Array of glob patterns using picomatch syntax |
 
 **Returns:** `NodeFileFinder` instance configured with the provided patterns.
 
 **Example:**
 
 ```js
-const finder = fileSystem.createFileFinder([
-  'src/**/*.css',
-  'components/**/*.js',
-  '!**/*.test.js',
-])
+const finder = fileSystem.createFileFinder(['src/**/*.css', 'components/**/*.js', '!**/*.test.js'])
 ```
 
 #### assetLoader
@@ -103,9 +99,9 @@ fileSystem.resolve(file: string): string
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `file` | Yes | `string` | Path to resolve |
+| Parameter | Required | Type     | Description     |
+| --------- | -------- | -------- | --------------- |
+| `file`    | Yes      | `string` | Path to resolve |
 
 **Returns:** Absolute path as a string.
 
@@ -126,9 +122,9 @@ await fileSystem.fileRead(file: string): Promise<string>
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `file` | Yes | `string` | Path to the file to read |
+| Parameter | Required | Type     | Description              |
+| --------- | -------- | -------- | ------------------------ |
+| `file`    | Yes      | `string` | Path to the file to read |
 
 **Returns:** Promise resolving to file content as UTF-8 string.
 
@@ -148,10 +144,10 @@ await fileSystem.fileWrite(file: string, content: string): Promise<boolean>
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `file` | Yes | `string` | Path to the file to write |
-| `content` | Yes | `string` | Content to write to the file |
+| Parameter | Required | Type     | Description                  |
+| --------- | -------- | -------- | ---------------------------- |
+| `file`    | Yes      | `string` | Path to the file to write    |
+| `content` | Yes      | `string` | Content to write to the file |
 
 **Returns:** Promise resolving to `true` on success, `false` on failure.
 
@@ -171,10 +167,10 @@ await fileSystem.fileCopy(from: string, to: string): Promise<boolean>
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `from` | Yes | `string` | Source file path |
-| `to` | Yes | `string` | Destination file path |
+| Parameter | Required | Type     | Description           |
+| --------- | -------- | -------- | --------------------- |
+| `from`    | Yes      | `string` | Source file path      |
+| `to`      | Yes      | `string` | Destination file path |
 
 **Returns:** Promise resolving to `true` on success, `false` on failure.
 
@@ -194,9 +190,9 @@ await fileSystem.fileExists(file: string): Promise<boolean>
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `file` | Yes | `string` | Path to check |
+| Parameter | Required | Type     | Description   |
+| --------- | -------- | -------- | ------------- |
+| `file`    | Yes      | `string` | Path to check |
 
 **Returns:** Promise resolving to `true` if file exists, `false` otherwise.
 
@@ -218,9 +214,9 @@ fileSystem.fileBasename(file: string): string
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `file` | Yes | `string` | File path |
+| Parameter | Required | Type     | Description |
+| --------- | -------- | -------- | ----------- |
+| `file`    | Yes      | `string` | File path   |
 
 **Returns:** Filename without extension.
 
@@ -241,9 +237,9 @@ fileSystem.fileDirname(file: string): string
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `file` | Yes | `string` | File path |
+| Parameter | Required | Type     | Description |
+| --------- | -------- | -------- | ----------- |
+| `file`    | Yes      | `string` | File path   |
 
 **Returns:** Directory path.
 
@@ -264,9 +260,9 @@ await fileSystem.ensureDirectoryExists(dir: string): Promise<boolean>
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `dir` | Yes | `string` | Directory path to create |
+| Parameter | Required | Type     | Description              |
+| --------- | -------- | -------- | ------------------------ |
+| `dir`     | Yes      | `string` | Directory path to create |
 
 **Returns:** Promise resolving to `true` (always succeeds or throws).
 
@@ -287,9 +283,9 @@ await fileSystem.isDirectory(dir: string): Promise<boolean>
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `dir` | Yes | `string` | Path to check |
+| Parameter | Required | Type     | Description   |
+| --------- | -------- | -------- | ------------- |
+| `dir`     | Yes      | `string` | Path to check |
 
 **Returns:** Promise resolving to `true` if path is a directory, `false` otherwise.
 
@@ -311,10 +307,10 @@ await fileSystem.directoryCopy(from: string, to: string): Promise<boolean>
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `from` | Yes | `string` | Source directory path |
-| `to` | Yes | `string` | Destination directory path |
+| Parameter | Required | Type     | Description                |
+| --------- | -------- | -------- | -------------------------- |
+| `from`    | Yes      | `string` | Source directory path      |
+| `to`      | Yes      | `string` | Destination directory path |
 
 **Returns:** Promise resolving to `true` if all files were copied successfully, `false` otherwise.
 
@@ -338,9 +334,9 @@ const finder = new NodeFileFinder(['src/**/*.css', 'components/**/*.js'])
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `globs` | No | `string[]` | Array of glob patterns. Default: `[]` |
+| Parameter | Required | Type       | Description                           |
+| --------- | -------- | ---------- | ------------------------------------- |
+| `globs`   | No       | `string[]` | Array of glob patterns. Default: `[]` |
 
 ### Properties
 
@@ -372,9 +368,9 @@ await finder.search(onFound: (file: string) => Promise<void> | void): Promise<vo
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `onFound` | Yes | `(file: string) => Promise<void> \| void` | Callback called for each matching file with absolute path |
+| Parameter | Required | Type                                      | Description                                               |
+| --------- | -------- | ----------------------------------------- | --------------------------------------------------------- |
+| `onFound` | Yes      | `(file: string) => Promise<void> \| void` | Callback called for each matching file with absolute path |
 
 **Example:**
 
@@ -397,9 +393,9 @@ finder.matches(file: string): boolean
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `file` | Yes | `string` | File path to test |
+| Parameter | Required | Type     | Description       |
+| --------- | -------- | -------- | ----------------- |
+| `file`    | Yes      | `string` | File path to test |
 
 **Returns:** `true` if the file matches any pattern, `false` otherwise.
 
@@ -427,9 +423,9 @@ const assetLoader = new NodeAssetLoader(fileSystem)
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `fileSystem` | Yes | `FileSystem` | File system instance to use for operations |
+| Parameter    | Required | Type         | Description                                |
+| ------------ | -------- | ------------ | ------------------------------------------ |
+| `fileSystem` | Yes      | `FileSystem` | File system instance to use for operations |
 
 ### Methods
 
@@ -443,9 +439,9 @@ await assetLoader.packageExists(packageName: string): Promise<boolean>
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `packageName` | Yes | `string` | npm package name |
+| Parameter     | Required | Type     | Description      |
+| ------------- | -------- | -------- | ---------------- |
+| `packageName` | Yes      | `string` | npm package name |
 
 **Returns:** Promise resolving to `true` if package exists, `false` otherwise.
 
@@ -467,9 +463,9 @@ await assetLoader.packagePath(packageName: string): Promise<string | undefined>
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `packageName` | Yes | `string` | npm package name |
+| Parameter     | Required | Type     | Description      |
+| ------------- | -------- | -------- | ---------------- |
+| `packageName` | Yes      | `string` | npm package name |
 
 **Returns:** Promise resolving to absolute path, or `undefined` if package not found.
 
@@ -490,9 +486,9 @@ await assetLoader.resolve(file: string): Promise<string | undefined>
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `file` | Yes | `string` | Package path (e.g., `@package/name/file.css`) or module specifier |
+| Parameter | Required | Type     | Description                                                       |
+| --------- | -------- | -------- | ----------------------------------------------------------------- |
+| `file`    | Yes      | `string` | Package path (e.g., `@package/name/file.css`) or module specifier |
 
 **Returns:** Promise resolving to absolute path, or `undefined` if file cannot be resolved.
 
@@ -513,9 +509,9 @@ await assetLoader.read(file: string): Promise<string>
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `file` | Yes | `string` | Package path (e.g., `@package/name/file.css`) |
+| Parameter | Required | Type     | Description                                   |
+| --------- | -------- | -------- | --------------------------------------------- |
+| `file`    | Yes      | `string` | Package path (e.g., `@package/name/file.css`) |
 
 **Returns:** Promise resolving to file content as UTF-8 string.
 
@@ -537,25 +533,19 @@ await assetLoader.copy(from: string, to: string): Promise<void>
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `from` | Yes | `string` | Package path (e.g., `@package/name/file.css`) |
-| `to` | Yes | `string` | Destination file path |
+| Parameter | Required | Type     | Description                                   |
+| --------- | -------- | -------- | --------------------------------------------- |
+| `from`    | Yes      | `string` | Package path (e.g., `@package/name/file.css`) |
+| `to`      | Yes      | `string` | Destination file path                         |
 
 **Throws:** Error if the source file cannot be resolved.
 
 **Example:**
 
 ```js
-await assetLoader.copy(
-  '@ui-doc/html-renderer/ui-doc.min.css',
-  './dist/ui-doc.css',
-)
+await assetLoader.copy('@ui-doc/html-renderer/ui-doc.min.css', './dist/ui-doc.css')
 
-await assetLoader.copy(
-  '@highlightjs/cdn-assets/highlight.min.js',
-  './dist/highlight.js',
-)
+await assetLoader.copy('@highlightjs/cdn-assets/highlight.min.js', './dist/highlight.js')
 ```
 
 ## Complete example
@@ -609,10 +599,7 @@ async function generateDocs() {
     '@highlightjs/cdn-assets/styles/default.min.css',
     `${outputDir}/highlight.css`,
   )
-  await assetLoader.copy(
-    '@highlightjs/cdn-assets/highlight.min.js',
-    `${outputDir}/highlight.js`,
-  )
+  await assetLoader.copy('@highlightjs/cdn-assets/highlight.min.js', `${outputDir}/highlight.js`)
 }
 
 generateDocs()
@@ -622,13 +609,13 @@ generateDocs()
 
 NodeFileFinder uses picomatch for glob pattern matching. Here are common patterns:
 
-| Pattern | Description | Example Matches |
-|---------|-------------|-----------------|
-| `src/*.css` | Files in directory (non-recursive) | `src/styles.css`, `src/theme.css` |
-| `src/**/*.css` | Files in directory and subdirectories | `src/styles.css`, `src/components/button.css` |
-| `**/*.{css,scss}` | Multiple file extensions | `file.css`, `dir/file.scss` |
-| `src/**/*.css` | Multiple directories | Searches in `src/`, `styles/`, `theme/` |
-| `!**/*.test.css` | Exclude pattern | Excludes files ending in `.test.css` |
+| Pattern           | Description                           | Example Matches                               |
+| ----------------- | ------------------------------------- | --------------------------------------------- |
+| `src/*.css`       | Files in directory (non-recursive)    | `src/styles.css`, `src/theme.css`             |
+| `src/**/*.css`    | Files in directory and subdirectories | `src/styles.css`, `src/components/button.css` |
+| `**/*.{css,scss}` | Multiple file extensions              | `file.css`, `dir/file.scss`                   |
+| `src/**/*.css`    | Multiple directories                  | Searches in `src/`, `styles/`, `theme/`       |
+| `!**/*.test.css`  | Exclude pattern                       | Excludes files ending in `.test.css`          |
 
 **Example:**
 
@@ -645,37 +632,37 @@ const finder = fileSystem.createFileFinder([
 
 ### NodeFileSystem methods
 
-| Method | Returns | Description |
-|--------|---------|-------------|
-| `createFileFinder(globs)` | `NodeFileFinder` | Create file finder with glob patterns |
-| `assetLoader()` | `NodeAssetLoader` | Get asset loader instance |
-| `resolve(file)` | `string` | Resolve path to absolute |
-| `fileRead(file)` | `Promise<string>` | Read file content |
-| `fileWrite(file, content)` | `Promise<boolean>` | Write content to file |
-| `fileCopy(from, to)` | `Promise<boolean>` | Copy file |
-| `fileExists(file)` | `Promise<boolean>` | Check if file exists |
-| `fileBasename(file)` | `string` | Get filename without extension |
-| `fileDirname(file)` | `string` | Get directory path |
-| `ensureDirectoryExists(dir)` | `Promise<boolean>` | Create directory if needed |
-| `isDirectory(dir)` | `Promise<boolean>` | Check if path is directory |
-| `directoryCopy(from, to)` | `Promise<boolean>` | Copy directory recursively |
+| Method                       | Returns            | Description                           |
+| ---------------------------- | ------------------ | ------------------------------------- |
+| `createFileFinder(globs)`    | `NodeFileFinder`   | Create file finder with glob patterns |
+| `assetLoader()`              | `NodeAssetLoader`  | Get asset loader instance             |
+| `resolve(file)`              | `string`           | Resolve path to absolute              |
+| `fileRead(file)`             | `Promise<string>`  | Read file content                     |
+| `fileWrite(file, content)`   | `Promise<boolean>` | Write content to file                 |
+| `fileCopy(from, to)`         | `Promise<boolean>` | Copy file                             |
+| `fileExists(file)`           | `Promise<boolean>` | Check if file exists                  |
+| `fileBasename(file)`         | `string`           | Get filename without extension        |
+| `fileDirname(file)`          | `string`           | Get directory path                    |
+| `ensureDirectoryExists(dir)` | `Promise<boolean>` | Create directory if needed            |
+| `isDirectory(dir)`           | `Promise<boolean>` | Check if path is directory            |
+| `directoryCopy(from, to)`    | `Promise<boolean>` | Copy directory recursively            |
 
 ### NodeFileFinder methods
 
-| Method | Returns | Description |
-|--------|---------|-------------|
-| `search(onFound)` | `Promise<void>` | Find all matching files |
-| `matches(file)` | `boolean` | Check if file matches patterns |
+| Method            | Returns         | Description                    |
+| ----------------- | --------------- | ------------------------------ |
+| `search(onFound)` | `Promise<void>` | Find all matching files        |
+| `matches(file)`   | `boolean`       | Check if file matches patterns |
 
 ### NodeAssetLoader methods
 
-| Method | Returns | Description |
-|--------|---------|-------------|
-| `packageExists(packageName)` | `Promise<boolean>` | Check if package is installed |
-| `packagePath(packageName)` | `Promise<string \| undefined>` | Get package directory path |
-| `resolve(file)` | `Promise<string \| undefined>` | Resolve module/package file path |
-| `read(file)` | `Promise<string>` | Read file from package |
-| `copy(from, to)` | `Promise<void>` | Copy asset from package |
+| Method                       | Returns                        | Description                      |
+| ---------------------------- | ------------------------------ | -------------------------------- |
+| `packageExists(packageName)` | `Promise<boolean>`             | Check if package is installed    |
+| `packagePath(packageName)`   | `Promise<string \| undefined>` | Get package directory path       |
+| `resolve(file)`              | `Promise<string \| undefined>` | Resolve module/package file path |
+| `read(file)`                 | `Promise<string>`              | Read file from package           |
+| `copy(from, to)`             | `Promise<void>`                | Copy asset from package          |
 
 ## See also
 

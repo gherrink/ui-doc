@@ -1,9 +1,11 @@
 import { builtinModules } from 'node:module'
+
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
 import swc from '@rollup/plugin-swc'
 import terser from '@rollup/plugin-terser'
+
 import { cssAssets } from './rollup-plugin-css.mjs'
 
 /** Extensions node-resolve must try, now that no plugin resolves .ts implicitly. */
@@ -56,7 +58,8 @@ export function configTs({ pkg, external = [] }) {
         format: 'cjs',
         file: pkg.main,
         exports: 'named',
-        footer: 'if (exports.default) { module.exports = Object.assign(exports.default, exports); }',
+        footer:
+          'if (exports.default) { module.exports = Object.assign(exports.default, exports); }',
         sourcemap: true,
       },
       {
@@ -65,12 +68,7 @@ export function configTs({ pkg, external = [] }) {
         sourcemap: true,
       },
     ],
-    plugins: [
-      json(),
-      resolve({ extensions: EXTENSIONS }),
-      commonjs(),
-      transpile('es2022'),
-    ],
+    plugins: [json(), resolve({ extensions: EXTENSIONS }), commonjs(), transpile('es2022')],
   }
 }
 
@@ -122,9 +120,6 @@ export function configTsWeb({ external, input, styles }) {
     //
     // node-resolve is required here: @rollup/plugin-typescript used to resolve
     // the relative .ts imports in scripts/, and nothing else does.
-    plugins: [
-      resolve({ extensions: EXTENSIONS }),
-      transpile('es2015'),
-    ],
+    plugins: [resolve({ extensions: EXTENSIONS }), transpile('es2015')],
   }
 }

@@ -1,7 +1,7 @@
+import { TagNodeError } from '../../errors'
 import type { TagNodeParse } from '../../Parser.types'
 import type { RenderContext, Renderer } from '../../Renderer.types'
 import type { TokenValue } from '../../Token.types'
-import { TagNodeError } from '../../errors'
 import { readNestedValue } from '../../utils'
 import { TagNode } from '../TagNode'
 
@@ -18,8 +18,8 @@ export class TagForNode extends TagNode {
   }
 
   public render(context: RenderContext, renderer: Renderer): string {
-    const contextNew
-      = this.contextKey === 'this' ? context : readNestedValue(this.contextKey, context)
+    const contextNew =
+      this.contextKey === 'this' ? context : readNestedValue(this.contextKey, context)
 
     if (Array.isArray(contextNew)) {
       return this.renderArray(contextNew, context, renderer)

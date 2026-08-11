@@ -152,8 +152,8 @@ describe('lexer', () => {
     expect(lexer.consume()).toStrictEqual({ type: 'tag-close' })
   })
 
-  it('consume conditional-tag identifier === string(\')', () => {
-    const reader = new InlineReader('{{ if foo === \'bar\' }}')
+  it("consume conditional-tag identifier === string(')", () => {
+    const reader = new InlineReader("{{ if foo === 'bar' }}")
     const lexer = new HtmlCurlyBraceLexer(reader)
 
     expect(lexer.consume()).toStrictEqual({ type: 'tag-open' })

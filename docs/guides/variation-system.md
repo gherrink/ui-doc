@@ -72,22 +72,22 @@ The `@variations` tag specifies which variations should be applied to a componen
 
 **Pattern matching:**
 
-| Pattern | Matches | Example |
-|---------|---------|---------|
-| `bg` | All variations starting with `bg.` | `bg.light`, `bg.dark`, `bg.subtle` |
-| `bg.light` | Exact match only | `bg.light` |
-| `*` | All defined variations | Everything |
-| `bg, theme` | Multiple groups | All `bg.*` and `theme.*` variations |
-| Empty or no tag | All variations | Same as `*` |
+| Pattern         | Matches                            | Example                             |
+| --------------- | ---------------------------------- | ----------------------------------- |
+| `bg`            | All variations starting with `bg.` | `bg.light`, `bg.dark`, `bg.subtle`  |
+| `bg.light`      | Exact match only                   | `bg.light`                          |
+| `*`             | All defined variations             | Everything                          |
+| `bg, theme`     | Multiple groups                    | All `bg.*` and `theme.*` variations |
+| Empty or no tag | All variations                     | Same as `*`                         |
 
 **Exclusion patterns:**
 
 You can exclude specific variations using the `-` prefix:
 
-| Pattern | Result |
-|---------|--------|
-| `bg, -bg.dark` | All `bg.*` except `bg.dark` |
-| `*, -bg.dark` | All variations except `bg.dark` |
+| Pattern                  | Result                          |
+| ------------------------ | ------------------------------- |
+| `bg, -bg.dark`           | All `bg.*` except `bg.dark`     |
+| `*, -bg.dark`            | All variations except `bg.dark` |
 | `-bg.dark, -theme.muted` | All variations except these two |
 
 ### Creating showcases with `@showcase`
@@ -330,7 +330,7 @@ Create multiple showcases with different variation subsets:
 @variations bg.light
 
 /* Shows in all bg.* variations */
-@variations bg
+@variations bg;
 ```
 
 ### Missing `{{content}}` placeholder
@@ -379,7 +379,7 @@ Create multiple showcases with different variation subsets:
 @variation bg.light Light Background
 
 /* Reference as bg.light (lowercase) */
-@variations bg.light
+@variations bg.light;
 ```
 
 ## Related documentation

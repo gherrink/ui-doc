@@ -15,11 +15,13 @@ Transform documentation requests into accurate, well-structured documentation th
 ## Input Format
 
 You will receive:
+
 1. **Topic**: What to document (e.g., "vite", "custom-templates", "doc-blocks")
 2. **Document Types**: One or more types to generate
 3. **Output Paths**: Where to save each document
 
 Example input:
+
 ```
 Topic: custom-templates
 Documents:
@@ -41,14 +43,15 @@ Documents:
 
 Gather all relevant information before writing any documents:
 
-| Information Source | What to Look For |
-|-------------------|------------------|
-| `packages/*/README.md` | API usage, configuration options |
-| `demos/` | Real-world examples, patterns |
-| `packages/*/src/*.ts` | Type definitions, method signatures |
-| `docs/` (existing) | Related documentation to cross-reference |
+| Information Source     | What to Look For                         |
+| ---------------------- | ---------------------------------------- |
+| `packages/*/README.md` | API usage, configuration options         |
+| `demos/`               | Real-world examples, patterns            |
+| `packages/*/src/*.ts`  | Type definitions, method signatures      |
+| `docs/` (existing)     | Related documentation to cross-reference |
 
 Research commands:
+
 ```bash
 # Find relevant package files
 Glob: packages/**/README.md
@@ -66,15 +69,15 @@ Glob: docs/**/*.md
 
 Map document types to templates from your documentation-guide skill:
 
-| Document Type | Template | Output Directory |
-|---------------|----------|------------------|
-| `getting-started` | references/templates/getting-started.md | `docs/getting-started/` |
-| `tutorial` | references/templates/tutorial.md | `docs/tutorials/` |
-| `how-to` | references/templates/how-to-guide.md | `docs/how-to/` |
-| `api-reference` | references/templates/api-reference.md | `docs/reference/` |
-| `conceptual` | references/templates/conceptual-guide.md | `docs/concepts/` |
-| `troubleshooting` | references/templates/troubleshooting.md | `docs/troubleshooting/` |
-| `contributing` | references/templates/contributing.md | `docs/contributing/` |
+| Document Type     | Template                                 | Output Directory        |
+| ----------------- | ---------------------------------------- | ----------------------- |
+| `getting-started` | references/templates/getting-started.md  | `docs/getting-started/` |
+| `tutorial`        | references/templates/tutorial.md         | `docs/tutorials/`       |
+| `how-to`          | references/templates/how-to-guide.md     | `docs/how-to/`          |
+| `api-reference`   | references/templates/api-reference.md    | `docs/reference/`       |
+| `conceptual`      | references/templates/conceptual-guide.md | `docs/concepts/`        |
+| `troubleshooting` | references/templates/troubleshooting.md  | `docs/troubleshooting/` |
+| `contributing`    | references/templates/contributing.md     | `docs/contributing/`    |
 
 ### 3. Write Each Document
 
@@ -100,36 +103,43 @@ When writing multiple related documents, add links between them:
 ## Document Type Guidelines
 
 ### Getting Started
+
 - Target: New users with no prior UI-Doc experience
 - Focus: Minimal working example, not comprehensive coverage
 - Include: Installation, first doc block, viewing output
 
 ### Tutorial
+
 - Target: Users learning a complete workflow
 - Focus: Teaching concepts through a guided project
 - Include: Full example from start to finish, explanations of "why"
 
 ### How-To Guide
+
 - Target: Users who know the basics, need to do a specific task
 - Focus: Task completion, not teaching
 - Include: Prerequisites, step-by-step instructions, expected result
 
 ### API Reference
+
 - Target: Users who need technical details
 - Focus: Complete, accurate specification
 - Include: All options, types, defaults, edge cases
 
 ### Conceptual Guide
+
 - Target: Users wanting to understand how things work
 - Focus: Explanation, not instruction
 - Include: Architecture, design decisions, mental models
 
 ### Troubleshooting
+
 - Target: Users experiencing problems
 - Focus: Quick problem identification and resolution
 - Include: Symptoms, causes, solutions, prevention
 
 ### Contributing
+
 - Target: Project contributors
 - Focus: Development workflows and processes
 - Include: Workflows, best practices, commands, cross-references to CONTRIBUTING.md
@@ -144,6 +154,7 @@ All code examples must be:
 4. **Tested** — Verify against demos or package tests
 
 Good example:
+
 ```css
 /**
  * Primary action button with brand colors.
@@ -159,6 +170,7 @@ Good example:
 ```
 
 Bad example (incomplete):
+
 ```css
 /* @example <button>Click</button> */
 .btn { ... }

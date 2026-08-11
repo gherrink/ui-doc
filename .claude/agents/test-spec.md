@@ -24,18 +24,21 @@ Analyze the provided source file and generate a comprehensive test specification
 
 Generate a Markdown document with this exact structure:
 
-```markdown
+````markdown
 # Test Specification: [FileName]
 
 ## Overview
+
 [1-2 sentence description of what this code does]
 
 ## Module Information
+
 - **File**: `path/to/file.ts`
 - **Test File**: `packages/<pkg>/tests/<name>.test.ts`
 - **Package**: `@ui-doc/<package>`
 
 ## Dependencies to Mock
+
 [List each dependency that needs mocking with its interface]
 
 - `DependencyName`:
@@ -51,6 +54,7 @@ Generate a Markdown document with this exact structure:
 **Behavior**: [Detailed description of what it does]
 
 **Parameters**:
+
 - `param1`: [description and valid values]
 - `param2`: [description and valid values]
 
@@ -63,19 +67,24 @@ Generate a Markdown document with this exact structure:
 **Category**: [Happy Path | Edge Case | Error Handling | State Management]
 
 **Setup**:
+
 - [Required mock setup]
 - [Initial state if any]
 
 **Input**:
+
 ```typescript
 // Exact input values to use
 ```
+````
 
 **Expected Behavior**:
+
 - [Specific assertion 1]
 - [Specific assertion 2]
 
 **Expected Output**:
+
 ```typescript
 // Exact expected output/return value
 ```
@@ -83,6 +92,7 @@ Generate a Markdown document with this exact structure:
 ---
 
 ### Scenario: [Next Scenario Name]
+
 [... repeat for each scenario ...]
 
 ## Error Conditions
@@ -99,9 +109,9 @@ Generate a Markdown document with this exact structure:
 
 [For stateful classes, document state changes]
 
-| Initial State | Action | Final State |
-|---------------|--------|-------------|
-| [state] | [method call] | [new state] |
+| Initial State | Action        | Final State |
+| ------------- | ------------- | ----------- |
+| [state]       | [method call] | [new state] |
 
 ## Mock Verification Requirements
 
@@ -113,7 +123,8 @@ Generate a Markdown document with this exact structure:
 ## Notes for Test Writer
 
 [Any additional context that would help write better tests]
-```
+
+````
 
 ## Guidelines
 
@@ -143,17 +154,20 @@ Generate a Markdown document with this exact structure:
 const input = `/**
  * @title Button Component
  */`
-```
+````
 
 **Expected Behavior**:
+
 - Should return array with exactly 1 block
 - Block should have `title` property set to "Button Component"
 
 **Expected Output**:
+
 ```typescript
-[{ title: 'Button Component' }]
+;[{ title: 'Button Component' }]
 ```
-```
+
+````
 
 ## Example Scenario (Bad - Too Vague)
 
@@ -163,7 +177,7 @@ const input = `/**
 **Input**: Some CSS with a doc block
 
 **Expected**: Should work correctly
-```
+````
 
 ## Important
 
@@ -179,6 +193,7 @@ Your output has two parts:
 ### 1. Write Full Specification to File
 
 Write the complete specification (using the Output Format above) to:
+
 ```
 .claude/specs/{SourceFileName}.spec.md
 ```
@@ -200,16 +215,19 @@ After writing the file, return ONLY a compact summary (not the full spec):
 - **Package**: `@ui-doc/{package}`
 
 ### Coverage
+
 - **Public API**: {N} methods/functions documented
 - **Scenarios**: {N} test scenarios
 - **Categories**: Happy Path ({N}), Edge Cases ({N}), Error Handling ({N})
 
 ### Key Areas
+
 - {area 1}
 - {area 2}
 - {area 3}
 
 ### Notes
+
 - {any important notes for the test writer}
 ```
 

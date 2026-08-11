@@ -72,9 +72,7 @@ const fileSystem = new NodeFileSystem()
 const renderer = new HtmlRenderer(NodeParser.init())
 
 // Load built-in templates
-const templatePath = await fileSystem.assetLoader().packagePath(
-  TemplateLoader.TEMPLATES_PACKAGE,
-)
+const templatePath = await fileSystem.assetLoader().packagePath(TemplateLoader.TEMPLATES_PACKAGE)
 await TemplateLoader.load({ renderer, fileSystem, templatePath })
 
 // Create UI-Doc instance
@@ -119,7 +117,7 @@ Render content conditionally:
 
 ```html
 {{if:showContent}}
-  <p>This is visible when showContent is truthy</p>
+<p>This is visible when showContent is truthy</p>
 {{/if}}
 ```
 
@@ -127,11 +125,9 @@ Supported comparison operators: `===`, `==`, `!==`, `!=`, `<`, `<=`, `>`, `>=`
 
 ```html
 {{if:status === "active"}}
-  <span>Active</span>
-{{/if}}
-
-{{if:count > 5}}
-  <span>More than 5 items</span>
+<span>Active</span>
+{{/if}} {{if:count > 5}}
+<span>More than 5 items</span>
 {{/if}}
 ```
 
@@ -143,7 +139,7 @@ Supported comparison operators: `===`, `==`, `!==`, `!=`, `<`, `<=`, `>`, `>=`
 <!-- Context: {"items": ["apple", "banana", "cherry"]} -->
 <ul>
   {{for:items}}
-    <li>{{var:_loop.value}} (index: {{var:_loop.index}})</li>
+  <li>{{var:_loop.value}} (index: {{var:_loop.index}})</li>
   {{/for}}
 </ul>
 
@@ -161,7 +157,7 @@ Supported comparison operators: `===`, `==`, `!==`, `!=`, `<`, `<=`, `>`, `>=`
 <!-- Context: {"colors": {"red": "#f00", "green": "#0f0", "blue": "#00f"}} -->
 <ul>
   {{for:colors}}
-    <li>{{var:_loop.key}}: {{var:_loop.value}}</li>
+  <li>{{var:_loop.key}}: {{var:_loop.value}}</li>
   {{/for}}
 </ul>
 
@@ -178,10 +174,10 @@ Supported comparison operators: `===`, `==`, `!==`, `!=`, `<`, `<=`, `>`, `>=`
 ```html
 <!-- Context: {"sections": [{"title": "Intro", "content": "..."}, {"title": "Details", "content": "..."}]} -->
 {{for:sections}}
-  <section>
-    <h2>{{var:title}}</h2>
-    <div>{{var:content}}</div>
-  </section>
+<section>
+  <h2>{{var:title}}</h2>
+  <div>{{var:content}}</div>
+</section>
 {{/for}}
 ```
 
@@ -335,9 +331,7 @@ my-templates/
 The package includes ready-to-use templates:
 
 ```ts
-const templatePath = await fileSystem.assetLoader().packagePath(
-  TemplateLoader.TEMPLATES_PACKAGE,
-)
+const templatePath = await fileSystem.assetLoader().packagePath(TemplateLoader.TEMPLATES_PACKAGE)
 await TemplateLoader.load({ renderer, fileSystem, templatePath })
 ```
 
@@ -370,14 +364,8 @@ The package provides pre-built CSS and JavaScript for documentation styling.
 ```ts
 const assetLoader = fileSystem.assetLoader()
 
-await assetLoader.copy(
-  '@ui-doc/html-renderer/ui-doc.min.css',
-  './dist/ui-doc.css',
-)
-await assetLoader.copy(
-  '@ui-doc/html-renderer/ui-doc.min.js',
-  './dist/ui-doc.js',
-)
+await assetLoader.copy('@ui-doc/html-renderer/ui-doc.min.css', './dist/ui-doc.css')
+await assetLoader.copy('@ui-doc/html-renderer/ui-doc.min.js', './dist/ui-doc.js')
 ```
 
 ### Syntax Highlighting
@@ -385,14 +373,8 @@ await assetLoader.copy(
 The built-in templates use highlight.js for code syntax highlighting. Include it in your output:
 
 ```ts
-await assetLoader.copy(
-  '@highlightjs/cdn-assets/styles/default.min.css',
-  './dist/highlight.css',
-)
-await assetLoader.copy(
-  '@highlightjs/cdn-assets/highlight.min.js',
-  './dist/highlight.js',
-)
+await assetLoader.copy('@highlightjs/cdn-assets/styles/default.min.css', './dist/highlight.css')
+await assetLoader.copy('@highlightjs/cdn-assets/highlight.min.js', './dist/highlight.js')
 ```
 
 ## API Reference
@@ -618,9 +600,7 @@ You can create custom templates to match your design requirements.
       <nav>{{partial:main-nav}}</nav>
     </header>
 
-    <main class="site-content">
-      {{page:page.id page}}
-    </main>
+    <main class="site-content">{{page:page.id page}}</main>
 
     <footer class="site-footer">
       <p>&copy; 2024 {{var:name}}</p>
@@ -639,16 +619,12 @@ You can create custom templates to match your design requirements.
   <header class="page-header">
     <h1>{{var:title}}</h1>
     {{if:description}}
-      <div class="page-description">{{var:description}}</div>
+    <div class="page-description">{{var:description}}</div>
     {{/if}}
   </header>
 
   {{if:sections}}
-    <div class="page-sections">
-      {{for:sections}}
-        {{partial:custom-section}}
-      {{/for}}
-    </div>
+  <div class="page-sections">{{for:sections}} {{partial:custom-section}} {{/for}}</div>
   {{/if}}
 </article>
 ```
