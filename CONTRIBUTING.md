@@ -10,7 +10,7 @@ Before contributing, please check the [issue tracker](https://github.com/gherrin
 
 - [mise](https://mise.jdx.dev/getting-started.html), which manages the toolchain for this repository
 
-The toolchain is pinned in `mise.toml` (Node 24, pnpm 11). The exact pnpm version
+The toolchain is pinned in `mise.toml` (Node 24, pnpm 11); TypeScript is 7.x. The exact pnpm version
 lives in the `packageManager` field of `package.json`; pnpm self-manages to it.
 
 If you would rather not use mise, install Node 24 and pnpm 11 yourself.
@@ -241,23 +241,29 @@ See the [Release Process Guide](./docs/contributing/release-process.md) for work
 
 Things that are easy to trip over and hard to infer from the code.
 
-### TypeScript stays on 5.x
+### TypeScript 7 has no compiler API
 
-TypeScript 7 is the native port, and it ships no JavaScript compiler API — its
-`exports` map exposes only `lib/version.cjs` and a few `unstable/*` entries.
-Two things in this repository depend on that API and therefore block the
-upgrade:
+TypeScript 7 is the native port and ships no JavaScript compiler API — its
+`exports` map exposes only `lib/version.cjs` and a few `unstable/*` entries,
+and `require('typescript')` yields an object with two keys. Anything that
+drove the compiler programmatically had to go before the upgrade could happen:
 
-- `@rollup/plugin-typescript` calls `ts.createProgram`, `ts.createWatchProgram`
-  and `ts.sys`. It cannot run on TypeScript 7 at all, so the build needs a
-  different compiler step first.
+- `@rollup/plugin-typescript` called `ts.createProgram`, `ts.createWatchProgram`
+  and `ts.sys`. The build now transpiles with swc and emits declarations with a
+  separate `tsc --emitDeclarationOnly` pass.
 - `typescript-eslint` capped its peer at `<6.1.0` and declined to support
-  TypeScript 7 until the API stabilises in 7.1. This is why the repository
-  moved to `oxlint` with `oxlint-tsgolint`, which keeps type-aware linting
-  without needing the TypeScript compiler API.
+  TypeScript 7 until the API stabilises in 7.1. The linter is now `oxlint` with
+  `oxlint-tsgolint`, which carries its own typescript-go build and never
+  touches the compiler API.
 
-Both are now resolved: the build transpiles with swc and emits declarations
-with `tsc`, and the linter no longer touches the compiler API.
+Two consequences to keep in mind when editing tsconfigs:
+
+- **`@types/*` is no longer auto-included.** `types: ["node"]` in
+  `tsconfig.base.json` is load-bearing; without it four of the five packages
+  stop resolving `console`, `node:fs/promises` and `node:path`. `typeRoots`
+  does not substitute for it.
+- **`moduleResolution: "node"` (node10) and `esModuleInterop: false` are
+  removed**, reported as `error TS5108`.
 
 ### marked is ESM-only
 
