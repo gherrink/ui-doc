@@ -2,25 +2,33 @@
   "name": "@ui-doc/rollup",
   "version": "0.6.3",
   "description": "Rollup plugin for UI-Doc generation.",
-  "author": "Maurice Busch",
-  "license": "MIT",
+  "keywords": [
+    "documentation",
+    "generation",
+    "rollup",
+    "rollup-plugin",
+    "styleguide",
+    "ui-doc",
+    "ui-kit"
+  ],
   "homepage": "https://github.com/gherrink/ui-doc/tree/master/packages/rollup#readme",
+  "bugs": "https://github.com/gherrink/ui-doc/issues",
+  "license": "MIT",
+  "author": "Maurice Busch",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gherrink/ui-doc.git",
     "directory": "packages/rollup"
   },
-  "bugs": "https://github.com/gherrink/ui-doc/issues",
-  "keywords": [
-    "ui-doc",
-    "styleguide",
-    "ui-kit",
-    "documentation",
-    "generation",
-    "rollup",
-    "rollup-plugin"
+  "files": [
+    "LICENSE.md",
+    "README.md",
+    "dist"
   ],
   "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -28,16 +36,8 @@
       "default": "./dist/index.cjs"
     }
   },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "LICENSE.md",
-    "README.md",
-    "dist"
-  ],
-  "engines": {
-    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "pnpm clean && tsc -p tsconfig.json --noEmit false --declaration --emitDeclarationOnly --rootDir src --declarationDir dist && rollup -c",
@@ -47,13 +47,6 @@
     "release:dry": "pnpm --workspace-root package:release-dry $(pwd)",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "peerDependencies": {
-    "@ui-doc/html-renderer": "workspace:^",
-    "rollup": "^4.0.0"
   },
   "dependencies": {
     "@ui-doc/core": "workspace:^",
@@ -66,5 +59,12 @@
     "picomatch": "^4.0.2",
     "rollup": "catalog:",
     "vitest": "catalog:"
+  },
+  "peerDependencies": {
+    "@ui-doc/html-renderer": "workspace:^",
+    "rollup": "^4.0.0"
+  },
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
   }
 }

@@ -21,10 +21,10 @@ Release commits follow the format `chore(release): <package-name> v<version>` an
 
 Versions are determined by conventional commit types:
 
-| Commit Type | Version Bump | Example |
-|-------------|--------------|---------|
-| `fix(core):` | Patch (0.0.x) | Bug fixes |
-| `feat(core):` | Minor (0.x.0) | New features |
+| Commit Type                         | Version Bump  | Example          |
+| ----------------------------------- | ------------- | ---------------- |
+| `fix(core):`                        | Patch (0.0.x) | Bug fixes        |
+| `feat(core):`                       | Minor (0.x.0) | New features     |
 | `feat(core)!:` or `BREAKING CHANGE` | Major (x.0.0) | Breaking changes |
 
 Commits without a package scope (like `docs:` or `chore:`) do not trigger releases.

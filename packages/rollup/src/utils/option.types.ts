@@ -41,7 +41,7 @@ export interface ResolvedOptions {
    * out of `assets`. Reported as warnings from `buildStart`, which is the
    * earliest point with a plugin context.
    */
-  unreadableAssets: { name: string, file: string }[]
+  unreadableAssets: { name: string; file: string }[]
   assetsFromInput: Set<string>
   copyAssets: CopyAssetResolved[]
   staticAssets?: string

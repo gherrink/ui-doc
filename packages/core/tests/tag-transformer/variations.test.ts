@@ -1,7 +1,10 @@
-import type { Block } from '../../src/Block.types'
-
 import { describe, expect, it } from 'vitest'
-import variations, { matchesVariationPattern, parseVariationPatterns } from '../../src/tag-transformers/variations'
+
+import type { Block } from '../../src/Block.types'
+import variations, {
+  matchesVariationPattern,
+  parseVariationPatterns,
+} from '../../src/tag-transformers/variations'
 
 describe('variations tag transformer', () => {
   describe('parseVariationPatterns', () => {

@@ -111,7 +111,7 @@ Add this to `src/components/button.css`:
  * <button class="btn btn-primary" aria-disabled="true">Cannot Save</button>
  */
 .btn-primary:disabled,
-.btn-primary[aria-disabled="true"] {
+.btn-primary[aria-disabled='true'] {
   background: #cccccc;
   color: #666666;
   cursor: not-allowed;
@@ -357,7 +357,7 @@ Here's the complete code from this tutorial:
  * <button class="btn btn-primary" aria-disabled="true">Cannot Save</button>
  */
 .btn-primary:disabled,
-.btn-primary[aria-disabled="true"] {
+.btn-primary[aria-disabled='true'] {
   background: #cccccc;
   color: #666666;
   cursor: not-allowed;

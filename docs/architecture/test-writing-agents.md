@@ -4,7 +4,7 @@ This document describes the architecture of the automated test generation system
 
 ## Overview
 
-The test writing system uses a **pipeline architecture** that separates concerns between analysis and implementation. The core principle: the test writer agent receives only behavioral specifications, never implementation code — ensuring tests focus on *what* code should do, not *how* it does it.
+The test writing system uses a **pipeline architecture** that separates concerns between analysis and implementation. The core principle: the test writer agent receives only behavioral specifications, never implementation code — ensuring tests focus on _what_ code should do, not _how_ it does it.
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
@@ -77,12 +77,12 @@ The entry point for users. Orchestrates the entire pipeline.
 
 Analyzes source code and produces structured test specifications.
 
-| Property | Value |
-|----------|-------|
-| Model | Sonnet |
-| Tools | Read, Grep, Glob |
-| Input | Source file path |
-| Output | Markdown specification |
+| Property | Value                  |
+| -------- | ---------------------- |
+| Model    | Sonnet                 |
+| Tools    | Read, Grep, Glob       |
+| Input    | Source file path       |
+| Output   | Markdown specification |
 
 **Output Format:**
 
@@ -90,24 +90,31 @@ Analyzes source code and produces structured test specifications.
 # Test Specification: [FileName]
 
 ## Overview
+
 [What the code does]
 
 ## Module Information
+
 - File, test path, package
 
 ## Dependencies to Mock
+
 [Interfaces and methods requiring mocks]
 
 ## Public API
+
 [Functions, classes, methods with signatures]
 
 ## Test Scenarios
+
 [Detailed scenarios with exact inputs/outputs]
 
 ## Error Conditions
+
 [Error triggers and expected behavior]
 
 ## Mock Verification Requirements
+
 [Expected mock call assertions]
 ```
 
@@ -117,13 +124,13 @@ Analyzes source code and produces structured test specifications.
 
 Transforms specifications into Vitest test files.
 
-| Property | Value |
-|----------|-------|
-| Model | Sonnet |
-| Tools | Read, Write, Edit |
-| Skills | vitest-guide |
-| Input | Test specification |
-| Output | `.test.ts` file |
+| Property | Value              |
+| -------- | ------------------ |
+| Model    | Sonnet             |
+| Tools    | Read, Write, Edit  |
+| Skills   | vitest-guide       |
+| Input    | Test specification |
+| Output   | `.test.ts` file    |
 
 **Key Constraint:** This agent NEVER receives source code — only the specification. This ensures:
 
@@ -177,12 +184,12 @@ The specification acts as the **contract** between the spec agent and writer age
 
 ### Information Boundaries
 
-| Information | Spec Agent | Writer Agent |
-|-------------|------------|--------------|
-| Source code | ✅ Full access | ❌ No access |
-| Test specification | ✅ Produces | ✅ Consumes |
-| Existing tests | ✅ Reference | ✅ Preserve |
-| Testing patterns | ❌ Not needed | ✅ Via skill |
+| Information        | Spec Agent     | Writer Agent |
+| ------------------ | -------------- | ------------ |
+| Source code        | ✅ Full access | ❌ No access |
+| Test specification | ✅ Produces    | ✅ Consumes  |
+| Existing tests     | ✅ Reference   | ✅ Preserve  |
+| Testing patterns   | ❌ Not needed  | ✅ Via skill |
 
 ## Design Decisions
 

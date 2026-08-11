@@ -82,7 +82,7 @@ Is this about contributing to the project?
 
 - Each step builds on the previous
 - Show complete code at each stage
-- Explain *why* as well as *how*
+- Explain _why_ as well as _how_
 - Include checkpoints ("Your file should now look like...")
 - Keep to 15-30 minutes of active work
 
@@ -167,16 +167,19 @@ Is this about contributing to the project?
 ### Content Types
 
 **For Tags:**
-| Tag | Role | Syntax | Description |
-|-----|------|--------|-------------|
+
+| Tag      | Role    | Syntax             | Description                 |
+| -------- | ------- | ------------------ | --------------------------- |
 | @example | display | `@example\n<html>` | Shows live preview and code |
 
 **For Options:**
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
+
+| Option | Type       | Default  | Description                    |
+| ------ | ---------- | -------- | ------------------------------ |
 | source | `string[]` | Required | Glob patterns for source files |
 
 **For Functions/Methods:**
+
 ```
 methodName(param1: Type, param2: Type): ReturnType
 ```
@@ -255,20 +258,23 @@ methodName(param1: Type, param2: Type): ReturnType
 
 ### Format Example
 
-```markdown
+````markdown
 ## Documentation not showing in dev server
 
 ### Symptoms
+
 - Browser shows 404 when accessing `/ui-doc/`
 - No UI-Doc output in terminal
 
 ### Causes
+
 1. `output.baseUri` set to `'.'` in dev mode
 2. Source patterns don't match any files
 
 ### Solutions
 
 **If baseUri is misconfigured:**
+
 ```js
 uidoc({
   output: {
@@ -276,9 +282,11 @@ uidoc({
   },
 })
 ```
+````
 
 **If source patterns are wrong:**
 Check that your glob patterns match existing files...
+
 ```
 
 ---
@@ -320,3 +328,4 @@ Check that your glob patterns match existing files...
 - Code review guidelines
 - Testing standards
 - Documentation contribution guide
+```

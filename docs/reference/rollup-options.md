@@ -528,7 +528,7 @@ import uidoc from '@ui-doc/rollup'
 
 export default {
   input: {
-    'app': 'src/index.js',
+    app: 'src/index.js',
     'ui-doc-custom': 'ui-doc/custom.css',
   },
   plugins: [

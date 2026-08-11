@@ -20,18 +20,18 @@ const uidoc = new UIDoc(options)
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `options` | Yes | `Options` | Configuration object (see Options below) |
+| Parameter | Required | Type      | Description                              |
+| --------- | -------- | --------- | ---------------------------------------- |
+| `options` | Yes      | `Options` | Configuration object (see Options below) |
 
 ### Options
 
-| Property | Required | Type | Description |
-|----------|----------|------|-------------|
-| `renderer` | Yes | `Renderer` | The renderer that generates output from context |
-| `blockParser` | No | `BlockParser` | Custom parser for extracting doc blocks. Default: `CommentBlockParser` |
-| `generate` | No | `Partial<GenerateFunctions>` | Functions that generate content for the renderer |
-| `texts` | No | `Partial<Texts>` | Text strings used by default generate functions |
+| Property      | Required | Type                         | Description                                                            |
+| ------------- | -------- | ---------------------------- | ---------------------------------------------------------------------- |
+| `renderer`    | Yes      | `Renderer`                   | The renderer that generates output from context                        |
+| `blockParser` | No       | `BlockParser`                | Custom parser for extracting doc blocks. Default: `CommentBlockParser` |
+| `generate`    | No       | `Partial<GenerateFunctions>` | Functions that generate content for the renderer                       |
+| `texts`       | No       | `Partial<Texts>`             | Text strings used by default generate functions                        |
 
 **Example:**
 
@@ -57,10 +57,10 @@ const uidoc = new UIDoc({
 
 Customizable text strings used throughout the documentation.
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `title` | `string` | `'UI-Doc'` | Title of your documentation site |
-| `copyright` | `string` | `'UI-Doc'` | Copyright text used in footer |
+| Property    | Type     | Default    | Description                      |
+| ----------- | -------- | ---------- | -------------------------------- |
+| `title`     | `string` | `'UI-Doc'` | Title of your documentation site |
+| `copyright` | `string` | `'UI-Doc'` | Copyright text used in footer    |
 
 **Example:**
 
@@ -78,17 +78,17 @@ const uidoc = new UIDoc({
 
 Functions that control how various parts of the documentation are generated.
 
-| Function | Signature | Description |
-|----------|-----------|-------------|
-| `exampleTitle` | `(example: ContextExample) => string` | Generate title for example pages |
-| `footerText` | `() => string` | Generate footer text |
-| `homeLink` | `() => string` | Generate link to homepage |
-| `logo` | `() => string` | Generate logo content (text, HTML, or SVG) |
-| `menu` | `(menu: MenuItem[], pages: Record<string, ContextEntry>) => MenuItem[]` | Create or modify navigation menu |
-| `name` | `() => string` | Generate site name |
-| `pageLink` | `(page: ContextEntry) => string` | Generate link to a page |
-| `pageTitle` | `(page: ContextEntry) => string` | Generate page title |
-| `resolve` | `(uri: string, type: string) => string` | Transform or manipulate URIs |
+| Function       | Signature                                                               | Description                                |
+| -------------- | ----------------------------------------------------------------------- | ------------------------------------------ |
+| `exampleTitle` | `(example: ContextExample) => string`                                   | Generate title for example pages           |
+| `footerText`   | `() => string`                                                          | Generate footer text                       |
+| `homeLink`     | `() => string`                                                          | Generate link to homepage                  |
+| `logo`         | `() => string`                                                          | Generate logo content (text, HTML, or SVG) |
+| `menu`         | `(menu: MenuItem[], pages: Record<string, ContextEntry>) => MenuItem[]` | Create or modify navigation menu           |
+| `name`         | `() => string`                                                          | Generate site name                         |
+| `pageLink`     | `(page: ContextEntry) => string`                                        | Generate link to a page                    |
+| `pageTitle`    | `(page: ContextEntry) => string`                                        | Generate page title                        |
+| `resolve`      | `(uri: string, type: string) => string`                                 | Transform or manipulate URIs               |
 
 **Example:**
 
@@ -122,9 +122,9 @@ uidoc.sourceCreate(file: string, content: string): void
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `file` | `string` | File path identifier |
+| Parameter | Type     | Description           |
+| --------- | -------- | --------------------- |
+| `file`    | `string` | File path identifier  |
 | `content` | `string` | File content to parse |
 
 **Example:**
@@ -148,9 +148,9 @@ uidoc.sourceUpdate(file: string, content: string): void
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `file` | `string` | File path identifier |
+| Parameter | Type     | Description          |
+| --------- | -------- | -------------------- |
+| `file`    | `string` | File path identifier |
 | `content` | `string` | Updated file content |
 
 **Example:**
@@ -171,9 +171,9 @@ uidoc.sourceDelete(file: string): void
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `file` | `string` | File path identifier |
+| Parameter | Type     | Description          |
+| --------- | -------- | -------------------- |
+| `file`    | `string` | File path identifier |
 
 **Example:**
 
@@ -193,9 +193,9 @@ uidoc.sourceExists(file: string): boolean
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `file` | `string` | File path identifier |
+| Parameter | Type     | Description          |
+| --------- | -------- | -------------------- |
+| `file`    | `string` | File path identifier |
 
 **Returns:** `true` if the source exists, `false` otherwise.
 
@@ -219,8 +219,8 @@ await uidoc.output(callback: OutputCallback): Promise<void>
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter  | Type                                                       | Description                 |
+| ---------- | ---------------------------------------------------------- | --------------------------- |
 | `callback` | `(file: string, content: string) => Promise<void> \| void` | Called for each output file |
 
 **Example:**
@@ -245,9 +245,9 @@ uidoc.page(pageId: string): string | null
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `pageId` | `string` | Page identifier |
+| Parameter | Type     | Description     |
+| --------- | -------- | --------------- |
+| `pageId`  | `string` | Page identifier |
 
 **Returns:** Rendered page content as a string, or `null` if the page doesn't exist.
 
@@ -272,8 +272,8 @@ uidoc.example(exampleId: string): string | null
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter   | Type     | Description        |
+| ----------- | -------- | ------------------ |
 | `exampleId` | `string` | Example identifier |
 
 **Returns:** Rendered example content as a string, or `null` if the example doesn't exist.
@@ -335,10 +335,10 @@ uidoc.addAsset(asset: Asset): void
 
 **Parameters:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `asset.type` | `'style' \| 'script'` | Asset type |
-| `asset.src` | `string` | Asset URL or path |
+| Property      | Type                     | Description              |
+| ------------- | ------------------------ | ------------------------ |
+| `asset.type`  | `'style' \| 'script'`    | Asset type               |
+| `asset.src`   | `string`                 | Asset URL or path        |
 | `asset.attrs` | `Record<string, string>` | Optional HTML attributes |
 
 **Example:**
@@ -392,10 +392,10 @@ uidoc.replaceGenerate<K extends keyof GenerateFunctions>(
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `name` | `keyof GenerateFunctions` | Name of the generate function to replace |
-| `callback` | `GenerateFunctions[K]` | New function implementation |
+| Parameter  | Type                      | Description                              |
+| ---------- | ------------------------- | ---------------------------------------- |
+| `name`     | `keyof GenerateFunctions` | Name of the generate function to replace |
+| `callback` | `GenerateFunctions[K]`    | New function implementation              |
 
 **Example:**
 
@@ -416,9 +416,9 @@ uidoc.on(event: string, listener: Function): void
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `event` | `string` | Event name |
+| Parameter  | Type       | Description            |
+| ---------- | ---------- | ---------------------- |
+| `event`    | `string`   | Event name             |
 | `listener` | `Function` | Event handler function |
 
 See [Events](#uidoc-events) for available events.
@@ -435,9 +435,9 @@ uidoc.off(event: string, listener: Function): void
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `event` | `string` | Event name |
+| Parameter  | Type       | Description                      |
+| ---------- | ---------- | -------------------------------- |
+| `event`    | `string`   | Event name                       |
 | `listener` | `Function` | Event handler function to remove |
 
 **Example:**
@@ -466,8 +466,8 @@ const parser = new CommentBlockParser(descriptionParser)
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter           | Type                | Description                   |
+| ------------------- | ------------------- | ----------------------------- |
 | `descriptionParser` | `DescriptionParser` | Parser for block descriptions |
 
 **Example:**
@@ -504,9 +504,9 @@ parser.parse(context: BlockParserContext): Block[]
 
 **Parameters:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `context.content` | `string` | Source file content |
+| Property             | Type     | Description                              |
+| -------------------- | -------- | ---------------------------------------- |
+| `context.content`    | `string` | Source file content                      |
 | `context.identifier` | `string` | File identifier (used in error messages) |
 
 **Returns:** Array of parsed `Block` objects.
@@ -532,10 +532,10 @@ parser.registerTagTransformer(transformer: TagTransformer): CommentBlockParser
 
 **Parameters:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `transformer.name` | `string` | Tag name (without `@`) |
-| `transformer.transform` | `TagTransformFunction` | Transform function |
+| Property                | Type                   | Description            |
+| ----------------------- | ---------------------- | ---------------------- |
+| `transformer.name`      | `string`               | Tag name (without `@`) |
+| `transformer.transform` | `TagTransformFunction` | Transform function     |
 
 **Example:**
 
@@ -586,13 +586,13 @@ parser.off(event: string, listener: Function): void
 
 ### UIDoc Events
 
-| Event | Payload | Description |
-|-------|---------|-------------|
+| Event           | Payload             | Description                                            |
+| --------------- | ------------------- | ------------------------------------------------------ |
 | `context-entry` | `ContextEntryEvent` | Before a context entry is created, updated, or deleted |
-| `source` | `SourceEvent` | Before a source is created, updated, or deleted |
-| `output` | `OutputEvent` | Before complete documentation is output |
-| `page` | `PageEvent` | Before a page is rendered |
-| `example` | `ExampleEvent` | Before an example is rendered |
+| `source`        | `SourceEvent`       | Before a source is created, updated, or deleted        |
+| `output`        | `OutputEvent`       | Before complete documentation is output                |
+| `page`          | `PageEvent`         | Before a page is rendered                              |
+| `example`       | `ExampleEvent`      | Before an example is rendered                          |
 
 #### context-entry
 
@@ -607,7 +607,7 @@ interface ContextEntryEvent {
   type: 'create' | 'update' | 'delete'
   changes?: {
     deleted: string[]
-    updated: Record<string, { from: unknown, to: unknown }>
+    updated: Record<string, { from: unknown; to: unknown }>
   }
 }
 ```
@@ -661,9 +661,7 @@ interface OutputEvent {
 
 ```js
 uidoc.on('output', ({ promises, write }) => {
-  promises.push(
-    write('custom.json', JSON.stringify(uidoc.entries())),
-  )
+  promises.push(write('custom.json', JSON.stringify(uidoc.entries())))
 })
 ```
 
@@ -711,8 +709,8 @@ uidoc.on('example', ({ example }) => {
 
 ### CommentBlockParser Events
 
-| Event | Payload | Description |
-|-------|---------|-------------|
+| Event    | Payload | Description             |
+| -------- | ------- | ----------------------- |
 | `parsed` | `Block` | After a block is parsed |
 
 **Example:**
@@ -901,31 +899,31 @@ The `spec` parameter contains parsed tag data from `comment-parser`:
 
 ### UIDoc Methods
 
-| Method | Description |
-|--------|-------------|
-| `sourceCreate(file, content)` | Add a source file |
-| `sourceUpdate(file, content)` | Update a source file |
-| `sourceDelete(file)` | Remove a source file |
-| `sourceExists(file)` | Check if source exists |
-| `output(callback)` | Generate all output files |
-| `page(pageId)` | Get rendered page content |
-| `example(exampleId)` | Get rendered example content |
-| `pages()` | Get all pages |
-| `entries()` | Get all entries |
-| `addAsset(asset)` | Add page asset |
-| `addExampleAsset(asset)` | Add example asset |
-| `replaceGenerate(name, fn)` | Replace generate function |
-| `on(event, listener)` | Add event listener |
-| `off(event, listener)` | Remove event listener |
+| Method                        | Description                  |
+| ----------------------------- | ---------------------------- |
+| `sourceCreate(file, content)` | Add a source file            |
+| `sourceUpdate(file, content)` | Update a source file         |
+| `sourceDelete(file)`          | Remove a source file         |
+| `sourceExists(file)`          | Check if source exists       |
+| `output(callback)`            | Generate all output files    |
+| `page(pageId)`                | Get rendered page content    |
+| `example(exampleId)`          | Get rendered example content |
+| `pages()`                     | Get all pages                |
+| `entries()`                   | Get all entries              |
+| `addAsset(asset)`             | Add page asset               |
+| `addExampleAsset(asset)`      | Add example asset            |
+| `replaceGenerate(name, fn)`   | Replace generate function    |
+| `on(event, listener)`         | Add event listener           |
+| `off(event, listener)`        | Remove event listener        |
 
 ### CommentBlockParser Methods
 
-| Method | Description |
-|--------|-------------|
-| `parse(context)` | Parse source content |
-| `registerTagTransformer(transformer)` | Register custom tag |
-| `on(event, listener)` | Add event listener |
-| `off(event, listener)` | Remove event listener |
+| Method                                | Description           |
+| ------------------------------------- | --------------------- |
+| `parse(context)`                      | Parse source content  |
+| `registerTagTransformer(transformer)` | Register custom tag   |
+| `on(event, listener)`                 | Add event listener    |
+| `off(event, listener)`                | Remove event listener |
 
 ## See Also
 

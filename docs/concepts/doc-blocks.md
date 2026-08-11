@@ -24,7 +24,9 @@ The `CommentBlockParser` scans your source files for JSDoc-style comments. It ex
  * @example
  * <button class="btn btn-primary">Save</button>
  */
-.btn-primary { /* ... */ }
+.btn-primary {
+  /* ... */
+}
 ```
 
 The parser identifies this as a doc block with:

@@ -198,14 +198,14 @@ Ensure the page key in your `@location` matches the key you defined with `@page`
 
 ```css
 @page myPage My Page
-@location MyPage.section Section  /* Wrong - capital M */
+@location MyPage.section Section; /* Wrong - capital M */
 ```
 
 **Solution:**
 
 ```css
 @page myPage My Page
-@location myPage.section Section  /* Correct - matches case */
+@location myPage.section Section; /* Correct - matches case */
 ```
 
 ### Nested sections don't display correctly
@@ -215,13 +215,13 @@ Verify that you're using dots (`.`) to separate section levels, not slashes or o
 **Problem:**
 
 ```css
-@location page/section/subsection Name  /* Wrong separator */
+@location page/section/subsection Name; /* Wrong separator */
 ```
 
 **Solution:**
 
 ```css
-@location page.section.subsection Name  /* Correct - uses dots */
+@location page.section.subsection Name; /* Correct - uses dots */
 ```
 
 ### Pages appear in the wrong order
@@ -232,14 +232,14 @@ Check that your `@order` values are numbers and that you haven't accidentally du
 
 ```css
 @page foo Foo
-@order first  /* Wrong - not a number */
+@order first; /* Wrong - not a number */
 ```
 
 **Solution:**
 
 ```css
 @page foo Foo
-@order 1  /* Correct - numeric value */
+@order 1; /* Correct - numeric value */
 ```
 
 ## Related guides

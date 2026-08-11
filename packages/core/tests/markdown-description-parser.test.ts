@@ -1,7 +1,6 @@
-import type { DescriptionParser } from '../src/DescriptionParser.types'
-
 import { describe, expect, it } from 'vitest'
 
+import type { DescriptionParser } from '../src/DescriptionParser.types'
 import {
   createMarkdownDescriptionParser,
   MarkdownDescriptionParser,
@@ -105,7 +104,9 @@ This is a paragraph with **bold** and *italic* text.
       const result = parser.parse(markdown)
 
       expect(result).toContain('<h1>Title</h1>')
-      expect(result).toContain('<p>This is a paragraph with <strong>bold</strong> and <em>italic</em> text.</p>')
+      expect(result).toContain(
+        '<p>This is a paragraph with <strong>bold</strong> and <em>italic</em> text.</p>',
+      )
       expect(result).toContain('<ul>')
       expect(result).toContain('<li>List item 1</li>')
       expect(result).toContain('<li>List item 2</li>')
@@ -237,9 +238,7 @@ This is a paragraph with **bold** and *italic* text.
     it('should render a nested list', () => {
       const parser = new MarkdownDescriptionParser()
 
-      expect(parser.parse('- a\n  - b')).toBe(
-        '<ul>\n<li>a<ul>\n<li>b</li>\n</ul>\n</li>\n</ul>\n',
-      )
+      expect(parser.parse('- a\n  - b')).toBe('<ul>\n<li>a<ul>\n<li>b</li>\n</ul>\n</li>\n</ul>\n')
     })
 
     it('should render a loose list with wrapped paragraphs', () => {

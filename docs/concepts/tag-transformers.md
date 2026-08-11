@@ -46,12 +46,12 @@ Tags follow JSDoc syntax with UI-Doc-specific semantics:
 
 Different tag transformers interpret these components differently:
 
-| Tag | Type | Name | Description |
-|-----|------|------|-------------|
-| `@location` | Ignored | Page and section key | Human-readable title |
-| `@color` | RGB/hex value | Variable name | Color description |
-| `@example` | Content type | Optional title | HTML/code content |
-| `@order` | Ignored | Sort order number | Ignored |
+| Tag         | Type          | Name                 | Description          |
+| ----------- | ------------- | -------------------- | -------------------- |
+| `@location` | Ignored       | Page and section key | Human-readable title |
+| `@color`    | RGB/hex value | Variable name        | Color description    |
+| `@example`  | Content type  | Optional title       | HTML/code content    |
+| `@order`    | Ignored       | Sort order number    | Ignored              |
 
 ### Processing order
 

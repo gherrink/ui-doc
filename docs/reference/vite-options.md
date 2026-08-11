@@ -176,17 +176,17 @@ Functions that generate custom content for documentation pages.
 
 **Available functions:**
 
-| Function | Type | Description |
-|----------|------|-------------|
-| `exampleTitle` | `(example: ContextExample) => string` | Generate title for example pages |
-| `footerText` | `() => string` | Generate footer text |
-| `homeLink` | `() => string` | Generate home page link |
-| `logo` | `() => string` | Generate logo HTML |
-| `menu` | `(menu, pages) => menu` | Customize menu structure |
-| `name` | `() => string` | Generate name for documentation |
-| `pageLink` | `(page: ContextEntry) => string` | Generate page links |
-| `pageTitle` | `(page: ContextEntry) => string` | Generate page titles |
-| `resolve` | `(uri: string, type: string) => string` | Resolve asset URLs |
+| Function       | Type                                    | Description                      |
+| -------------- | --------------------------------------- | -------------------------------- |
+| `exampleTitle` | `(example: ContextExample) => string`   | Generate title for example pages |
+| `footerText`   | `() => string`                          | Generate footer text             |
+| `homeLink`     | `() => string`                          | Generate home page link          |
+| `logo`         | `() => string`                          | Generate logo HTML               |
+| `menu`         | `(menu, pages) => menu`                 | Customize menu structure         |
+| `name`         | `() => string`                          | Generate name for documentation  |
+| `pageLink`     | `(page: ContextEntry) => string`        | Generate page links              |
+| `pageTitle`    | `(page: ContextEntry) => string`        | Generate page titles             |
+| `resolve`      | `(uri: string, type: string) => string` | Resolve asset URLs               |
 
 **Example:**
 
@@ -213,10 +213,10 @@ Text strings for title, copyright, and other static content.
 
 **Available texts:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `title` | `string` | Documentation title shown in pages |
-| `copyright` | `string` | Copyright notice shown in footer |
+| Property    | Type     | Description                        |
+| ----------- | -------- | ---------------------------------- |
+| `title`     | `string` | Documentation title shown in pages |
+| `copyright` | `string` | Copyright notice shown in footer   |
 
 **Example:**
 
@@ -573,7 +573,7 @@ export default defineConfig(({ command }) => ({
     outDir: 'dist',
     rollupOptions: {
       input: {
-        'app': 'js/app.js',
+        app: 'js/app.js',
         'ui-doc-custom': 'ui-doc/custom.css',
       },
       output: {

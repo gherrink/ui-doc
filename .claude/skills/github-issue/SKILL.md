@@ -24,11 +24,11 @@ Create well-structured GitHub issues that align with the project's issue templat
 
 **IMPORTANT:** Always read the matching `.github/ISSUE_TEMPLATE/*.yml` file before constructing the issue body. The template is the single source of truth for field names, field order, required/optional status, dropdown options, and placeholder text. Do NOT rely on memory — read the template every time.
 
-| Type | Template File | Title Prefix | Default Label |
-|------|---------------|--------------|---------------|
-| Bug Report | `.github/ISSUE_TEMPLATE/bug_report.yml` | `[Bug]: ` | `type:bug` |
+| Type            | Template File                                | Title Prefix  | Default Label  |
+| --------------- | -------------------------------------------- | ------------- | -------------- |
+| Bug Report      | `.github/ISSUE_TEMPLATE/bug_report.yml`      | `[Bug]: `     | `type:bug`     |
 | Feature Request | `.github/ISSUE_TEMPLATE/feature_request.yml` | `[Feature]: ` | `type:feature` |
-| Documentation | `.github/ISSUE_TEMPLATE/documentation.yml` | `[Docs]: ` | `type:docs` |
+| Documentation   | `.github/ISSUE_TEMPLATE/documentation.yml`   | `[Docs]: `    | `type:docs`    |
 
 ### Building the Body from a Template
 
@@ -47,26 +47,28 @@ Create well-structured GitHub issues that align with the project's issue templat
 When inferring issue details from conversation context:
 
 **Type detection:**
+
 - Bug indicators: "error", "crash", "fails", "broken", "unexpected", stack traces, error messages
 - Feature indicators: "would be nice", "add support", "missing feature", "could we", "should support"
 - Documentation indicators: "docs", "unclear", "confusing", "missing example", "typo", "outdated"
 
 **Package detection:**
+
 - File paths: `packages/core/` → `@ui-doc/core`
 - Direct mentions: `@ui-doc/node`, `html-renderer`
 - Import paths: `from '@ui-doc/rollup'`
 
 **Scope mapping:**
 
-| Path / Mention | Package | Scope Label |
-|----------------|---------|-------------|
-| `packages/core/` | `@ui-doc/core` | `scope:core` |
-| `packages/node/` | `@ui-doc/node` | `scope:node` |
+| Path / Mention            | Package                 | Scope Label           |
+| ------------------------- | ----------------------- | --------------------- |
+| `packages/core/`          | `@ui-doc/core`          | `scope:core`          |
+| `packages/node/`          | `@ui-doc/node`          | `scope:node`          |
 | `packages/html-renderer/` | `@ui-doc/html-renderer` | `scope:html-renderer` |
-| `packages/rollup/` | `@ui-doc/rollup` | `scope:rollup` |
-| `packages/vite/` | `@ui-doc/vite` | `scope:vite` |
-| `demos/` | Demos | `scope:demos` |
-| `docs/` | Documentation | `scope:docs` |
+| `packages/rollup/`        | `@ui-doc/rollup`        | `scope:rollup`        |
+| `packages/vite/`          | `@ui-doc/vite`          | `scope:vite`          |
+| `demos/`                  | Demos                   | `scope:demos`         |
+| `docs/`                   | Documentation           | `scope:docs`          |
 
 ## Workflow
 

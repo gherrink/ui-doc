@@ -106,10 +106,7 @@ await assetLoader.resolve('@ui-doc/html-renderer/ui-doc.min.css')
 await assetLoader.read('@ui-doc/html-renderer/ui-doc.min.css')
 
 // Copy an asset from a package to your output
-await assetLoader.copy(
-  '@ui-doc/html-renderer/ui-doc.min.css',
-  './dist/ui-doc.css',
-)
+await assetLoader.copy('@ui-doc/html-renderer/ui-doc.min.css', './dist/ui-doc.css')
 ```
 
 ### Complete Example

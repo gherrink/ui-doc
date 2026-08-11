@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
+
 import cssnano from 'cssnano'
 import postcss from 'postcss'
 import postcssImport from 'postcss-import'
@@ -29,9 +30,7 @@ export function cssAssets({ entries, minify = false }) {
     name: 'css-assets',
 
     async generateBundle(outputOptions) {
-      const outDir = path.resolve(
-        outputOptions.dir ?? path.dirname(outputOptions.file),
-      )
+      const outDir = path.resolve(outputOptions.dir ?? path.dirname(outputOptions.file))
 
       await Promise.all(
         Object.entries(entries).map(async ([name, entry]) => {
@@ -44,8 +43,9 @@ export function cssAssets({ entries, minify = false }) {
           // postcssImport must run first so @import-ed files are inlined
           // before nesting is flattened. postcssPresetEnv runs autoprefixer
           // internally.
-          const result = await postcss([postcssImport(), postcssPresetEnv()])
-            .process(await readFile(from, 'utf8'), {
+          const result = await postcss([postcssImport(), postcssPresetEnv()]).process(
+            await readFile(from, 'utf8'),
+            {
               from,
               to,
               map: {
@@ -53,7 +53,8 @@ export function cssAssets({ entries, minify = false }) {
                 inline: false,
                 sourcesContent: true,
               },
-            })
+            },
+          )
 
           // Every @import-ed file, so `rollup -w` reacts to changes in them.
           for (const message of result.messages) {
@@ -78,8 +79,9 @@ export function cssAssets({ entries, minify = false }) {
           })
 
           if (minify) {
-            const minified = await postcss([cssnano({ preset: 'default' })])
-              .process(result.css, { from: undefined })
+            const minified = await postcss([cssnano({ preset: 'default' })]).process(result.css, {
+              from: undefined,
+            })
 
             // postcss-calc cannot evaluate calc() over custom properties and
             // warns once per such declaration. These are noise, not defects,

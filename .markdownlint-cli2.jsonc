@@ -16,11 +16,7 @@
     "MD060": false,
     "MD033": false,
     "MD034": false,
-    "MD036": false
+    "MD036": false,
   },
-  "ignores": [
-    "**/coverage/**",
-    ".claude/**",
-    "LICENSE.md"
-  ]
+  "ignores": ["**/coverage/**", ".claude/**", "LICENSE.md"],
 }

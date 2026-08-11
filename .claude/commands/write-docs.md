@@ -25,12 +25,13 @@ Arguments → Parse Mode → Group by Topic → [Document Writer Agent(s)] → V
 
 Determine the mode based on argument format:
 
-| Format | Mode | Example |
-|--------|------|---------|
-| `<type> <topic>` | Single | `tutorial first-component` |
-| `batch <types> <topics>` | Batch | `batch tutorial,how-to vite,rollup` |
+| Format                   | Mode   | Example                             |
+| ------------------------ | ------ | ----------------------------------- |
+| `<type> <topic>`         | Single | `tutorial first-component`          |
+| `batch <types> <topics>` | Batch  | `batch tutorial,how-to vite,rollup` |
 
 **Document types** (comma-separated in batch mode):
+
 - `getting-started` - First-time onboarding
 - `tutorial` - Step-by-step learning
 - `how-to` - Task-focused guide
@@ -47,26 +48,28 @@ Check that all specified types are valid. If invalid, show error and list valid 
 
 Map document types to output directories:
 
-| Type | Output Path |
-|------|-------------|
+| Type              | Output Path                       |
+| ----------------- | --------------------------------- |
 | `getting-started` | `docs/getting-started/{topic}.md` |
-| `tutorial` | `docs/tutorials/{topic}.md` |
-| `how-to` | `docs/how-to/{topic}.md` |
-| `api-reference` | `docs/reference/{topic}.md` |
-| `conceptual` | `docs/concepts/{topic}.md` |
+| `tutorial`        | `docs/tutorials/{topic}.md`       |
+| `how-to`          | `docs/how-to/{topic}.md`          |
+| `api-reference`   | `docs/reference/{topic}.md`       |
+| `conceptual`      | `docs/concepts/{topic}.md`        |
 | `troubleshooting` | `docs/troubleshooting/{topic}.md` |
-| `contributing` | `docs/contributing/{topic}.md` |
+| `contributing`    | `docs/contributing/{topic}.md`    |
 
 ### Step 4: Group Work by Topic
 
 Each unique topic gets ONE agent that handles all its document types.
 
 **Why group by topic?**
+
 - Agent researches the topic once (reads packages, demos, existing docs)
 - Consistent terminology and examples across related documents
 - Natural cross-references between docs on the same topic
 
 Examples:
+
 ```
 # Input: batch tutorial,how-to custom-templates
 # Grouping: 1 agent → topic "custom-templates" → types [tutorial, how-to]
@@ -127,6 +130,7 @@ ls -la docs/tutorials/{topic}.md docs/how-to/{topic}.md  # etc.
 ```
 
 If available, run markdown lint:
+
 ```bash
 pnpm lint:docs  # if this command exists
 ```
@@ -134,6 +138,7 @@ pnpm lint:docs  # if this command exists
 ### Step 7: Report Results
 
 **Success:**
+
 ```
 ✅ Documentation generated successfully!
 
@@ -145,6 +150,7 @@ Cross-references added between related documents.
 ```
 
 **Partial success:**
+
 ```
 ⚠️ Some documentation could not be generated
 
@@ -160,6 +166,7 @@ Options:
 ```
 
 **Error:**
+
 ```
 ❌ Documentation generation failed
 
@@ -173,6 +180,7 @@ Options:
 ## Usage Examples
 
 ### Single Document
+
 ```
 /write-docs tutorial first-component
 /write-docs conceptual doc-blocks
@@ -180,38 +188,47 @@ Options:
 ```
 
 ### Multiple Types, One Topic (1 agent)
+
 ```
 /write-docs batch tutorial,how-to custom-templates
 ```
+
 Creates:
+
 - `docs/tutorials/custom-templates.md`
 - `docs/how-to/custom-templates.md`
 
 ### One Type, Multiple Topics (parallel agents)
+
 ```
 /write-docs batch getting-started vite,rollup,node
 ```
+
 Creates (in parallel):
+
 - `docs/getting-started/vite.md`
 - `docs/getting-started/rollup.md`
 - `docs/getting-started/node.md`
 
 ### Multiple Types AND Topics (parallel agents, each handles all types)
+
 ```
 /write-docs batch tutorial,how-to vite,rollup
 ```
+
 Creates (2 parallel agents):
+
 - Agent 1: `docs/tutorials/vite.md`, `docs/how-to/vite.md`
 - Agent 2: `docs/tutorials/rollup.md`, `docs/how-to/rollup.md`
 
 ## Error Handling
 
-| Error | Response |
-|-------|----------|
-| Invalid document type | Show valid types, ask user to correct |
-| Topic not found in codebase | Ask user to verify topic or provide context |
-| Agent fails | Show error details, offer retry or manual creation |
-| File already exists | Agent will update/overwrite (behavior can be customized) |
+| Error                       | Response                                                 |
+| --------------------------- | -------------------------------------------------------- |
+| Invalid document type       | Show valid types, ask user to correct                    |
+| Topic not found in codebase | Ask user to verify topic or provide context              |
+| Agent fails                 | Show error details, offer retry or manual creation       |
+| File already exists         | Agent will update/overwrite (behavior can be customized) |
 
 ## Notes
 

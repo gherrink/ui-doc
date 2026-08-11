@@ -73,8 +73,8 @@ The final phase makes assets available in the generated HTML:
 **Page assets** are included in documentation page HTML:
 
 ```html
-<link rel="stylesheet" href="ui-doc.css">
-<link rel="stylesheet" href="custom-docs.css">
+<link rel="stylesheet" href="ui-doc.css" />
+<link rel="stylesheet" href="custom-docs.css" />
 <script src="ui-doc.js"></script>
 ```
 
@@ -82,7 +82,7 @@ The final phase makes assets available in the generated HTML:
 
 ```html
 <!-- Inside example iframe -->
-<link rel="stylesheet" href="../app.css">
+<link rel="stylesheet" href="../app.css" />
 <script src="../app.js"></script>
 ```
 

@@ -23,10 +23,10 @@ Output values from the render context.
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| contextKey | Yes | `string` | Property name to read from context. Supports dot notation for nested properties. |
-| escape | No | `boolean` | When present, HTML-escapes the output value. |
+| Parameter  | Required | Type      | Description                                                                      |
+| ---------- | -------- | --------- | -------------------------------------------------------------------------------- |
+| contextKey | Yes      | `string`  | Property name to read from context. Supports dot notation for nested properties. |
+| escape     | No       | `boolean` | When present, HTML-escapes the output value.                                     |
 
 **Example:**
 
@@ -73,46 +73,46 @@ Conditionally render content based on truthiness or comparisons.
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| contextKey | Conditional | `string` | Property name to evaluate. Required if no operator is used. |
-| operator | No | `string` | Comparison operator. See table below. |
-| value | Conditional | `string \| number \| boolean` | Literal value to compare against. Required if operator is present. |
+| Parameter  | Required    | Type                          | Description                                                        |
+| ---------- | ----------- | ----------------------------- | ------------------------------------------------------------------ |
+| contextKey | Conditional | `string`                      | Property name to evaluate. Required if no operator is used.        |
+| operator   | No          | `string`                      | Comparison operator. See table below.                              |
+| value      | Conditional | `string \| number \| boolean` | Literal value to compare against. Required if operator is present. |
 
 **Supported operators:**
 
-| Operator | Description | Example |
-|----------|-------------|---------|
-| `===` | Strict equality | `{{if:status === "active"}}` |
-| `==` | Loose equality | `{{if:count == 5}}` |
-| `!==` | Strict inequality | `{{if:type !== "draft"}}` |
-| `!=` | Loose inequality | `{{if:value != false}}` |
-| `>` | Greater than | `{{if:count > 10}}` |
-| `>=` | Greater than or equal | `{{if:count >= 5}}` |
-| `<` | Less than | `{{if:count < 100}}` |
-| `<=` | Less than or equal | `{{if:count <= 50}}` |
+| Operator | Description           | Example                      |
+| -------- | --------------------- | ---------------------------- |
+| `===`    | Strict equality       | `{{if:status === "active"}}` |
+| `==`     | Loose equality        | `{{if:count == 5}}`          |
+| `!==`    | Strict inequality     | `{{if:type !== "draft"}}`    |
+| `!=`     | Loose inequality      | `{{if:value != false}}`      |
+| `>`      | Greater than          | `{{if:count > 10}}`          |
+| `>=`     | Greater than or equal | `{{if:count >= 5}}`          |
+| `<`      | Less than             | `{{if:count < 100}}`         |
+| `<=`     | Less than or equal    | `{{if:count <= 50}}`         |
 
 **Example:**
 
 ```html
 <!-- Simple truthiness check -->
 {{if:showContent}}
-  <p>This is visible when showContent is truthy</p>
+<p>This is visible when showContent is truthy</p>
 {{/if}}
 
 <!-- Comparison with literal value -->
 {{if:status === "active"}}
-  <span class="badge">Active</span>
+<span class="badge">Active</span>
 {{/if}}
 
 <!-- Comparison between context values -->
 {{if:currentId === selectedId}}
-  <div class="selected">Selected Item</div>
+<div class="selected">Selected Item</div>
 {{/if}}
 
 <!-- Numeric comparison -->
 {{if:count > 5}}
-  <span>More than 5 items</span>
+<span>More than 5 items</span>
 {{/if}}
 ```
 
@@ -143,21 +143,21 @@ Iterate over arrays or objects and render content for each item.
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| contextKey | No | `string` | Property name containing the array or object to iterate. Defaults to current context if omitted. |
+| Parameter  | Required | Type     | Description                                                                                      |
+| ---------- | -------- | -------- | ------------------------------------------------------------------------------------------------ |
+| contextKey | No       | `string` | Property name containing the array or object to iterate. Defaults to current context if omitted. |
 
 **Loop variables:**
 
 Within a `for` loop, these special variables are available:
 
-| Variable | Type | Description |
-|----------|------|-------------|
-| `_loop.index` | `number` | Zero-based iteration index |
-| `_loop.value` | `any` | Current item value |
-| `_loop.key` | `string` | Current key (object loops only) |
-| `_parent` | `object` | Reference to parent context |
-| `_contextKey` | `string` | Name of the iterated property |
+| Variable      | Type     | Description                     |
+| ------------- | -------- | ------------------------------- |
+| `_loop.index` | `number` | Zero-based iteration index      |
+| `_loop.value` | `any`    | Current item value              |
+| `_loop.key`   | `string` | Current key (object loops only) |
+| `_parent`     | `object` | Reference to parent context     |
+| `_contextKey` | `string` | Name of the iterated property   |
 
 **Array example:**
 
@@ -165,7 +165,7 @@ Within a `for` loop, these special variables are available:
 <!-- Context: { items: ["apple", "banana", "cherry"] } -->
 <ul>
   {{for:items}}
-    <li>{{var:_loop.value}} (index: {{var:_loop.index}})</li>
+  <li>{{var:_loop.value}} (index: {{var:_loop.index}})</li>
   {{/for}}
 </ul>
 ```
@@ -186,7 +186,7 @@ Within a `for` loop, these special variables are available:
 <!-- Context: { colors: { red: "#f00", green: "#0f0", blue: "#00f" } } -->
 <ul>
   {{for:colors}}
-    <li>{{var:_loop.key}}: {{var:_loop.value}}</li>
+  <li>{{var:_loop.key}}: {{var:_loop.value}}</li>
   {{/for}}
 </ul>
 ```
@@ -209,10 +209,10 @@ Within a `for` loop, these special variables are available:
   { title: "Details", content: "More info" }
 ]} -->
 {{for:sections}}
-  <section>
-    <h2>{{var:title}}</h2>
-    <div>{{var:content}}</div>
-  </section>
+<section>
+  <h2>{{var:title}}</h2>
+  <div>{{var:content}}</div>
+</section>
 {{/for}}
 ```
 
@@ -252,10 +252,10 @@ Render a registered page template with optional context switching.
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| pageName | No | `string` | Name of registered page template. Defaults to `'default'`. Supports dot notation for dynamic lookup. |
-| contextKey | No | `string` | Property name to use as context for rendering. Defaults to current context. |
+| Parameter  | Required | Type     | Description                                                                                          |
+| ---------- | -------- | -------- | ---------------------------------------------------------------------------------------------------- |
+| pageName   | No       | `string` | Name of registered page template. Defaults to `'default'`. Supports dot notation for dynamic lookup. |
+| contextKey | No       | `string` | Property name to use as context for rendering. Defaults to current context.                          |
 
 **Example:**
 
@@ -297,10 +297,10 @@ Include reusable template fragments.
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| partialName | Yes | `string` | Name of registered partial template. |
-| contextKey | No | `string` | Property name to use as context for rendering. Defaults to current context. |
+| Parameter   | Required | Type     | Description                                                                 |
+| ----------- | -------- | -------- | --------------------------------------------------------------------------- |
+| partialName | Yes      | `string` | Name of registered partial template.                                        |
+| contextKey  | No       | `string` | Property name to use as context for rendering. Defaults to current context. |
 
 **Example:**
 
@@ -313,11 +313,7 @@ Include reusable template fragments.
 {{partial:section currentSection}}
 
 <!-- Nested partials -->
-<div class="container">
-  {{for:sections}}
-    {{partial:section-inner}}
-  {{/for}}
-</div>
+<div class="container">{{for:sections}} {{partial:section-inner}} {{/for}}</div>
 ```
 
 **Behavior:**
@@ -341,9 +337,9 @@ Output context as formatted JSON for debugging templates.
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| contextKey | No | `string` | Property name to debug. Defaults to entire context. |
+| Parameter  | Required | Type     | Description                                         |
+| ---------- | -------- | -------- | --------------------------------------------------- |
+| contextKey | No       | `string` | Property name to debug. Defaults to entire context. |
 
 **Example:**
 
@@ -361,7 +357,8 @@ Output context as formatted JSON for debugging templates.
 **Output:**
 
 ```html
-<pre>{
+<pre>
+{
   "title": "My Page",
   "page": {
     "id": "home",
@@ -381,15 +378,15 @@ Output context as formatted JSON for debugging templates.
 
 The render context is an object containing data passed to templates. Common properties include:
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `title` | `string` | Document or page title |
-| `description` | `string` | Optional page description |
-| `page` | `object` | Page-specific data (id, title, content, etc.) |
-| `sections` | `array` | Array of section objects with nested subsections |
-| `assets` | `array` | Asset references for styles and scripts |
-| `styles` | `string` | Rendered style tags (in layout context) |
-| `scripts` | `string` | Rendered script tags (in layout context) |
+| Property      | Type     | Description                                      |
+| ------------- | -------- | ------------------------------------------------ |
+| `title`       | `string` | Document or page title                           |
+| `description` | `string` | Optional page description                        |
+| `page`        | `object` | Page-specific data (id, title, content, etc.)    |
+| `sections`    | `array`  | Array of section objects with nested subsections |
+| `assets`      | `array`  | Asset references for styles and scripts          |
+| `styles`      | `string` | Rendered style tags (in layout context)          |
+| `scripts`     | `string` | Rendered script tags (in layout context)         |
 
 Custom properties can be added through UI-Doc configuration.
 
@@ -400,12 +397,12 @@ Custom properties can be added through UI-Doc configuration.
 The `escape` modifier on `{{var}}` directives performs HTML entity encoding:
 
 | Character | Encoded As |
-|-----------|------------|
-| `&` | `&amp;` |
-| `<` | `&lt;` |
-| `>` | `&gt;` |
-| `"` | `&quot;` |
-| `'` | `&#039;` |
+| --------- | ---------- |
+| `&`       | `&amp;`    |
+| `<`       | `&lt;`     |
+| `>`       | `&gt;`     |
+| `"`       | `&quot;`   |
+| `'`       | `&#039;`   |
 
 ### Template literal syntax
 
@@ -413,14 +410,14 @@ Template directives use `{{` and `}}` delimiters. To output literal curly braces
 
 ## Complete directive reference
 
-| Directive | Has Content | Closes With | Purpose |
-|-----------|-------------|-------------|---------|
-| `{{var:...}}` | No | N/A | Output variable value |
-| `{{if:...}}` | Yes | `{{/if}}` | Conditional rendering |
-| `{{for:...}}` | Yes | `{{/for}}` | Loop over array/object |
-| `{{page:...}}` | No | N/A | Render page template |
-| `{{partial:...}}` | No | N/A | Include partial template |
-| `{{debug:...}}` | No | N/A | Output context as JSON |
+| Directive         | Has Content | Closes With | Purpose                  |
+| ----------------- | ----------- | ----------- | ------------------------ |
+| `{{var:...}}`     | No          | N/A         | Output variable value    |
+| `{{if:...}}`      | Yes         | `{{/if}}`   | Conditional rendering    |
+| `{{for:...}}`     | Yes         | `{{/for}}`  | Loop over array/object   |
+| `{{page:...}}`    | No          | N/A         | Render page template     |
+| `{{partial:...}}` | No          | N/A         | Include partial template |
+| `{{debug:...}}`   | No          | N/A         | Output context as JSON   |
 
 ## See also
 

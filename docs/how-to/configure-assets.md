@@ -227,9 +227,7 @@ uidoc({
   source: ['src/**/*.css'],
   output: {
     dir: 'docs',
-    baseUri: process.env.NODE_ENV === 'production'
-      ? '/styleguide/'
-      : '/docs/',
+    baseUri: process.env.NODE_ENV === 'production' ? '/styleguide/' : '/docs/',
   },
 })
 ```

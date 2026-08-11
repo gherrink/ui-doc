@@ -262,7 +262,7 @@ export default defineConfig(({ command }) => {
       outDir: 'dist',
       rollupOptions: {
         input: {
-          'app': 'js/app.js',
+          app: 'js/app.js',
           'ui-doc-custom': 'ui-doc/custom.css',
         },
       },
@@ -329,15 +329,15 @@ All options from [@ui-doc/rollup](../rollup/README.md#options) are supported. Th
 
 ### Core Options Summary
 
-| Name         | Type            | Required | Description                                  |
-| ------------ | --------------- | -------- | -------------------------------------------- |
-| source       | string[]        | yes      | Glob patterns to find source files           |
-| output       | object          | no       | Output configuration (dir, baseUri)          |
-| settings     | object          | no       | UI-Doc settings (generate, texts)            |
-| assets       | object          | no       | Asset configuration (static, page, example)  |
-| templatePath | string          | no       | Custom template directory                    |
-| renderer     | Renderer        | no       | Custom renderer instance                     |
-| blockParser  | BlockParser     | no       | Custom block parser instance                 |
+| Name         | Type        | Required | Description                                 |
+| ------------ | ----------- | -------- | ------------------------------------------- |
+| source       | string[]    | yes      | Glob patterns to find source files          |
+| output       | object      | no       | Output configuration (dir, baseUri)         |
+| settings     | object      | no       | UI-Doc settings (generate, texts)           |
+| assets       | object      | no       | Asset configuration (static, page, example) |
+| templatePath | string      | no       | Custom template directory                   |
+| renderer     | Renderer    | no       | Custom renderer instance                    |
+| blockParser  | BlockParser | no       | Custom block parser instance                |
 
 See the [@ui-doc/rollup documentation](../rollup/README.md#options) for detailed option descriptions.
 
@@ -492,7 +492,7 @@ export default defineConfig(({ command }) => {
     build: {
       rollupOptions: {
         input: {
-          'app': 'src/main.js',
+          app: 'src/main.js',
           'ui-doc-theme': 'ui-doc/theme.css',
         },
       },

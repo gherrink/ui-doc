@@ -1,9 +1,9 @@
-import type { FileSystem } from '@ui-doc/core'
 import fs from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import path from 'node:path'
 import process from 'node:process'
 
+import type { FileSystem } from '@ui-doc/core'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { NodeAssetLoader } from '../src'
@@ -151,9 +151,7 @@ describe('nodeAssetLoader', () => {
       const fileSystem = createMockFileSystem()
       const loader = new NodeAssetLoader(fileSystem)
 
-      await expect(loader.packagePath('any-pkg')).rejects.toThrow(
-        'Could not resolve require paths',
-      )
+      await expect(loader.packagePath('any-pkg')).rejects.toThrow('Could not resolve require paths')
     })
   })
 
@@ -288,9 +286,7 @@ describe('nodeAssetLoader', () => {
      * @param own Double returned for this package's own base
      */
     function useDistinctRequires(consumer: NodeRequire, own: NodeRequire): void {
-      vi.mocked(createRequire).mockImplementation(base =>
-        base === consumerBase ? consumer : own,
-      )
+      vi.mocked(createRequire).mockImplementation(base => (base === consumerBase ? consumer : own))
     }
 
     it('should anchor one require at the consumer cwd and one at this package', () => {
@@ -437,7 +433,9 @@ describe('nodeAssetLoader', () => {
 
       const loader = new NodeAssetLoader(
         createMockFileSystem({
-          fileExists: vi.fn(async file => Promise.resolve(file === '/own/node_modules/pkg/asset.css')),
+          fileExists: vi.fn(async file =>
+            Promise.resolve(file === '/own/node_modules/pkg/asset.css'),
+          ),
         }),
       )
 

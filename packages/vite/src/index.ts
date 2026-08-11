@@ -1,10 +1,10 @@
-import type { Api as RollupPluginApi, Options as RollupPluginOptions } from '@ui-doc/rollup'
-import type { ChangeEvent, InputOptions, OutputBundle, OutputOptions, PluginContext } from 'rollup'
-import type { Plugin, ViteDevServer } from 'vite'
-
 import path from 'node:path'
+
+import type { Api as RollupPluginApi, Options as RollupPluginOptions } from '@ui-doc/rollup'
 import createRollupPlugin, { PLUGIN_NAME as ROLLUP_PLUGIN_NAME } from '@ui-doc/rollup'
 import pc from 'picocolors'
+import type { ChangeEvent, InputOptions, OutputBundle, OutputOptions, PluginContext } from 'rollup'
+import type { Plugin, ViteDevServer } from 'vite'
 
 import { version } from '../package.json'
 
@@ -86,7 +86,8 @@ function prepareServe(api: Api): void {
     // for vite server
     api.uidoc.replaceGenerate('resolve', (uri: string, type: string) => {
       // don't add prefix if asset is from vite
-      return ['asset', 'asset-example'].includes(type) && (api.isAssetFromInput(uri) || uri.startsWith('@'))
+      return ['asset', 'asset-example'].includes(type) &&
+        (api.isAssetFromInput(uri) || uri.startsWith('@'))
         ? `/${uri}`
         : `/${api.options.prefix.uri}${uri}`
     })
@@ -194,9 +195,9 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         }
 
         if (
-          asset.type === 'style'
-          && foundBundle.viteMetadata?.importedCss
-          && foundBundle.viteMetadata.importedCss.size > 0
+          asset.type === 'style' &&
+          foundBundle.viteMetadata?.importedCss &&
+          foundBundle.viteMetadata.importedCss.size > 0
         ) {
           const firstCss = foundBundle.viteMetadata.importedCss.values().next().value as string
           asset.fileName = firstCss
@@ -216,11 +217,11 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     // Trigger reload when template files change in dev mode
     const templatePath = api.options.templatePath
     if (
-      serving
-      && viteServer !== undefined
-      && templatePath !== undefined
-      && id.startsWith(templatePath)
-      && (change.event === 'update' || change.event === 'create')
+      serving &&
+      viteServer !== undefined &&
+      templatePath !== undefined &&
+      id.startsWith(templatePath) &&
+      (change.event === 'update' || change.event === 'create')
     ) {
       viteServer.ws.send({ type: 'full-reload', path: '*' })
     }

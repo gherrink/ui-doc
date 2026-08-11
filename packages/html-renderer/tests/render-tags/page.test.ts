@@ -1,7 +1,7 @@
-import type { Renderer } from '../../src/Renderer.types'
-
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { TagPageNode } from '../../src/nodes/tags/page'
+import type { Renderer } from '../../src/Renderer.types'
 
 describe('render tag page', () => {
   const pageMock = vi.fn<Renderer['page']>(() => '').mockReturnValue('')

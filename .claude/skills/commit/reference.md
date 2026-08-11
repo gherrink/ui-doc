@@ -12,30 +12,30 @@
 
 ## Commit Types
 
-| Type | Description | SemVer Impact |
-|------|-------------|---------------|
-| feat | New feature | MINOR |
-| fix | Bug fix | PATCH |
-| docs | Documentation only | - |
-| style | Formatting, no code change | - |
-| refactor | Code restructuring | - |
-| perf | Performance improvement | - |
-| test | Adding/fixing tests | - |
-| build | Build system changes | - |
-| ci | CI configuration | - |
-| chore | Maintenance tasks | - |
+| Type     | Description                | SemVer Impact |
+| -------- | -------------------------- | ------------- |
+| feat     | New feature                | MINOR         |
+| fix      | Bug fix                    | PATCH         |
+| docs     | Documentation only         | -             |
+| style    | Formatting, no code change | -             |
+| refactor | Code restructuring         | -             |
+| perf     | Performance improvement    | -             |
+| test     | Adding/fixing tests        | -             |
+| build    | Build system changes       | -             |
+| ci       | CI configuration           | -             |
+| chore    | Maintenance tasks          | -             |
 
 ## Project Scopes
 
-| Scope | Directory |
-|-------|-----------|
-| `core` | `packages/core/` |
-| `node` | `packages/node/` |
-| `html-renderer` | `packages/html-renderer/` |
-| `rollup` | `packages/rollup/` |
-| `vite` | `packages/vite/` |
-| `demos` | `demos/` |
-| `release` | Version bumps (any package) |
+| Scope           | Directory                   |
+| --------------- | --------------------------- |
+| `core`          | `packages/core/`            |
+| `node`          | `packages/node/`            |
+| `html-renderer` | `packages/html-renderer/`   |
+| `rollup`        | `packages/rollup/`          |
+| `vite`          | `packages/vite/`            |
+| `demos`         | `demos/`                    |
+| `release`       | Version bumps (any package) |
 
 **Note:** Changes to `docs/` use the `docs:` commit type without a scope.
 

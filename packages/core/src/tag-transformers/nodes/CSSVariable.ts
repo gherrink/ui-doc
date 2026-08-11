@@ -1,5 +1,5 @@
-import type { RenderValue } from './RenderValue'
 import { CSSParseError } from '../../errors/CSSParseError'
+import type { RenderValue } from './RenderValue'
 
 export class CSSVariable implements RenderValue {
   public readonly output: string

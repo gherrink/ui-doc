@@ -1,6 +1,6 @@
-import type { EventArgs, EventMap } from '../src/EventEmitter.types'
-
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import type { EventArgs, EventMap } from '../src/EventEmitter.types'
 import { EventEmitterBase } from '../src/EventEmitterBase'
 
 // Define test event map
@@ -9,7 +9,7 @@ interface TestEvents extends EventMap {
   noArgs: []
   oneArg: [value: string]
   multipleArgs: [id: number, name: string, active: boolean]
-  objectArg: [data: { key: string, nested: { value: number } }]
+  objectArg: [data: { key: string; nested: { value: number } }]
 }
 
 // Concrete test class that extends EventEmitterBase

@@ -24,12 +24,16 @@ Define variation classes:
 /**
  * @location backgrounds.black Black
  */
-.bg-black { background: #1f2937; }
+.bg-black {
+  background: #1f2937;
+}
 
 /**
  * @location backgrounds.white White
  */
-.bg-white { background: #ffffff; }
+.bg-white {
+  background: #ffffff;
+}
 ```
 
 Reference them in components:

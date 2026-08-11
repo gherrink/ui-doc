@@ -9,9 +9,11 @@ Writing conventions and standards for UI-Doc documentation.
 Write concisely. Get to the point quickly. Every sentence should add value.
 
 **Good:**
+
 > Add the plugin to your Vite config and specify your source files.
 
 **Avoid:**
+
 > In this section, we will discuss how you might want to consider adding the plugin to your Vite configuration file, which will allow you to specify which source files should be processed.
 
 ### Use Second Person
@@ -19,9 +21,11 @@ Write concisely. Get to the point quickly. Every sentence should add value.
 Address the reader as "you" for instructions and guidance.
 
 **Good:**
+
 > You can customize the output directory using the `output.dir` option.
 
 **Avoid:**
+
 > The user can customize the output directory using the `output.dir` option.
 > One can customize the output directory using the `output.dir` option.
 
@@ -30,9 +34,11 @@ Address the reader as "you" for instructions and guidance.
 Active voice is clearer and more direct.
 
 **Good:**
+
 > UI-Doc parses your CSS files and extracts documentation.
 
 **Avoid:**
+
 > Your CSS files are parsed by UI-Doc and documentation is extracted.
 
 ### Be Confident
@@ -40,24 +46,26 @@ Active voice is clearer and more direct.
 State facts directly. Avoid hedging language unless uncertainty is genuinely warranted.
 
 **Good:**
+
 > This configuration generates documentation in `dist/docs/`.
 
 **Avoid:**
+
 > This configuration should probably generate documentation in `dist/docs/`.
 
 ## Terminology
 
 Use consistent terminology throughout all documentation.
 
-| Use | Don't Use |
-|-----|-----------|
-| doc block | comment block, documentation block, docblock |
-| tag | annotation, decorator |
-| page | route, view |
-| section | panel, block, area |
-| example | preview, demo, sample |
-| source file | input file |
-| UI-Doc | UIDoc, ui-doc, uidoc (except in code) |
+| Use         | Don't Use                                    |
+| ----------- | -------------------------------------------- |
+| doc block   | comment block, documentation block, docblock |
+| tag         | annotation, decorator                        |
+| page        | route, view                                  |
+| section     | panel, block, area                           |
+| example     | preview, demo, sample                        |
+| source file | input file                                   |
+| UI-Doc      | UIDoc, ui-doc, uidoc (except in code)        |
 
 ### Package Names
 
@@ -76,9 +84,11 @@ Always use the full npm package name in prose:
 Use sentence case for headers (capitalize first word only):
 
 **Good:**
+
 > ## Getting started with Vite
 
 **Avoid:**
+
 > ## Getting Started With Vite
 
 ### Code Blocks
@@ -102,6 +112,7 @@ For configuration files, use the appropriate language:
 ### Inline Code
 
 Use backticks for:
+
 - File names: `vite.config.js`
 - Package names: `@ui-doc/vite`
 - Option names: `output.dir`
@@ -112,11 +123,13 @@ Use backticks for:
 ### Lists
 
 Use unordered lists for items without sequence:
+
 - Option A
 - Option B
 - Option C
 
 Use ordered lists for sequential steps:
+
 1. Install the package
 2. Configure the plugin
 3. Run the dev server
@@ -125,10 +138,10 @@ Use ordered lists for sequential steps:
 
 Use tables for structured reference information:
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| source | `string[]` | Required | Glob patterns for source files |
-| output.dir | `string` | `'ui-doc'` | Output directory |
+| Option     | Type       | Default    | Description                    |
+| ---------- | ---------- | ---------- | ------------------------------ |
+| source     | `string[]` | Required   | Glob patterns for source files |
+| output.dir | `string`   | `'ui-doc'` | Output directory               |
 
 ### Admonitions
 
@@ -147,6 +160,7 @@ Use blockquotes with bold labels for important notes:
 Include all necessary imports and setup:
 
 **Good:**
+
 ```js
 import uidoc from '@ui-doc/vite'
 import { defineConfig } from 'vite'
@@ -161,6 +175,7 @@ export default defineConfig({
 ```
 
 **Avoid:**
+
 ```js
 uidoc({
   source: ['src/**/*.css'],
@@ -172,6 +187,7 @@ uidoc({
 Use realistic, meaningful values in examples:
 
 **Good:**
+
 ```css
 /**
  * Primary button for form submissions and main actions.
@@ -183,6 +199,7 @@ Use realistic, meaningful values in examples:
 ```
 
 **Avoid:**
+
 ```css
 /**
  * Foo bar baz
@@ -241,6 +258,7 @@ Every document should have:
 ### Section Length
 
 Keep sections focused:
+
 - Aim for 2-4 paragraphs per section
 - Use subsections for longer topics
 - If a section exceeds 500 words, consider splitting it

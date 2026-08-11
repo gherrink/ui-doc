@@ -23,20 +23,21 @@ Arguments → Parse Mode → Determine Type → Read Template → Collect Fields
 
 Determine the mode based on argument format:
 
-| Input | Mode | Example |
-|-------|------|---------|
-| (empty) | Context — extract from conversation | `/create-issue` |
-| `--context` | Context — explicit context extraction | `/create-issue --context` |
-| `bug "title"` | Typed — bug report with title | `/create-issue bug "Parser fails"` |
-| `feature "title"` | Typed — feature request with title | `/create-issue feature "Add nested examples"` |
-| `docs "title"` | Typed — documentation issue with title | `/create-issue docs "Missing API reference"` |
-| `"title"` | Interactive — ask for type | `/create-issue "Fix empty blocks"` |
+| Input             | Mode                                   | Example                                       |
+| ----------------- | -------------------------------------- | --------------------------------------------- |
+| (empty)           | Context — extract from conversation    | `/create-issue`                               |
+| `--context`       | Context — explicit context extraction  | `/create-issue --context`                     |
+| `bug "title"`     | Typed — bug report with title          | `/create-issue bug "Parser fails"`            |
+| `feature "title"` | Typed — feature request with title     | `/create-issue feature "Add nested examples"` |
+| `docs "title"`    | Typed — documentation issue with title | `/create-issue docs "Missing API reference"`  |
+| `"title"`         | Interactive — ask for type             | `/create-issue "Fix empty blocks"`            |
 
 ### Step 2: Determine Issue Type & Details
 
 **Context mode** (empty args or `--context`):
 
 Analyze the conversation to identify:
+
 - Issue type from keywords (error/crash/fails → bug, add/support/would be nice → feature, docs/unclear/typo → docs)
 - Affected package(s) from file paths (`packages/core/`) or package mentions (`@ui-doc/core`)
 - Technical details: error messages, code snippets, configuration
@@ -56,13 +57,14 @@ Ask the user which issue type to use with AskUserQuestion.
 
 **MANDATORY:** Use the Read tool to read the matching `.github/ISSUE_TEMPLATE/` file. The template is the single source of truth for field names, field order, required/optional status, dropdown options, and placeholder text.
 
-| Type | Template File |
-|------|---------------|
-| Bug Report | `.github/ISSUE_TEMPLATE/bug_report.yml` |
+| Type            | Template File                                |
+| --------------- | -------------------------------------------- |
+| Bug Report      | `.github/ISSUE_TEMPLATE/bug_report.yml`      |
 | Feature Request | `.github/ISSUE_TEMPLATE/feature_request.yml` |
-| Documentation | `.github/ISSUE_TEMPLATE/documentation.yml` |
+| Documentation   | `.github/ISSUE_TEMPLATE/documentation.yml`   |
 
 After reading the template, collect values for each field in the template's `body` array:
+
 - `validations.required: true` fields **must** have content
 - Optional fields with no content should be omitted entirely
 - Dropdown fields must use one of the listed `options` values
@@ -99,6 +101,7 @@ If unsure whether a label exists, run `gh label list` to verify.
 Ask the user to confirm the suggested labels or add more.
 
 Optionally set:
+
 - `--assignee "@me"` — if the user wants to self-assign
 - `--milestone "name"` — if a milestone is relevant
 
@@ -171,16 +174,16 @@ Labels: type:bug, scope:core
 
 ## Error Handling
 
-| Error | Response |
-|-------|----------|
-| `gh` not authenticated | Guide: run `gh auth login` |
-| Label not in allowed list | Stop. Do not create the issue. Show the label guide and ask user to pick from allowed labels. |
-| Label doesn't exist on GitHub | Run `gh label list` and show available labels |
-| No `type:*` label selected | Stop. Every issue requires exactly one type label. |
-| GitHub default label used | Replace with correct `type:*` equivalent (e.g., `bug` → `type:bug`) |
-| No conversation context | Switch to interactive mode, ask user for details |
-| Permission denied | Check repo access with `gh repo view` |
-| Network error | Show error, suggest retrying |
+| Error                         | Response                                                                                      |
+| ----------------------------- | --------------------------------------------------------------------------------------------- |
+| `gh` not authenticated        | Guide: run `gh auth login`                                                                    |
+| Label not in allowed list     | Stop. Do not create the issue. Show the label guide and ask user to pick from allowed labels. |
+| Label doesn't exist on GitHub | Run `gh label list` and show available labels                                                 |
+| No `type:*` label selected    | Stop. Every issue requires exactly one type label.                                            |
+| GitHub default label used     | Replace with correct `type:*` equivalent (e.g., `bug` → `type:bug`)                           |
+| No conversation context       | Switch to interactive mode, ask user for details                                              |
+| Permission denied             | Check repo access with `gh repo view`                                                         |
+| Network error                 | Show error, suggest retrying                                                                  |
 
 ## Usage Examples
 

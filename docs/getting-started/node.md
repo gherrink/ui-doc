@@ -86,7 +86,10 @@ async function generateDocs() {
   // Copy required assets
   await assetLoader.copy('@ui-doc/html-renderer/ui-doc.min.css', `${outputDir}/ui-doc.css`)
   await assetLoader.copy('@ui-doc/html-renderer/ui-doc.min.js', `${outputDir}/ui-doc.js`)
-  await assetLoader.copy('@highlightjs/cdn-assets/styles/default.min.css', `${outputDir}/highlight.css`)
+  await assetLoader.copy(
+    '@highlightjs/cdn-assets/styles/default.min.css',
+    `${outputDir}/highlight.css`,
+  )
   await assetLoader.copy('@highlightjs/cdn-assets/highlight.min.js', `${outputDir}/highlight.js`)
 
   console.log(`Documentation generated in ${outputDir}/`)
@@ -191,11 +194,7 @@ To document CSS, JavaScript, and TypeScript files, update the glob patterns:
 
 ```js
 // generate-docs.mjs
-const finder = fileSystem.createFileFinder([
-  'src/**/*.css',
-  'src/**/*.js',
-  'src/**/*.ts',
-])
+const finder = fileSystem.createFileFinder(['src/**/*.css', 'src/**/*.js', 'src/**/*.ts'])
 ```
 
 ## Add to your package.json

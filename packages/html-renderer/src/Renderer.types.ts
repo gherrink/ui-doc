@@ -4,7 +4,7 @@ import type { Reader } from './Reader.types'
 
 export type RenderContext = Record<string, unknown>
 
-export type SourceInput = { source: string, content: string } | Reader
+export type SourceInput = { source: string; content: string } | Reader
 
 export interface Renderer extends CoreRenderer {
   addLayout: (name: string, layout: SourceInput) => this

@@ -1,7 +1,7 @@
+import { TagNodeError } from '../../errors'
 import type { TagNodeParse } from '../../Parser.types'
 import type { RenderContext } from '../../Renderer.types'
 import type { TokenValue } from '../../Token.types'
-import { TagNodeError } from '../../errors'
 import { readNestedValue } from '../../utils'
 import { TagNode } from '../TagNode'
 
@@ -18,11 +18,12 @@ export class TagDebugNode extends TagNode {
   }
 
   public render(context: RenderContext): string {
-    const debugContext
-      = this.contextKey !== 'this' ? readNestedValue(this.contextKey, context) : context
-    const debugContent = debugContext !== undefined && debugContext !== null
-      ? JSON.stringify(debugContext, null, 2)
-      : `Current context for "${this.contextKey}" is empty`
+    const debugContext =
+      this.contextKey !== 'this' ? readNestedValue(this.contextKey, context) : context
+    const debugContent =
+      debugContext !== undefined && debugContext !== null
+        ? JSON.stringify(debugContext, null, 2)
+        : `Current context for "${this.contextKey}" is empty`
 
     return `<pre>${debugContent}</pre>`
   }

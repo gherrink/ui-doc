@@ -27,10 +27,10 @@ Creates a top-level documentation page or references an existing page.
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| page-key | Yes | `string` | Unique identifier for the page |
-| Page Title | No | `string` | Display title for the page (required when creating a new page) |
+| Parameter  | Required | Type     | Description                                                    |
+| ---------- | -------- | -------- | -------------------------------------------------------------- |
+| page-key   | Yes      | `string` | Unique identifier for the page                                 |
+| Page Title | No       | `string` | Display title for the page (required when creating a new page) |
 
 **Example:**
 
@@ -65,11 +65,11 @@ Creates a documentation section within a page. Sections can be nested using dot 
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| section-key | Yes | `string` | Unique identifier for the section within its parent |
-| nested-key | No | `string` | Additional keys for nested sections (use dot notation) |
-| Section Title | Yes | `string` | Display title for the section |
+| Parameter     | Required | Type     | Description                                            |
+| ------------- | -------- | -------- | ------------------------------------------------------ |
+| section-key   | Yes      | `string` | Unique identifier for the section within its parent    |
+| nested-key    | No       | `string` | Additional keys for nested sections (use dot notation) |
+| Section Title | Yes      | `string` | Display title for the section                          |
 
 **Example:**
 
@@ -105,11 +105,11 @@ Shorthand that combines `@page` and `@section` in a single tag.
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| page-key | Yes | `string` | Unique identifier for the page |
-| section-key | No | `string` | Section identifier(s) using dot notation |
-| Title | Yes | `string` | Display title for the page or section |
+| Parameter   | Required | Type     | Description                              |
+| ----------- | -------- | -------- | ---------------------------------------- |
+| page-key    | Yes      | `string` | Unique identifier for the page           |
+| section-key | No       | `string` | Section identifier(s) using dot notation |
+| Title       | Yes      | `string` | Display title for the page or section    |
 
 **Example:**
 
@@ -149,9 +149,9 @@ Defines the display order for pages or sections using a number. Lower numbers ap
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| order-number | Yes | `number` | Sort order (lower appears first) |
+| Parameter    | Required | Type     | Description                      |
+| ------------ | -------- | -------- | -------------------------------- |
+| order-number | Yes      | `number` | Sort order (lower appears first) |
 
 **Example:**
 
@@ -327,13 +327,13 @@ Defines color variables used in your styles. Multiple colors can be defined in o
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| color-value | No | `string` | RGB values (`0 0 0`), hex (`#fff`), or CSS variable reference (`--color-name`) |
-| text-color | No | `string` | RGB values for text color on the swatch (after `\|`) |
-| variable-name | Yes | `string` | CSS variable name (e.g., `--color-primary`) |
-| separator | No | `\|` or `-` | Separates variable name from description |
-| description | Yes | `string` | Human-readable color name |
+| Parameter     | Required | Type        | Description                                                                    |
+| ------------- | -------- | ----------- | ------------------------------------------------------------------------------ |
+| color-value   | No       | `string`    | RGB values (`0 0 0`), hex (`#fff`), or CSS variable reference (`--color-name`) |
+| text-color    | No       | `string`    | RGB values for text color on the swatch (after `\|`)                           |
+| variable-name | Yes      | `string`    | CSS variable name (e.g., `--color-primary`)                                    |
+| separator     | No       | `\|` or `-` | Separates variable name from description                                       |
+| description   | Yes      | `string`    | Human-readable color name                                                      |
 
 **Example:**
 
@@ -377,12 +377,12 @@ Defines spacing variables used in your layout. Multiple spacing values can be de
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| spacing-value | Yes | `number` | Spacing multiplier (e.g., `0.5`, `1.2`) |
-| variable-name | Yes | `string` | CSS variable name (e.g., `--space-sm`) |
-| separator | No | `\|` or `-` | Separates variable name from description |
-| description | Yes | `string` | Human-readable spacing name |
+| Parameter     | Required | Type        | Description                              |
+| ------------- | -------- | ----------- | ---------------------------------------- |
+| spacing-value | Yes      | `number`    | Spacing multiplier (e.g., `0.5`, `1.2`)  |
+| variable-name | Yes      | `string`    | CSS variable name (e.g., `--space-sm`)   |
+| separator     | No       | `\|` or `-` | Separates variable name from description |
+| description   | Yes      | `string`    | Human-readable spacing name              |
 
 **Example:**
 
@@ -424,12 +424,12 @@ Defines icons from your icon font. Multiple icons can be defined in one block.
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| icon-code | No | `string` | Unicode character code (e.g., `e900`) or CSS variable reference |
-| variable-name | Yes | `string` | CSS variable name (e.g., `--icon-chevron`) |
-| separator | No | `\|` or `-` | Separates variable name from description |
-| description | Yes | `string` | Human-readable icon name |
+| Parameter     | Required | Type        | Description                                                     |
+| ------------- | -------- | ----------- | --------------------------------------------------------------- |
+| icon-code     | No       | `string`    | Unicode character code (e.g., `e900`) or CSS variable reference |
+| variable-name | Yes      | `string`    | CSS variable name (e.g., `--icon-chevron`)                      |
+| separator     | No       | `\|` or `-` | Separates variable name from description                        |
+| description   | Yes      | `string`    | Human-readable icon name                                        |
 
 **Example:**
 
@@ -444,10 +444,10 @@ Defines icons from your icon font. Multiple icons can be defined in one block.
  * @icon --icon-chevron-up | chevron up
  */
 :root {
-  --icon-chevron-down: "\e900";
-  --icon-chevron-left: "\e901";
-  --icon-chevron-right: "\e902";
-  --icon-chevron-up: "\e903";
+  --icon-chevron-down: '\e900';
+  --icon-chevron-left: '\e901';
+  --icon-chevron-right: '\e902';
+  --icon-chevron-up: '\e903';
 }
 ```
 
@@ -487,10 +487,10 @@ Defines a reusable wrapper context that components can be displayed in. The vari
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| variation-key | Yes | `string` | Unique identifier using dot notation (e.g., `bg.light`, `theme.primary`) |
-| Display Name | Yes | `string` | Human-readable name for the variation |
+| Parameter     | Required | Type     | Description                                                              |
+| ------------- | -------- | -------- | ------------------------------------------------------------------------ |
+| variation-key | Yes      | `string` | Unique identifier using dot notation (e.g., `bg.light`, `theme.primary`) |
+| Display Name  | Yes      | `string` | Human-readable name for the variation                                    |
 
 **Example:**
 
@@ -548,21 +548,21 @@ Specifies which variations a component should be displayed in. Supports pattern 
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| patterns | No | `string` | Comma-separated list of variation patterns (empty/no tag = all variations) |
+| Parameter | Required | Type     | Description                                                                |
+| --------- | -------- | -------- | -------------------------------------------------------------------------- |
+| patterns  | No       | `string` | Comma-separated list of variation patterns (empty/no tag = all variations) |
 
 **Pattern matching:**
 
-| Pattern | Matches | Example |
-|---------|---------|---------|
-| `bg` | All variations in the `bg` group | `bg.light`, `bg.dark`, etc. |
-| `bg.light` | Exact match only | `bg.light` |
-| `*` | All defined variations | Everything |
-| `bg, theme` | Multiple groups | All `bg.*` and `theme.*` |
-| `bg, -bg.dark` | Group with exclusion | All `bg.*` except `bg.dark` |
-| `*, -bg.dark` | Wildcard with exclusion | All variations except `bg.dark` |
-| Empty or no tag | All variations | Same as `*` |
+| Pattern         | Matches                          | Example                         |
+| --------------- | -------------------------------- | ------------------------------- |
+| `bg`            | All variations in the `bg` group | `bg.light`, `bg.dark`, etc.     |
+| `bg.light`      | Exact match only                 | `bg.light`                      |
+| `*`             | All defined variations           | Everything                      |
+| `bg, theme`     | Multiple groups                  | All `bg.*` and `theme.*`        |
+| `bg, -bg.dark`  | Group with exclusion             | All `bg.*` except `bg.dark`     |
+| `*, -bg.dark`   | Wildcard with exclusion          | All variations except `bg.dark` |
+| Empty or no tag | All variations                   | Same as `*`                     |
 
 **Example:**
 
@@ -623,9 +623,9 @@ Creates a documentation block that displays a component in all its applicable va
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| page-key.section-key | Yes | `string` | Block key to showcase (format: `page.section`) |
+| Parameter            | Required | Type     | Description                                    |
+| -------------------- | -------- | -------- | ---------------------------------------------- |
+| page-key.section-key | Yes      | `string` | Block key to showcase (format: `page.section`) |
 
 **Example:**
 
@@ -669,17 +669,17 @@ Creates a documentation block that displays multiple components within a single 
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| variation-key | Yes | `string` | The variation to use as the wrapper (e.g., `bg.light`, `bg.dark`) |
-| component-patterns | No | `string` | Comma-separated component patterns with optional `+` or `-` prefixes |
+| Parameter          | Required | Type     | Description                                                          |
+| ------------------ | -------- | -------- | -------------------------------------------------------------------- |
+| variation-key      | Yes      | `string` | The variation to use as the wrapper (e.g., `bg.light`, `bg.dark`)    |
+| component-patterns | No       | `string` | Comma-separated component patterns with optional `+` or `-` prefixes |
 
 **Pattern modes:**
 
-| Prefix | Mode | Behavior |
-|--------|------|----------|
+| Prefix      | Mode          | Behavior                                                                                |
+| ----------- | ------------- | --------------------------------------------------------------------------------------- |
 | None or `-` | Auto-discover | Find all components with matching `@variations`, optionally exclude specific components |
-| `+` | Explicit | Only include explicitly specified components |
+| `+`         | Explicit      | Only include explicitly specified components                                            |
 
 **Example:**
 
@@ -735,12 +735,12 @@ Creates a section showing multiple components rendered together within the speci
 
 **Relationship with other variation tags:**
 
-| Tag | Relationship |
-|-----|--------------|
-| `@showcase` | ONE component → MULTIPLE variations (shows one component across different backgrounds) |
+| Tag              | Relationship                                                                           |
+| ---------------- | -------------------------------------------------------------------------------------- |
+| `@showcase`      | ONE component → MULTIPLE variations (shows one component across different backgrounds) |
 | `@variationdemo` | ONE variation → MULTIPLE components (shows multiple components in the same background) |
-| `@variation` | Defines the wrapper used by `@variationdemo` |
-| `@variations` | Marks components that can be auto-discovered by `@variationdemo` |
+| `@variation`     | Defines the wrapper used by `@variationdemo`                                           |
+| `@variations`    | Marks components that can be auto-discovered by `@variationdemo`                       |
 
 **Use cases:**
 
@@ -813,22 +813,22 @@ Document design tokens together:
 
 Quick reference for all tags:
 
-| Tag | Role | Required Parameters | Description |
-|-----|------|---------------------|-------------|
-| `@page` | Placement | `page-key`, `Page Title` | Create or reference a page |
-| `@section` | Placement | `section-key`, `Section Title` | Create a section within a page |
-| `@location` | Placement | `page-key[.section-key]`, `Title` | Shorthand for page and section |
-| `@order` | Placement | `order-number` | Define sort order |
-| `@example` | Display | Content on following lines | Show live preview and code |
-| `@code` | Display | Content on following lines | Show code block only |
-| `@hideCode` | Display | None | Hide code block from example |
-| `@color` | Display | `variable-name`, `description` | Define color variables |
-| `@space` | Display | `{value}`, `variable-name`, `description` | Define spacing variables |
-| `@icon` | Display | `variable-name`, `description` | Define icon font characters |
-| `@variation` | Display | `variation-key`, `Display Name` | Define a reusable wrapper context |
-| `@variations` | Display | Patterns (optional) | Mark which variations to apply |
-| `@showcase` | Display | `page-key.section-key` | Display component in variations |
-| `@variationdemo` | Display | `variation-key`, patterns (optional) | Display multiple components in one variation |
+| Tag              | Role      | Required Parameters                       | Description                                  |
+| ---------------- | --------- | ----------------------------------------- | -------------------------------------------- |
+| `@page`          | Placement | `page-key`, `Page Title`                  | Create or reference a page                   |
+| `@section`       | Placement | `section-key`, `Section Title`            | Create a section within a page               |
+| `@location`      | Placement | `page-key[.section-key]`, `Title`         | Shorthand for page and section               |
+| `@order`         | Placement | `order-number`                            | Define sort order                            |
+| `@example`       | Display   | Content on following lines                | Show live preview and code                   |
+| `@code`          | Display   | Content on following lines                | Show code block only                         |
+| `@hideCode`      | Display   | None                                      | Hide code block from example                 |
+| `@color`         | Display   | `variable-name`, `description`            | Define color variables                       |
+| `@space`         | Display   | `{value}`, `variable-name`, `description` | Define spacing variables                     |
+| `@icon`          | Display   | `variable-name`, `description`            | Define icon font characters                  |
+| `@variation`     | Display   | `variation-key`, `Display Name`           | Define a reusable wrapper context            |
+| `@variations`    | Display   | Patterns (optional)                       | Mark which variations to apply               |
+| `@showcase`      | Display   | `page-key.section-key`                    | Display component in variations              |
+| `@variationdemo` | Display   | `variation-key`, patterns (optional)      | Display multiple components in one variation |
 
 ## See also
 

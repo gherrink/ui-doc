@@ -1,9 +1,10 @@
+import path from 'node:path'
+
 import type { AssetType, FileSystem } from '@ui-doc/core'
+import picomatch from 'picomatch'
 
 import type { AssetOption, AssetResolved, CopyAssetOption, CopyAssetResolved } from './asset.types'
 import type { Options, ResolvedOptions } from './option.types'
-import path from 'node:path'
-import picomatch from 'picomatch'
 
 const STYLE_EXTENSIONS = /\.(?:css|less|sass|scss)$/
 const SCRIPT_EXTENSIONS = /\.(?:js|ts)$/
@@ -105,10 +106,10 @@ export function rewriteCssUrls(
   const rewriteUrl = (urlPath: string, quote: string): string | null => {
     // Skip data URIs and absolute URLs
     if (
-      urlPath.startsWith('data:')
-      || urlPath.startsWith('http://')
-      || urlPath.startsWith('https://')
-      || urlPath.startsWith('//')
+      urlPath.startsWith('data:') ||
+      urlPath.startsWith('http://') ||
+      urlPath.startsWith('https://') ||
+      urlPath.startsWith('//')
     ) {
       return null
     }
@@ -180,15 +181,15 @@ export async function resolveAssets(
     }
 
     if (
-      assetOption.fromInput !== undefined
-      && (typeof assetOption.fromInput === 'function'
+      assetOption.fromInput !== undefined &&
+      (typeof assetOption.fromInput === 'function'
         ? assetOption.fromInput(asset)
         : assetOption.fromInput)
     ) {
       asset.fromInput = true
     } else if (assetOption.source !== undefined) {
-      asset.source
-        = typeof assetOption.source === 'function' ? assetOption.source() : assetOption.source
+      asset.source =
+        typeof assetOption.source === 'function' ? assetOption.source() : assetOption.source
     } else if (asset.originalFileName !== undefined && asset.originalFileName !== '') {
       try {
         let source = await fileSystem.fileRead(asset.originalFileName)
@@ -248,7 +249,8 @@ export async function resolveAssets(
       ...(options.assets?.page ?? []).map(async asset => resolveAssetOption(asset, 'page')),
       ...(options.assets?.example ?? []).map(async asset => resolveAssetOption(asset, 'example')),
     ])
-  ).filter((asset): asset is AssetResolved =>
-    asset !== null && (asset.source !== undefined || asset.fromInput === true),
+  ).filter(
+    (asset): asset is AssetResolved =>
+      asset !== null && (asset.source !== undefined || asset.fromInput === true),
   )
 }

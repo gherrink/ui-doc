@@ -5,6 +5,7 @@ import type {
   OutputCallback,
   UIDoc,
 } from '@ui-doc/core'
+import { BlockParseError } from '@ui-doc/core'
 import type {
   InputOptions,
   NormalizedInputOptions,
@@ -12,14 +13,12 @@ import type {
   OutputBundle,
   PluginContext,
 } from 'rollup'
-import type { Options } from '../src'
-import type { ResolvedOptions } from '../src/utils/option.types'
-
-import { BlockParseError } from '@ui-doc/core'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import type { Options } from '../src'
 import uidocPlugin, { PLUGIN_NAME } from '../src'
 import { resolveOptions } from '../src/utils/option'
+import type { ResolvedOptions } from '../src/utils/option.types'
 
 // Mock dependencies
 vi.mock('../src/utils/option', () => ({
@@ -323,9 +322,7 @@ describe('uidocPlugin', () => {
     })
 
     it('should warn about assets whose configured file could not be read', async () => {
-      mockResolvedOptions.unreadableAssets = [
-        { name: 'app.css', file: '/project/dist/app.css' },
-      ]
+      mockResolvedOptions.unreadableAssets = [{ name: 'app.css', file: '/project/dist/app.css' }]
 
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
 
@@ -466,12 +463,7 @@ describe('uidocPlugin', () => {
         isWrite: boolean,
       ) => Promise<void>
       const generateBundle = plugin.generateBundle as GenerateBundleHook
-      await generateBundle.call(
-        mockPluginContext,
-        {} as NormalizedOutputOptions,
-        {},
-        false,
-      )
+      await generateBundle.call(mockPluginContext, {} as NormalizedOutputOptions, {}, false)
 
       expect(mockEmitFile).toHaveBeenCalledWith({
         name: 'styles',
@@ -498,16 +490,9 @@ describe('uidocPlugin', () => {
         isWrite: boolean,
       ) => Promise<void>
       const generateBundle = plugin.generateBundle as GenerateBundleHook
-      await generateBundle.call(
-        mockPluginContext,
-        {} as NormalizedOutputOptions,
-        {},
-        false,
-      )
+      await generateBundle.call(mockPluginContext, {} as NormalizedOutputOptions, {}, false)
 
-      expect(mockEmitFile).not.toHaveBeenCalledWith(
-        expect.objectContaining({ name: 'styles' }),
-      )
+      expect(mockEmitFile).not.toHaveBeenCalledWith(expect.objectContaining({ name: 'styles' }))
     })
 
     it('should call uidocAsset for all assets', async () => {
@@ -530,12 +515,7 @@ describe('uidocPlugin', () => {
         isWrite: boolean,
       ) => Promise<void>
       const generateBundle = plugin.generateBundle as GenerateBundleHook
-      await generateBundle.call(
-        mockPluginContext,
-        {} as NormalizedOutputOptions,
-        {},
-        false,
-      )
+      await generateBundle.call(mockPluginContext, {} as NormalizedOutputOptions, {}, false)
 
       expect(mockResolvedOptions.uidocAsset).toHaveBeenCalledWith('styles.css', 'page', {
         attrs: { rel: 'stylesheet' },
@@ -547,12 +527,10 @@ describe('uidocPlugin', () => {
     it('should call uidoc.output and emit generated files', async () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
 
-      mockOutput.mockImplementation(
-        async (callback: OutputCallback) => {
-          await callback('index.html', '<html>Index</html>')
-          await callback('page.html', '<html>Page</html>')
-        },
-      )
+      mockOutput.mockImplementation(async (callback: OutputCallback) => {
+        await callback('index.html', '<html>Index</html>')
+        await callback('page.html', '<html>Page</html>')
+      })
 
       type GenerateBundleHook = (
         options: NormalizedOutputOptions,
@@ -560,12 +538,7 @@ describe('uidocPlugin', () => {
         isWrite: boolean,
       ) => Promise<void>
       const generateBundle = plugin.generateBundle as GenerateBundleHook
-      await generateBundle.call(
-        mockPluginContext,
-        {} as NormalizedOutputOptions,
-        {},
-        false,
-      )
+      await generateBundle.call(mockPluginContext, {} as NormalizedOutputOptions, {}, false)
 
       expect(mockOutput).toHaveBeenCalledWith(expect.any(Function))
       expect(mockEmitFile).toHaveBeenCalledWith({
@@ -593,11 +566,9 @@ describe('uidocPlugin', () => {
 
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
 
-      mockOutput.mockImplementation(
-        async (callback: OutputCallback) => {
-          await callback('index.html', '<html>Index</html>')
-        },
-      )
+      mockOutput.mockImplementation(async (callback: OutputCallback) => {
+        await callback('index.html', '<html>Index</html>')
+      })
 
       type GenerateBundleHook = (
         options: NormalizedOutputOptions,
@@ -605,12 +576,7 @@ describe('uidocPlugin', () => {
         isWrite: boolean,
       ) => Promise<void>
       const generateBundle = plugin.generateBundle as GenerateBundleHook
-      await generateBundle.call(
-        mockPluginContext,
-        {} as NormalizedOutputOptions,
-        {},
-        false,
-      )
+      await generateBundle.call(mockPluginContext, {} as NormalizedOutputOptions, {}, false)
 
       expect(mockEmitFile).toHaveBeenCalledWith({
         name: 'styles',
@@ -644,12 +610,7 @@ describe('uidocPlugin', () => {
         isWrite: boolean,
       ) => Promise<void>
       const generateBundle = plugin.generateBundle as GenerateBundleHook
-      await generateBundle.call(
-        mockPluginContext,
-        {} as NormalizedOutputOptions,
-        {},
-        false,
-      )
+      await generateBundle.call(mockPluginContext, {} as NormalizedOutputOptions, {}, false)
 
       expect(mockInfo).toHaveBeenCalledWith({
         code: 'OUTPUT',
@@ -680,12 +641,7 @@ describe('uidocPlugin', () => {
         isWrite: boolean,
       ) => Promise<void>
       const generateBundle = plugin.generateBundle as GenerateBundleHook
-      await generateBundle.call(
-        mockPluginContext,
-        {} as NormalizedOutputOptions,
-        {},
-        false,
-      )
+      await generateBundle.call(mockPluginContext, {} as NormalizedOutputOptions, {}, false)
 
       expect(mockEmitFile).toHaveBeenCalledWith({
         name: 'hashed',
@@ -724,12 +680,7 @@ describe('uidocPlugin', () => {
         isWrite: boolean,
       ) => Promise<void>
       const generateBundle = plugin.generateBundle as GenerateBundleHook
-      await generateBundle.call(
-        mockPluginContext,
-        {} as NormalizedOutputOptions,
-        {},
-        false,
-      )
+      await generateBundle.call(mockPluginContext, {} as NormalizedOutputOptions, {}, false)
 
       expect(mockEmitFile).toHaveBeenCalledWith({
         name: 'ui-doc/hashed',
@@ -753,11 +704,7 @@ describe('uidocPlugin', () => {
         bundle: OutputBundle,
       ) => Promise<void>
       const writeBundle = plugin.writeBundle as WriteBundleHook
-      await writeBundle.call(
-        mockPluginContext,
-        { dir: undefined } as NormalizedOutputOptions,
-        {},
-      )
+      await writeBundle.call(mockPluginContext, { dir: undefined } as NormalizedOutputOptions, {})
 
       expect(mockFileCopy).not.toHaveBeenCalled()
       expect(mockDirectoryCopy).not.toHaveBeenCalled()
@@ -771,11 +718,7 @@ describe('uidocPlugin', () => {
         bundle: OutputBundle,
       ) => Promise<void>
       const writeBundle = plugin.writeBundle as WriteBundleHook
-      await writeBundle.call(
-        mockPluginContext,
-        { dir: '' } as NormalizedOutputOptions,
-        {},
-      )
+      await writeBundle.call(mockPluginContext, { dir: '' } as NormalizedOutputOptions, {})
 
       expect(mockFileCopy).not.toHaveBeenCalled()
       expect(mockDirectoryCopy).not.toHaveBeenCalled()
@@ -795,11 +738,7 @@ describe('uidocPlugin', () => {
         bundle: OutputBundle,
       ) => Promise<void>
       const writeBundle = plugin.writeBundle as WriteBundleHook
-      await writeBundle.call(
-        mockPluginContext,
-        { dir: 'dist' } as NormalizedOutputOptions,
-        {},
-      )
+      await writeBundle.call(mockPluginContext, { dir: 'dist' } as NormalizedOutputOptions, {})
 
       expect(mockEnsureDirectoryExists).toHaveBeenCalledWith('dist/ui-doc')
       expect(mockFileCopy).toHaveBeenCalledWith('dist/main.js', 'dist/ui-doc/main.js')
@@ -820,11 +759,7 @@ describe('uidocPlugin', () => {
         bundle: OutputBundle,
       ) => Promise<void>
       const writeBundle = plugin.writeBundle as WriteBundleHook
-      await writeBundle.call(
-        mockPluginContext,
-        { dir: 'dist' } as NormalizedOutputOptions,
-        {},
-      )
+      await writeBundle.call(mockPluginContext, { dir: 'dist' } as NormalizedOutputOptions, {})
 
       expect(mockFileExists).toHaveBeenCalledWith('dist/main.js.map')
       expect(mockFileCopy).toHaveBeenCalledWith('dist/main.js', 'dist/ui-doc/main.js')
@@ -845,11 +780,7 @@ describe('uidocPlugin', () => {
         bundle: OutputBundle,
       ) => Promise<void>
       const writeBundle = plugin.writeBundle as WriteBundleHook
-      await writeBundle.call(
-        mockPluginContext,
-        { dir: 'dist' } as NormalizedOutputOptions,
-        {},
-      )
+      await writeBundle.call(mockPluginContext, { dir: 'dist' } as NormalizedOutputOptions, {})
 
       expect(mockFileExists).toHaveBeenCalledWith('dist/main.js.map')
       expect(mockFileCopy).toHaveBeenCalledWith('dist/main.js', 'dist/ui-doc/main.js')
@@ -866,11 +797,7 @@ describe('uidocPlugin', () => {
         bundle: OutputBundle,
       ) => Promise<void>
       const writeBundle = plugin.writeBundle as WriteBundleHook
-      await writeBundle.call(
-        mockPluginContext,
-        { dir: 'dist' } as NormalizedOutputOptions,
-        {},
-      )
+      await writeBundle.call(mockPluginContext, { dir: 'dist' } as NormalizedOutputOptions, {})
 
       expect(mockDirectoryCopy).toHaveBeenCalledWith('public/assets', 'dist/')
       expect(mockInfo).toHaveBeenCalledWith({
@@ -889,11 +816,7 @@ describe('uidocPlugin', () => {
         bundle: OutputBundle,
       ) => Promise<void>
       const writeBundle = plugin.writeBundle as WriteBundleHook
-      await writeBundle.call(
-        mockPluginContext,
-        { dir: 'dist' } as NormalizedOutputOptions,
-        {},
-      )
+      await writeBundle.call(mockPluginContext, { dir: 'dist' } as NormalizedOutputOptions, {})
 
       expect(mockDirectoryCopy).not.toHaveBeenCalled()
     })
@@ -910,11 +833,7 @@ describe('uidocPlugin', () => {
         bundle: OutputBundle,
       ) => Promise<void>
       const writeBundle = plugin.writeBundle as WriteBundleHook
-      await writeBundle.call(
-        mockPluginContext,
-        { dir: 'dist' } as NormalizedOutputOptions,
-        {},
-      )
+      await writeBundle.call(mockPluginContext, { dir: 'dist' } as NormalizedOutputOptions, {})
 
       expect(mockFileCopy).toHaveBeenCalled()
       expect(mockDirectoryCopy).toHaveBeenCalled()

@@ -10,7 +10,8 @@ Comprehensive patterns for writing Vitest tests in TypeScript.
 import type { SomeType } from '../src/types'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-describe('moduleName', () => { // Use camelCase starting lowercase
+describe('moduleName', () => {
+  // Use camelCase starting lowercase
   // Setup/teardown
   beforeEach(() => {
     vi.clearAllMocks()
@@ -38,7 +39,8 @@ describe('moduleName', () => { // Use camelCase starting lowercase
 Use nested `describe` blocks to organize tests by feature or method:
 
 ```typescript
-describe('parser', () => { // Use camelCase starting lowercase
+describe('parser', () => {
+  // Use camelCase starting lowercase
   describe('parse', () => {
     describe('when input is valid', () => {
       it('should return parsed result', () => {})
@@ -73,7 +75,8 @@ const mockRead = vi.fn<Reader['read']>().mockReturnValue('content')
 const mockCalculate = vi.fn<Calculator['calc']>().mockImplementation((a, b) => a + b)
 
 // Sequential return values (for testing state changes)
-const mockFetch = vi.fn<Fetcher['fetch']>()
+const mockFetch = vi
+  .fn<Fetcher['fetch']>()
   .mockReturnValueOnce({ status: 'pending' })
   .mockReturnValueOnce({ status: 'complete' })
   .mockReturnValueOnce({ status: 'archived' })
@@ -249,7 +252,8 @@ const mockFetch = vi.fn<Fetcher['fetch']>().mockResolvedValue({ data: [] })
 const mockFetch = vi.fn<Fetcher['fetch']>().mockRejectedValue(new Error('Network error'))
 
 // Sequential async values
-const mockFetch = vi.fn<Fetcher['fetch']>()
+const mockFetch = vi
+  .fn<Fetcher['fetch']>()
   .mockResolvedValueOnce({ status: 'loading' })
   .mockResolvedValueOnce({ status: 'done' })
 ```
@@ -270,7 +274,7 @@ function createTestUser(overrides = {}): User {
 }
 
 // Setup helper
-function setupParser(): { parser: Parser, mockRenderer: MockRenderer } {
+function setupParser(): { parser: Parser; mockRenderer: MockRenderer } {
   const mockRenderer = { render: vi.fn() }
   const parser = new Parser(mockRenderer)
   return { parser, mockRenderer }

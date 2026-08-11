@@ -1,16 +1,28 @@
 import type { Block, BlockExample } from './Block.types'
 import type { BlockParser } from './BlockParser.types'
-import type { Asset, Context, ContextEntry, ContextExample, ContextShowcase, ContextShowcaseExample, ContextShowcaseItem, ContextVariation, ContextVariationdemo, ContextVariationdemoItem, GenerateExampleContext } from './Context.types'
+import { createCommentBlockParser } from './CommentBlockParser'
+import type {
+  Asset,
+  Context,
+  ContextEntry,
+  ContextExample,
+  ContextShowcase,
+  ContextShowcaseExample,
+  ContextShowcaseItem,
+  ContextVariation,
+  ContextVariationdemo,
+  ContextVariationdemoItem,
+  GenerateExampleContext,
+} from './Context.types'
+import { EventEmitterBase } from './EventEmitterBase'
 import type { FilePath } from './FileSystem.types'
+import { noopLogger } from './Logger'
 import type { Logger } from './Logger.types'
+import { createMarkdownDescriptionParser } from './MarkdownDescriptionParser'
 import type { Renderer } from './Renderer.types'
+import { matchesVariationPattern } from './tag-transformers/variations'
 import type { GenerateFunctions, Options, OutputCallback, Source } from './UIDoc.types'
 import type { ContextEntryEvent, UIDocEventMap as EventMap } from './UIDocEvent.types'
-import { createCommentBlockParser } from './CommentBlockParser'
-import { EventEmitterBase } from './EventEmitterBase'
-import { noopLogger } from './Logger'
-import { createMarkdownDescriptionParser } from './MarkdownDescriptionParser'
-import { matchesVariationPattern } from './tag-transformers/variations'
 
 export class UIDoc extends EventEmitterBase<EventMap> {
   protected sources: Record<FilePath, Source>
@@ -139,7 +151,12 @@ export class UIDoc extends EventEmitterBase<EventMap> {
         example.id = exampleKeyToId(key)
       }
 
-      if ((example.src === undefined || example.src === '') || (example.file === undefined || example.file === '')) {
+      if (
+        example.src === undefined ||
+        example.src === '' ||
+        example.file === undefined ||
+        example.file === ''
+      ) {
         example.file = `examples/${example.id}.html`
         example.src = this.generate.resolve(example.file, 'example')
       }
@@ -288,7 +305,9 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     const sourceBlock = this.findBlockByKey(block.showcase)
 
     if (!sourceBlock || !sourceBlock.example) {
-      this.logger.debug(`Showcase target "${block.showcase}" not found or has no example`, { phase: 'transform' })
+      this.logger.debug(`Showcase target "${block.showcase}" not found or has no example`, {
+        phase: 'transform',
+      })
 
       return null
     }
@@ -422,8 +441,17 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     this.logger.debug(`Transforming block "${block.key}"`, { phase: 'transform' })
     const entry = this.contextEntry(block.key)
     // Explicit list of properties that can be transferred from Block to ContextEntry
-    const transferableProps = ['order', 'description', 'code', 'example', 'colors', 'spaces', 'icons', 'hideCode'] as const
-    type TransferableProp = typeof transferableProps[number]
+    const transferableProps = [
+      'order',
+      'description',
+      'code',
+      'example',
+      'colors',
+      'spaces',
+      'icons',
+      'hideCode',
+    ] as const
+    type TransferableProp = (typeof transferableProps)[number]
 
     const event: ContextEntryEvent = {
       changes: { deleted: [], updated: {} },
@@ -434,8 +462,8 @@ export class UIDoc extends EventEmitterBase<EventMap> {
 
     // Handle title specially (has different source/target logic)
     if (
-      (typeof block.title === 'string' && block.title !== '')
-      || (entry.title === entry.id && block.title !== undefined && block.title !== '')
+      (typeof block.title === 'string' && block.title !== '') ||
+      (entry.title === entry.id && block.title !== undefined && block.title !== '')
     ) {
       event.changes.updated.title = { from: entry.title, to: block.title }
       entry.title = block.title
@@ -583,7 +611,9 @@ export class UIDoc extends EventEmitterBase<EventMap> {
 
   public pageContent(page: ContextEntry, layout?: string): string {
     this.ensureShowcasesResolved()
-    this.logger.debug(`Rendering page "${page.id}" with layout "${layout ?? 'default'}"`, { phase: 'render' })
+    this.logger.debug(`Rendering page "${page.id}" with layout "${layout ?? 'default'}"`, {
+      phase: 'render',
+    })
     const context = {
       assets: this.context.pageAssets,
       footerText: this.generate.footerText(),
@@ -623,9 +653,11 @@ export class UIDoc extends EventEmitterBase<EventMap> {
   }
 
   public exampleContent(example: ContextExample, layout = 'example'): string {
-    this.logger.debug(`Rendering example "${example.id}" with layout "${layout}"`, { phase: 'render' })
+    this.logger.debug(`Rendering example "${example.id}" with layout "${layout}"`, {
+      phase: 'render',
+    })
     const context: GenerateExampleContext = {
-      ...JSON.parse(JSON.stringify(example)) as ContextExample,
+      ...(JSON.parse(JSON.stringify(example)) as ContextExample),
       title: this.generate.exampleTitle(example),
       assets: this.context.exampleAssets,
     }
@@ -718,7 +750,9 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     const variation = this.context.variations[block.variationdemo]
 
     if (variation === undefined) {
-      this.logger.debug(`Variationdemo target variation "${block.variationdemo}" not found`, { phase: 'transform' })
+      this.logger.debug(`Variationdemo target variation "${block.variationdemo}" not found`, {
+        phase: 'transform',
+      })
 
       return null
     }
@@ -734,7 +768,9 @@ export class UIDoc extends EventEmitterBase<EventMap> {
     )
 
     if (filtered.length === 0) {
-      this.logger.debug(`No matching components for variationdemo "${blockKey}"`, { phase: 'transform' })
+      this.logger.debug(`No matching components for variationdemo "${blockKey}"`, {
+        phase: 'transform',
+      })
 
       return null
     }
@@ -746,7 +782,8 @@ export class UIDoc extends EventEmitterBase<EventMap> {
 
       return {
         componentKey: compKey,
-        componentTitle: compBlock.title !== undefined && compBlock.title !== '' ? compBlock.title : compKey,
+        componentTitle:
+          compBlock.title !== undefined && compBlock.title !== '' ? compBlock.title : compKey,
         file,
         src: this.generate.resolve(file, 'showcase'),
       }

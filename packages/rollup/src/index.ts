@@ -1,13 +1,13 @@
-import type { AssetType, FileFinder, FileSystem, UIDoc } from '@ui-doc/core'
-
-import type { Plugin, PluginContext } from 'rollup'
-import type { Options, ResolvedOptions } from './utils/option.types'
 import path from 'node:path'
 
+import type { AssetType, FileFinder, FileSystem, UIDoc } from '@ui-doc/core'
 import { BlockParseError } from '@ui-doc/core'
+import type { Plugin, PluginContext } from 'rollup'
+
 import { version } from '../package.json'
 import { resolveAssetType } from './utils/asset'
 import { resolveOptions } from './utils/option'
+import type { Options, ResolvedOptions } from './utils/option.types'
 import { isTemplateFile, reloadTemplate } from './utils/template'
 
 export const PLUGIN_NAME = 'ui-doc'
@@ -33,7 +33,7 @@ export interface Api {
   uidocAsset: (
     src: string,
     context: 'example' | 'page',
-    options?: { fromInput?: boolean, type?: AssetType, attrs?: Record<string, string> },
+    options?: { fromInput?: boolean; type?: AssetType; attrs?: Record<string, string> },
   ) => void
   /** Check if an asset was marked as coming from input */
   isAssetFromInput: (src: string) => boolean
@@ -104,11 +104,11 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       options.assets = options.assets.map(asset => {
         const { name, fromInput = false } = asset
         if (
-          fromInput
-          && typeof inputOptions.input === 'object'
-          && inputOptions.input !== null
-          && !Array.isArray(inputOptions.input)
-          && inputOptions.input[name]
+          fromInput &&
+          typeof inputOptions.input === 'object' &&
+          inputOptions.input !== null &&
+          !Array.isArray(inputOptions.input) &&
+          inputOptions.input[name]
         ) {
           const inputPath = inputOptions.input[name]
           return {
@@ -126,8 +126,8 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       // warning can reach Rollup rather than being thrown at config time.
       options.unreadableAssets.forEach(({ name, file }) => {
         this.warn(
-          `Asset "${name}" could not be read from "${file}" and was skipped. `
-          + 'If it is produced by this build, it will be picked up on the next run.',
+          `Asset "${name}" could not be read from "${file}" and was skipped. ` +
+            'If it is produced by this build, it will be picked up on the next run.',
         )
       })
 

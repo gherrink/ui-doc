@@ -20,7 +20,8 @@ Write comprehensive Vitest tests following UI-Doc project conventions. This skil
 ```typescript
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-describe('componentName', () => { // Use camelCase starting lowercase
+describe('componentName', () => {
+  // Use camelCase starting lowercase
   beforeEach(() => {
     vi.clearAllMocks()
   })
@@ -58,9 +59,7 @@ const mockFn = vi.fn<ClassName['methodName']>()
 const mockParse = vi.fn<Parser['parse']>().mockReturnValue([])
 
 // Sequential return values
-vi.fn<Reader['read']>()
-  .mockReturnValueOnce(firstResult)
-  .mockReturnValueOnce(secondResult)
+vi.fn<Reader['read']>().mockReturnValueOnce(firstResult).mockReturnValueOnce(secondResult)
 ```
 
 ### Module Mocking

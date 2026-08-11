@@ -1,9 +1,9 @@
 import type { FileSystem, Logger, Renderer } from '@ui-doc/core'
-import type { Options, ResolvedOptions } from './option.types'
 import { createConsoleLogger, noopLogger, UIDoc } from '@ui-doc/core'
-
 import { NodeFileSystem } from '@ui-doc/node'
+
 import { resolveAssets, resolveAssetType, resolveCopyAssets } from './asset'
+import type { Options, ResolvedOptions } from './option.types'
 
 async function createDefaultRenderer(
   templatePath: string | undefined,
@@ -82,8 +82,8 @@ export async function resolveOptions(options: Options): Promise<ResolvedOptions>
   const fileSystem = NodeFileSystem.init()
   const finder = fileSystem.createFileFinder(options.source)
   const logger = options.debug === true ? createConsoleLogger('debug') : noopLogger
-  const renderer = options.renderer
-    ?? (await createDefaultRenderer(options.templatePath, fileSystem, logger))
+  const renderer =
+    options.renderer ?? (await createDefaultRenderer(options.templatePath, fileSystem, logger))
   const uidoc = new UIDoc({
     blockParser: options.blockParser,
     logger,

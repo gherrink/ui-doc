@@ -23,7 +23,10 @@ export function parseComponentPatterns(value: string): {
   const exclude: string[] = []
   let explicitMode = false
 
-  const parts = value.split(',').map(p => p.trim()).filter(p => p !== '')
+  const parts = value
+    .split(',')
+    .map(p => p.trim())
+    .filter(p => p !== '')
 
   for (const part of parts) {
     if (part.startsWith('+')) {

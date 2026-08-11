@@ -1,8 +1,7 @@
 import type { FileFinder, FileFinderOnFoundCallback, FileSystem } from '@ui-doc/core'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { HtmlRenderer } from '../src/HtmlRenderer'
-
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { TemplateLoader } from '../src/TemplateLoader'
 
 describe('templateLoader', () => {
@@ -40,9 +39,7 @@ describe('templateLoader', () => {
       directories: vi.fn(() => []),
     }
 
-    mockCreateFileFinder = vi
-      .fn<FileSystem['createFileFinder']>()
-      .mockReturnValue(mockFinder)
+    mockCreateFileFinder = vi.fn<FileSystem['createFileFinder']>().mockReturnValue(mockFinder)
 
     mockFileSystem = {
       isDirectory: mockIsDirectory,
@@ -124,9 +121,7 @@ describe('templateLoader', () => {
         .mockResolvedValueOnce(false)
         .mockResolvedValueOnce(true)
 
-      mockFileBasename
-        .mockReturnValueOnce('main')
-        .mockReturnValueOnce('header')
+      mockFileBasename.mockReturnValueOnce('main').mockReturnValueOnce('header')
 
       mockFileRead
         .mockResolvedValueOnce('<html>layout</html>')
@@ -185,11 +180,9 @@ describe('templateLoader', () => {
 
       mockFileRead.mockResolvedValueOnce('  \n  <html>layout</html>  \n  ')
 
-      mockFinderSearch.mockImplementationOnce(
-        async (callback: FileFinderOnFoundCallback) => {
-          await callback('/templates/layouts/main.html')
-        },
-      )
+      mockFinderSearch.mockImplementationOnce(async (callback: FileFinderOnFoundCallback) => {
+        await callback('/templates/layouts/main.html')
+      })
 
       await TemplateLoader.load({
         renderer: mockRenderer,
@@ -221,13 +214,11 @@ describe('templateLoader', () => {
         .mockResolvedValueOnce('<footer>Footer</footer>')
         .mockResolvedValueOnce('<aside>Sidebar</aside>')
 
-      mockFinderSearch.mockImplementationOnce(
-        async (callback: FileFinderOnFoundCallback) => {
-          await callback('/templates/partials/header.html')
-          await callback('/templates/partials/footer.html')
-          await callback('/templates/partials/sidebar.html')
-        },
-      )
+      mockFinderSearch.mockImplementationOnce(async (callback: FileFinderOnFoundCallback) => {
+        await callback('/templates/partials/header.html')
+        await callback('/templates/partials/footer.html')
+        await callback('/templates/partials/sidebar.html')
+      })
 
       await TemplateLoader.load({
         renderer: mockRenderer,
@@ -352,11 +343,9 @@ describe('templateLoader', () => {
 
       mockFileRead.mockRejectedValue(readError)
 
-      mockFinderSearch.mockImplementationOnce(
-        async (callback: FileFinderOnFoundCallback) => {
-          await callback('/templates/layouts/main.html')
-        },
-      )
+      mockFinderSearch.mockImplementationOnce(async (callback: FileFinderOnFoundCallback) => {
+        await callback('/templates/layouts/main.html')
+      })
 
       await expect(
         TemplateLoader.load({

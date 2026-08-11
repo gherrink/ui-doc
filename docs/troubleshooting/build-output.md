@@ -617,7 +617,7 @@ UI-Doc uses Handlebars templating. Verify your templates use valid Handlebars sy
 <h1>{{title}}</h1>
 
 {{#each sections}}
-  <section>{{this.title}}</section>
+<section>{{this.title}}</section>
 {{/each}}
 ```
 

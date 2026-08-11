@@ -1,21 +1,21 @@
 import type { Asset, GenerateContext, GenerateExampleContext, Logger } from '@ui-doc/core'
+import { noopLogger } from '@ui-doc/core'
 
+import { HTMLRendererError, HTMLRendererSyntaxError, ParserError } from './errors'
+import { InlineReader } from './InlineReader'
 import type { Node } from './nodes'
 import type { Parser } from './Parser.types'
 import type { Reader } from './Reader.types'
 import type { RenderContext, Renderer, SourceInput } from './Renderer.types'
-import { noopLogger } from '@ui-doc/core'
-import { HTMLRendererError, HTMLRendererSyntaxError, ParserError } from './errors'
-import { InlineReader } from './InlineReader'
 
 function instanceofReader(object: unknown): object is Reader {
   return (
-    object !== null
-    && typeof object === 'object'
-    && typeof (object as Reader).peek === 'function'
-    && typeof (object as Reader).consume === 'function'
-    && typeof (object as Reader).isEof === 'function'
-    && typeof (object as Reader).debug === 'function'
+    object !== null &&
+    typeof object === 'object' &&
+    typeof (object as Reader).peek === 'function' &&
+    typeof (object as Reader).consume === 'function' &&
+    typeof (object as Reader).isEof === 'function' &&
+    typeof (object as Reader).debug === 'function'
   )
 }
 

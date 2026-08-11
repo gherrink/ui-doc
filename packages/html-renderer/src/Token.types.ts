@@ -4,15 +4,15 @@ export type TokenTypeIdentifier = 'tag-identifier' | 'identifier'
 
 export type TokenTagType = 'tag-open' | 'tag-close' | 'tag-end' | 'tag-separator'
 
-export type TokenType
-  = | 'comment'
-    | 'template'
-    | 'operator'
-    | 'number'
-    | 'string'
-    | 'boolean'
-    | TokenTypeIdentifier
-    | TokenTagType
+export type TokenType =
+  | 'comment'
+  | 'template'
+  | 'operator'
+  | 'number'
+  | 'string'
+  | 'boolean'
+  | TokenTypeIdentifier
+  | TokenTagType
 
 export interface Token {
   type: TokenType

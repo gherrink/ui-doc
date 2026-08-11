@@ -157,19 +157,19 @@ export default {
 
 ### Core Options
 
-| Name | Required | Type | Description |
-| --- | --- | --- | --- |
-| source | **Yes** | `string[]` | Glob patterns to find source files. Uses [picomatch](https://github.com/micromatch/picomatch) syntax. |
-| renderer | No | `Renderer` | Custom renderer instance. Defaults to `HtmlRenderer` from `@ui-doc/html-renderer`. |
-| blockParser | No | `BlockParser` | Custom block parser instance. Defaults to `CommentBlockParser`. |
-| templatePath | No | `string` | Path to custom templates directory for overriding or extending default renderer templates. |
+| Name         | Required | Type          | Description                                                                                           |
+| ------------ | -------- | ------------- | ----------------------------------------------------------------------------------------------------- |
+| source       | **Yes**  | `string[]`    | Glob patterns to find source files. Uses [picomatch](https://github.com/micromatch/picomatch) syntax. |
+| renderer     | No       | `Renderer`    | Custom renderer instance. Defaults to `HtmlRenderer` from `@ui-doc/html-renderer`.                    |
+| blockParser  | No       | `BlockParser` | Custom block parser instance. Defaults to `CommentBlockParser`.                                       |
+| templatePath | No       | `string`      | Path to custom templates directory for overriding or extending default renderer templates.            |
 
 ### Output Options
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| output.dir | `string` | `''` | Subdirectory within Rollup's output directory for UI-Doc files. |
-| output.baseUri | `string` | Same as `output.dir` | Base URI for all UI-Doc links. Use `'.'` for relative URLs. |
+| Name           | Type     | Default              | Description                                                     |
+| -------------- | -------- | -------------------- | --------------------------------------------------------------- |
+| output.dir     | `string` | `''`                 | Subdirectory within Rollup's output directory for UI-Doc files. |
+| output.baseUri | `string` | Same as `output.dir` | Base URI for all UI-Doc links. Use `'.'` for relative URLs.     |
 
 **Example:**
 
@@ -187,10 +187,10 @@ uidoc({
 
 UI-Doc specific settings that control content generation.
 
-| Name | Type | Description |
-| --- | --- | --- |
+| Name              | Type     | Description                                                                                      |
+| ----------------- | -------- | ------------------------------------------------------------------------------------------------ |
 | settings.generate | `object` | Functions that generate content. See [Core Documentation](../core/README.md#generate-functions). |
-| settings.texts | `object` | Text strings for title, copyright, etc. |
+| settings.texts    | `object` | Text strings for title, copyright, etc.                                                          |
 
 **Example:**
 
@@ -217,13 +217,13 @@ Control which assets are included in documentation pages and examples.
 
 #### Built-in Assets
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| assets.static | `string` | - | Path to static assets folder. Files are copied to UI-Doc output directory. |
-| assets.styleAsset | `false \| string` | `'ui-doc.css'` | Name of UI-Doc stylesheet. Set to `false` to disable. |
-| assets.highlightStyle | `false \| string` | `'highlight.css'` | Name of highlight.js stylesheet. Set to `false` to disable. |
-| assets.highlightTheme | `string` | `'default'` | Highlight.js theme name. See [available themes](https://github.com/highlightjs/highlight.js/tree/main/src/styles). |
-| assets.highlightScript | `false \| string` | `'highlight.js'` | Name of highlight.js script. Set to `false` to disable. |
+| Name                   | Type              | Default           | Description                                                                                                        |
+| ---------------------- | ----------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------ |
+| assets.static          | `string`          | -                 | Path to static assets folder. Files are copied to UI-Doc output directory.                                         |
+| assets.styleAsset      | `false \| string` | `'ui-doc.css'`    | Name of UI-Doc stylesheet. Set to `false` to disable.                                                              |
+| assets.highlightStyle  | `false \| string` | `'highlight.css'` | Name of highlight.js stylesheet. Set to `false` to disable.                                                        |
+| assets.highlightTheme  | `string`          | `'default'`       | Highlight.js theme name. See [available themes](https://github.com/highlightjs/highlight.js/tree/main/src/styles). |
+| assets.highlightScript | `false \| string` | `'highlight.js'`  | Name of highlight.js script. Set to `false` to disable.                                                            |
 
 **Example - Custom Highlighting:**
 
@@ -250,10 +250,10 @@ uidoc({
 
 #### Custom Assets
 
-| Name | Type | Description |
-| --- | --- | --- |
-| assets.page | `AssetOption[]` | Custom scripts and styles for documentation pages. |
-| assets.example | `AssetOption[]` | Custom scripts and styles for example previews. |
+| Name           | Type            | Description                                        |
+| -------------- | --------------- | -------------------------------------------------- |
+| assets.page    | `AssetOption[]` | Custom scripts and styles for documentation pages. |
+| assets.example | `AssetOption[]` | Custom scripts and styles for example previews.    |
 
 **AssetOption Interface:**
 
@@ -388,16 +388,16 @@ const myPlugin = {
 
 **API Methods:**
 
-| Property | Type | Description |
-| --- | --- | --- |
-| version | `string` | Plugin version |
-| fileFinder | `FileFinder` | File finder instance for searching source files |
-| fileSystem | `FileSystem` | File system abstraction |
-| options | `ResolvedOptions` | Resolved plugin options |
-| uidoc | `UIDoc` | UI-Doc instance |
-| uidocAsset | `Function` | Register an asset for documentation pages or examples |
-| isAssetFromInput | `Function` | Check if an asset was marked as coming from input |
-| addAssetFromInput | `Function` | Mark an asset as coming from input |
+| Property          | Type              | Description                                           |
+| ----------------- | ----------------- | ----------------------------------------------------- |
+| version           | `string`          | Plugin version                                        |
+| fileFinder        | `FileFinder`      | File finder instance for searching source files       |
+| fileSystem        | `FileSystem`      | File system abstraction                               |
+| options           | `ResolvedOptions` | Resolved plugin options                               |
+| uidoc             | `UIDoc`           | UI-Doc instance                                       |
+| uidocAsset        | `Function`        | Register an asset for documentation pages or examples |
+| isAssetFromInput  | `Function`        | Check if an asset was marked as coming from input     |
+| addAssetFromInput | `Function`        | Mark an asset as coming from input                    |
 
 ## Watch Mode
 

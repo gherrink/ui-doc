@@ -20,9 +20,9 @@ new HtmlRenderer(parser: Parser)
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| parser | Yes | `Parser` | Template parser instance (typically `NodeParser.init()`) |
+| Parameter | Required | Type     | Description                                              |
+| --------- | -------- | -------- | -------------------------------------------------------- |
+| parser    | Yes      | `Parser` | Template parser instance (typically `NodeParser.init()`) |
 
 **Example:**
 
@@ -46,10 +46,10 @@ renderer.addLayout(name: string, layout: SourceInput): HtmlRenderer
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| name | Yes | `string` | Unique identifier for the layout |
-| layout | Yes | `SourceInput` | Template source object or Reader instance |
+| Parameter | Required | Type          | Description                               |
+| --------- | -------- | ------------- | ----------------------------------------- |
+| name      | Yes      | `string`      | Unique identifier for the layout          |
+| layout    | Yes      | `SourceInput` | Template source object or Reader instance |
 
 **Returns:** The renderer instance for method chaining.
 
@@ -86,10 +86,10 @@ renderer.addPage(name: string, page: SourceInput): HtmlRenderer
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| name | Yes | `string` | Unique identifier for the page |
-| page | Yes | `SourceInput` | Template source object or Reader instance |
+| Parameter | Required | Type          | Description                               |
+| --------- | -------- | ------------- | ----------------------------------------- |
+| name      | Yes      | `string`      | Unique identifier for the page            |
+| page      | Yes      | `SourceInput` | Template source object or Reader instance |
 
 **Returns:** The renderer instance for method chaining.
 
@@ -123,10 +123,10 @@ renderer.addPartial(name: string, partial: SourceInput): HtmlRenderer
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| name | Yes | `string` | Unique identifier for the partial |
-| partial | Yes | `SourceInput` | Template source object or Reader instance |
+| Parameter | Required | Type          | Description                               |
+| --------- | -------- | ------------- | ----------------------------------------- |
+| name      | Yes      | `string`      | Unique identifier for the partial         |
+| partial   | Yes      | `SourceInput` | Template source object or Reader instance |
 
 **Returns:** The renderer instance for method chaining.
 
@@ -156,10 +156,10 @@ renderer.generate(context: GenerateContext, layout?: string): string
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| context | Yes | `GenerateContext` | UI-Doc context object containing page data and assets |
-| layout | No | `string` | Layout template name. Default: `'default'` |
+| Parameter | Required | Type              | Description                                           |
+| --------- | -------- | ----------------- | ----------------------------------------------------- |
+| context   | Yes      | `GenerateContext` | UI-Doc context object containing page data and assets |
+| layout    | No       | `string`          | Layout template name. Default: `'default'`            |
 
 **Returns:** The generated HTML string.
 
@@ -193,10 +193,10 @@ renderer.page(name: string, context: RenderContext): string
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| name | Yes | `string` | Page template name (falls back to `'default'` if not found) |
-| context | Yes | `RenderContext` | Context object for rendering |
+| Parameter | Required | Type            | Description                                                 |
+| --------- | -------- | --------------- | ----------------------------------------------------------- |
+| name      | Yes      | `string`        | Page template name (falls back to `'default'` if not found) |
+| context   | Yes      | `RenderContext` | Context object for rendering                                |
 
 **Returns:** The rendered HTML string.
 
@@ -226,10 +226,10 @@ renderer.partial(name: string, context?: RenderContext): string
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| name | Yes | `string` | Partial template name (falls back to `'default'` if not found) |
-| context | No | `RenderContext` | Context object for rendering. Default: `{}` |
+| Parameter | Required | Type            | Description                                                    |
+| --------- | -------- | --------------- | -------------------------------------------------------------- |
+| name      | Yes      | `string`        | Partial template name (falls back to `'default'` if not found) |
+| context   | No       | `RenderContext` | Context object for rendering. Default: `{}`                    |
 
 **Returns:** The rendered HTML string.
 
@@ -286,9 +286,9 @@ parser.registerTagParser(tag: TagNodeParse): NodeParser
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| tag | Yes | `TagNodeParse` | Tag parser definition object |
+| Parameter | Required | Type           | Description                  |
+| --------- | -------- | -------------- | ---------------------------- |
+| tag       | Yes      | `TagNodeParse` | Tag parser definition object |
 
 **Returns:** The parser instance for method chaining.
 
@@ -300,8 +300,12 @@ const customTag = {
   example: '{{uppercase:text}}',
   hasContent: false,
   parse: () => ({
-    addToken: token => { /* token processing */ },
-    create: () => { /* return tag node */ },
+    addToken: token => {
+      /* token processing */
+    },
+    create: () => {
+      /* return tag node */
+    },
   }),
 }
 
@@ -320,9 +324,9 @@ parser.parse(reader: Reader): Node
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| reader | Yes | `Reader` | Input stream reader |
+| Parameter | Required | Type     | Description         |
+| --------- | -------- | -------- | ------------------- |
+| reader    | Yes      | `Reader` | Input stream reader |
 
 **Returns:** Root `Node` of the parsed template AST.
 
@@ -351,9 +355,7 @@ static readonly TEMPLATES_PACKAGE: string
 ```ts
 import { TemplateLoader } from '@ui-doc/html-renderer'
 
-const templatePath = await fileSystem.assetLoader().packagePath(
-  TemplateLoader.TEMPLATES_PACKAGE,
-)
+const templatePath = await fileSystem.assetLoader().packagePath(TemplateLoader.TEMPLATES_PACKAGE)
 ```
 
 **Static Methods:**
@@ -374,11 +376,11 @@ static async load(options: {
 
 **Parameters:**
 
-| Parameter | Required | Type | Description |
-|-----------|----------|------|-------------|
-| options.renderer | Yes | `HtmlRenderer` | Renderer instance to load templates into |
-| options.fileSystem | Yes | `FileSystem` | File system instance (typically `NodeFileSystem`) |
-| options.templatePath | Yes | `string` | Path to templates directory |
+| Parameter            | Required | Type           | Description                                       |
+| -------------------- | -------- | -------------- | ------------------------------------------------- |
+| options.renderer     | Yes      | `HtmlRenderer` | Renderer instance to load templates into          |
+| options.fileSystem   | Yes      | `FileSystem`   | File system instance (typically `NodeFileSystem`) |
+| options.templatePath | Yes      | `string`       | Path to templates directory                       |
 
 **Example:**
 
@@ -422,15 +424,15 @@ Template source specification.
 **Syntax:**
 
 ```ts
-type SourceInput = { source: string, content: string } | Reader
+type SourceInput = { source: string; content: string } | Reader
 ```
 
 **Properties:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| source | `string` | Source identifier (file path or `'inline'`) |
-| content | `string` | Template content string |
+| Property | Type     | Description                                 |
+| -------- | -------- | ------------------------------------------- |
+| source   | `string` | Source identifier (file path or `'inline'`) |
+| content  | `string` | Template content string                     |
 
 **Example:**
 
@@ -463,9 +465,7 @@ type RenderContext = Record<string, unknown>
 ```ts
 const context: RenderContext = {
   title: 'Documentation',
-  sections: [
-    { id: 'intro', title: 'Introduction', content: '...' },
-  ],
+  sections: [{ id: 'intro', title: 'Introduction', content: '...' }],
   metadata: {
     version: '1.0.0',
     author: 'UI-Doc Team',
@@ -490,12 +490,12 @@ interface GenerateContext {
 
 **Properties:**
 
-| Property | Required | Type | Description |
-|----------|----------|------|-------------|
-| title | Yes | `string` | Document title |
-| page | Yes | `RenderContext` | Page-specific context data |
-| assets | Yes | `Asset[]` | Array of stylesheet and script assets |
-| [key] | No | `unknown` | Additional custom properties |
+| Property | Required | Type            | Description                           |
+| -------- | -------- | --------------- | ------------------------------------- |
+| title    | Yes      | `string`        | Document title                        |
+| page     | Yes      | `RenderContext` | Page-specific context data            |
+| assets   | Yes      | `Asset[]`       | Array of stylesheet and script assets |
+| [key]    | No       | `unknown`       | Additional custom properties          |
 
 **Asset Type:**
 
@@ -538,10 +538,10 @@ interface Parser {
 
 **Methods:**
 
-| Method | Description |
-|--------|-------------|
-| parse | Parse input stream and return AST |
-| registerTagParser | Register custom tag parser |
+| Method            | Description                       |
+| ----------------- | --------------------------------- |
+| parse             | Parse input stream and return AST |
+| registerTagParser | Register custom tag parser        |
 
 ### TagNodeParse
 
@@ -563,12 +563,12 @@ interface TagNodeParse {
 
 **Properties:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| identifier | `string` | Tag name (e.g., `'var'`, `'if'`, `'for'`) |
-| example | `string` | Example usage for error messages |
-| hasContent | `boolean` | Whether tag has content between open and close tags |
-| parse | `() => {...}` | Factory function returning token processor and node creator |
+| Property   | Type          | Description                                                 |
+| ---------- | ------------- | ----------------------------------------------------------- |
+| identifier | `string`      | Tag name (e.g., `'var'`, `'if'`, `'for'`)                   |
+| example    | `string`      | Example usage for error messages                            |
+| hasContent | `boolean`     | Whether tag has content between open and close tags         |
+| parse      | `() => {...}` | Factory function returning token processor and node creator |
 
 ### Reader
 
@@ -592,12 +592,12 @@ interface Reader {
 
 **Methods:**
 
-| Method | Description |
-|--------|-------------|
-| peek | Look ahead at next character(s) without consuming |
-| consume | Read and remove next character(s) from input |
-| isEof | Check if end of input reached |
-| debug | Get current position and content for debugging |
+| Method  | Description                                       |
+| ------- | ------------------------------------------------- |
+| peek    | Look ahead at next character(s) without consuming |
+| consume | Read and remove next character(s) from input      |
+| isEof   | Check if end of input reached                     |
+| debug   | Get current position and content for debugging    |
 
 ## Errors
 
@@ -615,10 +615,10 @@ class HTMLRendererError extends Error {
 
 **Properties:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| name | `string` | Always `'HTMLRendererError'` |
-| message | `string` | Error description |
+| Property | Type     | Description                  |
+| -------- | -------- | ---------------------------- |
+| name     | `string` | Always `'HTMLRendererError'` |
+| message  | `string` | Error description            |
 
 **Example:**
 
@@ -659,14 +659,14 @@ class HTMLRendererSyntaxError extends SyntaxError {
 
 **Properties:**
 
-| Property | Type | Description |
-|----------|------|-------------|
-| name | `string` | Always `'HTMLRendererSyntaxError'` |
-| message | `string` | Error description |
-| code | `string` | Code snippet where error occurred |
-| line | `number` | Line number of error |
-| column | `number` | Column number of error |
-| source | `string` | Source file or identifier |
+| Property | Type     | Description                        |
+| -------- | -------- | ---------------------------------- |
+| name     | `string` | Always `'HTMLRendererSyntaxError'` |
+| message  | `string` | Error description                  |
+| code     | `string` | Code snippet where error occurred  |
+| line     | `number` | Line number of error               |
+| column   | `number` | Column number of error             |
+| source   | `string` | Source file or identifier          |
 
 **Example:**
 
@@ -692,36 +692,30 @@ try {
 
 The package provides pre-built CSS files for documentation styling.
 
-| Export Path | Description |
-|-------------|-------------|
-| `@ui-doc/html-renderer/ui-doc.css` | Full CSS with source maps |
-| `@ui-doc/html-renderer/ui-doc.min.css` | Minified production CSS |
+| Export Path                            | Description               |
+| -------------------------------------- | ------------------------- |
+| `@ui-doc/html-renderer/ui-doc.css`     | Full CSS with source maps |
+| `@ui-doc/html-renderer/ui-doc.min.css` | Minified production CSS   |
 
 **Example:**
 
 ```ts
-await assetLoader.copy(
-  '@ui-doc/html-renderer/ui-doc.min.css',
-  './dist/ui-doc.css',
-)
+await assetLoader.copy('@ui-doc/html-renderer/ui-doc.min.css', './dist/ui-doc.css')
 ```
 
 ### JavaScript Exports
 
 Pre-built JavaScript for interactive documentation features.
 
-| Export Path | Description |
-|-------------|-------------|
-| `@ui-doc/html-renderer/ui-doc.js` | Full JavaScript bundle with types |
-| `@ui-doc/html-renderer/ui-doc.min.js` | Minified production JavaScript |
+| Export Path                           | Description                       |
+| ------------------------------------- | --------------------------------- |
+| `@ui-doc/html-renderer/ui-doc.js`     | Full JavaScript bundle with types |
+| `@ui-doc/html-renderer/ui-doc.min.js` | Minified production JavaScript    |
 
 **Example:**
 
 ```ts
-await assetLoader.copy(
-  '@ui-doc/html-renderer/ui-doc.min.js',
-  './dist/ui-doc.js',
-)
+await assetLoader.copy('@ui-doc/html-renderer/ui-doc.min.js', './dist/ui-doc.js')
 ```
 
 ## Integration Example
@@ -745,9 +739,7 @@ async function generateDocs() {
   const renderer = new HtmlRenderer(NodeParser.init())
 
   // Load built-in templates
-  const templatePath = await assetLoader.packagePath(
-    TemplateLoader.TEMPLATES_PACKAGE,
-  )
+  const templatePath = await assetLoader.packagePath(TemplateLoader.TEMPLATES_PACKAGE)
 
   try {
     await TemplateLoader.load({
@@ -781,14 +773,8 @@ async function generateDocs() {
   })
 
   // Copy required assets
-  await assetLoader.copy(
-    '@ui-doc/html-renderer/ui-doc.min.css',
-    `${outputDir}/ui-doc.css`,
-  )
-  await assetLoader.copy(
-    '@ui-doc/html-renderer/ui-doc.min.js',
-    `${outputDir}/ui-doc.js`,
-  )
+  await assetLoader.copy('@ui-doc/html-renderer/ui-doc.min.css', `${outputDir}/ui-doc.css`)
+  await assetLoader.copy('@ui-doc/html-renderer/ui-doc.min.js', `${outputDir}/ui-doc.js`)
 }
 
 generateDocs()

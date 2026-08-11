@@ -75,18 +75,18 @@ Tags are separated into two roles:
 - **Placement** - Where in the documentation your block appears (at least one required)
 - **Display** - What content is shown and how it's displayed
 
-| Tag       | Role      | Description                                                      |
-| --------- | --------- | ---------------------------------------------------------------- |
-| @code     | display   | Specify code that will be displayed                              |
-| @example  | display   | Add example with live preview and code                           |
-| @hideCode | display   | Remove code from block (show only preview)                       |
-| @location | placement | Combine `@page` and `@section` in one tag                        |
-| @order    | placement | Define sorting order for pages/sections                          |
-| @page     | placement | Create or reference a page                                       |
-| @section  | placement | Create or reference a section                                    |
-| @color    | display   | Define a color variable used in your styles                      |
-| @space    | display   | Define a spacing variable used in your styles                    |
-| @icon     | display   | Define an icon from your icon font                               |
+| Tag       | Role      | Description                                   |
+| --------- | --------- | --------------------------------------------- |
+| @code     | display   | Specify code that will be displayed           |
+| @example  | display   | Add example with live preview and code        |
+| @hideCode | display   | Remove code from block (show only preview)    |
+| @location | placement | Combine `@page` and `@section` in one tag     |
+| @order    | placement | Define sorting order for pages/sections       |
+| @page     | placement | Create or reference a page                    |
+| @section  | placement | Create or reference a section                 |
+| @color    | display   | Define a color variable used in your styles   |
+| @space    | display   | Define a spacing variable used in your styles |
+| @icon     | display   | Define an icon from your icon font            |
 
 You can combine tags to achieve different outcomes. See individual tag documentation for details.
 
@@ -381,35 +381,35 @@ You can also write a custom integration or use it in a Node.js script (see Quick
 
 ### UIDoc Options
 
-| Name        | Required | Type                  | Description                                                        |
-| ----------- | -------- | --------------------- | ------------------------------------------------------------------ |
-| renderer    | yes      | Renderer              | The renderer that generates output from the context                |
-| blockParser | no       | BlockParser           | Custom parser implementation for extracting and parsing blocks     |
-| generate    | no       | object of functions   | Functions that generate content for the renderer                   |
-| texts       | no       | object of texts       | Text strings used by the default generate functions                |
+| Name        | Required | Type                | Description                                                    |
+| ----------- | -------- | ------------------- | -------------------------------------------------------------- |
+| renderer    | yes      | Renderer            | The renderer that generates output from the context            |
+| blockParser | no       | BlockParser         | Custom parser implementation for extracting and parsing blocks |
+| generate    | no       | object of functions | Functions that generate content for the renderer               |
+| texts       | no       | object of texts     | Text strings used by the default generate functions            |
 
 ### Texts Options
 
-| Name      | Description                                           |
-| --------- | ----------------------------------------------------- |
+| Name      | Description                                          |
+| --------- | ---------------------------------------------------- |
 | copyright | Used in footer text to display copyright information |
-| title     | Title of your UI-Doc site                             |
+| title     | Title of your UI-Doc site                            |
 
 ### Generate Functions
 
 Functions that control how various parts of the documentation are generated:
 
-| Name         | Return Type                                                                    | Parameters                      | Description                                    |
-| ------------ | ------------------------------------------------------------------------------ | ------------------------------- | ---------------------------------------------- |
-| exampleTitle | string                                                                         | ExampleContext                  | Create page title for examples                 |
-| footerText   | string                                                                         | -                               | Text for the footer                            |
-| homeLink     | string                                                                         | -                               | Link to the homepage (front page)              |
-| logo         | string                                                                         | -                               | Logo to display (text, HTML, or SVG)           |
-| menu         | {active: boolean, href: string, order: number, text: string}[]                 | menu array, pages array         | Create or manipulate the navigation menu       |
-| name         | string                                                                         | -                               | Name of your UI-Doc site                       |
-| pageLink     | string                                                                         | page context                    | Link to a page                                 |
-| pageTitle    | string                                                                         | page context                    | Title of a page                                |
-| resolve      | string                                                                         | uri: string, context: string    | Transform or manipulate a URI                  |
+| Name         | Return Type                                                    | Parameters                   | Description                              |
+| ------------ | -------------------------------------------------------------- | ---------------------------- | ---------------------------------------- |
+| exampleTitle | string                                                         | ExampleContext               | Create page title for examples           |
+| footerText   | string                                                         | -                            | Text for the footer                      |
+| homeLink     | string                                                         | -                            | Link to the homepage (front page)        |
+| logo         | string                                                         | -                            | Logo to display (text, HTML, or SVG)     |
+| menu         | {active: boolean, href: string, order: number, text: string}[] | menu array, pages array      | Create or manipulate the navigation menu |
+| name         | string                                                         | -                            | Name of your UI-Doc site                 |
+| pageLink     | string                                                         | page context                 | Link to a page                           |
+| pageTitle    | string                                                         | page context                 | Title of a page                          |
+| resolve      | string                                                         | uri: string, context: string | Transform or manipulate a URI            |
 
 You can customize generate functions in two ways:
 
@@ -429,13 +429,13 @@ uidoc.replaceGenerate('name', () => 'MyUIDoc')
 
 UI-Doc provides an event system for customization.
 
-| Name          | Parameters        | When                                                  |
-| ------------- | ----------------- | ----------------------------------------------------- |
+| Name          | Parameters        | When                                                   |
+| ------------- | ----------------- | ------------------------------------------------------ |
 | context-entry | ContextEntryEvent | Before a context entry is created, updated, or deleted |
-| example       | ExampleEvent      | Before an example is output                           |
-| output        | OutputEvent       | Before the complete documentation is output           |
-| page          | PageEvent         | Before a page is output                               |
-| source        | SourceEvent       | Before a source is created, updated, or deleted       |
+| example       | ExampleEvent      | Before an example is output                            |
+| output        | OutputEvent       | Before the complete documentation is output            |
+| page          | PageEvent         | Before a page is output                                |
+| source        | SourceEvent       | Before a source is created, updated, or deleted        |
 
 **Example:**
 
@@ -481,9 +481,9 @@ By default, `CommentBlockParser` uses `MarkdownDescriptionParser` to parse markd
 
 ### CommentBlockParser Events
 
-| Name   | Parameters | When                     |
-| ------ | ---------- | ------------------------ |
-| parsed | Block      | After a block is parsed  |
+| Name   | Parameters | When                    |
+| ------ | ---------- | ----------------------- |
+| parsed | Block      | After a block is parsed |
 
 ### Custom Tags
 
