@@ -137,7 +137,7 @@ Before pushing changes that affect releases:
 1. Ensure all tests pass:
 
    ```bash
-   pnpm workspace:test
+   pnpm test
    ```
 
 2. Check for lint issues:

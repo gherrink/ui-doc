@@ -25,7 +25,7 @@ docs/               # Consumer documentation
 
 ```bash
 pnpm workspace:build              # Build all packages
-pnpm workspace:test               # Run all package tests
+pnpm test                          # Run all package tests
 pnpm --filter @ui-doc/core test   # Run tests for a specific package
 pnpm typecheck                    # Type check all packages
 ```

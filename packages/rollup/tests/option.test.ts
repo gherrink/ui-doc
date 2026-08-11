@@ -112,7 +112,11 @@ describe('resolveOptions', () => {
 
     type NodeFS = ReturnType<typeof NodeFileSystem.init>
     vi.mocked(NodeFileSystem.init).mockReturnValue(mockFileSystem as unknown as NodeFS)
-    vi.mocked(UIDoc).mockReturnValue(mockUIDocInstance)
+    // Vitest 4 rejects mockReturnValue on a mock invoked with `new`.
+    // A function implementation returning an object still wins over `this`.
+    vi.mocked(UIDoc).mockImplementation(function () {
+      return mockUIDocInstance
+    } as unknown as () => UIDoc)
     vi.mocked(resolveAssets).mockResolvedValue([])
     // Reset resolveAssetType to its default implementation
     vi.mocked(resolveAssetType).mockImplementation((fileName: string) => {
@@ -681,7 +685,12 @@ describe('resolveOptions', () => {
     beforeEach(() => {
       // Mock dynamic import for html-renderer
       vi.doMock('@ui-doc/html-renderer', () => ({
-        HtmlRenderer: vi.fn().mockImplementation(() => mockRenderer),
+        // Must be a function, not an arrow: HtmlRenderer is invoked with `new`,
+        // and arrows are not constructable.
+        // eslint-disable-next-line prefer-arrow-callback
+        HtmlRenderer: vi.fn().mockImplementation(function () {
+          return mockRenderer
+        }),
         NodeParser: {
           init: vi.fn().mockReturnValue({}),
         },

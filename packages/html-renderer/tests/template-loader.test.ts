@@ -1,4 +1,4 @@
-import type { FileSystem } from '@ui-doc/core'
+import type { FileFinder, FileFinderOnFoundCallback, FileSystem } from '@ui-doc/core'
 
 import type { HtmlRenderer } from '../src/HtmlRenderer'
 
@@ -10,16 +10,16 @@ describe('templateLoader', () => {
   let mockCreateFileFinder: ReturnType<typeof vi.fn<FileSystem['createFileFinder']>>
   let mockFileBasename: ReturnType<typeof vi.fn<FileSystem['fileBasename']>>
   let mockFileRead: ReturnType<typeof vi.fn<FileSystem['fileRead']>>
-  let mockFinderSearch: ReturnType<typeof vi.fn>
+  let mockFinderSearch: ReturnType<typeof vi.fn<FileFinder['search']>>
   let mockAddLayout: ReturnType<typeof vi.fn<HtmlRenderer['addLayout']>>
   let mockAddPage: ReturnType<typeof vi.fn<HtmlRenderer['addPage']>>
   let mockAddPartial: ReturnType<typeof vi.fn<HtmlRenderer['addPartial']>>
 
   let mockFileSystem: FileSystem
   let mockFinder: {
-    search: ReturnType<typeof vi.fn>
-    matches: ReturnType<typeof vi.fn>
-    directories: ReturnType<typeof vi.fn>
+    search: ReturnType<typeof vi.fn<FileFinder['search']>>
+    matches: ReturnType<typeof vi.fn<FileFinder['matches']>>
+    directories: ReturnType<typeof vi.fn<FileFinder['directories']>>
   }
   let mockRenderer: HtmlRenderer
 
@@ -81,13 +81,13 @@ describe('templateLoader', () => {
         .mockResolvedValueOnce('<div>partial</div>')
 
       mockFinderSearch
-        .mockImplementationOnce(async (callback: (file: string) => Promise<void>) => {
+        .mockImplementationOnce(async (callback: FileFinderOnFoundCallback) => {
           await callback('/templates/layouts/main.html')
         })
-        .mockImplementationOnce(async (callback: (file: string) => Promise<void>) => {
+        .mockImplementationOnce(async (callback: FileFinderOnFoundCallback) => {
           await callback('/templates/pages/index.html')
         })
-        .mockImplementationOnce(async (callback: (file: string) => Promise<void>) => {
+        .mockImplementationOnce(async (callback: FileFinderOnFoundCallback) => {
           await callback('/templates/partials/header.html')
         })
 
@@ -133,10 +133,10 @@ describe('templateLoader', () => {
         .mockResolvedValueOnce('<div>partial</div>')
 
       mockFinderSearch
-        .mockImplementationOnce(async (callback: (file: string) => Promise<void>) => {
+        .mockImplementationOnce(async (callback: FileFinderOnFoundCallback) => {
           await callback('/templates/layouts/main.html')
         })
-        .mockImplementationOnce(async (callback: (file: string) => Promise<void>) => {
+        .mockImplementationOnce(async (callback: FileFinderOnFoundCallback) => {
           await callback('/templates/partials/header.html')
         })
 
@@ -186,7 +186,7 @@ describe('templateLoader', () => {
       mockFileRead.mockResolvedValueOnce('  \n  <html>layout</html>  \n  ')
 
       mockFinderSearch.mockImplementationOnce(
-        async (callback: (file: string) => Promise<void>) => {
+        async (callback: FileFinderOnFoundCallback) => {
           await callback('/templates/layouts/main.html')
         },
       )
@@ -222,7 +222,7 @@ describe('templateLoader', () => {
         .mockResolvedValueOnce('<aside>Sidebar</aside>')
 
       mockFinderSearch.mockImplementationOnce(
-        async (callback: (file: string) => Promise<void>) => {
+        async (callback: FileFinderOnFoundCallback) => {
           await callback('/templates/partials/header.html')
           await callback('/templates/partials/footer.html')
           await callback('/templates/partials/sidebar.html')
@@ -311,15 +311,15 @@ describe('templateLoader', () => {
         .mockResolvedValueOnce('<div>partial</div>')
 
       mockFinderSearch
-        .mockImplementationOnce(async (callback: (file: string) => Promise<void>) => {
+        .mockImplementationOnce(async (callback: FileFinderOnFoundCallback) => {
           callOrder.push('search:layouts')
           await callback('/templates/layouts/main.html')
         })
-        .mockImplementationOnce(async (callback: (file: string) => Promise<void>) => {
+        .mockImplementationOnce(async (callback: FileFinderOnFoundCallback) => {
           callOrder.push('search:pages')
           await callback('/templates/pages/index.html')
         })
-        .mockImplementationOnce(async (callback: (file: string) => Promise<void>) => {
+        .mockImplementationOnce(async (callback: FileFinderOnFoundCallback) => {
           callOrder.push('search:partials')
           await callback('/templates/partials/header.html')
         })
@@ -353,7 +353,7 @@ describe('templateLoader', () => {
       mockFileRead.mockRejectedValue(readError)
 
       mockFinderSearch.mockImplementationOnce(
-        async (callback: (file: string) => Promise<void>) => {
+        async (callback: FileFinderOnFoundCallback) => {
           await callback('/templates/layouts/main.html')
         },
       )
