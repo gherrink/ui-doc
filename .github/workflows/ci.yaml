@@ -42,6 +42,21 @@ jobs:
       - name: Build packages
         run: pnpm workspace:build
 
+      # The vitest suites run against src through vite's ESM pipeline, so
+      # nothing else exercises the published CommonJS entry. marked is ESM-only
+      # from v16, which means dist/index.cjs reaches it via Node's require(esm)
+      # - a path that exists only on the Node versions in `engines`. Prove it
+      # rather than assume it.
+      - name: Verify CommonJS entry
+        run: |
+          node -e "
+            const { createMarkdownDescriptionParser } = require('./packages/core/dist/index.cjs')
+            const html = createMarkdownDescriptionParser().parse('# t')
+            if (html !== '<h1>t</h1>\n') {
+              throw new Error('unexpected CJS output: ' + JSON.stringify(html))
+            }
+          "
+
       - name: Lint
         run: pnpm lint
 
