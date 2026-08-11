@@ -51,7 +51,7 @@ http
     // e.g curl --path-as-is http://localhost:9000/../fileInDanger.txt
     // by limiting the path to current directory only
     const sanitizePath = path.normalize(parsedUrl.pathname).replace(/^(?:\.\.[/\\])+/, '')
-    let pathname = path.join(__dirname, basePath, sanitizePath)
+    let pathname = path.join(import.meta.dirname, basePath, sanitizePath)
 
     // file dose not exist exit with 404
     if (!fs.existsSync(pathname)) {

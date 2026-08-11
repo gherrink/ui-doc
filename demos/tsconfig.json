@@ -1,17 +1,10 @@
 {
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["ES2022"],
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "outDir": "dist",
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "skipLibCheck": true
+    // Demos include browser-side scripts, so DOM is needed on top of the base.
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "allowJs": true
   },
+  "include": ["**/*.ts", "**/*.mjs", "**/*.js"],
   "exclude": ["dist", "node_modules"]
 }
