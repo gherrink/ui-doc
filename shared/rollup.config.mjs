@@ -2,9 +2,36 @@ import { builtinModules } from 'node:module'
 import commonjs from '@rollup/plugin-commonjs'
 import json from '@rollup/plugin-json'
 import resolve from '@rollup/plugin-node-resolve'
+import swc from '@rollup/plugin-swc'
 import terser from '@rollup/plugin-terser'
-import typescript from '@rollup/plugin-typescript'
 import { cssAssets } from './rollup-plugin-css.mjs'
+
+/** Extensions node-resolve must try, now that no plugin resolves .ts implicitly. */
+const EXTENSIONS = ['.ts', '.mjs', '.js', '.json', '.node']
+
+/**
+ * Transpile TypeScript with swc. Declarations are emitted separately by `tsc`,
+ * because @rollup/plugin-typescript drives the TypeScript compiler API, which
+ * TypeScript 7 no longer exposes.
+ * @param {'es2022'|'es2015'} target Output language level
+ * @returns {import('rollup').Plugin} Configured swc plugin
+ */
+function transpile(target) {
+  return swc({
+    swc: {
+      jsc: {
+        target,
+        parser: { syntax: 'typescript' },
+        // @rollup/plugin-swc defaults this to true, which downlevels class
+        // property declarations into constructor assignments. That swaps
+        // define semantics for set semantics and breaks subclasses of
+        // EventEmitterBase, whose `listeners` field would be re-created.
+        loose: false,
+      },
+      sourceMaps: true,
+    },
+  })
+}
 
 /**
  * Create a base rollup config
@@ -40,12 +67,9 @@ export function configTs({ pkg, external = [] }) {
     ],
     plugins: [
       json(),
-      resolve(),
+      resolve({ extensions: EXTENSIONS }),
       commonjs(),
-      // declarationDir must sit inside the same directory as the `file` output
-      // (dist/index.cjs, dist/index.mjs). @rollup/plugin-typescript v12
-      // enforces this; v11 silently tolerated '.'.
-      typescript({ sourceMap: true, declarationDir: 'dist', declaration: true }),
+      transpile('es2022'),
     ],
   }
 }
@@ -90,16 +114,17 @@ export function configTsWeb({ external, input, styles }) {
         sourcemap: false,
       },
     ],
-    // The browser target is set by tsconfig.web.json (target: ES6). There is no
-    // babel step: the repo-root .babelrc was never loaded, because babel's
-    // config search does not walk above `root`, which defaults to rollup's cwd
-    // (the package dir). It ran with zero presets - a parse-and-reprint no-op.
+    // The browser target is ES6/es2015, matching tsconfig.web.json, which still
+    // typechecks these sources and emits their declarations. There is no babel
+    // step: the repo-root .babelrc was never loaded, because babel's config
+    // search does not walk above `root`, which defaults to rollup's cwd (the
+    // package dir). It ran with zero presets - a parse-and-reprint no-op.
+    //
+    // node-resolve is required here: @rollup/plugin-typescript used to resolve
+    // the relative .ts imports in scripts/, and nothing else does.
     plugins: [
-      typescript({
-        declaration: true,
-        outDir: './dist/assets',
-        tsconfig: './tsconfig.web.json',
-      }),
+      resolve({ extensions: EXTENSIONS }),
+      transpile('es2015'),
     ],
   }
 }
