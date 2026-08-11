@@ -6,6 +6,7 @@ packages:
 # longer reads the `pnpm` field in package.json, and renamed the setting from
 # `onlyBuiltDependencies` to this name/boolean map, so this is its new home.
 allowBuilds:
+  '@swc/core': true
   esbuild: true
 
 # @antfu/eslint-config 4.19 accepts any @typescript-eslint 8.x, and 8.66 ships a
