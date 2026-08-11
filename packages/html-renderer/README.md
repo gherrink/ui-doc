@@ -678,7 +678,7 @@ import type {
 
 ## Requirements
 
-- Node.js >= 16.0.0
+- Node.js 20.19, 22.12, or 24 and later
 - `@ui-doc/core` (peer dependency)
 
 ## License

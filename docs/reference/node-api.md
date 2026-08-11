@@ -14,7 +14,7 @@ npm install @ui-doc/node @ui-doc/core
 
 **Requirements:**
 
-- Node.js >= 18.0.0
+- Node.js 20.19, 22.12, or 24 and later
 
 ## NodeFileSystem class
 

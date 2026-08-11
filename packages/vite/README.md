@@ -28,7 +28,7 @@ pnpm install --save-dev @ui-doc/vite @ui-doc/html-renderer @highlightjs/cdn-asse
 
 **Requirements:**
 
-- Node.js >= 16.0.0
+- Node.js 20.19, 22.12, or 24 and later
 - Vite >= 5.0.0
 
 ## Quick Start

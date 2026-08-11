@@ -338,7 +338,7 @@ const assetLoader: AssetLoader = fileSystem.assetLoader()
 
 ## Requirements
 
-- Node.js >= 16.0.0
+- Node.js 20.19, 22.12, or 24 and later
 
 ## License
 
