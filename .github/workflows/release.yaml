@@ -65,6 +65,9 @@ jobs:
       - name: Run Tests
         run: pnpm test
 
+      # Publishing from CI authenticates through GitHub OIDC (npm Trusted
+      # Publisher), so no npm token is configured anywhere in this workflow.
+      # Local publishing authenticates via ~/.npmrc instead.
       - name: OIDC Preflight
         shell: bash
         run: |
