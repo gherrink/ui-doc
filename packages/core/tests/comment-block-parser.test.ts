@@ -1,8 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
 
+import type { BlockParserEventMap } from '../src/BlockParserEvent.types'
 import { CommentBlockParser } from '../src/CommentBlockParser'
 import type { DescriptionParser } from '../src/DescriptionParser.types'
 import { BlockParseError, TagTransformerError } from '../src/errors'
+import type { EventListener } from '../src/EventEmitter.types'
 
 class TestDescriptionParser implements DescriptionParser {
   public parse(content: string): string {
@@ -205,7 +207,7 @@ describe('commentBlockParser', () => {
   })
 
   it('should emit parsed event for each block', () => {
-    const listener = vi.fn()
+    const listener = vi.fn<EventListener<BlockParserEventMap, 'parsed'>>()
 
     parser.on('parsed', listener)
 
@@ -226,7 +228,7 @@ describe('commentBlockParser', () => {
 
   it('should parse description using description parser', () => {
     const mockDescriptionParser: DescriptionParser = {
-      parse: vi.fn().mockReturnValue('<p>Parsed description</p>'),
+      parse: vi.fn<DescriptionParser['parse']>().mockReturnValue('<p>Parsed description</p>'),
     }
     const parserWithMock = new CommentBlockParser(mockDescriptionParser)
 
