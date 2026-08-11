@@ -46,7 +46,10 @@ export function configTs({ pkg, external = [] }) {
       json(),
       resolve(),
       commonjs(),
-      typescript({ sourceMap: true, declarationDir: '.', declaration: true }),
+      // declarationDir must sit inside the same directory as the `file` output
+      // (dist/index.cjs, dist/index.mjs). @rollup/plugin-typescript v12
+      // enforces this; v11 silently tolerated '.'.
+      typescript({ sourceMap: true, declarationDir: 'dist', declaration: true }),
     ],
   }
 }
