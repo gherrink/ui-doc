@@ -37,7 +37,7 @@ export function queryParentSelector(
   }
 
   if (element.matches(selector)) {
-    return element as Element
+    return element
   }
 
   return element.parentElement

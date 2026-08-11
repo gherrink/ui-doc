@@ -82,7 +82,7 @@ export const parseTagIfNode: TagNodeParse = {
   hasContent: true,
   identifier: 'if',
   parse() {
-    const options: Partial<TagIfNodeOptions> = {}
+    const options: TagIfNodeOptions = {}
     const addOptionKeyOrValue = (
       token: TokenValue,
       keyName: 'firstContextKey' | 'secondContextKey',
@@ -155,7 +155,7 @@ export const parseTagIfNode: TagNodeParse = {
           throw new TagNodeError('Expected second context key or value when operator is given')
         }
 
-        return new TagIfNode(options as TagIfNodeOptions)
+        return new TagIfNode(options)
       },
     }
   },
