@@ -8,8 +8,12 @@ Before contributing, please check the [issue tracker](https://github.com/gherrin
 
 ### Prerequisites
 
-- Node.js v20 or higher
-- pnpm 10.x (`npm install -g pnpm@10`)
+- [mise](https://mise.jdx.dev/getting-started.html), which manages the toolchain for this repository
+
+The toolchain is pinned in `mise.toml` (Node 24, pnpm 10). The exact pnpm version
+lives in the `packageManager` field of `package.json`; pnpm self-manages to it.
+
+If you would rather not use mise, install Node 24 and pnpm 10 yourself.
 
 ### Setup
 
@@ -17,6 +21,9 @@ Before contributing, please check the [issue tracker](https://github.com/gherrin
 # Clone the repository
 git clone https://github.com/gherrink/ui-doc.git
 cd ui-doc
+
+# Install the pinned toolchain
+mise trust && mise install
 
 # Install dependencies
 pnpm install
@@ -26,6 +33,8 @@ pnpm workspace:build
 ```
 
 The project uses Husky for pre-commit hooks that automatically lint and format your code.
+They run lint-staged and commitlint from your local `node_modules`, so no network
+access is needed.
 
 ## Development Workflow
 
@@ -59,11 +68,13 @@ UI-Doc is a TypeScript monorepo with packages in the `packages/` directory:
 ### Running the Demo
 
 ```bash
-cd demos/ui-doc
-pnpm dev
+pnpm --filter ui-doc-demos vite
 ```
 
 This starts a Vite dev server with live preview at `http://localhost:5173/ui-doc`.
+
+Other demo entry points: `rollup`, `node-cli`, and the `showcase:*` builds. See
+`demos/package.json` for the full list.
 
 ## Code Standards
 
@@ -80,7 +91,8 @@ This starts a Vite dev server with live preview at `http://localhost:5173/ui-doc
 - No semicolons
 - 100 character max line length (code only; comments, strings, and URLs are exempt)
 
-ESLint and Prettier handle formatting automatically via pre-commit hooks.
+ESLint handles formatting automatically via pre-commit hooks. Prettier is not used
+in this repository.
 
 ### CSS
 

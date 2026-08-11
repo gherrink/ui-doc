@@ -243,8 +243,8 @@ Check out the [demos](./demos) directory for complete examples:
 
 ### Prerequisites
 
-- Node.js >= 16.0.0
-- pnpm 9.1.0 or higher
+- [mise](https://mise.jdx.dev) (recommended), which installs the pinned toolchain from `mise.toml`
+- Otherwise: Node.js 24 and pnpm 10
 
 ### Setup
 
