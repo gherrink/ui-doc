@@ -125,8 +125,14 @@ function toggleControlTarget(selector: string, show: boolean, callback: () => vo
     callback()
   }
 
-  if (show) {
-    // set tabindex=0 for all elements with tabindex=-1 that are not inside an aria-hidden element
+  // set tabindex=0 for all elements with tabindex=-1 that are not inside a
+  // nested hidden or aria-hidden element.
+  //
+  // This has to run *after* the target itself has been revealed. While the
+  // target still carries `hidden` (or `aria-hidden="true"`), every one of its
+  // descendants matches the `:not()` exclusions, so only the direct children
+  // picked up by the `:scope >` arm were ever restored.
+  const restoreTabIndex = (): void => {
     target
       .querySelectorAll<HTMLElement>(
         ':scope > [tabindex="-1"], [tabindex="-1"]:not([aria-hidden="true"] [tabindex="-1"], [hidden] [tabindex="-1"])',
@@ -134,7 +140,9 @@ function toggleControlTarget(selector: string, show: boolean, callback: () => vo
       .forEach(el => {
         el.setAttribute('tabindex', '0')
       })
-  } else {
+  }
+
+  if (!show) {
     // set tabindex=-1 for all elements with tabindex=0
     target.querySelectorAll<HTMLElement>('[tabindex="0"]').forEach(el => {
       el.setAttribute('tabindex', '-1')
@@ -146,12 +154,17 @@ function toggleControlTarget(selector: string, show: boolean, callback: () => vo
   if (animationName !== null && animationName !== '') {
     if (show) {
       toggleHide()
+      restoreTabIndex()
       animate(target, animationName, show)
     } else {
       animate(target, animationName, show, toggleHide)
     }
   } else {
     toggleHide()
+
+    if (show) {
+      restoreTabIndex()
+    }
   }
 }
 
@@ -187,6 +200,14 @@ export function initExpand(): void {
         Array.from(expander.parentElement.querySelectorAll(':scope > [aria-expanded="true"]'))
           .filter(el => el !== expander && el !== e.relatedTarget)
           .forEach(sibling => {
+            // The list above is a snapshot. Closing one sibling can already
+            // have closed another through that sibling's own handler, and
+            // clicking it again here would toggle it back open. Only act on
+            // siblings still expanded by the time we reach them.
+            if (sibling.getAttribute('aria-expanded') !== 'true') {
+              return
+            }
+
             sibling.dispatchEvent(
               new MouseEvent('click', { bubbles: true, relatedTarget: expander }),
             )

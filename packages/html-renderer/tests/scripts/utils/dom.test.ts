@@ -18,13 +18,14 @@ function setReadyState(state: DocumentReadyState): void {
 }
 
 /**
- * Replace window.getComputedStyle so animate() sees the transition and
+ * Replace window.getComputedStyle so animate() sees the transition-duration and
  * animation-name it would see in a browser.
- * @param transition value for the `transition` shorthand
+ * @param transitionDuration value for `transition-duration`, a comma separated
+ *   list when several properties transition
  * @param animationName value for `animation-name`
  */
-function stubComputedStyle(transition: string, animationName: string): void {
-  vi.stubGlobal('getComputedStyle', () => ({ animationName, transition }))
+function stubComputedStyle(transitionDuration: string, animationName: string): void {
+  vi.stubGlobal('getComputedStyle', () => ({ animationName, transitionDuration }))
 }
 
 describe('ready', () => {
@@ -84,7 +85,7 @@ describe('animate', () => {
     target = document.getElementById('target') as HTMLElement
     frames = stubAnimationFrames()
     // Browser value for an element with no transition and no animation.
-    stubComputedStyle('all 0s ease 0s', 'none')
+    stubComputedStyle('0s', 'none')
   })
 
   afterEach(() => {
@@ -198,12 +199,10 @@ describe('animate', () => {
       expect(callback).toHaveBeenCalledTimes(1)
     })
 
-    it('should run the callback again on a cancel event after completion', () => {
-      // Known leak: afterAnimation() removes only the `animationend` and
-      // `transitionend` listeners, never the two `*cancel` listeners it also
-      // registered. A cancel event arriving after the animation finished
-      // therefore re-runs the callback. Pinned so the behaviour cannot change
-      // unnoticed while it is being fixed.
+    it('should not run the callback again on a cancel event after completion', () => {
+      // afterAnimation() registers four listeners and must remove all four. It
+      // used to drop only the two "end" ones, so a cancel arriving afterwards
+      // ran the callback a second time.
       const callback = vi.fn<() => void>()
 
       animate(target, 'fade', true, callback)
@@ -211,13 +210,13 @@ describe('animate', () => {
       target.dispatchEvent(new Event('transitionend'))
       target.dispatchEvent(new Event('transitioncancel'))
 
-      expect(callback).toHaveBeenCalledTimes(2)
+      expect(callback).toHaveBeenCalledTimes(1)
     })
   })
 
   describe('no-animation shortcut', () => {
-    it('should finish on the following frame when computed transition is "none"', () => {
-      stubComputedStyle('none', 'none')
+    it('should finish on the following frame when there is no transition', () => {
+      stubComputedStyle('0s', 'none')
       const callback = vi.fn<() => void>()
 
       animate(target, 'fade', true, callback)
@@ -231,8 +230,8 @@ describe('animate', () => {
       expect(target.className).toBe('')
     })
 
-    it('should finish on the following frame when computed transition is "all"', () => {
-      stubComputedStyle('all', 'none')
+    it('should finish on the following frame when every duration in the list is zero', () => {
+      stubComputedStyle('0s, 0s', 'none')
       const callback = vi.fn<() => void>()
 
       animate(target, 'fade', true, callback)
@@ -243,7 +242,7 @@ describe('animate', () => {
     })
 
     it('should not shortcut when an animation name is set', () => {
-      stubComputedStyle('none', 'menu-show')
+      stubComputedStyle('0s', 'menu-show')
       const callback = vi.fn<() => void>()
 
       animate(target, 'fade', true, callback)
@@ -253,24 +252,35 @@ describe('animate', () => {
       expect(callback).not.toHaveBeenCalled()
     })
 
-    it('should not shortcut for the browser default transition value', () => {
-      // A browser reports `all 0s ease 0s` for an element without a transition,
-      // which is not in the ['all', 'none'] list the shortcut checks. The
-      // shortcut therefore never fires in a real browser: an element with no
-      // transition and no animation waits for an end event that never comes.
-      stubComputedStyle('all 0s ease 0s', 'none')
+    it('should shortcut for an element a browser reports as untransitioned', () => {
+      // The check used to read the `transition` shorthand, which a browser
+      // serialises as `all 0s ease 0s` for an element with no transition. That
+      // matched neither 'all' nor 'none', so the shortcut never fired and such
+      // an element waited for an end event that never came.
+      stubComputedStyle('0s', 'none')
       const callback = vi.fn<() => void>()
 
       animate(target, 'fade', true, callback)
       frames.flush()
       frames.flush()
 
-      expect(callback).not.toHaveBeenCalled()
-      expect(target.classList.contains('fade-enter-active')).toBe(true)
+      expect(callback).toHaveBeenCalledTimes(1)
+      expect(target.classList.contains('fade-enter-active')).toBe(false)
     })
 
     it('should not shortcut when a real transition is set', () => {
-      stubComputedStyle('opacity 0.5s ease 0s', 'none')
+      stubComputedStyle('0.5s', 'none')
+      const callback = vi.fn<() => void>()
+
+      animate(target, 'fade', true, callback)
+      frames.flush()
+      frames.flush()
+
+      expect(callback).not.toHaveBeenCalled()
+    })
+
+    it('should not shortcut when only one property in the list transitions', () => {
+      stubComputedStyle('0s, 0.3s', 'none')
       const callback = vi.fn<() => void>()
 
       animate(target, 'fade', true, callback)
