@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["typescript", "unicorn", "oxc", "import", "jsdoc", "promise", "node"],
+  "plugins": ["typescript", "unicorn", "oxc", "import", "jsdoc", "promise", "node", "vitest"],
   "jsPlugins": [
     "eslint-plugin-regexp",
     {
@@ -9,7 +9,9 @@
     }
   ],
   "categories": {
-    "correctness": "error"
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "error"
   },
   "ignorePatterns": ["**/coverage/**", "**/dist/**", "**/node_modules/**"],
   "rules": {
@@ -92,11 +94,49 @@
     ],
     "jsdoc/check-tag-names": "off",
     "jsdoc/require-returns-description": "error",
-    "typescript/no-redundant-type-constituents": "off",
-    "typescript/no-base-to-string": "off",
-    "typescript/no-useless-default-assignment": "off",
-    "unicorn/no-useless-fallback-in-spread": "off",
-    "jsdoc-js/check-param-names": "error"
+    "jsdoc-js/check-param-names": "error",
+
+    // --- Rules reached by the categories above that we deliberately leave off. ---
+    // Each is off because adopting it would make the code worse, not because the
+    // findings were tedious. Everything else in those categories is enforced.
+
+    // 333 findings, ~300 of them in test mocks. A narrowing `as` is the normal
+    // tool at this codebase's type boundaries: Rollup's hook unions, `unknown`
+    // template context, lexer token narrowing. There is no mechanical fix that
+    // is not a cast by another name. The `no-unsafe-*` family and
+    // `no-explicit-any` above already stop `any` leaking, which is the part
+    // that actually bites.
+    "typescript/no-unsafe-type-assertion": "off",
+
+    // All four occurrences are ordered fallbacks that return on the first hit
+    // (resolve a package from the consumer's paths first, then ours) or a fixed
+    // three-element loop. `Promise.all` would lose the short-circuit or the
+    // deterministic order.
+    "eslint/no-await-in-loop": "off",
+
+    // The only occurrence is `plugin.onLog`, which implements Rollup's
+    // contract: return `false` to suppress a log, return nothing to pass it
+    // through. A trailing `return undefined` would be noise.
+    "typescript/consistent-return": "off",
+
+    // The only occurrence is a deliberately side-effecting `.then()` in the
+    // Vite dev-server middleware, whose chain ends in `.finally(() => next())`.
+    "promise/always-return": "off",
+
+    // The only occurrence is `TemplateLoader`, part of the published
+    // `@ui-doc/html-renderer` API. Turning it into loose functions would break
+    // consumers to satisfy a style preference.
+    "typescript/no-extraneous-class": "off",
+
+    // The only occurrence is `queryParentSelector<E extends Element>`, which
+    // mirrors the DOM's own `querySelector<E>()` so callers can name the
+    // element type they expect instead of casting at every call site.
+    "typescript/no-unnecessary-type-parameters": "off",
+
+    // The only occurrence is `import '@shared/css/index.css'` in the Vite demo.
+    // Side-effect imports are how bundlers pick up stylesheets, and the rule
+    // has no allow-list to exempt them.
+    "import/no-unassigned-import": "off"
   },
   "overrides": [
     {
@@ -133,7 +173,20 @@
     {
       "files": ["**/*.test.ts", "**/*.spec.ts"],
       "rules": {
-        "typescript/no-unsafe-assignment": "off"
+        "typescript/no-unsafe-assignment": "off",
+
+        // A helper defined inside the `describe` that uses it stays next to the
+        // tests it serves. Hoisting it to module scope to save one closure
+        // allocation per call trades locality for nothing measurable.
+        "unicorn/consistent-function-scoping": "off",
+
+        // oxlint resolves test files without a project -- the package
+        // tsconfigs include only `src/**/*`, and the declaration build needs
+        // `rootDir: src`, so they cannot simply be widened. Without a project
+        // the type-aware pass has no ES2023 lib and reports `toSorted` as an
+        // error type, so the rule's own fix does not typecheck here. Every
+        // flagged call sorts a freshly built array anyway.
+        "unicorn/no-array-sort": "off"
       }
     }
   ]
