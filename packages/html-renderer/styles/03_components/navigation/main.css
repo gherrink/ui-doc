@@ -1,6 +1,6 @@
 .nav-main {
-  --bg-color: var(--na-main-bg-color, var(--color-blue));
-  --font-color: var(--nav-main-bg-color, var(--color-white));
+  --bg-color: var(--nav-main-bg-color, var(--color-blue));
+  --font-color: var(--nav-main-font-color, var(--color-white));
   --accent-color: var(--nav-main-accent-color, var(--color-yellow));
 
   position: sticky;
