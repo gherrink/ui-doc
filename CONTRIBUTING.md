@@ -61,7 +61,7 @@ UI-Doc is a TypeScript monorepo with packages in the `packages/` directory:
 | `pnpm workspace:build`            | Build all packages               |
 | `pnpm test`                       | Run all package tests            |
 | `pnpm --filter @ui-doc/core test` | Run tests for a specific package |
-| `pnpm lint`                       | Run all linters (docs, js, css)  |
+| `pnpm lint`                       | Run all linters and format check |
 | `pnpm fix`                        | Run all auto-fixes               |
 | `pnpm typecheck`                  | Type check all packages          |
 
@@ -91,8 +91,31 @@ Other demo entry points: `rollup`, `node-cli`, and the `showcase:*` builds. See
 - No semicolons
 - 100 character max line length (code only; comments, strings, and URLs are exempt)
 
-ESLint handles formatting automatically via pre-commit hooks. Prettier is not used
-in this repository.
+oxfmt formats automatically via pre-commit hooks, and `pnpm lint:format` checks
+it. Prettier is not used in this repository.
+
+### Linting
+
+| Tool                           | Scope                                            |
+| ------------------------------ | ------------------------------------------------ |
+| `oxlint` (+ `oxlint-tsgolint`) | JS/TS, including type-aware rules                |
+| `biome`                        | JSON and JSONC only — oxlint does not parse them |
+| `stylelint`                    | CSS                                              |
+| `markdownlint-cli2`            | Markdown prose                                   |
+| `oxfmt`                        | Formatting for JS/TS, JSON, YAML and Markdown    |
+
+Type-aware linting comes from `oxlint-tsgolint`, which carries its own
+typescript-go build and does not use the repository's `typescript` package.
+
+Two ESLint plugins are loaded through oxlint's `jsPlugins` bridge, because
+oxlint has no `regexp` plugin and its built-in `jsdoc` plugin has no
+`check-param-names`: `eslint-plugin-regexp`, and `eslint-plugin-jsdoc` under
+the `jsdoc-js` alias to avoid colliding with the built-in. That bridge is alpha
+and outside oxc's semver.
+
+YAML, TOML, and code inside Markdown fences are formatted but no longer
+_linted_. That is the deliberate cost of leaving ESLint; see the TypeScript
+note below.
 
 ### CSS
 
@@ -228,13 +251,13 @@ upgrade:
 - `@rollup/plugin-typescript` calls `ts.createProgram`, `ts.createWatchProgram`
   and `ts.sys`. It cannot run on TypeScript 7 at all, so the build needs a
   different compiler step first.
-- `typescript-eslint` caps its peer at `<6.1.0` and has declined to support
-  TypeScript 7 until the API stabilises in 7.1. Upgrading would silently drop
-  every type-aware lint rule this repository relies on. The alternative that
-  keeps them is `oxlint` with `oxlint-tsgolint`, which is a linter replacement
-  rather than a version bump.
+- `typescript-eslint` capped its peer at `<6.1.0` and declined to support
+  TypeScript 7 until the API stabilises in 7.1. This is why the repository
+  moved to `oxlint` with `oxlint-tsgolint`, which keeps type-aware linting
+  without needing the TypeScript compiler API.
 
-Neither is fixable here. Both are tracked upstream.
+Both are now resolved: the build transpiles with swc and emits declarations
+with `tsc`, and the linter no longer touches the compiler API.
 
 ### marked is ESM-only
 
@@ -260,11 +283,14 @@ consequences worth knowing:
   versioner will not cut a release for it. The new copy ships with whatever
   `feat`/`fix` lands there next.
 
-### The @typescript-eslint override
+### Reformatting and git blame
 
-`pnpm-workspace.yaml` pins `@typescript-eslint/*`. 8.66 reports
-`no-unnecessary-type-assertion` false positives against this codebase, and its
-autofix breaks both `tsc` and 37 tests. The pin goes away with ESLint itself.
+`.git-blame-ignore-revs` lists commits that only moved code. GitHub honours it
+automatically; locally, run this once per clone:
+
+```bash
+git config blame.ignoreRevsFile .git-blame-ignore-revs
+```
 
 ## Project Structure
 
