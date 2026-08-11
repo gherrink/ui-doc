@@ -1,25 +1,26 @@
 {
   "name": "ui-doc-demos",
+  "type": "module",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "node-cli": "ts-node node-cli/main.ts",
+    "node-cli": "node node-cli/main.ts",
     "rollup": "rollup -c rollup/rollup.config.mjs",
     "rollup:watch": "rollup -c rollup/rollup.config.mjs -w",
     "vite": "vite -c vite/vite.config.mjs",
     "vite:build": "vite build -c vite/vite.config.mjs",
     "vite:preview": "vite preview -c vite/vite.config.mjs",
-    "serve:node-cli": "ts-node ./serve.ts dist/node-cli",
-    "serve:rollup": "ts-node ./serve.ts dist/rollup/ui-doc",
-    "serve:vite": "ts-node ./serve.ts dist/vite/ui-doc",
+    "serve:node-cli": "node ./serve.ts dist/node-cli",
+    "serve:rollup": "node ./serve.ts dist/rollup/ui-doc",
+    "serve:vite": "node ./serve.ts dist/vite/ui-doc",
     "showcase:minimal": "vite build -c showcase-minimal/vite.config.mjs",
     "showcase:variations": "vite build -c showcase-variations/vite.config.mjs",
     "showcase:multi-source": "vite build -c showcase-multi-source/vite.config.mjs",
     "showcase:templates": "vite build -c showcase-templates/vite.config.mjs",
-    "serve:showcase:minimal": "ts-node ./serve.ts dist/showcase-minimal/ui-doc",
-    "serve:showcase:variations": "ts-node ./serve.ts dist/showcase-variations/ui-doc",
-    "serve:showcase:multi-source": "ts-node ./serve.ts dist/showcase-multi-source/ui-doc",
-    "serve:showcase:templates": "ts-node ./serve.ts dist/showcase-templates/ui-doc"
+    "serve:showcase:minimal": "node ./serve.ts dist/showcase-minimal/ui-doc",
+    "serve:showcase:variations": "node ./serve.ts dist/showcase-variations/ui-doc",
+    "serve:showcase:multi-source": "node ./serve.ts dist/showcase-multi-source/ui-doc",
+    "serve:showcase:templates": "node ./serve.ts dist/showcase-templates/ui-doc"
   },
   "dependencies": {
     "@highlightjs/cdn-assets": "^11.9.0",
@@ -35,7 +36,6 @@
     "postcss-preset-env": "^11.1.2",
     "rollup": "catalog:",
     "rollup-plugin-postcss": "^4.0.2",
-    "ts-node": "^10.9.2",
     "typescript": "catalog:",
     "vite": "catalog:"
   }
