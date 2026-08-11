@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+
+  // Biome is here for exactly one job: linting JSON and JSONC, which oxlint
+  // does not parse at all. Formatting belongs to oxfmt and JS/TS linting to
+  // oxlint, so both are switched off here and the tools cannot disagree.
+  "formatter": { "enabled": false },
+  "linter": {
+    "enabled": true,
+    "rules": { "preset": "recommended" }
+  },
+  "javascript": {
+    "linter": { "enabled": false }
+  },
+  "css": {
+    "linter": { "enabled": false }
+  },
+  "files": {
+    "includes": ["**/*.json", "**/*.jsonc", "!**/dist", "!**/coverage", "!**/node_modules"]
+  }
+}

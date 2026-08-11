@@ -35,14 +35,14 @@ async function main() {
     process.exit(0)
   }
 
-  // Run ESLint with --fix
+  // Run oxlint with --fix
   try {
-    execSync(`npx eslint --cache --fix --format json "${filePath}"`, {
+    execSync(`npx oxlint --type-aware --fix --format json "${filePath}"`, {
       encoding: 'utf8',
       stdio: ['pipe', 'pipe', 'pipe'],
     })
     // Success - no errors remain after fix
-    // eslint-disable-next-line no-console
+    // oxlint-disable-next-line no-console
     console.log(JSON.stringify({
       hookSpecificOutput: {
         linted: true,
@@ -51,32 +51,35 @@ async function main() {
       },
     }))
   } catch (error) {
-    // ESLint returns non-zero exit code when errors exist
+    // oxlint returns a non-zero exit code when errors remain
     // Parse the JSON output to extract error details
-    let eslintOutput = []
+    let lintOutput = { diagnostics: [] }
     try {
-      eslintOutput = JSON.parse(error.stdout || '[]')
+      lintOutput = JSON.parse(error.stdout || '{}')
     } catch {
-      // If we can't parse ESLint output, report the raw error
-      // eslint-disable-next-line no-console
+      // If we can't parse the linter output, report the raw error
+      // oxlint-disable-next-line no-console
       console.log(JSON.stringify({
         decision: 'block',
-        reason: `ESLint failed to run: ${error.message}`,
+        reason: `oxlint failed to run: ${error.message}`,
       }))
       return
     }
 
-    // Extract remaining errors (severity 2 = error, severity 1 = warning)
-    const errors = eslintOutput
-      .flatMap(file => file.messages?.filter(msg => msg.severity >= 2) || [])
+    // oxlint reports a flat `diagnostics` array, each entry carrying its rule
+    // in `code` and its position in the first label's span.
+    const diagnostics = (lintOutput.diagnostics ?? [])
+      .filter(diagnostic => diagnostic.severity === 'error')
+
+    const errors = diagnostics
       .slice(0, 5) // Limit to first 5 errors to keep feedback concise
-      .map(err => `Line ${err.line}: [${err.ruleId}] ${err.message}`)
+      .map(diagnostic => `Line ${diagnostic.labels?.[0]?.span?.line ?? '?'}: `
+        + `[${diagnostic.code}] ${diagnostic.message}`)
 
     if (errors.length > 0) {
-      const totalErrors = eslintOutput
-        .reduce((sum, file) => sum + (file.errorCount || 0), 0)
+      const totalErrors = diagnostics.length
 
-      // eslint-disable-next-line no-console
+      // oxlint-disable-next-line no-console
       console.log(JSON.stringify({
         decision: 'block',
         reason: [
@@ -90,7 +93,7 @@ async function main() {
       }))
     } else {
       // No errors remain (maybe only warnings)
-      // eslint-disable-next-line no-console
+      // oxlint-disable-next-line no-console
       console.log(JSON.stringify({
         hookSpecificOutput: {
           linted: true,

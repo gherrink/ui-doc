@@ -15,11 +15,11 @@
     "fix": "pnpm run /^fix:/",
     "fix:css": "stylelint 'packages/**/*.css' 'demos/**/*.css' --cache --fix",
     "fix:docs": "markdownlint-cli2 --fix '**/*.md'",
-    "fix:js": "eslint --cache --fix",
+    "fix:js": "oxlint --type-aware --fix",
     "lint": "pnpm run /^lint:/",
     "lint:css": "stylelint 'packages/**/*.css' 'demos/**/*.css' --cache",
     "lint:docs": "markdownlint-cli2 '**/*.md'",
-    "lint:js": "eslint --cache",
+    "lint:js": "oxlint --type-aware",
     "package:release": "versioner --stripShortName='^@.+/' --target",
     "package:release-dry": "versioner --dry --stripShortName='^@.+/' --target",
     "preinstall": "npx only-allow pnpm",
@@ -31,11 +31,13 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest",
     "typecheck": "pnpm -r --filter './packages/*' run typecheck",
-    "typecheck:all": "tsc --noEmit -p tsconfig.eslint.json",
-    "workspace:build": "pnpm -r --filter './packages/*' run build"
+    "typecheck:all": "tsc --noEmit -p tsconfig.all.json",
+    "workspace:build": "pnpm -r --filter './packages/*' run build",
+    "lint:json": "biome lint .",
+    "fix:json": "biome lint --write ."
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^4.19.0",
+    "@biomejs/biome": "^2.5.7",
     "@commitlint/cli": "^21.2.1",
     "@commitlint/config-conventional": "^21.2.0",
     "@dot/versioner": "^0.4.3",
@@ -48,10 +50,14 @@
     "@types/node": "catalog:",
     "@vitest/coverage-v8": "4.1.10",
     "cssnano": "^8.0.5",
-    "eslint": "^9.39.3",
+    "eslint-plugin-jsdoc": "^64.0.2",
+    "eslint-plugin-regexp": "^3.1.1",
     "husky": "^9.1.7",
     "lint-staged": "^17.3.0",
     "markdownlint-cli2": "^0.23.2",
+    "oxfmt": "0.63.0",
+    "oxlint": "1.78.0",
+    "oxlint-tsgolint": "^7.0.2001",
     "postcss": "^8.5.26",
     "postcss-import": "^16.1.1",
     "postcss-preset-env": "^11.1.2",
@@ -65,20 +71,16 @@
   },
   "lint-staged": {
     "*.{ts,js,mjs,cjs}": [
-      "eslint --cache --fix"
+      "oxlint --type-aware --fix"
     ],
     "*.css": [
       "stylelint --fix"
     ],
     "*.{json,jsonc}": [
-      "eslint --cache --fix"
-    ],
-    "*.{yml,yaml}": [
-      "eslint --cache --fix"
+      "biome lint --write --no-errors-on-unmatched"
     ],
     "*.md": [
-      "markdownlint-cli2 --fix",
-      "eslint --cache --fix"
+      "markdownlint-cli2 --fix"
     ]
   }
 }
