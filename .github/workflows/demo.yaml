@@ -22,19 +22,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Must run before setup-node: `cache: pnpm` needs pnpm on PATH.
+      # Version comes from the packageManager field in package.json.
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          run_install: false
 
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24 # keep in sync with mise.toml
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build packages
         run: pnpm workspace:build
