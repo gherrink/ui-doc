@@ -70,5 +70,9 @@
   },
   "optionalDependencies": {
     "@highlightjs/cdn-assets": "^11.9.0"
+  },
+  "devDependencies": {
+    "@ui-doc/core": "workspace:^",
+    "vitest": "catalog:"
   }
 }

@@ -2,10 +2,6 @@
   "name": "ui-doc",
   "type": "module",
   "private": true,
-  "workspaces": [
-    "packages/*",
-    "demos/*"
-  ],
   "browserslist": [
     "defaults",
     "not IE 11"
@@ -47,7 +43,7 @@
     "@rollup/plugin-node-resolve": "^15.3.1",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
-    "@types/node": "^20.19.35",
+    "@types/node": "catalog:",
     "autoprefixer": "^10.4.27",
     "cssnano": "^7.1.2",
     "eslint": "^9.39.3",
@@ -57,20 +53,16 @@
     "postcss": "^8.5.6",
     "postcss-import": "^16.1.1",
     "postcss-nested": "^6.2.0",
-    "rollup": "^4.59.0",
+    "rollup": "catalog:",
     "rollup-plugin-postcss": "^4.0.2",
     "stylelint": "^16.26.1",
     "stylelint-config-clean-order": "^6.1.0",
     "stylelint-config-standard": "^36.0.1",
-    "tsconfig-paths": "^4.2.0",
     "tslib": "^2.8.1",
-    "typescript": "^5.9.3",
-    "vitest": "^3.2.4"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "pnpm": {
-    "ignoredBuiltDependencies": [
-      "esbuild"
-    ],
     "onlyBuiltDependencies": [
       "esbuild"
     ]
