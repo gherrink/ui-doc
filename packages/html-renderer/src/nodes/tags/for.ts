@@ -6,7 +6,8 @@ import { readNestedValue } from '../../utils'
 import { TagNode } from '../TagNode'
 
 export interface TagForNodeOptions {
-  contextKey?: 'this' | string
+  /** Context path to iterate. The special value `this` refers to the current render context. */
+  contextKey?: string
 }
 
 export class TagForNode extends TagNode {
@@ -79,7 +80,7 @@ export const parseTagForNode: TagNodeParse = {
   hasContent: true,
   identifier: 'for',
   parse() {
-    const options: Partial<TagForNodeOptions> = {}
+    const options: TagForNodeOptions = {}
     let gotSeparator = false
 
     return {
@@ -101,7 +102,7 @@ export const parseTagForNode: TagNodeParse = {
         throw new TagNodeError('Expected tag identifier"')
       },
       create() {
-        return new TagForNode(options as TagForNodeOptions)
+        return new TagForNode(options)
       },
     }
   },

@@ -6,8 +6,10 @@ import { readNestedValue } from '../../utils'
 import { TagNode } from '../TagNode'
 
 export interface TagPageNodeOptions {
-  name?: 'default' | string
-  contextKey?: 'this' | string
+  /** Page template name. Falls back to `default` when omitted. */
+  name?: string
+  /** Context path to render with. The special value `this` refers to the current render context. */
+  contextKey?: string
 }
 
 export class TagPageNode extends TagNode {
@@ -45,7 +47,7 @@ export const parseTagPageNode: TagNodeParse = {
   hasContent: false,
   identifier: 'page',
   parse() {
-    const options: Partial<TagPageNodeOptions> = {}
+    const options: TagPageNodeOptions = {}
     let gotSeparator = false
 
     return {
@@ -79,7 +81,7 @@ export const parseTagPageNode: TagNodeParse = {
         }
       },
       create() {
-        return new TagPageNode(options as TagPageNodeOptions)
+        return new TagPageNode(options)
       },
     }
   },

@@ -6,7 +6,8 @@ import { escapeHtml, readNestedValue } from '../../utils'
 import { TagNode } from '../TagNode'
 
 export interface TagVarNodeOptions {
-  contextKey: 'this' | string
+  /** Context path to read. The special value `this` refers to the current render context. */
+  contextKey: string
   escape?: boolean
 }
 
@@ -23,6 +24,9 @@ export class TagVarNode extends TagNode {
 
   public render(context: RenderContext): string {
     const rawValue = readNestedValue(this.contextKey, context)
+    // A template var renders whatever the context holds, so generic stringification is the
+    // intended behaviour here -- including `[object Object]` for a key that points at an object.
+    // oxlint-disable-next-line typescript/no-base-to-string
     const value = rawValue === undefined || rawValue === null ? '' : String(rawValue)
 
     return this.escape ? escapeHtml(value) : value

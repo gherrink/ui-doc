@@ -7,7 +7,8 @@ import { TagNode } from '../TagNode'
 
 export interface TagPartialNodeOptions {
   name: string
-  contextKey?: 'this' | string
+  /** Context path to render with. The special value `this` refers to the current render context. */
+  contextKey?: string
 }
 
 export class TagPartialNode extends TagNode {
