@@ -1,30 +1,27 @@
 import path from 'node:path'
 
 import uidoc from '@ui-doc/rollup'
-import postcssImport from 'postcss-import'
-import postcssPresetEnv from 'postcss-preset-env'
-import postcss from 'rollup-plugin-postcss'
+
+import { cssAssets } from '../../shared/rollup-plugin-css.mjs'
 
 const sharedDir = path.resolve(import.meta.dirname, '../shared')
 const distDir = path.resolve(import.meta.dirname, '../dist/rollup')
 
 export default {
   input: {
-    app: path.join(sharedDir, 'css/index.css'),
+    app: path.join(import.meta.dirname, 'app.js'),
   },
   output: {
     dir: distDir,
     format: 'es',
     sourcemap: true,
+    plugins: [
+      cssAssets({
+        entries: { app: path.join(sharedDir, 'css/index.css') },
+      }),
+    ],
   },
   plugins: [
-    postcss({
-      autoModules: true,
-      extract: true,
-      minimize: true,
-      plugins: [postcssImport(), postcssPresetEnv()],
-      sourceMap: true,
-    }),
     uidoc({
       output: {
         dir: 'ui-doc',
