@@ -13,10 +13,11 @@
   */
 html {
   font-size: var(--font-size-base);
+  text-size-adjust: 100%;
+  overflow-wrap: break-word;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-size-adjust: 100%;
-  word-break: break-word;
 }
 
 body,

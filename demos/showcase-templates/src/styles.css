@@ -24,21 +24,21 @@
   cursor: pointer;
 
   padding: 10px 20px;
+  border: 2px solid #6366f1;
+  border-radius: 6px;
 
   font-size: 14px;
   font-weight: 500;
   color: white;
 
   background: #6366f1;
-  border: 2px solid #6366f1;
-  border-radius: 6px;
 
   transition: all 0.2s;
 }
 
 .btn:hover {
-  background: #4f46e5;
   border-color: #4f46e5;
+  background: #4f46e5;
 }
 
 .btn-outline {
@@ -63,11 +63,10 @@
   width: 100%;
   max-width: 300px;
   padding: 10px 14px;
-
-  font-size: 14px;
-
   border: 2px solid #e5e7eb;
   border-radius: 6px;
+
+  font-size: 14px;
 
   transition: border-color 0.2s;
 }
@@ -106,8 +105,9 @@
   position: absolute;
   inset: 0;
 
-  background: #e5e7eb;
   border-radius: 26px;
+
+  background: #e5e7eb;
 
   transition: 0.3s;
 }
@@ -121,9 +121,9 @@
 
   width: 20px;
   height: 20px;
+  border-radius: 50%;
 
   background: white;
-  border-radius: 50%;
 
   transition: 0.3s;
 }
