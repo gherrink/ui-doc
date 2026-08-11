@@ -88,7 +88,7 @@ export async function resolveOptions(options: Options): Promise<ResolvedOptions>
     blockParser: options.blockParser,
     logger,
     renderer,
-    ...(resolvedSettings ?? {}),
+    ...resolvedSettings,
   })
   const assetsFromInput = new Set<string>()
   const isAssetFromInput: ResolvedOptions['isAssetFromInput'] = src => assetsFromInput.has(src)

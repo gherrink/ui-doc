@@ -236,7 +236,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
           source: content,
           type: 'asset',
         })
-        this.info({ code: 'OUTPUT', message: `${fileName}` })
+        this.info({ code: 'OUTPUT', message: fileName })
       })
     },
 

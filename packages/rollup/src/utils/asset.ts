@@ -237,14 +237,16 @@ export async function resolveAssets(
           return null
         }
 
-        return {
+        const asset: AssetResolved = {
           name: assetName,
           type,
           fileName: assetName,
           context: 'page',
           originalFileName: resolvedFile,
           source: await assetLoader.read(resolvedFile),
-        } as AssetResolved
+        }
+
+        return asset
       }),
       ...(options.assets?.page ?? []).map(async asset => resolveAssetOption(asset, 'page')),
       ...(options.assets?.example ?? []).map(async asset => resolveAssetOption(asset, 'example')),
