@@ -1,9 +1,11 @@
 import { describe, expect, it, vi } from 'vitest'
 
 import type { BlockParser } from '../src/BlockParser.types'
+import type { EventListener } from '../src/EventEmitter.types'
 import type { Renderer } from '../src/Renderer.types'
 import { UIDoc } from '../src/UIDoc'
-import type { GenerateFunctions } from '../src/UIDoc.types'
+import type { GenerateFunctions, OutputCallback } from '../src/UIDoc.types'
+import type { UIDocEventMap } from '../src/UIDocEvent.types'
 
 interface UidocMockResult {
   blockParser: BlockParser
@@ -510,7 +512,7 @@ describe('uI-Doc', () => {
   })
 
   it('should emit source events on create, update, and delete', () => {
-    const sourceListener = vi.fn()
+    const sourceListener = vi.fn<EventListener<UIDocEventMap, 'source'>>()
     const { uidoc } = uidocMock({
       blockParserParse: vi
         .fn<BlockParser['parse']>()
@@ -539,7 +541,7 @@ describe('uI-Doc', () => {
   })
 
   it('should emit context-entry events on block changes', () => {
-    const contextEntryListener = vi.fn()
+    const contextEntryListener = vi.fn<EventListener<UIDocEventMap, 'context-entry'>>()
     const { uidoc } = uidocMock({
       blockParserParse: vi
         .fn<BlockParser['parse']>()
@@ -639,7 +641,7 @@ describe('uI-Doc', () => {
 
   describe('output', () => {
     it('should write all pages using output callback', async () => {
-      const outputCallback = vi.fn()
+      const outputCallback = vi.fn<OutputCallback>()
       const { uidoc } = uidocMock({
         rendererGenerate: vi.fn<Renderer['generate']>().mockReturnValue('<html>content</html>'),
         blockParserParse: vi.fn<BlockParser['parse']>().mockReturnValue([
@@ -659,7 +661,7 @@ describe('uI-Doc', () => {
     })
 
     it('should handle async output callback', async () => {
-      const outputCallback = vi.fn().mockResolvedValue(undefined)
+      const outputCallback = vi.fn<OutputCallback>().mockResolvedValue(undefined)
       const { uidoc } = uidocMock({
         rendererGenerate: vi.fn<Renderer['generate']>().mockReturnValue('<html></html>'),
         blockParserParse: vi
@@ -675,7 +677,7 @@ describe('uI-Doc', () => {
     })
 
     it('should emit output event', async () => {
-      const outputListener = vi.fn()
+      const outputListener = vi.fn<EventListener<UIDocEventMap, 'output'>>()
       const { uidoc } = uidocMock({
         rendererGenerate: vi.fn<Renderer['generate']>().mockReturnValue(''),
         blockParserParse: vi.fn<BlockParser['parse']>().mockReturnValue([]),
@@ -724,7 +726,7 @@ describe('uI-Doc', () => {
     })
 
     it('should emit page event', () => {
-      const pageListener = vi.fn()
+      const pageListener = vi.fn<EventListener<UIDocEventMap, 'page'>>()
       const { uidoc } = uidocMock({
         rendererGenerate: vi.fn<Renderer['generate']>().mockReturnValue(''),
         blockParserParse: vi
@@ -777,7 +779,7 @@ describe('uI-Doc', () => {
     })
 
     it('should emit example event', () => {
-      const exampleListener = vi.fn()
+      const exampleListener = vi.fn<EventListener<UIDocEventMap, 'example'>>()
       const { uidoc } = uidocMock({
         rendererGenerate: vi.fn<Renderer['generate']>().mockReturnValue(''),
         blockParserParse: vi.fn<BlockParser['parse']>().mockReturnValue([
@@ -984,7 +986,7 @@ describe('uI-Doc', () => {
 
   describe('constructor options', () => {
     it('should use default block parser when not provided', () => {
-      const renderer = { generate: vi.fn() }
+      const renderer = { generate: vi.fn<Renderer['generate']>() }
       const uidoc = new UIDoc({ renderer })
 
       expect(uidoc.blockParser).toBeDefined()

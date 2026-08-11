@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import type { EventArgs, EventMap } from '../src/EventEmitter.types'
+import type { EventArgs, EventListener, EventMap } from '../src/EventEmitter.types'
 import { EventEmitterBase } from '../src/EventEmitterBase'
 
 // Define test event map
@@ -33,7 +33,7 @@ describe('eventEmitterBase', () => {
 
   describe('on', () => {
     it('should register a single listener and emit event with arguments', () => {
-      const listener = vi.fn()
+      const listener = vi.fn<EventListener<TestEvents, 'multipleArgs'>>()
 
       emitter.on('multipleArgs', listener)
       emitter.emitPublic('multipleArgs', 42, 'test', true)
@@ -43,7 +43,7 @@ describe('eventEmitterBase', () => {
     })
 
     it('should register listener for event with no arguments', () => {
-      const listener = vi.fn()
+      const listener = vi.fn<EventListener<TestEvents, 'noArgs'>>()
 
       emitter.on('noArgs', listener)
       emitter.emitPublic('noArgs')
@@ -53,9 +53,9 @@ describe('eventEmitterBase', () => {
     })
 
     it('should register multiple listeners for the same event and call in order', () => {
-      const listener1 = vi.fn()
-      const listener2 = vi.fn()
-      const listener3 = vi.fn()
+      const listener1 = vi.fn<EventListener<TestEvents, 'oneArg'>>()
+      const listener2 = vi.fn<EventListener<TestEvents, 'oneArg'>>()
+      const listener3 = vi.fn<EventListener<TestEvents, 'oneArg'>>()
       const callOrder: number[] = []
 
       listener1.mockImplementation(() => callOrder.push(1))
@@ -75,9 +75,9 @@ describe('eventEmitterBase', () => {
     })
 
     it('should register listeners for different events', () => {
-      const listener1 = vi.fn()
-      const listener2 = vi.fn()
-      const listener3 = vi.fn()
+      const listener1 = vi.fn<EventListener<TestEvents, 'noArgs'>>()
+      const listener2 = vi.fn<EventListener<TestEvents, 'oneArg'>>()
+      const listener3 = vi.fn<EventListener<TestEvents, 'multipleArgs'>>()
 
       emitter.on('noArgs', listener1)
       emitter.on('oneArg', listener2)
@@ -93,7 +93,7 @@ describe('eventEmitterBase', () => {
     })
 
     it('should allow same listener to be registered for multiple events', () => {
-      const listener = vi.fn()
+      const listener = vi.fn<EventListener<TestEvents, string>>()
 
       emitter.on('oneArg', listener)
       emitter.on('multipleArgs', listener)
@@ -107,9 +107,9 @@ describe('eventEmitterBase', () => {
     })
 
     it('should support method chaining with multiple on calls', () => {
-      const listener1 = vi.fn()
-      const listener2 = vi.fn()
-      const listener3 = vi.fn()
+      const listener1 = vi.fn<EventListener<TestEvents, 'noArgs'>>()
+      const listener2 = vi.fn<EventListener<TestEvents, 'oneArg'>>()
+      const listener3 = vi.fn<EventListener<TestEvents, 'multipleArgs'>>()
 
       const result = emitter
         .on('noArgs', listener1)
@@ -130,7 +130,7 @@ describe('eventEmitterBase', () => {
 
   describe('off', () => {
     it('should remove a registered listener', () => {
-      const listener = vi.fn()
+      const listener = vi.fn<EventListener<TestEvents, 'oneArg'>>()
 
       emitter.on('oneArg', listener)
       emitter.emitPublic('oneArg', 'first')
@@ -144,9 +144,9 @@ describe('eventEmitterBase', () => {
     })
 
     it('should remove one listener while others remain', () => {
-      const listener1 = vi.fn()
-      const listener2 = vi.fn()
-      const listener3 = vi.fn()
+      const listener1 = vi.fn<EventListener<TestEvents, 'oneArg'>>()
+      const listener2 = vi.fn<EventListener<TestEvents, 'oneArg'>>()
+      const listener3 = vi.fn<EventListener<TestEvents, 'oneArg'>>()
 
       emitter.on('oneArg', listener1)
       emitter.on('oneArg', listener2)
@@ -161,7 +161,7 @@ describe('eventEmitterBase', () => {
     })
 
     it('should remove only first instance when listener is registered multiple times', () => {
-      const listener = vi.fn()
+      const listener = vi.fn<EventListener<TestEvents, 'oneArg'>>()
 
       emitter.on('oneArg', listener)
       emitter.on('oneArg', listener)
@@ -174,7 +174,7 @@ describe('eventEmitterBase', () => {
     })
 
     it('should not throw when removing listener that was never registered', () => {
-      const listener = vi.fn()
+      const listener = vi.fn<EventListener<TestEvents, 'oneArg'>>()
 
       expect(() => {
         emitter.off('oneArg', listener)
@@ -185,7 +185,7 @@ describe('eventEmitterBase', () => {
     })
 
     it('should not throw when removing listener for event with no listeners', () => {
-      const listener = vi.fn()
+      const listener = vi.fn<EventListener<TestEvents, 'noArgs'>>()
 
       expect(() => {
         emitter.off('noArgs', listener)
@@ -193,8 +193,8 @@ describe('eventEmitterBase', () => {
     })
 
     it('should support method chaining', () => {
-      const listener1 = vi.fn()
-      const listener2 = vi.fn()
+      const listener1 = vi.fn<EventListener<TestEvents, 'oneArg'>>()
+      const listener2 = vi.fn<EventListener<TestEvents, 'multipleArgs'>>()
 
       emitter.on('oneArg', listener1)
       emitter.on('multipleArgs', listener2)
@@ -211,9 +211,9 @@ describe('eventEmitterBase', () => {
     })
 
     it('should support chaining on and off calls', () => {
-      const listener1 = vi.fn()
-      const listener2 = vi.fn()
-      const listener3 = vi.fn()
+      const listener1 = vi.fn<EventListener<TestEvents, 'oneArg'>>()
+      const listener2 = vi.fn<EventListener<TestEvents, 'oneArg'>>()
+      const listener3 = vi.fn<EventListener<TestEvents, 'multipleArgs'>>()
 
       const result = emitter
         .on('oneArg', listener1)
@@ -249,7 +249,7 @@ describe('eventEmitterBase', () => {
 
     it('should propagate error when listener throws during execution', () => {
       const error = new Error('Listener error')
-      const listener = vi.fn().mockImplementation(() => {
+      const listener = vi.fn<EventListener<TestEvents, 'oneArg'>>().mockImplementation(() => {
         throw error
       })
 
@@ -261,7 +261,7 @@ describe('eventEmitterBase', () => {
     })
 
     it('should pass complex object arguments by reference', () => {
-      const listener = vi.fn()
+      const listener = vi.fn<EventListener<TestEvents, 'objectArg'>>()
       const complexObject = {
         key: 'value',
         nested: {
@@ -279,10 +279,10 @@ describe('eventEmitterBase', () => {
 
   describe('integration', () => {
     it('should handle complex workflow with multiple events and listeners', () => {
-      const noArgsListener = vi.fn()
-      const oneArgListener1 = vi.fn()
-      const oneArgListener2 = vi.fn()
-      const multipleArgsListener = vi.fn()
+      const noArgsListener = vi.fn<EventListener<TestEvents, 'noArgs'>>()
+      const oneArgListener1 = vi.fn<EventListener<TestEvents, 'oneArg'>>()
+      const oneArgListener2 = vi.fn<EventListener<TestEvents, 'oneArg'>>()
+      const multipleArgsListener = vi.fn<EventListener<TestEvents, 'multipleArgs'>>()
 
       emitter
         .on('noArgs', noArgsListener)
