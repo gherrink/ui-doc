@@ -49,14 +49,12 @@
     "templates"
   ],
   "engines": {
-    "node": ">=18.0.0"
+    "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
   },
   "scripts": {
-    "build": "rollup -c",
+    "build": "pnpm clean && rollup -c",
     "clean": "rm -rf dist",
-    "prebuild": "pnpm clean",
-    "prepare": "if [ ! -d 'dist' ]; then pnpm build; fi",
-    "prepublish": "pnpm build",
+    "prepack": "pnpm build",
     "release": "pnpm --workspace-root package:release $(pwd)",
     "release:dry": "pnpm --workspace-root package:release-dry $(pwd)",
     "test": "vitest run",
