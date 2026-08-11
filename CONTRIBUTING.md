@@ -10,10 +10,10 @@ Before contributing, please check the [issue tracker](https://github.com/gherrin
 
 - [mise](https://mise.jdx.dev/getting-started.html), which manages the toolchain for this repository
 
-The toolchain is pinned in `mise.toml` (Node 24, pnpm 10). The exact pnpm version
+The toolchain is pinned in `mise.toml` (Node 24, pnpm 11). The exact pnpm version
 lives in the `packageManager` field of `package.json`; pnpm self-manages to it.
 
-If you would rather not use mise, install Node 24 and pnpm 10 yourself.
+If you would rather not use mise, install Node 24 and pnpm 11 yourself.
 
 ### Setup
 
@@ -213,6 +213,58 @@ Packages are versioned independently—a `feat(core):` commit only releases `@ui
 - When making breaking changes, update workspace dependency constraints in the same PR
 
 See the [Release Process Guide](./docs/contributing/release-process.md) for workspace dependency management, manual procedures, and troubleshooting.
+
+## Dependency Notes
+
+Things that are easy to trip over and hard to infer from the code.
+
+### TypeScript stays on 5.x
+
+TypeScript 7 is the native port, and it ships no JavaScript compiler API — its
+`exports` map exposes only `lib/version.cjs` and a few `unstable/*` entries.
+Two things in this repository depend on that API and therefore block the
+upgrade:
+
+- `@rollup/plugin-typescript` calls `ts.createProgram`, `ts.createWatchProgram`
+  and `ts.sys`. It cannot run on TypeScript 7 at all, so the build needs a
+  different compiler step first.
+- `typescript-eslint` caps its peer at `<6.1.0` and has declined to support
+  TypeScript 7 until the API stabilises in 7.1. Upgrading would silently drop
+  every type-aware lint rule this repository relies on. The alternative that
+  keeps them is `oxlint` with `oxlint-tsgolint`, which is a linter replacement
+  rather than a version bump.
+
+Neither is fixable here. Both are tracked upstream.
+
+### marked is ESM-only
+
+`@ui-doc/core` depends on marked 18, which dropped its CommonJS build in v16.
+`dist/index.cjs` therefore reaches it through Node's `require(esm)`, which
+exists on exactly the Node versions in the package's `engines`. CI executes
+that path on every build (the "Verify CommonJS entry" step) — keep it.
+Consumers resolving `@ui-doc/core` through a strict CommonJS-only transform,
+such as Jest's default, will not be able to load it.
+
+### picomatch is bundled into @ui-doc/rollup
+
+`configTs` derives Rollup's `external` list from `dependencies` plus
+`peerDependencies`. picomatch is a *devDependency* of `@ui-doc/rollup`, so it
+is inlined into the published bundle, while `@ui-doc/node` declares it as a
+dependency and keeps it external. That is deliberate — promoting it would flip
+it from bundled to external and change the published contract — but it has two
+consequences worth knowing:
+
+- The bundled copy is invisible to a consumer's `pnpm audit`, and cannot be
+  patched by a consumer's dependency update.
+- Refreshing picomatch touches no file inside `packages/rollup/`, so the
+  versioner will not cut a release for it. The new copy ships with whatever
+  `feat`/`fix` lands there next.
+
+### The @typescript-eslint override
+
+`pnpm-workspace.yaml` pins `@typescript-eslint/*`. 8.66 reports
+`no-unnecessary-type-assertion` false positives against this codebase, and its
+autofix breaks both `tsc` and 37 tests. The pin goes away with ESLint itself.
 
 ## Project Structure
 
