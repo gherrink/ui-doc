@@ -28,15 +28,15 @@ describe('templateLoader', () => {
     mockIsDirectory = vi.fn<FileSystem['isDirectory']>()
     mockFileBasename = vi.fn<FileSystem['fileBasename']>()
     mockFileRead = vi.fn<FileSystem['fileRead']>()
-    mockFinderSearch = vi.fn()
+    mockFinderSearch = vi.fn<FileFinder['search']>()
     mockAddLayout = vi.fn<HtmlRenderer['addLayout']>().mockReturnThis()
     mockAddPage = vi.fn<HtmlRenderer['addPage']>().mockReturnThis()
     mockAddPartial = vi.fn<HtmlRenderer['addPartial']>().mockReturnThis()
 
     mockFinder = {
       search: mockFinderSearch,
-      matches: vi.fn(() => true),
-      directories: vi.fn(() => []),
+      matches: vi.fn<FileFinder['matches']>(() => true),
+      directories: vi.fn<FileFinder['directories']>(() => []),
     }
 
     mockCreateFileFinder = vi.fn<FileSystem['createFileFinder']>().mockReturnValue(mockFinder)

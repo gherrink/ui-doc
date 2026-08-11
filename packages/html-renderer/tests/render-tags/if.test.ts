@@ -9,7 +9,7 @@ describe('render tag if', () => {
 
   it('using value true condition expect call content node', () => {
     const context = {}
-    const contentNodeRenderMock = vi.fn().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagIfNode({ firstValue: true })
 
@@ -22,7 +22,7 @@ describe('render tag if', () => {
 
   it('using value false condition expect not call content node', () => {
     const context = {}
-    const contentNodeRenderMock = vi.fn().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagIfNode({ firstValue: false })
 
@@ -34,7 +34,7 @@ describe('render tag if', () => {
 
   it('using context true condition expect call content node', () => {
     const context = { foo: true }
-    const contentNodeRenderMock = vi.fn().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagIfNode({ firstContextKey: 'foo' })
 
@@ -47,7 +47,7 @@ describe('render tag if', () => {
 
   it('using context false condition expect not call content node', () => {
     const context = { foo: false }
-    const contentNodeRenderMock = vi.fn().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagIfNode({ firstContextKey: 'foo' })
 
@@ -59,7 +59,7 @@ describe('render tag if', () => {
 
   it('using non existent context key expect not call content node', () => {
     const context = {}
-    const contentNodeRenderMock = vi.fn().mockReturnValue('content')
+    const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
     const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
     const node = new TagIfNode({ firstContextKey: 'foo' })
 
@@ -73,7 +73,7 @@ describe('render tag if', () => {
     'using values that result in true condition expect call content node',
     firstValue => {
       const context = {}
-      const contentNodeRenderMock = vi.fn().mockReturnValue('content')
+      const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
       const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
       const node = new TagIfNode({ firstValue })
 
@@ -89,7 +89,7 @@ describe('render tag if', () => {
     'using values that result in false condition expect not call content node',
     firstValue => {
       const context = {}
-      const contentNodeRenderMock = vi.fn().mockReturnValue('content')
+      const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
       const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
       const node = new TagIfNode({ firstValue })
 
@@ -137,7 +137,7 @@ describe('render tag if', () => {
     'using values that result in true condition with operator %s %s %s expect call content node',
     (firstValue, operator, secondValue) => {
       const context = {}
-      const contentNodeRenderMock = vi.fn().mockReturnValue('content')
+      const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
       const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
       const node = new TagIfNode({ firstValue, operator: operator as NodeOperator, secondValue })
 
@@ -186,7 +186,7 @@ describe('render tag if', () => {
     'using values that result in false condition with operator %s %s %s expect not call content node',
     (firstValue, operator, secondValue) => {
       const context = {}
-      const contentNodeRenderMock = vi.fn().mockReturnValue('content')
+      const contentNodeRenderMock = vi.fn<Node['render']>().mockReturnValue('content')
       const contentNode = { render: contentNodeRenderMock as Node['render'] } as Node
       const node = new TagIfNode({ firstValue, operator: operator as NodeOperator, secondValue })
 
