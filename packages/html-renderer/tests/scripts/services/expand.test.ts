@@ -287,12 +287,11 @@ describe('initExpand', () => {
       expect(el('#nested').getAttribute('tabindex')).toBe('0')
     })
 
-    it('should leave nested descendants unfocusable when expanding a hidden target', () => {
-      // Ordering bug: toggleControlTarget() runs the tabindex fixup *before*
-      // toggleHide() removes `hidden`, so while expanding, the target still
-      // matches `[hidden]` and its own descendants are excluded by
-      // `:not([hidden] [tabindex="-1"])`. Only the `:scope >` branch survives,
-      // so anything nested deeper than one level never regains focusability.
+    it('should make nested descendants focusable when expanding a hidden target', () => {
+      // The fixup runs after toggleHide() has removed `hidden`. Before, it ran
+      // first, so the target still matched `[hidden]`, every descendant was
+      // excluded by `:not([hidden] [tabindex="-1"])`, and only the direct
+      // children caught by the `:scope >` arm regained focusability.
       setup(
         '<button id="btn" aria-expanded="false" aria-controls="target"></button>' +
           '<div id="target" hidden><div><a id="nested" tabindex="-1"></a></div></div>',
@@ -300,11 +299,11 @@ describe('initExpand', () => {
 
       el('#btn').click()
 
-      expect(el('#nested').getAttribute('tabindex')).toBe('-1')
+      expect(el('#nested').getAttribute('tabindex')).toBe('0')
     })
 
-    it('should leave nested descendants unfocusable when expanding an aria-hidden target', () => {
-      // Same ordering bug through the aria-hidden branch.
+    it('should make nested descendants focusable when expanding an aria-hidden target', () => {
+      // Same ordering, through the aria-hidden branch.
       setup(
         '<button id="btn" aria-expanded="false" aria-controls="target"></button>' +
           '<div id="target" aria-hidden="true"><div><a id="nested" tabindex="-1"></a></div></div>',
@@ -312,7 +311,7 @@ describe('initExpand', () => {
 
       el('#btn').click()
 
-      expect(el('#nested').getAttribute('tabindex')).toBe('-1')
+      expect(el('#nested').getAttribute('tabindex')).toBe('0')
     })
 
     it('should leave descendants inside a hidden subtree unfocusable', () => {
@@ -552,16 +551,12 @@ describe('initExpand', () => {
       expect(el('#two').getAttribute('aria-expanded')).toBe('true')
     })
 
-    it('should re-expand the last sibling when more than one was open', () => {
-      // Cascade bug. Clicking #three snapshots [#one, #two] and clicks each in
-      // turn. #one carries data-hide-same-level too, so its own handler already
-      // clicks #two shut; the relatedTarget guard only stops #one from clicking
-      // #three back, not from reaching #two. #three's loop then clicks #two a
-      // second time, which re-opens it.
-      //
-      // Only reachable with three or more siblings, two of them expanded. The
-      // shipped templates never nest that many, which is why it has gone
-      // unnoticed.
+    it('should collapse every sibling when more than one was open', () => {
+      // Clicking #three snapshots [#one, #two] and clicks each in turn. #one
+      // carries data-hide-same-level too, so its own handler already closes
+      // #two; the relatedTarget guard only stops #one clicking #three back.
+      // Re-clicking the now-closed #two used to re-open it, so the loop
+      // re-checks aria-expanded before acting.
       setup(
         '<div>' +
           '<button id="one" aria-expanded="true" data-hide-same-level></button>' +
@@ -573,7 +568,7 @@ describe('initExpand', () => {
       el('#three').click()
 
       expect(el('#one').getAttribute('aria-expanded')).toBe('false')
-      expect(el('#two').getAttribute('aria-expanded')).toBe('true')
+      expect(el('#two').getAttribute('aria-expanded')).toBe('false')
       expect(el('#three').getAttribute('aria-expanded')).toBe('true')
     })
 

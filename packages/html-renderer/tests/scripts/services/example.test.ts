@@ -174,6 +174,23 @@ describe('initExample', () => {
       }).not.toThrow()
       expect(mutationObservers).toHaveLength(0)
     })
+
+    it('should give up quietly when the document is still unreachable on load', () => {
+      // The document is resolved when the load handler runs, so it has to cope
+      // with the frame still exposing nothing - a cross-origin frame never
+      // hands one over, and firing load does not change that.
+      document.body.innerHTML = '<div data-example><iframe></iframe></div>'
+      const iframe = document.querySelector('iframe') as HTMLIFrameElement
+
+      Object.defineProperty(iframe, 'contentDocument', { configurable: true, get: () => null })
+      Object.defineProperty(iframe, 'contentWindow', { configurable: true, get: () => null })
+
+      initExample()
+
+      expect(() => iframe.dispatchEvent(new Event('load'))).not.toThrow()
+      expect(mutationObservers).toHaveLength(0)
+      expect(iframe.style.height).toBe('')
+    })
   })
 
   describe('deferred initialisation', () => {
@@ -192,12 +209,12 @@ describe('initExample', () => {
       expect(mutationObservers).toHaveLength(1)
     })
 
-    it('should read the document captured before load, not the one loaded into the frame', () => {
-      // Stale-reference bug: the content document is resolved once, at init.
-      // When the frame is still loading, a real navigation replaces that
-      // document, but the load handler keeps measuring and observing the
-      // original one. Here the frame ends up sized from the throwaway document
-      // rather than from the page it actually loaded.
+    it('should read the document the frame actually loaded, not the one present at init', () => {
+      // The content document used to be resolved once, at init. While the frame
+      // is still loading that is the about:blank placeholder, which a real
+      // navigation then replaces - so the load handler measured and observed a
+      // document the frame no longer showed. It is now resolved when the
+      // handler runs.
       document.body.innerHTML = '<div data-example><iframe></iframe></div>'
       const iframe = document.querySelector('iframe') as HTMLIFrameElement
       const before = document.implementation.createHTMLDocument('before')
@@ -216,8 +233,8 @@ describe('initExample', () => {
       current = after
       iframe.dispatchEvent(new Event('load'))
 
-      expect(iframe.style.height).toBe('100px')
-      expect(mutationObservers[0].observed).toEqual([before.body])
+      expect(iframe.style.height).toBe('900px')
+      expect(mutationObservers[0].observed).toEqual([after.body])
     })
   })
 })

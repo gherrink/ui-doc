@@ -47,8 +47,13 @@ export function animate(
   const animateClassFrom = `${animationName}-${animationState}-from`
   const afterAnimation = (): void => {
     target.classList.remove(animateClassTo, animateClassActive)
+    // Every listener registered below has to come off, not just the two "end"
+    // ones: a cancel arriving after the animation finished would otherwise run
+    // the callback a second time.
     target.removeEventListener('animationend', afterAnimation)
     target.removeEventListener('transitionend', afterAnimation)
+    target.removeEventListener('animationcancel', afterAnimation)
+    target.removeEventListener('transitioncancel', afterAnimation)
 
     if (callback) {
       callback()
@@ -65,9 +70,19 @@ export function animate(
   requestAnimationFrame(() => {
     const styles = window.getComputedStyle(target)
 
-    // if the element has no transition or animation we can call the afterAnimation function in the
-    // next frame
-    if (['all', 'none'].includes(styles.transition) && styles.animationName === 'none') {
+    // If the element has neither a transition nor an animation, no end event
+    // will ever arrive, so finish on the next frame instead of waiting forever.
+    //
+    // This reads `transition-duration` rather than the `transition` shorthand.
+    // The shorthand serialises as `all 0s ease 0s` for an element with no
+    // transition, so comparing it against 'all' or 'none' never matched in a
+    // browser and the shortcut was effectively dead. Duration is a list when
+    // several properties transition, hence the split.
+    const hasTransition = (styles.transitionDuration ?? '')
+      .split(',')
+      .some(duration => Number.parseFloat(duration) > 0)
+
+    if (!hasTransition && styles.animationName === 'none') {
       requestAnimationFrame(afterAnimation)
     }
 
