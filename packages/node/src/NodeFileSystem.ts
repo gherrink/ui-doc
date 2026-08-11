@@ -104,7 +104,7 @@ export class NodeFileSystem implements FileSystem {
       }),
     )
 
-    return res.every(value => value === true)
+    return res.every(value => value)
   }
 }
 
