@@ -64,6 +64,12 @@ This basic setup will:
 
 ### Basic Example
 
+> The `example.fromInput` option needs your stylesheet to be a Rollup `input`
+> entry, which means a plugin that puts CSS into Rollup's module graph. The
+> examples below use `rollup-plugin-postcss` because it is the most widely
+> known one, but it has not been released since 2023 — any plugin that emits a
+> CSS asset works, and UI-Doc itself no longer depends on one.
+
 ```js
 import uidoc from '@ui-doc/rollup'
 import postcss from 'rollup-plugin-postcss'
