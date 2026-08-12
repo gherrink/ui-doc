@@ -54,6 +54,50 @@ function viteMetadataOf(entry: OutputBundle[string]): Partial<ChunkMetadata> | u
 }
 
 /**
+ * Source files an emitted bundle entry was produced from, relative to the Vite root.
+ *
+ * Read defensively: the field is absent on older Rollup versions, which Vite 6 consumers may
+ * still be on, and only assets carry it.
+ */
+function originalFileNamesOf(entry: OutputBundle[string] | undefined): string[] {
+  return (entry as { originalFileNames?: string[] } | undefined)?.originalFileNames ?? []
+}
+
+/**
+ * Picks the stylesheet that a style entry itself produced.
+ *
+ * `importedCss` lists every stylesheet the entry pulled in. Taking the first relies on
+ * insertion order, which is not contractual - Vite 8 reordered the chunk graph
+ * (vitejs/vite#22252) - and picking wrong points the docs at another entry's CSS with no
+ * error. So when there is a choice, match the emitted asset back to the entry's own source
+ * file. `originalFileNames` is root-relative while `originalFileName` is absolute, hence the
+ * suffix comparison.
+ *
+ * Falls back to insertion order when nothing matches, which is the behaviour this replaces.
+ */
+function selectStyleFileName(
+  importedCss: Set<string>,
+  bundle: OutputBundle,
+  originalFileName: string | undefined,
+): string {
+  const files = [...importedCss]
+
+  if (files.length > 1 && originalFileName !== undefined && originalFileName !== '') {
+    const matched = files.find(file =>
+      originalFileNamesOf(bundle[file]).some(
+        origin => originalFileName === origin || originalFileName.endsWith(`/${origin}`),
+      ),
+    )
+
+    if (matched !== undefined) {
+      return matched
+    }
+  }
+
+  return files[0]
+}
+
+/**
  * Resolves plugin options with defaults.
  * Returns a new object to avoid mutating the input.
  */
@@ -181,8 +225,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
         }
 
         if (asset.type === 'style' && metadata?.importedCss && metadata.importedCss.size > 0) {
-          const firstCss = metadata.importedCss.values().next().value as string
-          asset.fileName = firstCss
+          asset.fileName = selectStyleFileName(metadata.importedCss, bundle, asset.originalFileName)
         }
       })
 
