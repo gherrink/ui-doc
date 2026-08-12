@@ -31,6 +31,12 @@ function bundleChunk(overrides: ChunkDouble): BundleEntry {
   return { type: 'chunk', ...overrides } as unknown as BundleEntry
 }
 
+// Emitted assets, for the entries `importedCss` points at. `originalFileNames` is what ties a
+// built stylesheet back to the source file it came from.
+function bundleAsset(overrides: Partial<Extract<BundleEntry, { type: 'asset' }>>): BundleEntry {
+  return { type: 'asset', ...overrides } as unknown as BundleEntry
+}
+
 // Extended interface for mock request with connect middleware properties
 interface MockRequest extends Partial<IncomingMessage> {
   originalUrl?: string
@@ -834,6 +840,93 @@ describe('uidocPlugin', () => {
 
       const asset = mockApi.options.assets[0]
       expect(asset.fileName).toBe('assets/generated.css')
+
+      // Reset
+      mockApi.options.assets = []
+    })
+
+    it('should pick the css the style entry produced when several are imported', async () => {
+      mockApi.options.assets = [
+        {
+          name: 'styles',
+          fromInput: true,
+          type: 'style',
+          fileName: '',
+          // absolute, as @ui-doc/rollup records it from the resolved input
+          originalFileName: '/project/src/theme.css',
+        },
+      ]
+
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+      const generateBundle = plugin.generateBundle as (
+        options: object,
+        bundle: OutputBundle,
+        isWrite: boolean,
+      ) => Promise<void>
+
+      const mockBundle: OutputBundle = {
+        'assets/styles.js': bundleChunk({
+          name: 'styles',
+          fileName: 'assets/styles.js',
+          // vendor.css is inserted first, so insertion order alone would pick the wrong file
+          viteMetadata: { importedCss: new Set(['assets/vendor.css', 'assets/theme.css']) },
+        }),
+        // originalFileNames are relative to the vite root, unlike originalFileName
+        'assets/vendor.css': bundleAsset({
+          fileName: 'assets/vendor.css',
+          originalFileNames: ['src/vendor.css'],
+        }),
+        'assets/theme.css': bundleAsset({
+          fileName: 'assets/theme.css',
+          originalFileNames: ['src/theme.css'],
+        }),
+      }
+
+      await generateBundle.call({}, {}, mockBundle, true)
+
+      expect(mockApi.options.assets[0].fileName).toBe('assets/theme.css')
+
+      // Reset
+      mockApi.options.assets = []
+    })
+
+    it('should fall back to the first css when none matches the style entry source', async () => {
+      mockApi.options.assets = [
+        {
+          name: 'styles',
+          fromInput: true,
+          type: 'style',
+          fileName: '',
+          originalFileName: '/project/src/unrelated.css',
+        },
+      ]
+
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+      const generateBundle = plugin.generateBundle as (
+        options: object,
+        bundle: OutputBundle,
+        isWrite: boolean,
+      ) => Promise<void>
+
+      const mockBundle: OutputBundle = {
+        'assets/styles.js': bundleChunk({
+          name: 'styles',
+          fileName: 'assets/styles.js',
+          viteMetadata: { importedCss: new Set(['assets/vendor.css', 'assets/theme.css']) },
+        }),
+        'assets/vendor.css': bundleAsset({
+          fileName: 'assets/vendor.css',
+          originalFileNames: ['src/vendor.css'],
+        }),
+        'assets/theme.css': bundleAsset({
+          fileName: 'assets/theme.css',
+          originalFileNames: ['src/theme.css'],
+        }),
+      }
+
+      await generateBundle.call({}, {}, mockBundle, true)
+
+      expect(mockApi.options.assets[0].fileName).toBe('assets/vendor.css')
 
       // Reset
       mockApi.options.assets = []
