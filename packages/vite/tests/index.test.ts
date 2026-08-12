@@ -84,7 +84,13 @@ describe('uidocPlugin', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(createRollupPlugin).mockResolvedValue(mockRollupPlugin)
+    // The double is typed as vite's Plugin because that is what the code under test sees,
+    // while createRollupPlugin returns rollup's. From Vite 8 those are different packages
+    // (Rolldown vs Rollup) describing the same runtime object, so the two Plugin types no
+    // longer overlap structurally even though the value satisfies both.
+    vi.mocked(createRollupPlugin).mockResolvedValue(
+      mockRollupPlugin as unknown as Awaited<ReturnType<typeof createRollupPlugin>>,
+    )
   })
 
   describe('resolveOptions', () => {
@@ -386,7 +392,7 @@ describe('uidocPlugin', () => {
         config: {
           logger: { info: vi.fn<Logger['info']>(), error: vi.fn<Logger['error']>() },
         },
-        ws: { send: vi.fn<(payload: HotPayload) => void>() },
+        hot: { send: vi.fn<(payload: HotPayload) => void>() },
         resolvedUrls: { local: ['http://localhost:5173/'] },
       } as unknown as ViteDevServer
 
@@ -567,7 +573,7 @@ describe('uidocPlugin', () => {
         config: {
           logger: { info: vi.fn<Logger['info']>(), error: vi.fn<Logger['error']>() },
         },
-        ws: { send: vi.fn<(payload: HotPayload) => void>() },
+        hot: { send: vi.fn<(payload: HotPayload) => void>() },
         resolvedUrls: { local: ['http://localhost:5173/'] },
       } as unknown as ViteDevServer
     })
@@ -1010,7 +1016,7 @@ describe('uidocPlugin', () => {
         config: {
           logger: { info: loggerInfoMock, error: vi.fn<Logger['error']>() },
         },
-        ws: { send: vi.fn<(payload: HotPayload) => void>() },
+        hot: { send: vi.fn<(payload: HotPayload) => void>() },
         resolvedUrls: {
           local: ['http://localhost:5173/', 'http://192.168.1.100:5173/'],
         },
@@ -1045,7 +1051,7 @@ describe('uidocPlugin', () => {
         config: {
           logger: { info: loggerInfoMock, error: vi.fn<Logger['error']>() },
         },
-        ws: { send: vi.fn<(payload: HotPayload) => void>() },
+        hot: { send: vi.fn<(payload: HotPayload) => void>() },
         resolvedUrls: { local: undefined },
       } as unknown as ViteDevServer
 
@@ -1078,7 +1084,7 @@ describe('uidocPlugin', () => {
         config: {
           logger: { info: loggerInfoMock, error: vi.fn<Logger['error']>() },
         },
-        ws: { send: vi.fn<(payload: HotPayload) => void>() },
+        hot: { send: vi.fn<(payload: HotPayload) => void>() },
         resolvedUrls: { local: [] },
       } as unknown as ViteDevServer
 
@@ -1095,7 +1101,7 @@ describe('uidocPlugin', () => {
     })
 
     it('should trigger HMR full reload on context-entry event', async () => {
-      const wsSendMock = vi.fn<(payload: HotPayload) => void>()
+      const hotSendMock = vi.fn<(payload: HotPayload) => void>()
       let contextEntryHandler: (() => void) | undefined
       const mockServer = {
         middlewares: { use: vi.fn<(handler: MiddlewareHandler) => void>() },
@@ -1109,7 +1115,7 @@ describe('uidocPlugin', () => {
         config: {
           logger: { info: vi.fn<Logger['info']>(), error: vi.fn<Logger['error']>() },
         },
-        ws: { send: wsSendMock },
+        hot: { send: hotSendMock },
         resolvedUrls: { local: [] },
       } as unknown as ViteDevServer
 
@@ -1127,7 +1133,7 @@ describe('uidocPlugin', () => {
       expect(contextEntryHandler).toBeDefined()
       contextEntryHandler!()
 
-      expect(wsSendMock).toHaveBeenCalledWith({
+      expect(hotSendMock).toHaveBeenCalledWith({
         type: 'full-reload',
         path: '/ui-doc/*',
       })
@@ -1140,7 +1146,7 @@ describe('uidocPlugin', () => {
         config: {
           logger: { info: vi.fn<Logger['info']>(), error: vi.fn<Logger['error']>() },
         },
-        ws: { send: vi.fn<(payload: HotPayload) => void>() },
+        hot: { send: vi.fn<(payload: HotPayload) => void>() },
         resolvedUrls: { local: [] },
       } as unknown as ViteDevServer
 

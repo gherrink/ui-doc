@@ -205,7 +205,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       id.startsWith(templatePath) &&
       (change.event === 'update' || change.event === 'create')
     ) {
-      viteServer.ws.send({ type: 'full-reload', path: '*' })
+      viteServer.hot.send({ type: 'full-reload', path: '*' })
     }
   }
 
@@ -338,7 +338,7 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
       }, SERVER_READY_LOG_DELAY_MS)
 
       uidoc.on('context-entry', () => {
-        server.ws.send({ type: 'full-reload', path: `/${uriPrefix}*` })
+        server.hot.send({ type: 'full-reload', path: `/${uriPrefix}*` })
       })
     })
   }

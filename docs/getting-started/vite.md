@@ -7,7 +7,7 @@ UI-Doc generates interactive documentation from JSDoc-style comments in your sou
 Before you begin, make sure you have:
 
 - Node.js 20.19, 22.12, or 24 and later
-- Vite 5.0 or later installed and configured
+- Vite 6.0 or later installed and configured
 - A Vite project (create one with `npm create vite@latest` if needed)
 
 ## What you'll build
@@ -147,7 +147,7 @@ pnpm dev
 You'll see output similar to this:
 
 ```text
-  VITE v5.3.1  ready in 450 ms
+  VITE v8.2.1  ready in 450 ms
 
   ➜  Local:   http://localhost:5173/
 
