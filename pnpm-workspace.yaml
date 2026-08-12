@@ -24,7 +24,11 @@ allowBuilds:
 # catalogued: `pnpm pack` rewrites `catalog:` to the catalog's specifier, which
 # would silently narrow consumer-facing ranges (e.g. rollup's peer ^4.0.0).
 catalog:
-  '@types/node': ^24.13.3
+  # Tracks the lowest Node in the published packages' `engines`
+  # (^20.19.0 || ^22.12.0 || >=24.0.0), not the version used to develop. Typing
+  # against a newer runtime than consumers may run lets an API that does not
+  # exist there compile cleanly here.
+  '@types/node': ^20.19.0
   '@types/picomatch': ^4.0.3
   rollup: ^4.59.0
   typescript: ^7.0.2
