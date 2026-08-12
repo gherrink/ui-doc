@@ -64,6 +64,7 @@ describe('uidocPlugin', () => {
       prefix: { uri: 'ui-doc/', path: 'ui-doc/' },
       assets: [] as Array<Record<string, unknown>>,
       staticAssets: undefined as string | undefined,
+      templatePath: undefined as string | undefined,
     },
     fileSystem: mockFileSystem,
     isAssetFromInput: vi.fn<Api['isAssetFromInput']>().mockReturnValue(false),
@@ -77,6 +78,7 @@ describe('uidocPlugin', () => {
     api: mockApi,
     buildStart: vi.fn<HookFn<'buildStart'>>(),
     generateBundle: vi.fn<HookFn<'generateBundle'>>(),
+    watchChange: undefined,
     onLog: undefined,
     config: undefined,
     configureServer: undefined,
@@ -959,6 +961,116 @@ describe('uidocPlugin', () => {
         expect.anything(),
         expect.anything(),
       )
+    })
+  })
+
+  describe('watchChange', () => {
+    const templatePath = '/project/templates'
+    let hotSendMock: ReturnType<typeof vi.fn<(payload: HotPayload) => void>>
+    let mockServer: ViteDevServer
+
+    beforeEach(() => {
+      hotSendMock = vi.fn<(payload: HotPayload) => void>()
+      mockServer = {
+        middlewares: { use: vi.fn<(handler: MiddlewareHandler) => void>() },
+        httpServer: null,
+        config: { logger: { info: vi.fn<Logger['info']>(), error: vi.fn<Logger['error']>() } },
+        hot: { send: hotSendMock },
+        resolvedUrls: { local: [] },
+      } as unknown as ViteDevServer
+      mockApi.options.templatePath = templatePath
+    })
+
+    // A reload only happens once `config` has seen `serve` and `configureServer` has run,
+    // so most cases need both. `withServer: false` covers the case where it has not.
+    async function createServingPlugin(
+      command = 'serve',
+      withServer = true,
+    ): Promise<(id: string, change: { event: string }) => Promise<void>> {
+      const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
+      const configHook = plugin.config as (config: object, env: { command: string }) => void
+      configHook({}, { command })
+
+      if (withServer) {
+        const configureServer = plugin.configureServer as (server: ViteDevServer) => Promise<void>
+        await configureServer(mockServer)
+      }
+
+      return plugin.watchChange as (id: string, change: { event: string }) => Promise<void>
+    }
+
+    it('should call original watchChange if it exists', async () => {
+      const originalWatchChange = vi.fn<HookFn<'watchChange'>>()
+      mockRollupPlugin.watchChange = originalWatchChange
+
+      const watchChange = await createServingPlugin()
+      await watchChange(`${templatePath}/index.html`, { event: 'update' })
+
+      expect(originalWatchChange).toHaveBeenCalledWith(`${templatePath}/index.html`, {
+        event: 'update',
+      })
+
+      // Reset
+      mockRollupPlugin.watchChange = undefined
+    })
+
+    it('should not throw when no original watchChange exists', async () => {
+      const watchChange = await createServingPlugin()
+
+      await expect(
+        watchChange(`${templatePath}/index.html`, { event: 'update' }),
+      ).resolves.not.toThrow()
+    })
+
+    it('should trigger a full reload when a template file is updated', async () => {
+      const watchChange = await createServingPlugin()
+      await watchChange(`${templatePath}/pages/index.html`, { event: 'update' })
+
+      expect(hotSendMock).toHaveBeenCalledWith({ type: 'full-reload', path: '*' })
+    })
+
+    it('should trigger a full reload when a template file is created', async () => {
+      const watchChange = await createServingPlugin()
+      await watchChange(`${templatePath}/pages/new.html`, { event: 'create' })
+
+      expect(hotSendMock).toHaveBeenCalledWith({ type: 'full-reload', path: '*' })
+    })
+
+    it('should not trigger a reload when a template file is deleted', async () => {
+      const watchChange = await createServingPlugin()
+      await watchChange(`${templatePath}/pages/gone.html`, { event: 'delete' })
+
+      expect(hotSendMock).not.toHaveBeenCalled()
+    })
+
+    it('should not trigger a reload for files outside the template path', async () => {
+      const watchChange = await createServingPlugin()
+      await watchChange('/project/src/main.css', { event: 'update' })
+
+      expect(hotSendMock).not.toHaveBeenCalled()
+    })
+
+    it('should not trigger a reload when no template path is configured', async () => {
+      mockApi.options.templatePath = undefined
+
+      const watchChange = await createServingPlugin()
+      await watchChange(`${templatePath}/index.html`, { event: 'update' })
+
+      expect(hotSendMock).not.toHaveBeenCalled()
+    })
+
+    it('should not trigger a reload during build', async () => {
+      const watchChange = await createServingPlugin('build')
+      await watchChange(`${templatePath}/index.html`, { event: 'update' })
+
+      expect(hotSendMock).not.toHaveBeenCalled()
+    })
+
+    it('should not trigger a reload before the dev server is configured', async () => {
+      const watchChange = await createServingPlugin('serve', false)
+      await watchChange(`${templatePath}/index.html`, { event: 'update' })
+
+      expect(hotSendMock).not.toHaveBeenCalled()
     })
   })
 
