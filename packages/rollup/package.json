@@ -64,6 +64,11 @@
     "@ui-doc/html-renderer": "workspace:^",
     "rollup": "^4.0.0"
   },
+  "peerDependenciesMeta": {
+    "rollup": {
+      "optional": true
+    }
+  },
   "engines": {
     "node": "^20.19.0 || ^22.12.0 || >=24.0.0"
   }
