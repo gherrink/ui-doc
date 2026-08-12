@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 
 import createRollupPlugin from '@ui-doc/rollup'
-import type { HotPayload, Logger, Plugin, ViteDevServer } from 'vite'
+import type { ChunkMetadata, HotPayload, Logger, Plugin, ViteDevServer } from 'vite'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Api, Options } from '../src'
@@ -11,6 +11,25 @@ import uidocPlugin from '../src'
 // bundler the installed Vite uses - Rollup up to Vite 7, Rolldown from Vite 8. `Extract` drops
 // the `{ handler }` object-hook variant, which has no call signature.
 type HookFn<K extends keyof Plugin<Api>> = Extract<Plugin<Api>[K], (...args: never[]) => unknown>
+
+// The bundle generateBundle receives, taken from the hook so it follows the installed bundler.
+type OutputBundle = Parameters<HookFn<'generateBundle'>>[1]
+type BundleEntry = OutputBundle[string]
+type OutputChunk = Extract<BundleEntry, { type: 'chunk' }>
+
+// Bundle entries carry far more than the plugin reads, so the doubles fill in only `name`,
+// `fileName` and `viteMetadata` and borrow their types from the real entry. `viteMetadata` is
+// widened to Partial because ChunkMetadata also declares an internal `__modules` field, and
+// because the plugin tolerates entries carrying only one of the two sets.
+type ChunkDouble = Partial<Omit<OutputChunk, 'viteMetadata'>> & {
+  viteMetadata?: Partial<ChunkMetadata>
+}
+
+// One cast, in one place: a rename or reshape of importedAssets/importedCss then fails
+// typecheck at every call below, instead of leaving the tests green while builds regress.
+function bundleChunk(overrides: ChunkDouble): BundleEntry {
+  return { type: 'chunk', ...overrides } as unknown as BundleEntry
+}
 
 // Extended interface for mock request with connect middleware properties
 interface MockRequest extends Partial<IncomingMessage> {
@@ -710,12 +729,12 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const generateBundle = plugin.generateBundle as (
         options: object,
-        bundle: Record<string, { name: string; fileName: string }>,
+        bundle: OutputBundle,
         isWrite: boolean,
       ) => Promise<void>
 
-      const mockBundle = {
-        'main-abc123.js': { name: 'main', fileName: 'assets/main-abc123.js' },
+      const mockBundle: OutputBundle = {
+        'main-abc123.js': bundleChunk({ name: 'main', fileName: 'assets/main-abc123.js' }),
       }
 
       await generateBundle.call({}, {}, mockBundle, true)
@@ -733,18 +752,18 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const generateBundle = plugin.generateBundle as (
         options: object,
-        bundle: Record<string, object>,
+        bundle: OutputBundle,
         isWrite: boolean,
       ) => Promise<void>
 
-      const mockBundle = {
-        'main.js': {
+      const mockBundle: OutputBundle = {
+        'main.js': bundleChunk({
           name: 'main',
           fileName: 'assets/main.js',
           viteMetadata: {
             importedAssets: new Set(['assets/image.png', 'assets/font.woff2']),
           },
-        },
+        }),
       }
 
       await generateBundle.call({}, {}, mockBundle, true)
@@ -764,18 +783,18 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const generateBundle = plugin.generateBundle as (
         options: object,
-        bundle: Record<string, object>,
+        bundle: OutputBundle,
         isWrite: boolean,
       ) => Promise<void>
 
-      const mockBundle = {
-        'main.js': {
+      const mockBundle: OutputBundle = {
+        'main.js': bundleChunk({
           name: 'main',
           fileName: 'assets/main.js',
           viteMetadata: {
             importedCss: new Set(['assets/main.css', 'assets/vendor.css']),
           },
-        },
+        }),
       }
 
       await generateBundle.call({}, {}, mockBundle, true)
@@ -797,18 +816,18 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const generateBundle = plugin.generateBundle as (
         options: object,
-        bundle: Record<string, object>,
+        bundle: OutputBundle,
         isWrite: boolean,
       ) => Promise<void>
 
-      const mockBundle = {
-        'styles.css': {
+      const mockBundle: OutputBundle = {
+        'styles.css': bundleChunk({
           name: 'styles',
           fileName: 'assets/styles.css',
           viteMetadata: {
             importedCss: new Set(['assets/generated.css']),
           },
-        },
+        }),
       }
 
       await generateBundle.call({}, {}, mockBundle, true)
@@ -826,18 +845,18 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const generateBundle = plugin.generateBundle as (
         options: object,
-        bundle: Record<string, object>,
+        bundle: OutputBundle,
         isWrite: boolean,
       ) => Promise<void>
 
-      const mockBundle = {
-        'styles.css': {
+      const mockBundle: OutputBundle = {
+        'styles.css': bundleChunk({
           name: 'styles',
           fileName: 'assets/styles.css',
           viteMetadata: {
             importedCss: new Set<string>(),
           },
-        },
+        }),
       }
 
       await generateBundle.call({}, {}, mockBundle, true)
@@ -857,12 +876,12 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const generateBundle = plugin.generateBundle as (
         options: object,
-        bundle: Record<string, object>,
+        bundle: OutputBundle,
         isWrite: boolean,
       ) => Promise<void>
 
-      const mockBundle = {
-        'other.js': { name: 'other', fileName: 'assets/other.js' },
+      const mockBundle: OutputBundle = {
+        'other.js': bundleChunk({ name: 'other', fileName: 'assets/other.js' }),
       }
 
       await generateBundle.call({}, {}, mockBundle, true)
@@ -881,15 +900,15 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const generateBundle = plugin.generateBundle as (
         options: object,
-        bundle: Record<string, object>,
+        bundle: OutputBundle,
         isWrite: boolean,
       ) => Promise<void>
 
-      const mockBundle = {
-        'main.js': {
+      const mockBundle: OutputBundle = {
+        'main.js': bundleChunk({
           name: 'main',
           fileName: '',
-        },
+        }),
       }
 
       await generateBundle.call({}, {}, mockBundle, true)
@@ -909,15 +928,15 @@ describe('uidocPlugin', () => {
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
       const generateBundle = plugin.generateBundle as (
         options: object,
-        bundle: Record<string, object>,
+        bundle: OutputBundle,
         isWrite: boolean,
       ) => Promise<void>
 
-      const mockBundle = {
-        'static.js': {
+      const mockBundle: OutputBundle = {
+        'static.js': bundleChunk({
           name: 'static',
           fileName: 'assets/static-hashed.js',
-        },
+        }),
       }
 
       await generateBundle.call({}, {}, mockBundle, true)
