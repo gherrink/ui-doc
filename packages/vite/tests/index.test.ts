@@ -1,12 +1,16 @@
 import type { IncomingMessage, ServerResponse } from 'node:http'
 
 import createRollupPlugin from '@ui-doc/rollup'
-import type { FunctionPluginHooks } from 'rollup'
 import type { HotPayload, Logger, Plugin, ViteDevServer } from 'vite'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Api, Options } from '../src'
 import uidocPlugin from '../src'
+
+// Hook types come from the plugin itself rather than from `rollup`, so they follow whichever
+// bundler the installed Vite uses - Rollup up to Vite 7, Rolldown from Vite 8. `Extract` drops
+// the `{ handler }` object-hook variant, which has no call signature.
+type HookFn<K extends keyof Plugin<Api>> = Extract<Plugin<Api>[K], (...args: never[]) => unknown>
 
 // Extended interface for mock request with connect middleware properties
 interface MockRequest extends Partial<IncomingMessage> {
@@ -71,8 +75,8 @@ describe('uidocPlugin', () => {
     name: 'ui-doc',
     version: '1.0.0',
     api: mockApi,
-    buildStart: vi.fn<FunctionPluginHooks['buildStart']>(),
-    generateBundle: vi.fn<FunctionPluginHooks['generateBundle']>(),
+    buildStart: vi.fn<HookFn<'buildStart'>>(),
+    generateBundle: vi.fn<HookFn<'generateBundle'>>(),
     onLog: undefined,
     config: undefined,
     configureServer: undefined,
@@ -676,7 +680,7 @@ describe('uidocPlugin', () => {
 
   describe('generateBundle', () => {
     it('should call original generateBundle if it exists', async () => {
-      const originalGenerateBundle = vi.fn<FunctionPluginHooks['generateBundle']>()
+      const originalGenerateBundle = vi.fn<HookFn<'generateBundle'>>()
       mockRollupPlugin.generateBundle = originalGenerateBundle
 
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })
@@ -920,7 +924,7 @@ describe('uidocPlugin', () => {
 
   describe('buildStart', () => {
     it('should call original buildStart if it exists', async () => {
-      const originalBuildStart = vi.fn<FunctionPluginHooks['buildStart']>()
+      const originalBuildStart = vi.fn<HookFn<'buildStart'>>()
       mockRollupPlugin.buildStart = originalBuildStart
 
       const plugin = await uidocPlugin({ source: ['src/**/*.css'] })

@@ -3,8 +3,7 @@ import path from 'node:path'
 import type { Api as RollupPluginApi, Options as RollupPluginOptions } from '@ui-doc/rollup'
 import createRollupPlugin, { PLUGIN_NAME as ROLLUP_PLUGIN_NAME } from '@ui-doc/rollup'
 import pc from 'picocolors'
-import type { ChangeEvent, InputOptions, OutputBundle, OutputOptions, PluginContext } from 'rollup'
-import type { Plugin, ViteDevServer } from 'vite'
+import type { ChunkMetadata, Plugin, ViteDevServer } from 'vite'
 
 import { version } from '../package.json'
 
@@ -31,39 +30,27 @@ export interface Api extends RollupPluginApi {
 }
 
 /**
- * Rollup hook function type for buildStart.
+ * Narrows a hook to its callable form, dropping the `{ handler }` object variant.
  */
-type BuildStartHook = (this: PluginContext, options: InputOptions) => Promise<void> | void
+type HookFn<K extends keyof Plugin<Api>> = Extract<Plugin<Api>[K], (...args: never[]) => unknown>
 
 /**
- * Rollup hook function type for generateBundle.
+ * The bundle `generateBundle` receives. Derived from the plugin type rather than imported
+ * from a bundler package, so it follows whichever bundler the installed Vite uses - Rollup
+ * up to Vite 7, Rolldown from Vite 8.
  */
-type GenerateBundleHook = (
-  this: PluginContext,
-  options: OutputOptions,
-  bundle: OutputBundle,
-  isWrite: boolean,
-) => Promise<void> | void
+type OutputBundle = Parameters<HookFn<'generateBundle'>>[1]
 
 /**
- * Rollup hook function type for watchChange.
+ * Reads Vite's per-entry record of the assets and stylesheets an entry pulled in.
+ *
+ * Vite declares this by augmenting the bundler's own types: on `RenderedChunk` in Vite 6/7
+ * (inherited by `OutputChunk`) and additionally on `OutputChunk`/`OutputAsset` in Vite 8.
+ * Reading it structurally rather than narrowing to `type === 'chunk'` keeps both shapes
+ * working, and keeps assets - which Vite 8 also annotates - in scope.
  */
-type WatchChangeHook = (
-  this: PluginContext,
-  id: string,
-  change: { event: ChangeEvent },
-) => Promise<void> | void
-
-/**
- * Vite-specific bundle output entry with metadata about imported assets.
- */
-interface ViteBundleEntry {
-  name?: string
-  fileName?: string
-  viteMetadata?: {
-    importedAssets?: Set<string>
-    importedCss?: Set<string>
-  }
+function viteMetadataOf(entry: OutputBundle[string]): Partial<ChunkMetadata> | undefined {
+  return (entry as { viteMetadata?: ChunkMetadata }).viteMetadata
 }
 
 /**
@@ -144,12 +131,15 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     serving = command === 'serve'
   }
 
-  const orgBuildStart = plugin.buildStart as BuildStartHook | undefined
-  const orgGenerateBundle = plugin.generateBundle as GenerateBundleHook | undefined
-  const orgWatchChange = plugin.watchChange as WatchChangeHook | undefined
+  // Captured before reassignment. Kept as the plugin's own hook types so `.call(this, ...)`
+  // stays an exact match; the `typeof` guards also skip the `{ handler }` object-hook form,
+  // which the wrapped plugin does not use but a cast would have silently mistyped.
+  const orgBuildStart = plugin.buildStart
+  const orgGenerateBundle = plugin.generateBundle
+  const orgWatchChange = plugin.watchChange
 
   plugin.buildStart = async function (inputOptions) {
-    if (orgBuildStart) {
+    if (typeof orgBuildStart === 'function') {
       await orgBuildStart.call(this, inputOptions)
     }
 
@@ -163,54 +153,46 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     api.options.assets
       .filter(asset => asset.fromInput)
       .forEach(asset => {
-        const foundBundle = Object.values(bundle).find(({ name }) => name === asset.name) as
-          | ViteBundleEntry
-          | undefined
+        const foundBundle = Object.values(bundle).find(({ name }) => name === asset.name)
 
         if (!foundBundle) {
           return
         }
 
+        const metadata = viteMetadataOf(foundBundle)
+
         // copy imported assets from vite into UI-Doc output
-        if (foundBundle.viteMetadata?.importedAssets) {
-          foundBundle.viteMetadata.importedAssets.forEach((importedAsset: string) => {
-            api.addAssetFromInput(importedAsset)
-          })
-        }
+        metadata?.importedAssets?.forEach((importedAsset: string) => {
+          api.addAssetFromInput(importedAsset)
+        })
 
         if (asset.type === 'script') {
-          if (foundBundle.fileName !== undefined && foundBundle.fileName !== '') {
+          if (foundBundle.fileName !== '') {
             asset.fileName = foundBundle.fileName
           }
 
           // copy and register imported css files to ui-doc
-          if (foundBundle.viteMetadata?.importedCss) {
-            foundBundle.viteMetadata.importedCss.forEach((imported: string) => {
-              api.addAssetFromInput(imported)
-              api.uidocAsset(imported, asset.context, { type: 'style' })
-            })
-          }
+          metadata?.importedCss?.forEach((imported: string) => {
+            api.addAssetFromInput(imported)
+            api.uidocAsset(imported, asset.context, { type: 'style' })
+          })
 
           return
         }
 
-        if (
-          asset.type === 'style' &&
-          foundBundle.viteMetadata?.importedCss &&
-          foundBundle.viteMetadata.importedCss.size > 0
-        ) {
-          const firstCss = foundBundle.viteMetadata.importedCss.values().next().value as string
+        if (asset.type === 'style' && metadata?.importedCss && metadata.importedCss.size > 0) {
+          const firstCss = metadata.importedCss.values().next().value as string
           asset.fileName = firstCss
         }
       })
 
-    if (orgGenerateBundle) {
+    if (typeof orgGenerateBundle === 'function') {
       await orgGenerateBundle.call(this, outputOptions, bundle, isWrite)
     }
   }
 
   plugin.watchChange = async function (id, change) {
-    if (orgWatchChange) {
+    if (typeof orgWatchChange === 'function') {
       await orgWatchChange.call(this, id, change)
     }
 
