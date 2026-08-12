@@ -98,7 +98,12 @@ export default async function uidocPlugin(rawOptions: Options): Promise<Plugin<A
     },
 
     async buildStart(inputOptions) {
-      const watchedFiles = this.getWatchFiles()
+      // `getWatchFiles` is Rollup-only: Vite 8 runs plugins on Rolldown, whose plugin
+      // context does not implement it. It is used purely to avoid re-registering files,
+      // and `addWatchFile` is idempotent in both bundlers, so falling back to an empty
+      // list costs nothing beyond a few redundant calls.
+      const watchedFiles: readonly string[] =
+        typeof this.getWatchFiles === 'function' ? this.getWatchFiles() : []
 
       // if fromInput is true, try to use inputOptions.input[name] as fileName
       options.assets = options.assets.map(asset => {
