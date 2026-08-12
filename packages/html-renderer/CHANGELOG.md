@@ -1,5 +1,13 @@
 # @ui-doc/html-renderer ChangeLog
 
+## v1.3.4
+
+_2026-08-12_
+
+### Bugfixes
+
+- html-renderer: repair five defects in the browser scripts (8a41d61)
+
 ## v1.0.0
 
 _2026-01-30_
