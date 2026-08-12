@@ -63,5 +63,13 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      # `pnpm typecheck` is per-package tsc, and every package tsconfig includes
+      # only `src/**/*`. Tests and demos are typechecked by this target alone, so
+      # without it a test double can drift from the API it stands in for and stay
+      # green. Don't widen the package tsconfigs instead - they also drive `build`
+      # with --rootDir src, and would start emitting declarations for tests.
+      - name: Typecheck tests and demos
+        run: pnpm typecheck:all
+
       - name: Test
         run: pnpm test
